@@ -1,0 +1,71 @@
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import {SchedulingMockData} from '../../../adapters/calendar-adapter/schedulingMockData';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/delay';
+
+@Injectable()
+export class CalendarService {
+  private plan;
+
+  constructor() {
+  }
+
+  public getLessons(): Observable<any[]> {
+    return Observable.of(new SchedulingMockData().mockLessons)  // todo - remove the mock data
+      .delay(1000);
+  }
+
+  public getAvailability(): Observable<any> {
+    return Observable.of(SchedulingMockData.availability) // todo - remove the mock data
+      .delay(1000);
+  }
+
+  public getPlan(): Observable<any> {
+    // todo - change the initial scheduling to the current week (change the year, month, date - day in month and keep only the day and hour)
+    // todo - another alternative - save only the day and hour and support this structure in backend.
+    if (!this.plan) {
+      this.plan = SchedulingMockData.mockPlan; // todo - remove the mock data
+    }
+    return Observable.of(this.plan)
+      .delay(1000);
+  }
+
+  public isCalendarContainDateParams(obj, year, month, dayInMonth, hour) {
+    return (obj[year]
+      && obj[year][month]
+      && obj[year][month][dayInMonth]
+      && obj[year][month][dayInMonth][hour]);
+  }
+
+  public isCalendarContainDate(obj, date) {
+    // todo - use user's timezone;
+    const year = new Date(date).getFullYear();
+    const month = new Date(date).getMonth();
+    const dayInMonth = new Date(date).getDate();
+    const hour = new Date(date).getHours();
+    return this.isCalendarContainDateParams(obj, year, month, dayInMonth, hour);
+  }
+
+  public convertToUTCMilisec(year, month, dayInMonth, hour) {
+    const dateObj = new Date(year, month, dayInMonth, hour); // todo - use user's timezone
+    return dateObj.getTime();
+  }
+
+  public runOnDateObject(dateObj, cbFunction, convertToUserTimezone?) {
+    Object.keys(dateObj).forEach(year => {
+      Object.keys(dateObj[year]).forEach(month => {
+        Object.keys(dateObj[year][month]).forEach(dayInMonth => {
+          Object.keys(dateObj[year][month][dayInMonth]).forEach(hour => {
+            // todo - convert (year,month,dayInMonth,hour) to user's timezone (if needed).
+            if (convertToUserTimezone) {
+              console.log(convertToUserTimezone);
+              // cbFunction(convertedYear, convertedMonth, convertedDayInMonth, convertedHour);
+            }
+            cbFunction(year, month, dayInMonth, hour);
+          });
+        });
+      });
+    });
+  }
+}

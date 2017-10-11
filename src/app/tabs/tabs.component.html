@@ -1,0 +1,12 @@
+<nav md-tab-nav-bar>
+  <a md-tab-link
+     *ngFor="let link of navLinks; let i=index"
+     [routerLink]="link">
+    {{navTitles[i]}}
+  </a>
+  <img src="../../assets/tgs-logo.png"/>
+</nav>
+
+<router-outlet></router-outlet>
+
+

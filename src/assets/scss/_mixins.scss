@@ -1,0 +1,65 @@
+@mixin text-style($size: null,$color: null,$family: null,$weight: null,$letter-spacing:null,$text-transform: null, $style: null, $align: null) {
+  @if ($size) {
+    font-size: $size;
+  }
+
+  @if ($color) {
+    color: $color;
+  }
+
+  @if ($family) {
+    font-family: $family;
+  }
+
+  @if $weight {
+    font-weight: $weight;
+  }
+
+  @if $letter-spacing {
+    letter-spacing: $letter-spacing;
+  }
+
+  @if $text-transform {
+    text-transform: $text-transform;
+  }
+
+  @if $style {
+    font-style: $style;
+  }
+
+  @if $align {
+    text-align: $align;
+  }
+}
+
+@mixin button-style($bgColor: null,$borderRadius: null,$width: null,$height: null,$border:null) {
+  @if ($bgColor) {
+    background-color: $bgColor;
+  }
+
+  @if ($borderRadius) {
+    border-radius: $borderRadius;
+  }
+
+  @if ($width) {
+    width: $width;
+  }
+
+  @if $height {
+    height: $height;
+  }
+
+  @if $border {
+    border: $border;
+  } @else {
+    border: none;
+  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  outline: 0;
+  padding: 0;
+  box-sizing: content-box;
+}
+
