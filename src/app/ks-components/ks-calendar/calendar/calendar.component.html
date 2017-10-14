@@ -38,13 +38,14 @@
     </div>
 
     <div class="calendar-cells-wrapper">
-      <div *ngFor="let headerDate of headerDates[activeWeek]">
-        <div *ngFor="let hour  of hours">
-          <app-time-slot
-            (availableSlotEvent)="availableSlotEventHandler($event)"
-            (initialScheduleLessonRemovedEvent)="initialScheduleLessonRemovedEvent($event)"
-            [timeSlotData]="timeSlotData[headerDate.getFullYear()][headerDate.getMonth()][headerDate.getDate()][hour]">
-          </app-time-slot>
+      <div *ngFor="let a of calendarRows; let row = index;">
+        <div *ngFor="let b  of calendarColumns; let column = index;">
+          {{row}} - {{column}}
+          <!--<app-time-slot-->
+            <!--(availableSlotEvent)="availableSlotEventHandler($event)"-->
+            <!--(initialScheduleLessonRemovedEvent)="initialScheduleLessonRemovedEvent($event)"-->
+            <!--[timeSlotData]="timeSlotData[headerDate.getFullYear()][headerDate.getMonth()][headerDate.getDate()][hour]">-->
+          <!--</app-time-slot>-->
         </div>
       </div>
     </div>

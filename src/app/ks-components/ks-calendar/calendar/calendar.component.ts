@@ -32,6 +32,9 @@ export class CalendarComponent implements OnChanges, OnInit {
   public onInitialScheduleLessonRemoved: BehaviorSubject<any>;
   public onReset: BehaviorSubject<any>;
 
+  public calendarRows = new Array(24);
+  public calendarColumns = new Array(21);
+
   @Input() timeSlotView = TimeSlotConstant.TIME_SLOT_VIEWS.LESSON_VIEW; // todo - change to znk ks-calendar view
   @Input() startHour = 9; // todo - take from config.
   @Input() lessons: any[];
@@ -47,7 +50,8 @@ export class CalendarComponent implements OnChanges, OnInit {
   }
 
   ngOnInit() {
-    this.initCalendar(this.activeWeek);
+    // this.initCalendar(this.activeWeek);
+    this.initCalendar();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -131,33 +135,37 @@ export class CalendarComponent implements OnChanges, OnInit {
   }
 
   // initialize header dates, side hours and the timeSlotData
-  private initCalendar(weekNum) {
-    let i, year, month, dayInMonth, hour = 0;
-    const runningDate = new Date();
-    const currentDay = runningDate.getDay();
-    runningDate.setDate(runningDate.getDate() - currentDay + (weekNum * 7));
-    if (!this.headerDates[String(weekNum)]) {
-      this.headerDates[String(weekNum)] = [];
-    }
+  // private initCalendar(weekNum) {
+  //   let i, year, month, dayInMonth, hour = 0;
+  //   const runningDate = new Date();
+  //   const currentDay = runningDate.getDay();
+  //   runningDate.setDate(runningDate.getDate() - currentDay + (weekNum * 7));
+  //   if (!this.headerDates[String(weekNum)]) {
+  //     this.headerDates[String(weekNum)] = [];
+  //   }
+  //
+  //   for (i = 0; i < CalendarConstant.DAYS_IN_WEEK; i++) {
+  //     year = runningDate.getFullYear();
+  //     month = runningDate.getMonth();
+  //     dayInMonth = runningDate.getDate();
+  //
+  //     this.headerDates[String(weekNum)].push(new Date(runningDate.getTime()));
+  //     this.initTimeSlotData(year, month, dayInMonth);
+  //
+  //     runningDate.setDate(runningDate.getDate() + 1);
+  //     hour = 0;
+  //   }
+  //
+  //   if (this.hours && this.hours.length === 0) {
+  //     for (i = 0; i < CalendarConstant.HOURS_IN_DAYS; i++) {
+  //       hour = (i + this.startHour) % CalendarConstant.HOURS_IN_DAYS;
+  //       this.hours.push(hour);
+  //     }
+  //   }
+  // }
 
-    for (i = 0; i < CalendarConstant.DAYS_IN_WEEK; i++) {
-      year = runningDate.getFullYear();
-      month = runningDate.getMonth();
-      dayInMonth = runningDate.getDate();
+  private initCalendar(){
 
-      this.headerDates[String(weekNum)].push(new Date(runningDate.getTime()));
-      this.initTimeSlotData(year, month, dayInMonth);
-
-      runningDate.setDate(runningDate.getDate() + 1);
-      hour = 0;
-    }
-
-    if (this.hours && this.hours.length === 0) {
-      for (i = 0; i < CalendarConstant.HOURS_IN_DAYS; i++) {
-        hour = (i + this.startHour) % CalendarConstant.HOURS_IN_DAYS;
-        this.hours.push(hour);
-      }
-    }
   }
 
   private initTimeSlotData(year, month, dayInMonth) {
@@ -181,11 +189,11 @@ export class CalendarComponent implements OnChanges, OnInit {
     }
   }
 
-  private changeActiveWeek(weekDirection) {
-    const newActiveWeek = this.activeWeek + weekDirection; // todo - very slow, improve performance.
-    if (!this.headerDates[String(newActiveWeek)]) {
-      this.initCalendar(newActiveWeek);
-    }
-    this.activeWeek = newActiveWeek;
-  }
+  // private changeActiveWeek(weekDirection) {
+  //   const newActiveWeek = this.activeWeek + weekDirection; // todo - very slow, improve performance.
+  //   if (!this.headerDates[String(newActiveWeek)]) {
+  //     this.initCalendar();
+  //   }
+  //   this.activeWeek = newActiveWeek;
+  // }
 }
