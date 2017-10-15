@@ -2,10 +2,8 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {TimeSlotConstant} from '../constants/timeSlot.constant';
 import {CalendarConstant} from '../constants/calendar.constant';
 import {CalendarService} from '../services/calendarservice';
-import {SchedulingConstant} from '../constants/scheduling.constant';
 import {DatePipe} from '@angular/common';
 import {TranslateService} from '@ngx-translate/core';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 @Component({
   selector: 'app-calendar',
@@ -14,13 +12,10 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
   providers: [DatePipe]
 })
 export class CalendarComponent implements OnChanges, OnInit {
-  public headerDates = {};
-  public activeWeek = 0;
+  public headerDates = [];
   public hours = [];
   public timeSlotData = {}; // all slots ks-components get this object as an input.
-  public showCancelButton = false;
   public showSpinner = false;
-  public SCHEDULING_VIEWS = SchedulingConstant.SCHEDULING_VIEWS;
   public DYNAMIC_DEFAULT_VIEWS = TimeSlotConstant.DYNAMIC_DEFAULT_VIEWS;
   public dynamicDefaultView = {timeSlotClass: ''};
   public dynamicDefaultViewsMap = {
@@ -28,29 +23,33 @@ export class CalendarComponent implements OnChanges, OnInit {
     [TimeSlotConstant.DYNAMIC_DEFAULT_VIEWS.UNAVAILABLE]: 'unavailable-slot'
   };
 
-  public onLessonScheduled: BehaviorSubject<any>;
-  public onInitialScheduleLessonRemoved: BehaviorSubject<any>;
-  public onReset: BehaviorSubject<any>;
+  public calendarRows = new Array(CalendarConstant.HOURS_IN_DAYS);
+  public calendarColumns = new Array(CalendarConstant.DAYS_IN_WEEK);
+  public calendarWeeks = ['week_slide_0', 'week_slide_1', 'week_slide_2'];
+  public weeksStyles = {
+    week_slide_0: {left: '-900px', transition: '1sec'},
+    week_slide_1: {left: '0px', transition: '1sec'},
+    week_slide_2: {left: '900px', transition: '1sec'}
+  };
 
-  public calendarRows = new Array(24);
-  public calendarColumns = new Array(21);
+  public current_week_slide = 2;
+  public startHour = 9;
+  public currentDate = new Date();
 
-  @Input() timeSlotView = TimeSlotConstant.TIME_SLOT_VIEWS.LESSON_VIEW; // todo - change to znk ks-calendar view
-  @Input() startHour = 9; // todo - take from config.
-  @Input() lessons: any[];
-  @Input() schedulingView;
-  @Input() plan;
-
-  @Output() pendingLessonEvent: EventEmitter<any> = new EventEmitter();
-
-  constructor(private translate: TranslateService, private calendarService: CalendarService, private datePipe: DatePipe) {
-    this.onLessonScheduled = <BehaviorSubject<any>>new BehaviorSubject(null);
-    this.onInitialScheduleLessonRemoved = <BehaviorSubject<any>>new BehaviorSubject(null);
-    this.onReset = <BehaviorSubject<any>>new BehaviorSubject(null);
+  constructor(private calendarService: CalendarService) {
   }
 
   ngOnInit() {
     // this.initCalendar(this.activeWeek);
+
+
+    let i, hour = 0;
+    for (i = 0; i < CalendarConstant.HOURS_IN_DAYS; i++) {
+      hour = (i + this.startHour) % CalendarConstant.HOURS_IN_DAYS;
+      this.hours.push(hour);
+    }
+
+    this.timeSlotData = {2017: {10: {10: {9: {dynamicDefaultView: {timeSlotClass: 'sd'}}}}}};
     this.initCalendar();
   }
 
@@ -61,7 +60,6 @@ export class CalendarComponent implements OnChanges, OnInit {
   public resetCalendar(): void {
     this.updateDynamicDefaultView(this.DYNAMIC_DEFAULT_VIEWS.EMPTY);
     this.clearSlotsByGivenViews([TimeSlotConstant.TIME_SLOT_VIEWS.AVAILABLE_TIME_SLOT_VIEW]);
-    this.showCancelButton = false;
   }
 
   public showAvailableDates(availabilityDates, data): void {
@@ -83,13 +81,11 @@ export class CalendarComponent implements OnChanges, OnInit {
       if (isSlotAvailable && canMarkAsAvailable) {
         const date = this.calendarService.convertToUTCMilisec(year, month, dayInMonth, hour);
         this.timeSlotData[year][month][dayInMonth][hour].data = {};
-        this.timeSlotData[year][month][dayInMonth][hour].data.lesson = Object.assign({}, data);
         this.timeSlotData[year][month][dayInMonth][hour].data.date = date;
         this.timeSlotData[year][month][dayInMonth][hour].view = AVAILABLE_VIEW;
       }
       // change the default timeSlot style
       this.dynamicDefaultView.timeSlotClass = this.dynamicDefaultViewsMap[this.DYNAMIC_DEFAULT_VIEWS.UNAVAILABLE];
-      this.showCancelButton = true;
       this.showSpinner = false;
     });
   }
@@ -164,11 +160,11 @@ export class CalendarComponent implements OnChanges, OnInit {
   //   }
   // }
 
-  private initCalendar(){
+  private initCalendar() {
 
   }
 
-  private initTimeSlotData(year, month, dayInMonth) {
+  private updateTimeSlots(year, month, dayInMonth) {
     if (!this.timeSlotData[year]) {
       this.timeSlotData[year] = {};
     }
@@ -189,11 +185,29 @@ export class CalendarComponent implements OnChanges, OnInit {
     }
   }
 
-  // private changeActiveWeek(weekDirection) {
-  //   const newActiveWeek = this.activeWeek + weekDirection; // todo - very slow, improve performance.
-  //   if (!this.headerDates[String(newActiveWeek)]) {
-  //     this.initCalendar();
-  //   }
-  //   this.activeWeek = newActiveWeek;
-  // }
+  private updateHeadersDays(date: Date) {
+
+  }
+
+  public changeActiveWeek(weekDirection) {
+    let newActiveWeek = (this.current_week_slide + weekDirection) % this.calendarWeeks.length;
+    this.current_week_slide = newActiveWeek < 0 ? this.calendarWeeks.length - 1 : newActiveWeek;
+
+    let left_style_pixels: any = '';
+    Object.keys(this.weeksStyles).forEach((week_slide: string) => {
+      left_style_pixels = this.weeksStyles[week_slide].left;
+      left_style_pixels = +left_style_pixels.replace('px', '');
+
+      if (left_style_pixels + weekDirection * 900 > (this.calendarWeeks.length - 2) * 900) {
+        this.weeksStyles[week_slide].left = '-900px';
+        this.weeksStyles[week_slide].transition = 'none';
+      } else if (left_style_pixels + weekDirection * 900 < -900) {
+        this.weeksStyles[week_slide].left = (this.calendarWeeks.length - 2) * 900 + 'px';
+        this.weeksStyles[week_slide].transition = 'none';
+      } else {
+        this.weeksStyles[week_slide].transition = '0.7s';
+        this.weeksStyles[week_slide].left = weekDirection * 900 + left_style_pixels + 'px';
+      }
+    })
+  }
 }

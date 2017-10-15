@@ -1,56 +1,77 @@
-
-<div >change week
-  <div style="cursor: pointer;" (click)="changeActiveWeek(1)" >+</div>
-  <div style="cursor: pointer;" (click)="changeActiveWeek(-1)">-</div>
-</div>
-
-<div class="znk-calendar-wrapper" [ngClass]="{'show-spinner': showSpinner}">
-
-  <div class="sk-circle">
-    <div class="sk-circle1 sk-child"></div>
-    <div class="sk-circle2 sk-child"></div>
-    <div class="sk-circle3 sk-child"></div>
-    <div class="sk-circle4 sk-child"></div>
-    <div class="sk-circle5 sk-child"></div>
-    <div class="sk-circle6 sk-child"></div>
-    <div class="sk-circle7 sk-child"></div>
-    <div class="sk-circle8 sk-child"></div>
-    <div class="sk-circle9 sk-child"></div>
-    <div class="sk-circle10 sk-child"></div>
-    <div class="sk-circle11 sk-child"></div>
-    <div class="sk-circle12 sk-child"></div>
+<div class="calendar-component">
+  <div class="change-week">
+    change week
+    <div style="cursor: pointer;" (click)="changeActiveWeek(-1)">
+      <div class="arrow-right"></div>
+    </div>
+    <div style="cursor: pointer;" (click)="changeActiveWeek(1)">
+      <div class="arrow-left"></div>
+    </div>
   </div>
 
-  <div class="buttons-and-filters-wrapper">
-    <div class="btn-type-3 calendar_cancel-btn" *ngIf="showCancelButton" (click)="cancleButtonClickHandler()"
-         [translate]="'CALENDAR_MODULE.CALENDAR_COMPONENT.CANCEL'"></div>
-  </div>
+  <div class="calendar-wrapper" [ngClass]="{'show-spinner': showSpinner}">
 
-  <div class="znk-calendar-header ">
-    <div class="calendar-header-column quicksand-14-b" *ngFor="let headerDate of headerDates[activeWeek]">{{headerDate | date:'EEE d' }}</div>
-  </div>
+    <div class="sk-circle">
+      <div class="sk-circle1 sk-child"></div>
+      <div class="sk-circle2 sk-child"></div>
+      <div class="sk-circle3 sk-child"></div>
+      <div class="sk-circle4 sk-child"></div>
+      <div class="sk-circle5 sk-child"></div>
+      <div class="sk-circle6 sk-child"></div>
+      <div class="sk-circle7 sk-child"></div>
+      <div class="sk-circle8 sk-child"></div>
+      <div class="sk-circle9 sk-child"></div>
+      <div class="sk-circle10 sk-child"></div>
+      <div class="sk-circle11 sk-child"></div>
+      <div class="sk-circle12 sk-child"></div>
+    </div>
 
-  <div class="calendar-content znk-scrollbar">
-    <div class="calendar-hours-wrapper">
-      <div class="calendar-hours">
-        <div class="hour lato-12-n" *ngFor="let hour  of hours;">{{(hour) | CalendarHoursPipe}}</div>
+    <!--<div class="buttons-and-filters-wrapper">-->
+      <!--<div class="btn-type-3 calendar_cancel-btn" *ngIf="showCancelButton" (click)="cancleButtonClickHandler()"-->
+           <!--[translate]="'CALENDAR_MODULE.CALENDAR_COMPONENT.CANCEL'"></div>-->
+    <!--</div>-->
+
+    <div class="calendar-header ">
+      <div class="calendar-header-column quicksand-14-b" *ngFor="let headerDate of headerDates[activeWeek]">{{headerDate
+        | date:'EEE d' }}
       </div>
     </div>
 
-    <div class="calendar-cells-wrapper">
-      <div *ngFor="let a of calendarRows; let row = index;">
-        <div *ngFor="let b  of calendarColumns; let column = index;">
-          {{row}} - {{column}}
-          <!--<app-time-slot-->
-            <!--(availableSlotEvent)="availableSlotEventHandler($event)"-->
-            <!--(initialScheduleLessonRemovedEvent)="initialScheduleLessonRemovedEvent($event)"-->
-            <!--[timeSlotData]="timeSlotData[headerDate.getFullYear()][headerDate.getMonth()][headerDate.getDate()][hour]">-->
-          <!--</app-time-slot>-->
+    <div class="calendar-content">
+      <div class="calendar-cells-wrapper znk-scrollbar"> <!--overflow hidden-->
+        <div class="calendar-container-flex">
+          <div
+            *ngFor="let weekName of calendarWeeks"
+            class="calendar-weeks-container"
+            [ngStyle]="weeksStyles[weekName]"
+            [ngClass]="weekName">
+            <div class="calendar-hours-wrapper">
+              <div class="calendar-hours">
+                <div class="hour lato-12-n" *ngFor="let hour  of hours;">{{(hour) | CalendarHoursPipe}}</div>
+              </div>
+            </div>
+
+            <div *ngFor="let b  of calendarColumns; let column = index;">
+              <div *ngFor="let a of calendarRows; let row = index;">
+                <!--<app-time-slot-->
+                <!--(availableSlotEvent)="availableSlotEventHandler($event)"-->
+                <!--(initialScheduleLessonRemovedEvent)="initialScheduleLessonRemovedEvent($event)"-->
+                <!--[timeSlotData]="timeSlotData[headerDate.getFullYear()][headerDate.getMonth()][headerDate.getDate()][hour]">-->
+                <!--</app-time-slot>-->
+
+                <app-time-slot
+                  (availableSlotEvent)="availableSlotEventHandler($event)"
+                  (initialScheduleLessonRemovedEvent)="initialScheduleLessonRemovedEvent($event)"
+                  [timeSlotData]="timeSlotData[2017][10][10][9]">
+                </app-time-slot>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
     </div>
-
+    <div class="calendar-footer"></div>
   </div>
-  <div class="calendar-footer"></div>
-</div>
 
+</div>

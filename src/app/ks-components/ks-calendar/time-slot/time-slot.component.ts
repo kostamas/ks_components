@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {trigger, state, style, animate, transition} from '@angular/animations';
 import {TimeSlotConstant} from '../constants/timeSlot.constant';
-import {CalendarService} from '../services/calendarservice';
 
 @Component({
   selector: 'app-time-slot',

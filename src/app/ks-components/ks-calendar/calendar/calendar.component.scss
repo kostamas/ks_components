@@ -1,234 +1,294 @@
 @import '../../../../assets/scss/main';
 
 $calendar-width: 900px;
+.calendar-component {
+  width: 1200px;
+  overflow: hidden;
+  display: flex;
+  margin: 100px auto 100px auto;
+  position: relative;
 
-.znk-calendar-wrapper {
-  position: relative; // todo - for test (schedule, reset buttons)
-  width: $calendar-width;
-  height: 578px;
-  margin: 0 auto;
-
-  .buttons-and-filters-wrapper {
-    height: 50px;
-    display: flex;
-    flex-direction: row-reverse;
-
-    .calendar_cancel-btn {
-      background-color: $hintOfRed;
-      color: $bermuda;
-      border: 1px solid $bermuda;
-      margin-left: 8px;
-
-      &:hover {
-        opacity: 0.5;
-        color: $bondiBlue;
-      }
+  .change-week {
+    @include text-style(23px, $kimberlyDark, Lato, $normalFontWeight);
+    margin-right: 30px;
+    .arrow-right, .arrow-left {
+      cursor: pointer;
+      position: absolute;
+      top: 40px;
+    }
+    .arrow-left {
+      left: 20px;
+    }
+    .arrow-right {
+      left: 60px;
     }
   }
 
-  .znk-calendar-header {
-    background-color: $ABC;
-    display: flex;
-    align-items: center;
+  .calendar-wrapper {
+    position: relative; // todo - for test (schedule, reset buttons)
     width: $calendar-width;
-    height: 38px;
-    padding-left: 45px;
-    box-sizing: border-box;
-    border-radius: 10px 10px 0 0;
+    height: 578px;
 
-    .calendar-header-column {
-      flex-grow: 0;
-      flex-shrink: 0;
-      width: 120px;
-      height: 30px;
+    .buttons-and-filters-wrapper {
+      height: 50px;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-    }
-  }
+      flex-direction: row-reverse;
 
-  .calendar-content {
-    display: flex;
-    width: 900px;
-    height: 400px;
-    background-color: $white;
-    overflow-y: auto;
+      .calendar_cancel-btn {
+        background-color: $hintOfRed;
+        color: $bermuda;
+        border: 1px solid $bermuda;
+        margin-left: 8px;
 
-    .calendar-hours-wrapper { // without ks-calendar-hours-wrapper the ks-calendar-hours won't grow because the parent has fixed height + overflow scroll
-      .calendar-hours {
-        display: flex;
-        flex-direction: column;
-        border-bottom: 1px solid $alto;
-        box-sizing: border-box;
-        background-color: white;
-
-        .hour {
-          height: 50px;
-          width: 45px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          color: $silverChalice;
-          flex: 1;
-          border-left: 1px solid  $alabaster;;
+        &:hover {
+          opacity: 0.5;
+          color: $bondiBlue;
         }
       }
     }
 
-    .calendar-cells-wrapper {
+    .calendar-header {
+      background-color: $ABC;
       display: flex;
+      align-items: center;
+      width: $calendar-width;
+      height: 38px;
+      padding-left: 45px;
+      box-sizing: border-box;
+      border-radius: 10px 10px 0 0;
+
+      .calendar-header-column {
+        flex-grow: 0;
+        flex-shrink: 0;
+        width: 120px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+      }
+    }
+
+    .calendar-content {
+      display: flex;
+      width: calc(3 * 886px);
+      height: 400px;
+      background-color: $white;
+
+      .calendar-hours-wrapper { // without ks-calendar-hours-wrapper the ks-calendar-hours won't grow because the parent has fixed height + overflow scroll
+        .calendar-hours {
+          display: flex;
+          flex-direction: column;
+          border-bottom: 1px solid $alto;
+          box-sizing: border-box;
+          background-color: white;
+
+          .hour {
+            padding-top: 2px;
+            height: 47.95px;
+            width: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: $silverChalice;
+            flex: 1;
+            border-left: 1px solid $alabaster;;
+          }
+        }
+      }
+
+      .calendar-cells-wrapper {
+        overflow-x: hidden;
+        overflow-y: scroll;
+        width: $calendar-width;
+
+        .calendar-container-flex {
+          width: 5000px;
+          display: flex;
+          position: relative;
+          .calendar-weeks-container {
+            display: flex;
+            height: 400px;
+            width: $calendar-width;
+            position: absolute;
+          }
+        }
+      }
+    }
+
+    .calendar-footer {
+      background-color: $alabaster;
+      border-radius: 0 0 15px 15px;
+      width: $calendar-width;
+      height: 18px;
     }
   }
 
-  .calendar-footer {
-    background-color: $alabaster;
-    border-radius: 0 0 15px 15px;
-    width: $calendar-width;
-    height: 18px;
-  }
-}
+  // ********** temporary ks-calendar animation ****************//
+  .calendar-wrapper.show-spinner {
+    transition: 0.5s;
+    opacity: 0.7;
 
-// ********** temporary ks-calendar animation ****************//
-.znk-calendar-wrapper.show-spinner {
-  transition: 0.5s;
-  opacity: 0.7;
+    &:before {
+      content: '';
+      position: absolute;
+      z-index: 2;
+      width: $calendar-width;;
+      height: 475px;
+      background-color: $gallery;
+      opacity: 0.5;
+      top: 50px;
+    }
 
-  &:before {
-    content: '';
-    position: absolute;
-    z-index: 2;
-    width: $calendar-width;;
-    height: 475px;
-    background-color: $gallery;
-    opacity: 0.5;
-    top: 50px;
-  }
+    .sk-circle {
+      margin: 100px auto;
+      width: 40px;
+      height: 40px;
+      position: absolute;
+      top: 33%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+    }
+    .sk-circle .sk-child {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    .sk-circle .sk-child:before {
+      content: '';
+      display: block;
+      margin: 0 auto;
+      width: 15%;
+      height: 15%;
+      background-color: #333;
+      border-radius: 100%;
+      -webkit-animation: sk-circleBounceDelay 1.2s infinite ease-in-out both;
+      animation: sk-circleBounceDelay 1.2s infinite ease-in-out both;
+    }
+    .sk-circle .sk-circle2 {
+      -webkit-transform: rotate(30deg);
+      -ms-transform: rotate(30deg);
+      transform: rotate(30deg);
+    }
+    .sk-circle .sk-circle3 {
+      -webkit-transform: rotate(60deg);
+      -ms-transform: rotate(60deg);
+      transform: rotate(60deg);
+    }
+    .sk-circle .sk-circle4 {
+      -webkit-transform: rotate(90deg);
+      -ms-transform: rotate(90deg);
+      transform: rotate(90deg);
+    }
+    .sk-circle .sk-circle5 {
+      -webkit-transform: rotate(120deg);
+      -ms-transform: rotate(120deg);
+      transform: rotate(120deg);
+    }
+    .sk-circle .sk-circle6 {
+      -webkit-transform: rotate(150deg);
+      -ms-transform: rotate(150deg);
+      transform: rotate(150deg);
+    }
+    .sk-circle .sk-circle7 {
+      -webkit-transform: rotate(180deg);
+      -ms-transform: rotate(180deg);
+      transform: rotate(180deg);
+    }
+    .sk-circle .sk-circle8 {
+      -webkit-transform: rotate(210deg);
+      -ms-transform: rotate(210deg);
+      transform: rotate(210deg);
+    }
+    .sk-circle .sk-circle9 {
+      -webkit-transform: rotate(240deg);
+      -ms-transform: rotate(240deg);
+      transform: rotate(240deg);
+    }
+    .sk-circle .sk-circle10 {
+      -webkit-transform: rotate(270deg);
+      -ms-transform: rotate(270deg);
+      transform: rotate(270deg);
+    }
+    .sk-circle .sk-circle11 {
+      -webkit-transform: rotate(300deg);
+      -ms-transform: rotate(300deg);
+      transform: rotate(300deg);
+    }
+    .sk-circle .sk-circle12 {
+      -webkit-transform: rotate(330deg);
+      -ms-transform: rotate(330deg);
+      transform: rotate(330deg);
+    }
+    .sk-circle .sk-circle2:before {
+      -webkit-animation-delay: -1.1s;
+      animation-delay: -1.1s;
+    }
+    .sk-circle .sk-circle3:before {
+      -webkit-animation-delay: -1s;
+      animation-delay: -1s;
+    }
+    .sk-circle .sk-circle4:before {
+      -webkit-animation-delay: -0.9s;
+      animation-delay: -0.9s;
+    }
+    .sk-circle .sk-circle5:before {
+      -webkit-animation-delay: -0.8s;
+      animation-delay: -0.8s;
+    }
+    .sk-circle .sk-circle6:before {
+      -webkit-animation-delay: -0.7s;
+      animation-delay: -0.7s;
+    }
+    .sk-circle .sk-circle7:before {
+      -webkit-animation-delay: -0.6s;
+      animation-delay: -0.6s;
+    }
+    .sk-circle .sk-circle8:before {
+      -webkit-animation-delay: -0.5s;
+      animation-delay: -0.5s;
+    }
+    .sk-circle .sk-circle9:before {
+      -webkit-animation-delay: -0.4s;
+      animation-delay: -0.4s;
+    }
+    .sk-circle .sk-circle10:before {
+      -webkit-animation-delay: -0.3s;
+      animation-delay: -0.3s;
+    }
+    .sk-circle .sk-circle11:before {
+      -webkit-animation-delay: -0.2s;
+      animation-delay: -0.2s;
+    }
+    .sk-circle .sk-circle12:before {
+      -webkit-animation-delay: -0.1s;
+      animation-delay: -0.1s;
+    }
 
-  .sk-circle {
-    margin: 100px auto;
-    width: 40px;
-    height: 40px;
-    position: absolute;
-    top: 33%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 3;
-  }
-  .sk-circle .sk-child {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-  }
-  .sk-circle .sk-child:before {
-    content: '';
-    display: block;
-    margin: 0 auto;
-    width: 15%;
-    height: 15%;
-    background-color: #333;
-    border-radius: 100%;
-    -webkit-animation: sk-circleBounceDelay 1.2s infinite ease-in-out both;
-    animation: sk-circleBounceDelay 1.2s infinite ease-in-out both;
-  }
-  .sk-circle .sk-circle2 {
-    -webkit-transform: rotate(30deg);
-    -ms-transform: rotate(30deg);
-    transform: rotate(30deg); }
-  .sk-circle .sk-circle3 {
-    -webkit-transform: rotate(60deg);
-    -ms-transform: rotate(60deg);
-    transform: rotate(60deg); }
-  .sk-circle .sk-circle4 {
-    -webkit-transform: rotate(90deg);
-    -ms-transform: rotate(90deg);
-    transform: rotate(90deg); }
-  .sk-circle .sk-circle5 {
-    -webkit-transform: rotate(120deg);
-    -ms-transform: rotate(120deg);
-    transform: rotate(120deg); }
-  .sk-circle .sk-circle6 {
-    -webkit-transform: rotate(150deg);
-    -ms-transform: rotate(150deg);
-    transform: rotate(150deg); }
-  .sk-circle .sk-circle7 {
-    -webkit-transform: rotate(180deg);
-    -ms-transform: rotate(180deg);
-    transform: rotate(180deg); }
-  .sk-circle .sk-circle8 {
-    -webkit-transform: rotate(210deg);
-    -ms-transform: rotate(210deg);
-    transform: rotate(210deg); }
-  .sk-circle .sk-circle9 {
-    -webkit-transform: rotate(240deg);
-    -ms-transform: rotate(240deg);
-    transform: rotate(240deg); }
-  .sk-circle .sk-circle10 {
-    -webkit-transform: rotate(270deg);
-    -ms-transform: rotate(270deg);
-    transform: rotate(270deg); }
-  .sk-circle .sk-circle11 {
-    -webkit-transform: rotate(300deg);
-    -ms-transform: rotate(300deg);
-    transform: rotate(300deg); }
-  .sk-circle .sk-circle12 {
-    -webkit-transform: rotate(330deg);
-    -ms-transform: rotate(330deg);
-    transform: rotate(330deg); }
-  .sk-circle .sk-circle2:before {
-    -webkit-animation-delay: -1.1s;
-    animation-delay: -1.1s; }
-  .sk-circle .sk-circle3:before {
-    -webkit-animation-delay: -1s;
-    animation-delay: -1s; }
-  .sk-circle .sk-circle4:before {
-    -webkit-animation-delay: -0.9s;
-    animation-delay: -0.9s; }
-  .sk-circle .sk-circle5:before {
-    -webkit-animation-delay: -0.8s;
-    animation-delay: -0.8s; }
-  .sk-circle .sk-circle6:before {
-    -webkit-animation-delay: -0.7s;
-    animation-delay: -0.7s; }
-  .sk-circle .sk-circle7:before {
-    -webkit-animation-delay: -0.6s;
-    animation-delay: -0.6s; }
-  .sk-circle .sk-circle8:before {
-    -webkit-animation-delay: -0.5s;
-    animation-delay: -0.5s; }
-  .sk-circle .sk-circle9:before {
-    -webkit-animation-delay: -0.4s;
-    animation-delay: -0.4s; }
-  .sk-circle .sk-circle10:before {
-    -webkit-animation-delay: -0.3s;
-    animation-delay: -0.3s; }
-  .sk-circle .sk-circle11:before {
-    -webkit-animation-delay: -0.2s;
-    animation-delay: -0.2s; }
-  .sk-circle .sk-circle12:before {
-    -webkit-animation-delay: -0.1s;
-    animation-delay: -0.1s; }
-
-  @-webkit-keyframes sk-circleBounceDelay {
-    0%, 80%, 100% {
-      -webkit-transform: scale(0);
-      transform: scale(0);
-    } 40% {
+    @-webkit-keyframes sk-circleBounceDelay {
+      0%, 80%, 100% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+      }
+      40% {
         -webkit-transform: scale(1);
         transform: scale(1);
       }
-  }
+    }
 
-  @keyframes sk-circleBounceDelay {
-    0%, 80%, 100% {
-      -webkit-transform: scale(0);
-      transform: scale(0);
-    } 40% {
+    @keyframes sk-circleBounceDelay {
+      0%, 80%, 100% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+      }
+      40% {
         -webkit-transform: scale(1);
         transform: scale(1);
       }
+    }
   }
 }
 

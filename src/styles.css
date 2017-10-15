@@ -1,1 +1,29 @@
-/* You can add global styles to this file, and also import other style files */
+.arrow-right, .arrow-left{
+  width: 0;
+  height: 0;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+}
+
+.arrow-right:hover, .arrow-left:hover{
+  opacity: 0.9;
+}
+
+.arrow-right:active{
+  border-left-color: #767676;
+}
+
+.arrow-left:active{
+  border-right-color: #767676;
+
+}
+
+.arrow-right{
+  border-left: 30px solid #B7B7B7;
+
+}
+
+.arrow-left {
+  border-right: 30px solid #B7B7B7;
+
+}

@@ -1,6 +1,7 @@
 <div class="time-slot-wrapper"
      [ngClass]="[timeSlotData.dynamicDefaultView.timeSlotClass, timeSlotData.classToAdd ? timeSlotData.classToAdd : '']">
 
+  {{timeSlotData.data}}
   <div *ngIf="timeSlotData.view" [@flyInOut]="'in'">
     <div [ngSwitch]="timeSlotData.view">
 
