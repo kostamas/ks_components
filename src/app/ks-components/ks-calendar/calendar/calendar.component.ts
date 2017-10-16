@@ -3,7 +3,6 @@ import {TimeSlotConstant} from '../constants/timeSlot.constant';
 import {CalendarConstant} from '../constants/calendar.constant';
 import {CalendarService} from '../services/calendarservice';
 import {DatePipe} from '@angular/common';
-import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-calendar',
@@ -32,24 +31,26 @@ export class CalendarComponent implements OnChanges, OnInit {
     week_slide_2: {left: '900px', transition: '1sec'}
   };
 
-  public current_week_slide = 2;
+  public current_week_slide = 1;
   public startHour = 9;
-  public currentDate = new Date();
+  public currentDate;
 
   constructor(private calendarService: CalendarService) {
   }
 
   ngOnInit() {
-    // this.initCalendar(this.activeWeek);
-
-
-    let i, hour = 0;
-    for (i = 0; i < CalendarConstant.HOURS_IN_DAYS; i++) {
+    for (let i = 0, hour = 0; i < CalendarConstant.HOURS_IN_DAYS; i++) {
       hour = (i + this.startHour) % CalendarConstant.HOURS_IN_DAYS;
       this.hours.push(hour);
     }
 
-    this.timeSlotData = {2017: {10: {10: {9: {dynamicDefaultView: {timeSlotClass: 'sd'}}}}}};
+    this.headerDates = [];
+    for (let i = 0; i < CalendarConstant.DAYS_IN_WEEK; i++) {
+      this.headerDates.push({[i]:''});
+    }
+
+    this.currentDate = new Date();
+    this.updateHeaderDates(this.currentDate);
     this.initCalendar();
   }
 
@@ -130,38 +131,20 @@ export class CalendarComponent implements OnChanges, OnInit {
     return !datesToIgnore || datesToIgnore.indexOf(slotDate) === -1;
   }
 
-  // initialize header dates, side hours and the timeSlotData
-  // private initCalendar(weekNum) {
-  //   let i, year, month, dayInMonth, hour = 0;
-  //   const runningDate = new Date();
-  //   const currentDay = runningDate.getDay();
-  //   runningDate.setDate(runningDate.getDate() - currentDay + (weekNum * 7));
-  //   if (!this.headerDates[String(weekNum)]) {
-  //     this.headerDates[String(weekNum)] = [];
-  //   }
-  //
-  //   for (i = 0; i < CalendarConstant.DAYS_IN_WEEK; i++) {
-  //     year = runningDate.getFullYear();
-  //     month = runningDate.getMonth();
-  //     dayInMonth = runningDate.getDate();
-  //
-  //     this.headerDates[String(weekNum)].push(new Date(runningDate.getTime()));
-  //     this.initTimeSlotData(year, month, dayInMonth);
-  //
-  //     runningDate.setDate(runningDate.getDate() + 1);
-  //     hour = 0;
-  //   }
-  //
-  //   if (this.hours && this.hours.length === 0) {
-  //     for (i = 0; i < CalendarConstant.HOURS_IN_DAYS; i++) {
-  //       hour = (i + this.startHour) % CalendarConstant.HOURS_IN_DAYS;
-  //       this.hours.push(hour);
-  //     }
-  //   }
-  // }
+  private updateHeaderDates(dateObj) {
+    const runningDate = new Date(dateObj);
+    const currentDay = runningDate.getDay();
+    runningDate.setDate(runningDate.getDate() - currentDay); // get this week sunday
+
+
+    for (let i = 0; i < CalendarConstant.DAYS_IN_WEEK; i++) {
+      this.headerDates[i] = new Date(runningDate.getTime());
+      runningDate.setDate(runningDate.getDate() + 1);
+    }
+  }
 
   private initCalendar() {
-
+    this.timeSlotData = {2017: {10: {10: {9: {dynamicDefaultView: {timeSlotClass: 'sd'}}}}}};
   }
 
   private updateTimeSlots(year, month, dayInMonth) {
@@ -185,13 +168,11 @@ export class CalendarComponent implements OnChanges, OnInit {
     }
   }
 
-  private updateHeadersDays(date: Date) {
-
-  }
-
   public changeActiveWeek(weekDirection) {
-    let newActiveWeek = (this.current_week_slide + weekDirection) % this.calendarWeeks.length;
+    let newActiveWeek = (this.current_week_slide - weekDirection) % this.calendarWeeks.length;
     this.current_week_slide = newActiveWeek < 0 ? this.calendarWeeks.length - 1 : newActiveWeek;
+    this.currentDate.setDate(this.currentDate.getDate() - weekDirection * 7);
+    this.updateHeaderDates(this.currentDate);
 
     let left_style_pixels: any = '';
     Object.keys(this.weeksStyles).forEach((week_slide: string) => {

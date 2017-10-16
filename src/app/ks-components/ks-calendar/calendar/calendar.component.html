@@ -8,7 +8,6 @@
       <div class="arrow-left"></div>
     </div>
   </div>
-
   <div class="calendar-wrapper" [ngClass]="{'show-spinner': showSpinner}">
 
     <div class="sk-circle">
@@ -27,13 +26,13 @@
     </div>
 
     <!--<div class="buttons-and-filters-wrapper">-->
-      <!--<div class="btn-type-3 calendar_cancel-btn" *ngIf="showCancelButton" (click)="cancleButtonClickHandler()"-->
-           <!--[translate]="'CALENDAR_MODULE.CALENDAR_COMPONENT.CANCEL'"></div>-->
+    <!--<div class="btn-type-3 calendar_cancel-btn" *ngIf="showCancelButton" (click)="cancleButtonClickHandler()"-->
+    <!--[translate]="'CALENDAR_MODULE.CALENDAR_COMPONENT.CANCEL'"></div>-->
     <!--</div>-->
 
     <div class="calendar-header ">
-      <div class="calendar-header-column quicksand-14-b" *ngFor="let headerDate of headerDates[activeWeek]">{{headerDate
-        | date:'EEE d' }}
+      <div class="calendar-header-column quicksand-14-b" *ngFor="let headerDate of headerDates; let i = index;">
+        {{headerDates[i] | date:'EEE d' }}
       </div>
     </div>
 
