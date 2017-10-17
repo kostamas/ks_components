@@ -1,4 +1,6 @@
 <div class="calendar-component">
+  <span class="current-date-title">{{currentDate | date:'yyyy MM'}}</span>
+
   <div class="change-week">
     change week
     <div style="cursor: pointer;" (click)="changeActiveWeek(-1)">
@@ -61,7 +63,7 @@
                 <app-time-slot
                   (availableSlotEvent)="availableSlotEventHandler($event)"
                   (initialScheduleLessonRemovedEvent)="initialScheduleLessonRemovedEvent($event)"
-                  [timeSlotData]="timeSlotData[2017][10][10][9]">
+                  [timeSlotData]="timeSlotData[weekName][column][row]">
                 </app-time-slot>
               </div>
             </div>

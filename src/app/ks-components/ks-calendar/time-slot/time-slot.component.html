@@ -4,7 +4,6 @@
   {{timeSlotData.data}}
   <div *ngIf="timeSlotData.view" [@flyInOut]="'in'">
     <div [ngSwitch]="timeSlotData.view">
-
       <div *ngSwitchCase="TIME_SLOT_VIEWS.INITIAL_SCHEDULING_LESSON_VIEW"
            [ngClass]="topicMap[timeSlotData.data.topic]"
            class="initial-schedule-lesson-item-wrapper">

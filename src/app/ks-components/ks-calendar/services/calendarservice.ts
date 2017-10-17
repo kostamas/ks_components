@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {SchedulingMockData} from '../../../adapters/calendar-adapter/schedulingMockData';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
 
@@ -11,23 +10,9 @@ export class CalendarService {
   constructor() {
   }
 
-  public getLessons(): Observable<any[]> {
-    return Observable.of(new SchedulingMockData().mockLessons)  // todo - remove the mock data
-      .delay(1000);
-  }
 
   public getAvailability(): Observable<any> {
-    return Observable.of(SchedulingMockData.availability) // todo - remove the mock data
-      .delay(1000);
-  }
-
-  public getPlan(): Observable<any> {
-    // todo - change the initial scheduling to the current week (change the year, month, date - day in month and keep only the day and hour)
-    // todo - another alternative - save only the day and hour and support this structure in backend.
-    if (!this.plan) {
-      this.plan = SchedulingMockData.mockPlan; // todo - remove the mock data
-    }
-    return Observable.of(this.plan)
+    return Observable.of()
       .delay(1000);
   }
 
@@ -39,7 +24,6 @@ export class CalendarService {
   }
 
   public isCalendarContainDate(obj, date) {
-    // todo - use user's timezone;
     const year = new Date(date).getFullYear();
     const month = new Date(date).getMonth();
     const dayInMonth = new Date(date).getDate();

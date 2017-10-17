@@ -7,10 +7,20 @@ $calendar-width: 900px;
   display: flex;
   margin: 100px auto 100px auto;
   position: relative;
+  padding-top: 60px;
+
+  .current-date-title{
+    @include text-style(27px, $kimberlyDark, Lato, $normalFontWeight);
+    position: absolute;
+    transform: translateX(-50%);
+    left: 50%;
+    top: 0;
+  }
 
   .change-week {
     @include text-style(23px, $kimberlyDark, Lato, $normalFontWeight);
     margin-right: 30px;
+    position: relative;
     .arrow-right, .arrow-left {
       cursor: pointer;
       position: absolute;
