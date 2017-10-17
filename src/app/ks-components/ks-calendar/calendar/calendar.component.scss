@@ -38,6 +38,7 @@ $calendar-width: 900px;
     position: relative; // todo - for test (schedule, reset buttons)
     width: $calendar-width;
     height: 578px;
+    overflow: hidden;
 
     .buttons-and-filters-wrapper {
       height: 50px;
