@@ -54,16 +54,8 @@
 
             <div *ngFor="let b  of calendarColumns; let column = index;">
               <div *ngFor="let a of calendarRows; let row = index;">
-                <!--<app-time-slot-->
-                <!--(availableSlotEvent)="availableSlotEventHandler($event)"-->
-                <!--(initialScheduleLessonRemovedEvent)="initialScheduleLessonRemovedEvent($event)"-->
-                <!--[timeSlotData]="timeSlotData[headerDate.getFullYear()][headerDate.getMonth()][headerDate.getDate()][hour]">-->
-                <!--</app-time-slot>-->
-
                 <app-time-slot
-                  (availableSlotEvent)="availableSlotEventHandler($event)"
-                  (initialScheduleLessonRemovedEvent)="initialScheduleLessonRemovedEvent($event)"
-                  [timeSlotData]="timeSlotData[weekName][column][row]">
+                  [timeSlotData]="timeSlotData[weekName][column][hours[row]]">
                 </app-time-slot>
               </div>
             </div>

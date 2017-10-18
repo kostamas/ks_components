@@ -143,7 +143,7 @@ export class CalendarComponent implements OnChanges, OnInit {
 
     for (let i = 0; i < CalendarConstant.DAYS_IN_WEEK; i++) {
       this.headerDates[i] = new Date(runningDate.getTime());
-      runningDate.setDate(runningDate.getDate() + 1 * weekDirection);
+      runningDate.setDate(runningDate.getDate() - 1 * weekDirection);
     }
   }
 
@@ -165,11 +165,11 @@ export class CalendarComponent implements OnChanges, OnInit {
       left_style_pixels = +left_style_pixels.replace('px', '');
 
       if (left_style_pixels + weekDirection * 900 > (this.calendarWeeks.length - 2) * 900) {
+        this.weeksStyles[week_slide].transition = 'none';
         this.weeksStyles[week_slide].left = '-900px';
-        this.weeksStyles[week_slide].transition = 'none';
       } else if (left_style_pixels + weekDirection * 900 < -900) {
-        this.weeksStyles[week_slide].left = (this.calendarWeeks.length - 2) * 900 + 'px';
         this.weeksStyles[week_slide].transition = 'none';
+        this.weeksStyles[week_slide].left = (this.calendarWeeks.length - 2) * 900 + 'px';
       } else {
         this.weeksStyles[week_slide].transition = '0.7s';
         this.weeksStyles[week_slide].left = weekDirection * 900 + left_style_pixels + 'px';
