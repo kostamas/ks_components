@@ -1,45 +1,26 @@
 <div class="time-slot-wrapper"
      [ngClass]="[timeSlotData.dynamicDefaultView.timeSlotClass, timeSlotData.classToAdd ? timeSlotData.classToAdd : '']">
 
-  {{timeSlotData.data}}
 
-  <div *ngIf="timeSlotData.view" [@flyInOut]="'in'">
-    <div [ngSwitch]="timeSlotData.view">
-      <div *ngSwitchCase="TIME_SLOT_VIEWS.INITIAL_SCHEDULING_LESSON_VIEW"
-           [ngClass]="topicMap[timeSlotData.data.topic]"
-           class="initial-schedule-lesson-item-wrapper">
-        <!--todo - use svg icon-->
-        <div class="remove-lesson-icon" (click)="removeInitialScheduleLesson()">x</div>
-        <div class="future-text lato-12-n"
-             *ngIf="timeSlotData.data.futureText && timeSlotData.data.futureText.length > 0">
-          {{timeSlotData.data.futureText}}
-        </div>
-        <!--todo-use svg-icon-->
-        <div class="service-icon"></div>
+  <!--<div style="font-size: 12px;">{{timeSlotData.date || ' '}}</div>-->
+  <!--<div style="font-size: 14px;">{{timeSlotData.hour || ' '}}</div>-->
 
-        <div class="lesson-details">
-          <div class="lato-13-n">{{timeSlotData.data.date | date:'jm'}}</div>
-        </div>
-      </div>
+  <div *ngIf="timeSlotData.metaData.view" [@flyInOut]="'in'">
+    <div [ngSwitch]="timeSlotData.metaData.view">
 
-      <div *ngSwitchCase="TIME_SLOT_VIEWS.LESSON_VIEW"
-           [ngClass]="topicMap[timeSlotData.data.topic]"
-           class="lesson-item-wrapper">
-        <!--todo-use svg-icon-->
-        <div class="service-icon"></div>
-
-        <div class="lesson-details">
-          <div class="lato-13-n">{{timeSlotData.data.date | date:'jm'}}</div>
-          <div class="lato-13-n educator-name"> {{timeSlotData.data.educatorName}}</div>
-        </div>
-      </div>
 
       <div *ngSwitchCase="TIME_SLOT_VIEWS.AVAILABLE_TIME_SLOT_VIEW"
            class="available-time-slot-wrapper"
            (click)="availableSlotClick()">
+        {{timeSlotData.date}}
+      </div>
+
+      <div *ngSwitchCase="TIME_SLOT_VIEWS.SCHEDULE">
+        {{timeSlotData.data}}
       </div>
 
     </div>
   </div>
 </div>
+
 

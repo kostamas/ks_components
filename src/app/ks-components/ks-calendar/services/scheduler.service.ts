@@ -4,31 +4,25 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
 
 @Injectable()
-export class CalendarService {
+export class SchedulerService {
   private plan;
 
   constructor() {
   }
 
-
-  public getAvailability(): Observable<any> {
-    return Observable.of()
-      .delay(1000);
-  }
-
-  public isCalendarContainDateParams(obj, year, month, dayInMonth, hour) {
+  public isDateExistByParams(obj, year, month, dayInMonth, hour) {
     return (obj[year]
       && obj[year][month]
       && obj[year][month][dayInMonth]
       && obj[year][month][dayInMonth][hour]);
   }
 
-  public isCalendarContainDate(obj, date) {
+  public isDateExistByDate(obj, date) {
     const year = new Date(date).getFullYear();
     const month = new Date(date).getMonth();
     const dayInMonth = new Date(date).getDate();
     const hour = new Date(date).getHours();
-    return this.isCalendarContainDateParams(obj, year, month, dayInMonth, hour);
+    return this.isDateExistByParams(obj, year, month, dayInMonth, hour);
   }
 
   public convertToUTCMilisec(year, month, dayInMonth, hour) {

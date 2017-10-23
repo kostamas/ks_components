@@ -1,7 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {TimeSlotComponent} from './time-slot.component';
-import {SchedulingService} from '../services/calendarservice';
+import {SchedulingService} from '../services/scheduler.service';
 import {InitialSchedulePaneComponent} from '../initial-schedule-pane/initial-schedule-pane.component';
 import {KeysPipe} from '../../pipes/keys';
 import {CalendarHoursPipe} from '../pipes/calendarHoursPipe.pipe';
@@ -12,7 +12,7 @@ import {CommonModule} from '@angular/common';
 import {SchedulingRoutingModule} from '../scheduling.route';
 import {TranslateModule} from '@ngx-translate/core';
 import {TimeSlotConstant} from '../constants/timeSlot.constant';
-import {CalendarConstant} from '../constants/calendar.constant';
+import {CalendarConstant} from '../constants/scheduler.constant';
 
 describe('TimeSlotComponent', () => {
   let component: TimeSlotComponent;

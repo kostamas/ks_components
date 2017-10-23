@@ -1,1 +1,14 @@
-<app-calendar></app-calendar>
+<div class="scheduler-adapter-container">
+
+  <div class="items-to-schedule">
+    <div class="items-to-schedule-title">Items To Schedule</div>
+
+    <div class="scroll-container scrollbar-style">
+      <div *ngFor="let item of itemsToSchedule">
+        <div class="item-to-schedule" (click)="onItemClick(item)">{{item.text}}</div>
+      </div>
+    </div>
+
+  </div>
+  <app-calendar [schedulerConfig]="schedulerConfig"></app-calendar>
+</div>

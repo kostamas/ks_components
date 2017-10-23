@@ -1,0 +1,63 @@
+@import '../../../assets/scss/main';
+@import '../../../assets/scss/mixins';
+
+.scheduler-adapter-container {
+  margin: 50px;
+  display: flex;
+  width: 1700px;
+
+  .items-to-schedule {
+    width: 320px;
+    height: 453px;
+    border: 1px solid $manatee;
+    margin-top: 115px;
+    margin-right: 150px;
+    background-color: $white;
+
+    .items-to-schedule-title {
+      @include text-style(21px, $white, Lato);
+      background-color: $ABC;
+      height: 35px;
+      text-align: center;
+      padding-top: 8px;
+    }
+
+    .scroll-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      overflow-y: auto;
+      height: 410px;
+      padding-bottom: 10px;
+      background-color: #b3c7fb;
+      box-sizing: border-box;
+
+      .item-to-schedule {
+        @include text-style(21px, $ABC, Lato);
+        width: 130px;
+        height: 60px;
+        margin: 30px 0;
+        background-color: $white;
+        color: $ABC;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
+        cursor: pointer;
+        transition: 0.3s;
+
+        &:hover {
+          background-color: $silver;
+        }
+
+        &:active{
+          opacity: 0.4;
+        }
+      }
+    }
+  }
+
+  .calendar-component {
+    position: relative;
+  }
+}

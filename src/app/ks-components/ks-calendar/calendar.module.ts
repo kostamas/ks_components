@@ -3,11 +3,13 @@ import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {CalendarComponent} from './calendar/calendar.component';
 import {TimeSlotComponent} from './time-slot/time-slot.component';
-import {CalendarService} from './services/calendarservice';
+import {SchedulerService} from './services/scheduler.service';
 import {TimeSlotConstant} from './constants/timeSlot.constant';
-import {CalendarConstant} from './constants/calendar.constant';
+import {SchedulerConstant} from './constants/scheduler.constant';
 import {CalendarHoursPipe} from './pipes/calendarHoursPipe.pipe';
 import {KeysPipe} from '../../../pipes/keys';
+import {SchedulerSpinnerComponent} from './schedularSppiner/scheduler-spinner.component';
+import {SchedulerStoreService} from './services/scheduler-store.service';
 
 @NgModule({
   imports: [
@@ -18,7 +20,8 @@ import {KeysPipe} from '../../../pipes/keys';
     CalendarComponent,
     TimeSlotComponent,
     CalendarHoursPipe,
-    KeysPipe
+    KeysPipe,
+    SchedulerSpinnerComponent
   ],
   exports: [
     TranslateModule,
@@ -26,8 +29,9 @@ import {KeysPipe} from '../../../pipes/keys';
   ],
   providers: [
     TimeSlotConstant,
-    CalendarService,
-    CalendarConstant
+    SchedulerService,
+    SchedulerConstant,
+    SchedulerStoreService
   ]
 })
 export class CalendarModule {

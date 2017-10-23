@@ -1,12 +1,13 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {trigger, state, style, animate, transition} from '@angular/animations';
 import {TimeSlotConstant} from '../constants/timeSlot.constant';
+import {SchedulerService} from '../services/scheduler.service';
 
 @Component({
   selector: 'app-time-slot',
   templateUrl: './time-slot.component.html',
   styleUrls: ['./time-slot.component.scss'],
-  animations: [                         // todo - make as shared animation
+  animations: [
     trigger('flyInOut', [
       state('in', style({opacity: '1'})),
       transition('void => *', [
@@ -19,29 +20,15 @@ import {TimeSlotConstant} from '../constants/timeSlot.constant';
     ])
   ]
 })
-export class TimeSlotComponent  {
-  public TIME_SLOT_VIEWS;
-  public topicMap;
+export class TimeSlotComponent {
 
   @Input() timeSlotData: any;
-
-  @Output() availableSlotEvent: EventEmitter<number> = new EventEmitter<number>();
-  @Output() initialScheduleLessonRemovedEvent: EventEmitter<number> = new EventEmitter<number>();
+  public TIME_SLOT_VIEWS = TimeSlotConstant.TIME_SLOT_VIEWS;
 
   constructor() {
-    this.TIME_SLOT_VIEWS = TimeSlotConstant.TIME_SLOT_VIEWS;
-    this.topicMap = { // todo - need to come from enum or something like that
-      1: 'math',
-      2: 'english'
-    };
   }
 
+  public availableSlotClick(){
 
-  public availableSlotClick() {
-    this.availableSlotEvent.emit(this.timeSlotData.data);
-  }
-
-  public removeInitialScheduleLesson() {
-    this.initialScheduleLessonRemovedEvent.emit(this.timeSlotData.data);
   }
 }
