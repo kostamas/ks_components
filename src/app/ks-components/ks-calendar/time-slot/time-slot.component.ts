@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {trigger, state, style, animate, transition} from '@angular/animations';
 import {TimeSlotConstant} from '../constants/timeSlot.constant';
 import {SchedulerService} from '../services/scheduler.service';
@@ -21,12 +21,18 @@ import {SchedulerStoreService, TIME_SLOT_STORE_TYPE} from "../services/scheduler
     ])
   ]
 })
-export class TimeSlotComponent {
+export class TimeSlotComponent implements OnChanges{
 
   @Input() timeSlotData: any;
   public TIME_SLOT_VIEWS = TimeSlotConstant.TIME_SLOT_VIEWS;
 
   constructor(private schedulerStoreService: SchedulerStoreService) {
+  }
+
+  ngOnChanges(changes: any) {
+    if(!changes.timeSlotData || !changes.timeSlotData.currentValue || !changes.timeSlotData.currentValue.dynamicDefaultView){
+      debugger;
+    }
   }
 
   public availableSlotClick() {

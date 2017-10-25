@@ -61,27 +61,30 @@ export class CalendarAdapterComponent implements OnInit {
       .delay(1000);
   }
 
-  private schedule({timeSlotType, date, data}): Observable<any> {
+  private schedule = ({timeSlotType, date, data}): Observable<any> => {
+    let selectedItemIndex = this.selectedItemIndex;
+    let selectedItem = this.itemsToSchedule[selectedItemIndex];
+    this.itemsToSchedule.splice(selectedItemIndex, 1);
+
     this.selectedItemIndex = -1;
     const year = date.getFullYear();
     const month = date.getMonth();
     const dayInMonth = date.getDate();
     const hour = date.getHours();
 
-    if(!SchedulingMockData.schedules[year][month]){
+    if (!SchedulingMockData.schedules[year][month]) {
       SchedulingMockData.schedules[year][month] = {};
     }
 
-    if(!SchedulingMockData.schedules[year][month][dayInMonth]){
+    if (!SchedulingMockData.schedules[year][month][dayInMonth]) {
       SchedulingMockData.schedules[year][month][dayInMonth] = {};
-      for(let i = 0 ; i < 24; i++){
+      for (let i = 0; i < 24; i++) {
         SchedulingMockData.schedules[year][month][dayInMonth][i] = {};
       }
     }
 
-    SchedulingMockData.schedules[year][month][dayInMonth][hour] = data;
-    return Observable.of({})
-      .delay(1000);
+    SchedulingMockData.schedules[year][month][dayInMonth][hour].data = selectedItem.text;
+    return Observable.of({});
   }
 
   private showSchedules() {

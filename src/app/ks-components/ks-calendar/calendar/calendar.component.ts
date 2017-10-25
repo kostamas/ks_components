@@ -235,7 +235,7 @@ export class CalendarComponent implements OnChanges, OnInit {
     this.showSpinner = true;
     this.currentOperationId = OperationTypes.SCHEDULES;
     this.dynamicDefaultView.timeSlotClass = this.dynamicDefaultViewsMap[TimeSlotConstant.DYNAMIC_DEFAULT_VIEWS.EMPTY];
-    debugger;
+
     this.schedulerConfig.getSchedules().subscribe((schedules) => {
       this.updateTimeSlotsWithData(schedules, OperationTypes.SCHEDULES);
       this.showSpinner = false;
@@ -247,7 +247,7 @@ export class CalendarComponent implements OnChanges, OnInit {
     runningDate.setDate(runningDate.getDate() - runningDate.getDay());
     let year, month, dayInMonth;
     let timeSlotData;
-    debugger;
+
     for (let i = 0; i < SchedulerConstant.DAYS_IN_WEEK; i++) {
       year = runningDate.getFullYear();
       month = runningDate.getMonth();
@@ -266,7 +266,6 @@ export class CalendarComponent implements OnChanges, OnInit {
         this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i][hour].metaData.date = new Date(year, month, dayInMonth, +hour);
         this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i][hour].dynamicDefaultView = this.dynamicDefaultView;
       });
-
       this.showSpinner = false;
     }
   };
