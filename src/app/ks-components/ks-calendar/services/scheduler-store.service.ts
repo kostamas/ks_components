@@ -7,25 +7,25 @@ import {Observable} from "rxjs/Observable";
 @Injectable()
 export class SchedulerStoreService {
   private availability$ = new Subject<number>();
-  private schedule$ = new Subject<number>();
+  private schedules$ = new Subject<number>();
 
   constructor() {
   }
 
-  public notifyAvailability(availability: number) {
-    this.availability$.next(availability);
+  public notifyAvailability(storeType: number) {
+    this.availability$.next(storeType);
   }
 
   public onAvailability(cb) {
     return this.availability$.subscribe(cb);
   }
 
-  public schedule(item: IScheduleItem) {
-    return this.schedule$.next();
+  public notifySchedules(storeType) {
+    return this.schedules$.next(storeType);
   }
 
-  public onSchdeule(cb) {
-    return this.schedule$.subscribe(cb);
+  public onSchedules(cb) {
+    return this.schedules$.subscribe(cb);
   }
 }
 
@@ -45,7 +45,7 @@ export interface ISchedulerConfig {
 
 /*************************************** constants *******************************/
 
-export const AVAILABILITY_STORE_TYPE = {
+export const SCHEDULER_STORE_TYPE = {
   GET: 1,
   SET: 2
 };

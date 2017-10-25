@@ -2,56 +2,87 @@
 @import '../../../assets/scss/mixins';
 
 .scheduler-adapter-container {
-  margin: 50px;
   display: flex;
+  margin: 50px;
   width: 1700px;
 
-  .items-to-schedule {
-    width: 320px;
-    height: 453px;
-    border: 1px solid $manatee;
-    margin-top: 115px;
-    margin-right: 150px;
-    background-color: $white;
+  .scheduler-operation-pan {
+    padding-top: 50px;
 
-    .items-to-schedule-title {
-      @include text-style(21px, $white, Lato);
-      background-color: $ABC;
-      height: 35px;
-      text-align: center;
-      padding-top: 8px;
+    display: flex;
+    flex-direction: column;
+
+    .show-schedules-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 200px;
+      height: 40px;
+      background-color: $blueChill;
+      border: 1px solid $nobel;
+      color: $white;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.5s;
+
+      &:hover {
+        background-color: $blueLagoon;
+      }
+
+      &:active {
+        opacity: 0.7;
+      }
     }
 
-    .scroll-container {
+    .items-to-schedule {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-      overflow-y: auto;
-      height: 410px;
-      padding-bottom: 10px;
-      background-color: #b3c7fb;
-      box-sizing: border-box;
+      flex-direction: column;
+      width: 320px;
+      height: 453px;
+      border: 1px solid $manatee;
+      margin-top: 25px;
+      margin-right: 150px;
+      background-color: $white;
 
-      .item-to-schedule {
-        @include text-style(21px, $ABC, Lato);
-        width: 130px;
-        height: 60px;
-        margin: 30px 0;
-        background-color: $white;
-        color: $ABC;
+      .items-to-schedule-title {
+        @include text-style(21px, $white, Lato);
+        background-color: $ABC;
+        height: 35px;
+        text-align: center;
+        padding-top: 8px;
+      }
+
+      .scroll-container {
         display: flex;
-        justify-content: center;
-        align-items: center;
-        box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
-        cursor: pointer;
-        transition: 0.3s;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        overflow-y: auto;
+        height: 410px;
+        padding-bottom: 10px;
+        background-color: #b3c7fb;
+        box-sizing: border-box;
 
-        &:hover {
-          background-color: $silver;
-        }
+        .item-to-schedule {
+          @include text-style(21px, $ABC, Lato);
+          width: 130px;
+          height: 60px;
+          margin: 30px 0;
+          background-color: $white;
+          color: $ABC;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
+          cursor: pointer;
+          transition: 0.5s;
 
-        &:active{
-          opacity: 0.4;
+          &:hover {
+            background-color: $silver;
+          }
+
+          &:active {
+            opacity: 0.4;
+          }
         }
       }
     }

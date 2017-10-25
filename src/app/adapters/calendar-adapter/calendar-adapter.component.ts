@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {
-  AVAILABILITY_STORE_TYPE,
+  SCHEDULER_STORE_TYPE,
   SchedulerStoreService,
   ISchedulerConfig
 } from "../../ks-components/ks-calendar/services/scheduler-store.service";
@@ -38,7 +38,7 @@ export class CalendarAdapterComponent implements OnInit {
   }
 
   public onItemClick(item) {
-    this.schedulerStoreService.notifyAvailability(AVAILABILITY_STORE_TYPE.GET);
+    this.schedulerStoreService.notifyAvailability(SCHEDULER_STORE_TYPE.GET);
     this.schedulerStoreService.onAvailability((availability: number) => {
       // if (availability === AVAILABILITY_STORE_TYPE.SET) {
       // }
@@ -50,8 +50,13 @@ export class CalendarAdapterComponent implements OnInit {
       .delay(1000);
   }
 
+
   private getSchedules(): Observable<any> {
     return Observable.of(SchedulingMockData.schedules)
       .delay(1000);
+  }
+
+  private showSchedules() {
+    this.schedulerStoreService.notifySchedules(SCHEDULER_STORE_TYPE.GET);
   }
 }

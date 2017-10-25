@@ -8,11 +8,9 @@
   <div *ngIf="timeSlotData.metaData.view" [@flyInOut]="'in'">
     <div [ngSwitch]="timeSlotData.metaData.view">
 
-
       <div *ngSwitchCase="TIME_SLOT_VIEWS.AVAILABLE_TIME_SLOT_VIEW"
            class="available-time-slot-wrapper"
            (click)="availableSlotClick()">
-        {{timeSlotData.date}}
       </div>
 
       <div *ngSwitchCase="TIME_SLOT_VIEWS.SCHEDULE">

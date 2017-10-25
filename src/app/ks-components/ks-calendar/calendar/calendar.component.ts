@@ -4,8 +4,7 @@ import {OperationTypes, SchedulerConstant} from '../constants/scheduler.constant
 import {SchedulerService} from '../services/scheduler.service';
 import {DatePipe} from '@angular/common';
 import {SchedulingMockData} from '../../../adapters/calendar-adapter/schedulingMockData';
-import {AVAILABILITY_STORE_TYPE, SchedulerStoreService} from "../services/scheduler-store.service";
-import {Observable} from "rxjs/Observable";
+import {SCHEDULER_STORE_TYPE, SchedulerStoreService} from "../services/scheduler-store.service";
 
 @Component({
   selector: 'app-calendar',
@@ -41,6 +40,7 @@ export class CalendarComponent implements OnChanges, OnInit {
 
   public startHour = 9;
   public currentDate;
+  private currentOperationId = OperationTypes.SCHEDULES;
   @Input() schedulerConfig;
 
   constructor(private schedulerService: SchedulerService, private schedulingMockData: SchedulingMockData,
@@ -69,16 +69,17 @@ export class CalendarComponent implements OnChanges, OnInit {
     let relevantWeek: Date = new Date(this.currentDate);
     relevantWeek.setDate(relevantWeek.getDate() - relevantWeek.getDay());
 
-    this.schedulerConfig.getSchedules().subscribe(() => {
-      this.showSpinner = false;
-    });
 
     this.schedulerConfig.getSchedules().subscribe((schedules) => {
       this.updateTimeSlotsWithData(schedules, OperationTypes.SCHEDULES);
       this.showSpinner = false;
     });
 
-    this.schedulerStoreService.onAvailability(this.availabilityHandler)
+    this.schedulerStoreService.onAvailability(this.availabilityHandler);
+
+    this.schedulerStoreService.onSchedules(this.schedulesHandler);
+
+    this.schedulesHandler();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -88,34 +89,6 @@ export class CalendarComponent implements OnChanges, OnInit {
   public resetCalendar(): void {
     this.updateDynamicDefaultView(this.DYNAMIC_DEFAULT_VIEWS.EMPTY);
     this.clearSlotsByGivenViews([TimeSlotConstant.TIME_SLOT_VIEWS.AVAILABLE_TIME_SLOT_VIEW]);
-  }
-
-  public showAvailableDates(availabilityDates, data): void {
-    const EMPTY_VIEW = TimeSlotConstant.TIME_SLOT_VIEWS.EMPTY;
-    const AVAILABLE_VIEW = TimeSlotConstant.TIME_SLOT_VIEWS.AVAILABLE_TIME_SLOT_VIEW;
-
-    this.schedulerService.runOnDateObject(availabilityDates, (year, month, dayInMonth, hour) => {
-      if (!this.schedulerService.isDateExistByParams(this.timeSlotData, year, month, dayInMonth, hour)) {
-        console.log('ksCalendar:showAvailableDates - trying to show a date outside the ks-calendar');
-        const timeSlotDate = new Date(year, month, dayInMonth, hour);
-        console.log(`Please: Move to the correct week. TimeSlot date: ${timeSlotDate}`);
-        this.showSpinner = false;
-        return;
-      }
-      const currentView = this.timeSlotData[year][month][dayInMonth][hour].view;
-      const canMarkAsAvailable = currentView === EMPTY_VIEW || currentView === AVAILABLE_VIEW;
-      const isSlotAvailable = this.schedulerService.isDateExistByParams(availabilityDates, year, month, dayInMonth, hour);
-
-      if (isSlotAvailable && canMarkAsAvailable) {
-        const date = this.schedulerService.convertToUTCMilisec(year, month, dayInMonth, hour);
-        this.timeSlotData[year][month][dayInMonth][hour].data = {};
-        this.timeSlotData[year][month][dayInMonth][hour].data.date = date;
-        this.timeSlotData[year][month][dayInMonth][hour].view = AVAILABLE_VIEW;
-      }
-      // change the default timeSlot style
-      this.dynamicDefaultView.timeSlotClass = this.dynamicDefaultViewsMap[this.DYNAMIC_DEFAULT_VIEWS.UNAVAILABLE];
-      this.showSpinner = false;
-    });
   }
 
   public clearTimeSlot(date): void {
@@ -202,10 +175,16 @@ export class CalendarComponent implements OnChanges, OnInit {
 
     let relevantWeek: Date = new Date(this.currentDate);
     relevantWeek.setDate(relevantWeek.getDate() - relevantWeek.getDay());
-    this.schedulerConfig.getSchedules().subscribe((schedules) => {
-      this.updateTimeSlotsWithData(schedules, OperationTypes.SCHEDULES)
-      this.showSpinner = false;
-    });
+
+    switch (this.currentOperationId) {
+      case OperationTypes.SCHEDULES:
+        this.schedulesHandler();
+        break;
+
+      case OperationTypes.AVAILABILITY:
+        this.availabilityHandler(SCHEDULER_STORE_TYPE.GET);
+        break;
+    }
   }
 
   public initTimeSlots() {
@@ -229,45 +208,33 @@ export class CalendarComponent implements OnChanges, OnInit {
     Object.keys(this.timeSlotData).forEach((weekSlide) => {
       for (let i = 0; i < SchedulerConstant.DAYS_IN_WEEK; i++) {
         this.timeSlotData[weekSlide][i] = this.emptyDay;
-
       }
     });
   }
 
-  public getDataByDateAndUpdateTimeSlots(startDate: Date) {
-    return this.schedulingMockData.getDataByDate(startDate)  // todo - get from adapter.
-      .map((data) => {
-        let runningDate: Date = new Date(startDate);
-        let year, month, dayInMonth;
-        for (let i = 0; i < SchedulerConstant.DAYS_IN_WEEK; i++) {
-          year = runningDate.getFullYear();
-          month = runningDate.getMonth();
-          dayInMonth = runningDate.getDate();
-          if (data[year] && data[year][month] && data[year][month][dayInMonth]) {
-            this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i] = data[runningDate.getFullYear()][runningDate.getMonth()][runningDate.getDate()];
-          } else {
-            this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i] = this.emptyDay;
-          }
 
-          runningDate.setDate(runningDate.getDate() + 1);
-          Object.keys(this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i]).forEach(day => {
-            this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i][day].dynamicDefaultView = this.dynamicDefaultView;
-          });
-        }
-      });
-  }
-
-  private availabilityHandler = (availability: number) => {
-    this.dynamicDefaultView.timeSlotClass = this.dynamicDefaultViewsMap[TimeSlotConstant.DYNAMIC_DEFAULT_VIEWS.UNAVAILABLE]
-    if (availability === AVAILABILITY_STORE_TYPE.GET) {
-
+  private availabilityHandler = (availabilityStoreType: number) => {
+    this.currentOperationId = OperationTypes.AVAILABILITY;
+    this.dynamicDefaultView.timeSlotClass = this.dynamicDefaultViewsMap[TimeSlotConstant.DYNAMIC_DEFAULT_VIEWS.UNAVAILABLE];
+    if (availabilityStoreType === SCHEDULER_STORE_TYPE.GET) {
       this.schedulerConfig.getAvailability(this.currentDate)
-        .subscribe(this.updateTimeSlotsWithData, OperationTypes.AVAILABILITY);
+        .subscribe(data => {
+          this.updateTimeSlotsWithData(data, OperationTypes.AVAILABILITY);
+        });
     }
+  };
+
+  private schedulesHandler = () => {
+    this.currentOperationId = OperationTypes.SCHEDULES;
+    this.dynamicDefaultView.timeSlotClass = this.dynamicDefaultViewsMap[TimeSlotConstant.DYNAMIC_DEFAULT_VIEWS.EMPTY];
+    this.schedulerConfig.getSchedules().subscribe((schedules) => {
+      this.updateTimeSlotsWithData(schedules, OperationTypes.SCHEDULES);
+    });
   };
 
   private updateTimeSlotsWithData = (data, operationTypes) => {
     let runningDate: Date = new Date(this.currentDate);
+    runningDate.setDate(runningDate.getDate() - runningDate.getDay());
     let year, month, dayInMonth;
     let timeSlotData;
 
@@ -283,17 +250,17 @@ export class CalendarComponent implements OnChanges, OnInit {
 
       runningDate.setDate(runningDate.getDate() + 1);
 
-      Object.keys(this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i]).forEach(day => {
-        timeSlotData = this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i][day];
-        this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i][day].metaData = this.metaDataGetterByTimeSlot(timeSlotData, operationTypes);
-        this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i][day].dynamicDefaultView = this.dynamicDefaultView;
+      Object.keys(this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i]).forEach(hour => {
+        timeSlotData = this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i][hour];
+        this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i][hour].metaData = this.metaDataGetterByTimeSlot(timeSlotData, operationTypes);
+        this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i][hour].dynamicDefaultView = this.dynamicDefaultView;
       });
+
+      this.showSpinner = false;
     }
   };
 
   private metaDataGetterByTimeSlot(timeSlotData, operationType) {
-    if(timeSlotData.data){
-    }
     switch (operationType) {
       case OperationTypes.AVAILABILITY:
         if (timeSlotData.data === true) {
