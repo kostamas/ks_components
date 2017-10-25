@@ -74,7 +74,9 @@
           align-items: center;
           box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
           cursor: pointer;
-          transition: 0.5s;
+          transition: 0.2s;
+          box-sizing: border-box;
+          position: relative;
 
           &:hover {
             background-color: $silver;
@@ -83,6 +85,14 @@
           &:active {
             opacity: 0.4;
           }
+
+          &.selectedItem {
+            transition: 0.1s;
+            border: 3px solid;
+            animation:0.3s mymove ease infinite;
+            box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
+            background-color: $portafino;
+          }
         }
       }
     }
@@ -90,5 +100,26 @@
 
   .calendar-component {
     position: relative;
+  }
+}
+
+@keyframes mymove {
+  0% {
+    transform: rotate(0deg);
+    left:1px;
+  }
+  25% {
+    transform: rotate(4deg);
+    top:1px;
+  }
+  50%{
+    transform: rotate(0deg);
+    top:0;
+    left:-1px;
+  }
+  75%{
+    transform: rotate(-4deg);
+    top:-1px;
+    left:0;
   }
 }

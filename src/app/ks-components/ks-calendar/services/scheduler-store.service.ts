@@ -9,6 +9,8 @@ export class SchedulerStoreService {
   private availability$ = new Subject<number>();
   private schedules$ = new Subject<number>();
 
+  private timeSlot$ = new Subject<any>();
+
   constructor() {
   }
 
@@ -27,19 +29,14 @@ export class SchedulerStoreService {
   public onSchedules(cb) {
     return this.schedules$.subscribe(cb);
   }
-}
 
-/*************************************** interfaces *******************************/
+  public notifyTimeSlot(timeSlotType: number, date: Date, data: any) {
+    this.timeSlot$.next({timeSlotType, date, data});
+  }
 
-export interface IScheduleItem {
-  date: Date;
-  data: any;
-}
-
-export interface ISchedulerConfig {
-  getAvailability: () => Observable<any>;
-  getSchedules: () => Observable<any>;
-
+  public onTimeSlot(cb) {
+    return this.timeSlot$.subscribe(cb);
+  }
 }
 
 
@@ -48,4 +45,9 @@ export interface ISchedulerConfig {
 export const SCHEDULER_STORE_TYPE = {
   GET: 1,
   SET: 2
+};
+
+export const TIME_SLOT_STORE_TYPE = {
+  AVAILABILITY: 1,
+  CUSTOM: 2
 };

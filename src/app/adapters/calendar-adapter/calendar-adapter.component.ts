@@ -1,11 +1,12 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {
   SCHEDULER_STORE_TYPE,
-  SchedulerStoreService,
-  ISchedulerConfig
+  SchedulerStoreService
 } from "../../ks-components/ks-calendar/services/scheduler-store.service";
 import {Observable} from "rxjs/Observable";
 import {SchedulingMockData} from './schedulingMockData';
+import {TimeSlotTypes} from "../../ks-components/ks-calendar/constants/scheduler.constant";
+import {ISchedulerConfig} from '../../ks-components/ks-calendar/calendar/calendar.component';
 
 @Component({
   selector: 'app-calendar-adapter',
@@ -15,17 +16,18 @@ import {SchedulingMockData} from './schedulingMockData';
 })
 export class CalendarAdapterComponent implements OnInit {
   public schedulerConfig: ISchedulerConfig;  // todo - figure how and where to store scheduler types.
+  public selectedItemIndex;
 
   public itemsToSchedule: any[] = [
-    {text: 'eqweqwe', id: 123},
-    {text: 'lorem ipsum', id: 123},
-    {text: 'qweqwe', id: 123},
-    {text: '11111', id: 123},
-    {text: '22222', id: 123},
-    {text: '3333', id: 123},
-    {text: '444', id: 123},
-    {text: '5555', id: 123},
-    {text: '6666', id: 123}];
+    {text: 'Item 1', id: 123, type: TimeSlotTypes.REGULAR},
+    {text: 'Item 2', id: 123, type: TimeSlotTypes.REGULAR},
+    {text: 'Item 3', id: 123, type: TimeSlotTypes.REGULAR, classToAdd: "custom-class-1"},
+    {text: 'Item 4', id: 123, type: TimeSlotTypes.REGULAR},
+    {text: 'Item 5', id: 123, type: TimeSlotTypes.REGULAR},
+    {text: 'Item 6', id: 123, type: TimeSlotTypes.REGULAR, classToAdd: "custom-class-2"},
+    {text: 'Item 7', id: 123, type: TimeSlotTypes.REGULAR},
+    {text: 'Item 8', id: 123, type: TimeSlotTypes.REGULAR},
+    {text: 'Item 9', id: 123, type: TimeSlotTypes.REGULAR}];
 
   constructor(private schedulerStoreService: SchedulerStoreService) {
   }
@@ -33,15 +35,18 @@ export class CalendarAdapterComponent implements OnInit {
   ngOnInit() {
     this.schedulerConfig = {
       getAvailability: this.getAvailability,
-      getSchedules: this.getSchedules
+      getSchedules: this.getSchedules,
+      schedule: this.schedule
     };
   }
 
-  public onItemClick(item) {
+  public onItemClick(itemIndex) {
+    this.selectedItemIndex = -1;
     this.schedulerStoreService.notifyAvailability(SCHEDULER_STORE_TYPE.GET);
     this.schedulerStoreService.onAvailability((availability: number) => {
-      // if (availability === AVAILABILITY_STORE_TYPE.SET) {
-      // }
+      if (availability === SCHEDULER_STORE_TYPE.SET) {
+        this.selectedItemIndex = itemIndex;
+      }
     });
   }
 
@@ -56,7 +61,31 @@ export class CalendarAdapterComponent implements OnInit {
       .delay(1000);
   }
 
+  private schedule({timeSlotType, date, data}): Observable<any> {
+    this.selectedItemIndex = -1;
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const dayInMonth = date.getDate();
+    const hour = date.getHours();
+
+    if(!SchedulingMockData.schedules[year][month]){
+      SchedulingMockData.schedules[year][month] = {};
+    }
+
+    if(!SchedulingMockData.schedules[year][month][dayInMonth]){
+      SchedulingMockData.schedules[year][month][dayInMonth] = {};
+      for(let i = 0 ; i < 24; i++){
+        SchedulingMockData.schedules[year][month][dayInMonth][i] = {};
+      }
+    }
+
+    SchedulingMockData.schedules[year][month][dayInMonth][hour] = data;
+    return Observable.of({})
+      .delay(1000);
+  }
+
   private showSchedules() {
+    this.selectedItemIndex = -1;
     this.schedulerStoreService.notifySchedules(SCHEDULER_STORE_TYPE.GET);
   }
 }

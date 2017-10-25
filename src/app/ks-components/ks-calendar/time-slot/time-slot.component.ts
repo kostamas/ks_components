@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core';
 import {trigger, state, style, animate, transition} from '@angular/animations';
 import {TimeSlotConstant} from '../constants/timeSlot.constant';
 import {SchedulerService} from '../services/scheduler.service';
+import {SchedulerStoreService, TIME_SLOT_STORE_TYPE} from "../services/scheduler-store.service";
 
 @Component({
   selector: 'app-time-slot',
@@ -25,10 +26,10 @@ export class TimeSlotComponent {
   @Input() timeSlotData: any;
   public TIME_SLOT_VIEWS = TimeSlotConstant.TIME_SLOT_VIEWS;
 
-  constructor() {
+  constructor(private schedulerStoreService: SchedulerStoreService) {
   }
 
-  public availableSlotClick(){
-
+  public availableSlotClick() {
+    this.schedulerStoreService.notifyTimeSlot(TIME_SLOT_STORE_TYPE.AVAILABILITY, this.timeSlotData.metaData.date, this.timeSlotData.data)
   }
 }

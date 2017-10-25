@@ -5,6 +5,7 @@ import {SchedulerService} from '../services/scheduler.service';
 import {DatePipe} from '@angular/common';
 import {SchedulingMockData} from '../../../adapters/calendar-adapter/schedulingMockData';
 import {SCHEDULER_STORE_TYPE, SchedulerStoreService} from "../services/scheduler-store.service";
+import {Observable} from "rxjs/Observable";
 
 @Component({
   selector: 'app-calendar',
@@ -79,6 +80,8 @@ export class CalendarComponent implements OnChanges, OnInit {
 
     this.schedulerStoreService.onSchedules(this.schedulesHandler);
 
+    this.schedulerStoreService.onTimeSlot(this.timeSlotHandler);
+
     this.schedulesHandler();
   }
 
@@ -92,7 +95,7 @@ export class CalendarComponent implements OnChanges, OnInit {
   }
 
   public clearTimeSlot(date): void {
-    const dateObj = new Date(date); // todo - use user's timezone
+    const dateObj = new Date(date);
     const year = dateObj.getFullYear();
     const month = dateObj.getMonth();
     const dayInMonth = dateObj.getDate();
@@ -215,20 +218,27 @@ export class CalendarComponent implements OnChanges, OnInit {
 
   private availabilityHandler = (availabilityStoreType: number) => {
     this.currentOperationId = OperationTypes.AVAILABILITY;
+
     this.dynamicDefaultView.timeSlotClass = this.dynamicDefaultViewsMap[TimeSlotConstant.DYNAMIC_DEFAULT_VIEWS.UNAVAILABLE];
     if (availabilityStoreType === SCHEDULER_STORE_TYPE.GET) {
+      this.showSpinner = true;
       this.schedulerConfig.getAvailability(this.currentDate)
         .subscribe(data => {
           this.updateTimeSlotsWithData(data, OperationTypes.AVAILABILITY);
+          this.schedulerStoreService.notifyAvailability(SCHEDULER_STORE_TYPE.SET);
+          this.showSpinner = false;
         });
     }
   };
 
   private schedulesHandler = () => {
+    this.showSpinner = true;
     this.currentOperationId = OperationTypes.SCHEDULES;
     this.dynamicDefaultView.timeSlotClass = this.dynamicDefaultViewsMap[TimeSlotConstant.DYNAMIC_DEFAULT_VIEWS.EMPTY];
+    debugger;
     this.schedulerConfig.getSchedules().subscribe((schedules) => {
       this.updateTimeSlotsWithData(schedules, OperationTypes.SCHEDULES);
+      this.showSpinner = false;
     });
   };
 
@@ -237,7 +247,7 @@ export class CalendarComponent implements OnChanges, OnInit {
     runningDate.setDate(runningDate.getDate() - runningDate.getDay());
     let year, month, dayInMonth;
     let timeSlotData;
-
+    debugger;
     for (let i = 0; i < SchedulerConstant.DAYS_IN_WEEK; i++) {
       year = runningDate.getFullYear();
       month = runningDate.getMonth();
@@ -253,6 +263,7 @@ export class CalendarComponent implements OnChanges, OnInit {
       Object.keys(this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i]).forEach(hour => {
         timeSlotData = this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i][hour];
         this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i][hour].metaData = this.metaDataGetterByTimeSlot(timeSlotData, operationTypes);
+        this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i][hour].metaData.date = new Date(year, month, dayInMonth, +hour);
         this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i][hour].dynamicDefaultView = this.dynamicDefaultView;
       });
 
@@ -268,14 +279,28 @@ export class CalendarComponent implements OnChanges, OnInit {
         } else {
           return {view: TimeSlotConstant.TIME_SLOT_VIEWS.EMPTY};
         }
+
       case OperationTypes.SCHEDULES:
         if (!!timeSlotData.data) {
           return {view: TimeSlotConstant.TIME_SLOT_VIEWS.SCHEDULE}
         } else {
           return {view: TimeSlotConstant.TIME_SLOT_VIEWS.EMPTY};
         }
+
       default:
         return {view: TimeSlotConstant.TIME_SLOT_VIEWS.EMPTY};
     }
   }
+
+  public timeSlotHandler = ({timeSlotType: number, date: Date, data: any}) => {
+    this.schedulerConfig.schedule({timeSlotType: number, date: Date, data: any}).subscribe(() => {
+      this.schedulesHandler();
+    })
+  }
+}
+
+export interface ISchedulerConfig {
+  getAvailability: () => Observable<any>;
+  getSchedules: () => Observable<any>;
+  schedule: (data: any) => Observable<any>;
 }

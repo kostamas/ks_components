@@ -6,8 +6,8 @@
     <div class="items-to-schedule">
       <div class="items-to-schedule-title">Items To Schedule</div>
       <div class="scroll-container scrollbar-style">
-        <div *ngFor="let item of itemsToSchedule">
-          <div class="item-to-schedule" (click)="onItemClick(item)">{{item.text}}</div>
+        <div *ngFor="let item of itemsToSchedule; let i = index;">
+          <div class="item-to-schedule" [ngClass]="{'selectedItem': i === selectedItemIndex}" (click)="onItemClick(i)">{{item.text}}</div>
         </div>
       </div>
     </div>
