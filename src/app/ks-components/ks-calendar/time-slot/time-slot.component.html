@@ -13,6 +13,10 @@
            (click)="availableSlotClick()">
       </div>
 
+      <div *ngSwitchCase="TIME_SLOT_VIEWS.UNAVAILABLE_TIME_SLOT_VIEW">
+        {{getTypeof(timeSlotData.data) === 'string' ? timeSlotData.data : ''}}
+      </div>
+
       <div *ngSwitchCase="TIME_SLOT_VIEWS.SCHEDULE">
         {{timeSlotData.data}}
       </div>

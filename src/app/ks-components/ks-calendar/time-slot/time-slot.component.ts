@@ -21,7 +21,7 @@ import {SchedulerStoreService, TIME_SLOT_STORE_TYPE} from "../services/scheduler
     ])
   ]
 })
-export class TimeSlotComponent implements OnChanges{
+export class TimeSlotComponent implements OnChanges {
 
   @Input() timeSlotData: any;
   public TIME_SLOT_VIEWS = TimeSlotConstant.TIME_SLOT_VIEWS;
@@ -30,12 +30,16 @@ export class TimeSlotComponent implements OnChanges{
   }
 
   ngOnChanges(changes: any) {
-    if(!changes.timeSlotData || !changes.timeSlotData.currentValue || !changes.timeSlotData.currentValue.dynamicDefaultView){
-      debugger;
+    if (!changes.timeSlotData || !changes.timeSlotData.currentValue || !changes.timeSlotData.currentValue.dynamicDefaultView) {
+
     }
   }
 
   public availableSlotClick() {
     this.schedulerStoreService.notifyTimeSlot(TIME_SLOT_STORE_TYPE.AVAILABILITY, this.timeSlotData.metaData.date, this.timeSlotData.data)
+  }
+
+  public getTypeof(val) {
+    return typeof(val);
   }
 }
