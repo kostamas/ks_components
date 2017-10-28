@@ -38,7 +38,7 @@ export class CalendarComponent implements OnChanges, OnInit {
   };
   public emptyDay;
 
-  public current_week_slide = 1;
+  public current_week_slide;
 
   public startHour = 9;
   public currentDate;
@@ -63,6 +63,7 @@ export class CalendarComponent implements OnChanges, OnInit {
     }
 
     this.currentDate = new Date();
+    this.current_week_slide = 1;
 
     this.updateHeaderDates(this.currentDate);
 
@@ -71,19 +72,21 @@ export class CalendarComponent implements OnChanges, OnInit {
     const relevantWeek: Date = new Date(this.currentDate);
     relevantWeek.setDate(relevantWeek.getDate() - relevantWeek.getDay());
 
-
+    const startDate = new Date(new Date(this.currentDate).setDate(this.currentDate.getDate() - 7 - this.currentDate.getDay()));
+    const endDate = new Date(new Date(this.currentDate).setDate(this.currentDate.getDate() + 14 - this.currentDate.getDay()));
+    const startWeekSlide = this.current_week_slide - 1;
     this.schedulerConfig.getSchedules().subscribe((schedules) => {
-      this.updateTimeSlotsWithData(schedules, OperationTypes.SCHEDULES);
+      this.updateTimeSlotsWithData(schedules, startDate, endDate, startWeekSlide, OperationTypes.SCHEDULES);
       this.showSpinner = false;
     });
 
     this.schedulerStoreService.onAvailability(this.availabilityHandler);
 
-    this.schedulerStoreService.onSchedules(this.schedulesHandler);
+    this.schedulerStoreService.onSchedules(this.schedulesHandler.bind(startDate, endDate, this.getStartWeekSlide));
 
-    this.schedulerStoreService.onTimeSlot(this.timeSlotHandler);
+    this.schedulerStoreService.onTimeSlot(this.timeSlotHandler.bind(startDate, endDate, this.getStartWeekSlide));
 
-    this.schedulesHandler();
+    this.schedulesHandler(startDate, endDate, startWeekSlide);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -180,13 +183,26 @@ export class CalendarComponent implements OnChanges, OnInit {
     const relevantWeek: Date = new Date(this.currentDate);
     relevantWeek.setDate(relevantWeek.getDate() - relevantWeek.getDay());
 
+    let startDate;
+    let endDate;
+    let startWeekSlide;
+    if (weekDirection < 0) { // next week
+      startWeekSlide = (this.current_week_slide + 1) % 3;
+      startDate = new Date(this.currentDate).setDate(this.currentDate.getDate() + 7 - this.currentDate.getDay);
+      endDate = new Date(this.currentDate).setDate(this.currentDate.getDate() + 14 - this.currentDate.getDay);
+    } else {
+      startWeekSlide = this.current_week_slide === 0 ? 2 : (this.current_week_slide - 1) % 3; // make as fn (duplication)
+      startDate = new Date(this.currentDate).setDate(this.currentDate.getDate() - 7 - this.currentDate.getDay);
+      endDate = new Date(this.currentDate).setDate(this.currentDate.getDate() - this.currentDate.getDay);
+    }
+
     switch (this.currentOperationId) {
       case OperationTypes.SCHEDULES:
-        this.schedulesHandler();
+        this.schedulesHandler(startDate, endDate, startWeekSlide);
         break;
 
       case OperationTypes.AVAILABILITY:
-        this.availabilityHandler(SCHEDULER_STORE_TYPE.GET);
+        this.availabilityHandler(startDate, endDate, startWeekSlide, SCHEDULER_STORE_TYPE.GET);
         break;
     }
   }
@@ -217,7 +233,7 @@ export class CalendarComponent implements OnChanges, OnInit {
   }
 
 
-  private availabilityHandler = (availabilityStoreType: number) => {
+  private availabilityHandler = (startDate, endDate, startWeekSlide, availabilityStoreType: number) => {
     this.currentOperationId = OperationTypes.AVAILABILITY;
 
     this.dynamicDefaultView.timeSlotClass = this.dynamicDefaultViewsMap[TimeSlotConstant.DYNAMIC_DEFAULT_VIEWS.UNAVAILABLE];
@@ -225,59 +241,62 @@ export class CalendarComponent implements OnChanges, OnInit {
       this.showSpinner = true;
       this.schedulerConfig.getAvailability(this.currentDate)
         .subscribe(data => {
-          this.updateTimeSlotsWithData(data, OperationTypes.AVAILABILITY);
+          this.updateTimeSlotsWithData(data, startDate, endDate, startWeekSlide, OperationTypes.AVAILABILITY);
           this.schedulerStoreService.notifyAvailability(SCHEDULER_STORE_TYPE.SET);
           this.showSpinner = false;
         });
     }
   };
 
-  private schedulesHandler = () => {
+  private schedulesHandler = (startDate, endDate, startWeekSlide) => {
     this.showSpinner = true;
     this.currentOperationId = OperationTypes.SCHEDULES;
     this.dynamicDefaultView.timeSlotClass = this.dynamicDefaultViewsMap[TimeSlotConstant.DYNAMIC_DEFAULT_VIEWS.EMPTY];
 
     this.schedulerConfig.getSchedules().subscribe((schedules) => {
-      this.updateTimeSlotsWithData(schedules, OperationTypes.SCHEDULES);
+      if (typeof startWeekSlide === 'function') {
+        startWeekSlide = startWeekSlide();
+      }
+      this.updateTimeSlotsWithData(schedules, startDate, endDate, startWeekSlide, OperationTypes.SCHEDULES);
       this.showSpinner = false;
     });
   };
 
-  private updateTimeSlotsWithData = (data, operationType) => {
-    const runningDate: Date = new Date(this.currentDate);
-    runningDate.setDate(runningDate.getDate() - runningDate.getDay());
+  private updateTimeSlotsWithData = (data, startData, endDate, weekSlide, operationType) => {
+    const runningDate: Date = new Date(startData);
+
     let year, month, dayInMonth;
     let timeSlotData;
-    let isEmpty;
+    let isAvailable;
 
-    for (let i = 0; i < SchedulerConstant.DAYS_IN_WEEK; i++) {
-      year = runningDate.getFullYear();
-      month = runningDate.getMonth();
-      dayInMonth = runningDate.getDate();
-      if (operationType !== OperationTypes.AVAILABILITY) {
-        if (data[year] && data[year][month] && data[year][month][dayInMonth]) {
-          this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i] = data[year][month][dayInMonth];
-        } else {
-          this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i] = _.cloneDeep(this.emptyDay);
-        }
-      }
+    while (runningDate <= endDate) {
+      for (let i = 0; i < SchedulerConstant.DAYS_IN_WEEK; i++) {
+        for (let j = 0; j < SchedulerConstant.HOURS_IN_DAYS; j++) {
+          year = runningDate.getFullYear();
+          month = runningDate.getMonth();
+          dayInMonth = runningDate.getDate();
 
-      runningDate.setDate(runningDate.getDate() + 1);
-      Object.keys(this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i]).forEach(hour => {
-        if (operationType === OperationTypes.AVAILABILITY && data[year] && data[year][month] && data[year][month][dayInMonth]) {
-          isEmpty = data[year][month][dayInMonth][hour].data;
-          if (isEmpty) {
-            this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i][hour].data = true;
+
+          if (operationType === OperationTypes.AVAILABILITY) {
+            isAvailable = data[year][month][dayInMonth][j].data;
+            if (isAvailable) {
+              this.timeSlotData[this.calendarWeeks[weekSlide]][i][j].data = true;
+            }
+          } else {
+            this.timeSlotData[this.calendarWeeks[weekSlide]][i][j].data = this.extractData(data, year, month, dayInMonth, j);
           }
-        }
 
-        timeSlotData = this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i][hour];
-        this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i][hour].metaData = this.metaDataGetterByTimeSlot(timeSlotData, operationType);
-        this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i][hour].metaData.date = new Date(year, month, dayInMonth, +hour);
-        this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i][hour].dynamicDefaultView = this.dynamicDefaultView;
-      });
-      this.showSpinner = false;
+          timeSlotData = this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i][j];
+          this.timeSlotData[this.calendarWeeks[weekSlide]][i][j].metaData = this.metaDataGetterByTimeSlot(timeSlotData, operationType);
+          this.timeSlotData[this.calendarWeeks[weekSlide]][i][j].metaData.date = new Date(year, month, dayInMonth, +j);
+          this.timeSlotData[this.calendarWeeks[weekSlide]][i][j].dynamicDefaultView = this.dynamicDefaultView;
+
+        }
+        runningDate.setDate(runningDate.getDate() + 1);
+      }
+      weekSlide = (weekSlide + 1) % 3;
     }
+    this.showSpinner = false;
   };
 
   private metaDataGetterByTimeSlot(timeSlotData, operationType) {
@@ -301,10 +320,24 @@ export class CalendarComponent implements OnChanges, OnInit {
     }
   }
 
+  private extractData(data, year, month, dayInMonth, hour) {
+    if (this.schedulerService.isDateExistByParams(data, year, month, dayInMonth, hour)) {
+      return data[year][month][dayInMonth][hour].data;
+    } else {
+      return '';
+    }
+  }
+
   public timeSlotHandler = ({timeSlotType: number, date: Date, data: any}) => {
     this.schedulerConfig.schedule({timeSlotType: number, date: Date, data: any}).subscribe(() => {
-      this.schedulesHandler();
+      const startDate = new Date(this.currentDate).setDate(this.currentDate.getDate() - 7 - this.currentDate.getDay);
+      const endDate = new Date(this.currentDate).setDate(this.currentDate.getDate() + 7 - this.currentDate.getDay);
+      this.schedulesHandler(startDate, endDate, this.getStartWeekSlide());
     });
+  };
+
+  private getStartWeekSlide() {
+    return this.current_week_slide === 0 ? 2 : (this.current_week_slide - 1) % 3;
   }
 }
 

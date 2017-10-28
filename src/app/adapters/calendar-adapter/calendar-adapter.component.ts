@@ -52,13 +52,13 @@ export class CalendarAdapterComponent implements OnInit {
 
   private getAvailability(): Observable<any> {
     return Observable.of(SchedulingMockData.availability)
-      .delay(1000);
+      .delay(500);
   }
 
 
   private getSchedules(): Observable<any> {
     return Observable.of(SchedulingMockData.schedules)
-      .delay(1000);
+      .delay(500);
   }
 
   private schedule = ({timeSlotType, date, data}): Observable<any> => {
