@@ -8,16 +8,17 @@
     <div [ngSwitch]="timeSlotData.metaData.view">
 
       <div *ngSwitchCase="TIME_SLOT_VIEWS.AVAILABLE_TIME_SLOT_VIEW"
-           class="available-time-slot-wrapper"
+           class="available-time-slot"
            (click)="availableSlotClick()">
       </div>
 
-      <div *ngSwitchCase="TIME_SLOT_VIEWS.UNAVAILABLE_TIME_SLOT_VIEW">
+      <div *ngSwitchCase="TIME_SLOT_VIEWS.UNAVAILABLE_TIME_SLOT_VIEW"
+        class="unavailable-time-slot">
         {{getTypeof(timeSlotData.data) === 'string' ? timeSlotData.data : ''}}
       </div>
 
-      <div *ngSwitchCase="TIME_SLOT_VIEWS.SCHEDULE">
-        {{timeSlotData.data}}
+      <div *ngSwitchCase="TIME_SLOT_VIEWS.SCHEDULE" class="schedule-data">
+         {{timeSlotData.data}}
       </div>
 
     </div>

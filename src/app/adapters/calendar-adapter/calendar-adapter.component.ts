@@ -41,13 +41,17 @@ export class CalendarAdapterComponent implements OnInit {
   }
 
   public onItemClick = (itemIndex) => {
-    this.selectedItemIndex = -1;
-    this.schedulerStoreService.notifyAvailability(SCHEDULER_STORE_TYPE.GET);
-    this.schedulerStoreService.onAvailability((availability: number) => {
-      if (availability === SCHEDULER_STORE_TYPE.SET) {
-        this.selectedItemIndex = itemIndex;
-      }
-    });
+    if(this.selectedItemIndex !== itemIndex) {
+      this.schedulerStoreService.notifyAvailability(SCHEDULER_STORE_TYPE.GET);
+      this.schedulerStoreService.onAvailability((availability: number) => {
+        if (availability === SCHEDULER_STORE_TYPE.SET) {
+          this.selectedItemIndex = itemIndex;
+        }
+      });
+    } else {
+      this.selectedItemIndex = -1;
+      this.showSchedules();
+    }
   };
 
   private getAvailability = (): Observable<any> => {
