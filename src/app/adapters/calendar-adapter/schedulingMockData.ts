@@ -1,15 +1,16 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Rx'
 
 @Injectable()
 export class SchedulingMockData {
-  public static schedules: any = SchedulingMockData.buildMockData(SchedulingMockData.getRandomText, ' ');
-  public static availability: any = SchedulingMockData.buildMockData(true, false);
+  public schedules: any;
+  public availability: any;
 
   constructor() {
+    this.schedules = this.buildMockData(this.getRandomText, ' ');
+    this.availability = this.buildMockData(true, false);
   }
 
-  public static buildMockData(assignWhenTrue, assignWhenFalse) {
+  public buildMockData(assignWhenTrue, assignWhenFalse) {
     let obj = {};
     obj[new Date().getFullYear() - 1] = {};
     obj[new Date().getFullYear()] = {};
@@ -28,11 +29,14 @@ export class SchedulingMockData {
           if (Math.floor((Math.random() * 2))) {
             obj[year][month][day] = {};
             for (let hour = 0; hour < 24; hour++) {
-              obj[year][month][day][hour] = {
-                data: Math.floor((Math.random() * 2)) ? (typeof assignWhenTrue == 'function' ? assignWhenTrue() : assignWhenTrue) : assignWhenFalse,
-                hour: +hour,
-                date: `${year} - ${+month + 1} - ${day}`
-              };
+              if (!(this.schedules && this.schedules[year] && this.schedules[year][month] &&
+                  this.schedules[year][month][day] && this.schedules[year][month][day][hour])) {
+                obj[year][month][day][hour] = {
+                  data: Math.floor((Math.random() * 2)) ? (typeof assignWhenTrue == 'function' ? assignWhenTrue() : assignWhenTrue) : assignWhenFalse,
+                  hour: +hour,
+                  date: `${year} - ${+month + 1} - ${day}`
+                };
+              }
             }
           }
         }
@@ -41,12 +45,8 @@ export class SchedulingMockData {
     return obj;
   }
 
-  public static getRandomText() {
+  public  getRandomText() {
     let text = ['11111', '222222', 'aabbcc', 'hello', 'Lorem ipsum', 'dolor sit amet', 'aliquam est sapien eros', 'arcu, risus ', 'vestibulum sed ', 'neque quam', 'ipsum purus'];
     return text[Math.floor((Math.random() * 10) + 1)];
-  }
-
-  private daysInThisMonth(dateObj) {
-    return new Date(dateObj.getFullYear(), dateObj.getMonth() + 1, 0).getDate();
   }
 }

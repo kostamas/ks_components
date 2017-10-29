@@ -3,7 +3,6 @@ import {TimeSlotConstant} from '../constants/timeSlot.constant';
 import {OperationTypes, SchedulerConstant} from '../constants/scheduler.constant';
 import {SchedulerService} from '../services/scheduler.service';
 import {DatePipe} from '@angular/common';
-import {SchedulingMockData} from '../../../adapters/calendar-adapter/schedulingMockData';
 import {SCHEDULER_STORE_TYPE, SchedulerStoreService} from "../services/scheduler-store.service";
 import {Observable} from 'rxjs/Observable';
 import * as _ from 'lodash';
@@ -12,7 +11,7 @@ import * as _ from 'lodash';
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
-  providers: [DatePipe, SchedulingMockData],
+  providers: [DatePipe],
   encapsulation: ViewEncapsulation.None
 })
 
@@ -45,8 +44,7 @@ export class CalendarComponent implements OnChanges, OnInit {
   private currentOperationId = OperationTypes.SCHEDULES;
   @Input() schedulerConfig;
 
-  constructor(private schedulerService: SchedulerService, private schedulingMockData: SchedulingMockData,
-              private schedulerStoreService: SchedulerStoreService) {
+  constructor(private schedulerService: SchedulerService, private schedulerStoreService: SchedulerStoreService) {
   }
 
   ngOnInit() {
@@ -72,19 +70,34 @@ export class CalendarComponent implements OnChanges, OnInit {
     const relevantWeek: Date = new Date(this.currentDate);
     relevantWeek.setDate(relevantWeek.getDate() - relevantWeek.getDay());
 
-    const startDate = new Date(new Date(this.currentDate).setDate(this.currentDate.getDate() - 7 - this.currentDate.getDay()));
-    const endDate = new Date(new Date(this.currentDate).setDate(this.currentDate.getDate() + 14 - this.currentDate.getDay()));
-    const startWeekSlide = this.current_week_slide - 1;
+
     this.schedulerConfig.getSchedules().subscribe((schedules) => {
+      const startDate = new Date(new Date(this.currentDate).setDate(this.currentDate.getDate() - 7 - this.currentDate.getDay()));
+      const endDate = new Date(new Date(this.currentDate).setDate(this.currentDate.getDate() + 14 - this.currentDate.getDay()));
+      const startWeekSlide = this.current_week_slide - 1;
       this.updateTimeSlotsWithData(schedules, startDate, endDate, startWeekSlide, OperationTypes.SCHEDULES);
       this.showSpinner = false;
     });
 
-    this.schedulerStoreService.onAvailability(this.availabilityHandler);
+    this.schedulerStoreService.onAvailability((availabilityStoreType: number) => {
+      const startDate = new Date(new Date(this.currentDate).setDate(this.currentDate.getDate() - 7 - this.currentDate.getDay()));
+      const endDate = new Date(new Date(this.currentDate).setDate(this.currentDate.getDate() + 14 - this.currentDate.getDay()));
+      this.availabilityHandler(startDate, endDate, this.getStartWeekSlide, availabilityStoreType);
+    });
 
-    this.schedulerStoreService.onSchedules(this.schedulesHandler.bind(startDate, endDate, this.getStartWeekSlide));
+    this.schedulerStoreService.onSchedules(() => {
+      const startDate = new Date(new Date(this.currentDate).setDate(this.currentDate.getDate() - 7 - this.currentDate.getDay()));
+      const endDate = new Date(new Date(this.currentDate).setDate(this.currentDate.getDate() + 14 - this.currentDate.getDay()));
+      this.schedulesHandler(startDate, endDate, this.getStartWeekSlide);
+    });
 
-    this.schedulerStoreService.onTimeSlot(this.timeSlotHandler.bind(startDate, endDate, this.getStartWeekSlide));
+    this.schedulerStoreService.onTimeSlot(this.timeSlotHandler.bind(this));
+
+    this.schedulerStoreService.onUpdateTimeSlot(this.updateTimeSlots.bind(this));
+
+    const startDate = new Date(new Date(this.currentDate).setDate(this.currentDate.getDate() - 7 - this.currentDate.getDay()));
+    const endDate = new Date(new Date(this.currentDate).setDate(this.currentDate.getDate() + 14 - this.currentDate.getDay()));
+    const startWeekSlide = this.current_week_slide - 1;
 
     this.schedulesHandler(startDate, endDate, startWeekSlide);
   }
@@ -149,10 +162,6 @@ export class CalendarComponent implements OnChanges, OnInit {
     }
   }
 
-  private updateTimeSlots(week_slide, datesData) {
-    this.timeSlotData[week_slide] = datesData;
-  }
-
   public changeActiveWeek(weekDirection) {
     this.showSpinner = true;
 
@@ -168,6 +177,7 @@ export class CalendarComponent implements OnChanges, OnInit {
       left_style_pixels = this.weeksStyles[week_slide].left;
       left_style_pixels = +left_style_pixels.replace('px', '');
 
+
       if (left_style_pixels + weekDirection * 900 > (this.calendarWeeks.length - 2) * 900) {
         this.weeksStyles[week_slide].transition = 'none';
         this.weeksStyles[week_slide].left = '-900px';
@@ -175,7 +185,7 @@ export class CalendarComponent implements OnChanges, OnInit {
         this.weeksStyles[week_slide].transition = 'none';
         this.weeksStyles[week_slide].left = (this.calendarWeeks.length - 2) * 900 + 'px';
       } else {
-        this.weeksStyles[week_slide].transition = '0.7s';
+        this.weeksStyles[week_slide].transition = '0.6s left ease';
         this.weeksStyles[week_slide].left = weekDirection * 900 + left_style_pixels + 'px';
       }
     });
@@ -188,12 +198,12 @@ export class CalendarComponent implements OnChanges, OnInit {
     let startWeekSlide;
     if (weekDirection < 0) { // next week
       startWeekSlide = (this.current_week_slide + 1) % 3;
-      startDate = new Date(this.currentDate).setDate(this.currentDate.getDate() + 7 - this.currentDate.getDay);
-      endDate = new Date(this.currentDate).setDate(this.currentDate.getDate() + 14 - this.currentDate.getDay);
+      startDate = new Date(new Date(this.currentDate).setDate(this.currentDate.getDate() + 7 - this.currentDate.getDay()));
+      endDate = new Date(new Date(this.currentDate).setDate(this.currentDate.getDate() + 14 - this.currentDate.getDay()));
     } else {
       startWeekSlide = this.current_week_slide === 0 ? 2 : (this.current_week_slide - 1) % 3; // make as fn (duplication)
-      startDate = new Date(this.currentDate).setDate(this.currentDate.getDate() - 7 - this.currentDate.getDay);
-      endDate = new Date(this.currentDate).setDate(this.currentDate.getDate() - this.currentDate.getDay);
+      startDate = new Date(new Date(this.currentDate).setDate(this.currentDate.getDate() - 7 - this.currentDate.getDay()));
+      endDate = new Date(new Date(this.currentDate).setDate(this.currentDate.getDate() - this.currentDate.getDay()));
     }
 
     switch (this.currentOperationId) {
@@ -232,7 +242,6 @@ export class CalendarComponent implements OnChanges, OnInit {
     });
   }
 
-
   private availabilityHandler = (startDate, endDate, startWeekSlide, availabilityStoreType: number) => {
     this.currentOperationId = OperationTypes.AVAILABILITY;
 
@@ -241,6 +250,10 @@ export class CalendarComponent implements OnChanges, OnInit {
       this.showSpinner = true;
       this.schedulerConfig.getAvailability(this.currentDate)
         .subscribe(data => {
+
+          if (typeof startWeekSlide === 'function') {
+            startWeekSlide = startWeekSlide.apply(this);
+          }
           this.updateTimeSlotsWithData(data, startDate, endDate, startWeekSlide, OperationTypes.AVAILABILITY);
           this.schedulerStoreService.notifyAvailability(SCHEDULER_STORE_TYPE.SET);
           this.showSpinner = false;
@@ -255,7 +268,7 @@ export class CalendarComponent implements OnChanges, OnInit {
 
     this.schedulerConfig.getSchedules().subscribe((schedules) => {
       if (typeof startWeekSlide === 'function') {
-        startWeekSlide = startWeekSlide();
+        startWeekSlide = startWeekSlide.apply(this);
       }
       this.updateTimeSlotsWithData(schedules, startDate, endDate, startWeekSlide, OperationTypes.SCHEDULES);
       this.showSpinner = false;
@@ -276,9 +289,10 @@ export class CalendarComponent implements OnChanges, OnInit {
           month = runningDate.getMonth();
           dayInMonth = runningDate.getDate();
 
-
           if (operationType === OperationTypes.AVAILABILITY) {
-            isAvailable = data[year][month][dayInMonth][j].data;
+            isAvailable = data[year] && data[year][month] && data[year][month][dayInMonth]
+              && data[year][month][dayInMonth][j] && data[year][month][dayInMonth][j].data;
+
             if (isAvailable) {
               this.timeSlotData[this.calendarWeeks[weekSlide]][i][j].data = true;
             }
@@ -286,7 +300,7 @@ export class CalendarComponent implements OnChanges, OnInit {
             this.timeSlotData[this.calendarWeeks[weekSlide]][i][j].data = this.extractData(data, year, month, dayInMonth, j);
           }
 
-          timeSlotData = this.timeSlotData[this.calendarWeeks[this.current_week_slide]][i][j];
+          timeSlotData = this.timeSlotData[this.calendarWeeks[weekSlide]][i][j];
           this.timeSlotData[this.calendarWeeks[weekSlide]][i][j].metaData = this.metaDataGetterByTimeSlot(timeSlotData, operationType);
           this.timeSlotData[this.calendarWeeks[weekSlide]][i][j].metaData.date = new Date(year, month, dayInMonth, +j);
           this.timeSlotData[this.calendarWeeks[weekSlide]][i][j].dynamicDefaultView = this.dynamicDefaultView;
@@ -314,7 +328,6 @@ export class CalendarComponent implements OnChanges, OnInit {
         } else {
           return {view: TimeSlotConstant.TIME_SLOT_VIEWS.EMPTY};
         }
-
       default:
         return {view: TimeSlotConstant.TIME_SLOT_VIEWS.EMPTY};
     }
@@ -328,21 +341,34 @@ export class CalendarComponent implements OnChanges, OnInit {
     }
   }
 
-  public timeSlotHandler = ({timeSlotType: number, date: Date, data: any}) => {
-    this.schedulerConfig.schedule({timeSlotType: number, date: Date, data: any}).subscribe(() => {
-      const startDate = new Date(this.currentDate).setDate(this.currentDate.getDate() - 7 - this.currentDate.getDay);
-      const endDate = new Date(this.currentDate).setDate(this.currentDate.getDate() + 7 - this.currentDate.getDay);
-      this.schedulesHandler(startDate, endDate, this.getStartWeekSlide());
-    });
+  public timeSlotHandler = (timeSlotData) => {
+    let {timeSlotType, date, data} = timeSlotData;
+    this.schedulerConfig.schedule.call(this, {timeSlotType, date, data});
   };
 
   private getStartWeekSlide() {
     return this.current_week_slide === 0 ? 2 : (this.current_week_slide - 1) % 3;
+  }
+
+  private updateTimeSlots(timeSlotsData){
+    const weekSlide = this.calendarWeeks[this.current_week_slide];
+    let _day, _hour, _date;
+
+    this.schedulerService.runOnDateObject(timeSlotsData,(year, month, dayInMonth, hour)=>{
+       _date = new Date(year,month,dayInMonth,hour);
+       _day = _date.getDay();
+       _hour = _date.getHours();
+      this.timeSlotData[weekSlide][_day][_hour].data = timeSlotsData[year][month][dayInMonth][hour].data;
+      this.timeSlotData[weekSlide][_day][_hour].metaData = this.metaDataGetterByTimeSlot(this.timeSlotData[weekSlide][_day][_hour].data, OperationTypes.AVAILABILITY); // todo - availability is hard coded
+      this.timeSlotData[weekSlide][_day][_hour].metaData.date = new Date(year, month, dayInMonth, hour);
+      this.timeSlotData[weekSlide][_day][_hour].dynamicDefaultView = this.dynamicDefaultView;
+    });
+    this.updateDynamicDefaultView(this.DYNAMIC_DEFAULT_VIEWS.EMPTY);
   }
 }
 
 export interface ISchedulerConfig {
   getAvailability: () => Observable<any>;
   getSchedules: () => Observable<any>;
-  schedule: (data: any) => Observable<any>;
+  schedule: (data: any) => any;
 }

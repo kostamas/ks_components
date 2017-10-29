@@ -9,7 +9,8 @@ export class SchedulerStoreService {
   private availability$ = new Subject<number>();
   private schedules$ = new Subject<number>();
 
-  private timeSlot$ = new Subject<any>();
+  private timeSlotClick$ = new Subject<any>();
+  private updateTimeSlots$ = new Subject<any>();
 
   constructor() {
   }
@@ -31,11 +32,19 @@ export class SchedulerStoreService {
   }
 
   public notifyTimeSlot(timeSlotType: number, date: Date, data: any) {
-    this.timeSlot$.next({timeSlotType, date, data});
+    this.timeSlotClick$.next({timeSlotType, date, data});
   }
 
   public onTimeSlot(cb) {
-    return this.timeSlot$.subscribe(cb);
+    return this.timeSlotClick$.subscribe(cb);
+  }
+
+  public notifyUpdateTimeSlot(data){
+    this.updateTimeSlots$.next(data);
+  }
+
+  public onUpdateTimeSlot(cb) {
+    return this.updateTimeSlots$.subscribe(cb);
   }
 }
 

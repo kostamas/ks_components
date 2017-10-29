@@ -137,6 +137,7 @@ $calendar-width: 900px;
             height: 400px;
             width: $calendar-width;
             position: absolute;
+            transform: translate3d(0, 0, 0);
           }
         }
       }

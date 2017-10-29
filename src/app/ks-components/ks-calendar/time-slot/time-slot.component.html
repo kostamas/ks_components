@@ -2,8 +2,7 @@
      [ngClass]="[timeSlotData.dynamicDefaultView.timeSlotClass, timeSlotData.classToAdd ? timeSlotData.classToAdd : '']">
 
 
-  <!--<div style="font-size: 12px;">{{timeSlotData.date || ' '}}</div>-->
-  <!--<div style="font-size: 14px;">{{timeSlotData.hour || ' '}}</div>-->
+  <!--<div style="font-size: 12px;">{{timeSlotData.metaData.date | date:'medium'}}</div>-->
 
   <div *ngIf="timeSlotData.metaData.view" [@flyInOut]="'in'">
     <div [ngSwitch]="timeSlotData.metaData.view">

@@ -29,7 +29,7 @@ export class CalendarAdapterComponent implements OnInit {
     {text: 'Item 8', id: 123, type: TimeSlotTypes.REGULAR},
     {text: 'Item 9', id: 123, type: TimeSlotTypes.REGULAR}];
 
-  constructor(private schedulerStoreService: SchedulerStoreService) {
+  constructor(private schedulerStoreService: SchedulerStoreService, private schedulingMockData: SchedulingMockData) {
   }
 
   ngOnInit() {
@@ -40,7 +40,7 @@ export class CalendarAdapterComponent implements OnInit {
     };
   }
 
-  public onItemClick(itemIndex) {
+  public onItemClick = (itemIndex) => {
     this.selectedItemIndex = -1;
     this.schedulerStoreService.notifyAvailability(SCHEDULER_STORE_TYPE.GET);
     this.schedulerStoreService.onAvailability((availability: number) => {
@@ -48,20 +48,20 @@ export class CalendarAdapterComponent implements OnInit {
         this.selectedItemIndex = itemIndex;
       }
     });
-  }
+  };
 
-  private getAvailability(): Observable<any> {
-    return Observable.of(SchedulingMockData.availability)
+  private getAvailability = (): Observable<any> => {
+    return Observable.of(this.schedulingMockData.availability)
       .delay(500);
-  }
+  };
 
 
-  private getSchedules(): Observable<any> {
-    return Observable.of(SchedulingMockData.schedules)
+  private getSchedules = (): Observable<any> => {
+    return Observable.of(this.schedulingMockData.schedules)
       .delay(500);
-  }
+  };
 
-  private schedule = ({timeSlotType, date, data}): Observable<any> => {
+  private schedule = ({timeSlotType, date}) => {
     let selectedItemIndex = this.selectedItemIndex;
     let selectedItem = this.itemsToSchedule[selectedItemIndex];
     this.itemsToSchedule.splice(selectedItemIndex, 1);
@@ -71,23 +71,33 @@ export class CalendarAdapterComponent implements OnInit {
     const month = date.getMonth();
     const dayInMonth = date.getDate();
     const hour = date.getHours();
+    let timeSlotData = {
+      [year]: {
+        [month]: {
+          [dayInMonth]: {
+            [hour]: {
+              data: selectedItem.text
+            }
+          }
+        }
+      }
+    };
 
-    if (!SchedulingMockData.schedules[year][month]) {
-      SchedulingMockData.schedules[year][month] = {};
+    this.schedulingMockData.availability[year][month][dayInMonth][hour].data = false;
+    if(!this.schedulingMockData.schedules[year][month]){
+      this.schedulingMockData.schedules[year][month] = {};
     }
-
-    if (!SchedulingMockData.schedules[year][month][dayInMonth]) {
-      SchedulingMockData.schedules[year][month][dayInMonth] = {};
-      for (let i = 0; i < 24; i++) {
-        SchedulingMockData.schedules[year][month][dayInMonth][i] = {};
+    if(!this.schedulingMockData.schedules[year][month][dayInMonth]){
+      this.schedulingMockData.schedules[year][month][dayInMonth] = {};
+      for(let i = 0 ; i < 24; i++){
+        this.schedulingMockData.schedules[year][month][dayInMonth][i] = {};
       }
     }
+    this.schedulingMockData.schedules[year][month][dayInMonth][hour].data = selectedItem.text;
+    this.schedulerStoreService.notifyUpdateTimeSlot(timeSlotData);
+  };
 
-    SchedulingMockData.schedules[year][month][dayInMonth][hour].data = selectedItem.text;
-    return Observable.of({});
-  }
-
-  private showSchedules() {
+  private showSchedules = () => {
     this.selectedItemIndex = -1;
     this.schedulerStoreService.notifySchedules(SCHEDULER_STORE_TYPE.GET);
   }
