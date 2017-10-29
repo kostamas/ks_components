@@ -227,7 +227,7 @@ export class CalendarComponent implements OnChanges, OnInit {
     this.emptyDay = {};
     for (let i = 0; i < SchedulerConstant.HOURS_IN_DAYS; i++) {
       this.emptyDay[i] = {
-        data: undefined,
+        data: '',
         dynamicDefaultView: this.dynamicDefaultView,
         metaData: {
           view: TimeSlotConstant.TIME_SLOT_VIEWS.EMPTY
@@ -323,7 +323,7 @@ export class CalendarComponent implements OnChanges, OnInit {
         }
 
       case OperationTypes.SCHEDULES:
-        if (timeSlotData.data) {
+        if (!!timeSlotData.data) {
           return {view: TimeSlotConstant.TIME_SLOT_VIEWS.SCHEDULE};
         } else {
           return {view: TimeSlotConstant.TIME_SLOT_VIEWS.EMPTY};

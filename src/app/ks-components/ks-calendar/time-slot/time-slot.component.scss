@@ -28,12 +28,12 @@
     background-color: $white;
   }
 
-  .unavailable-time-slot{
+  .unavailable-time-slot {
     @include text-style(17px, $kimberlyDark, Lato, $normalFontWeight);
 
   }
 
-  .available-time-slot-wrapper:hover {
+  .available-time-slot:hover {
     cursor: pointer;
     transition: ease-out 100ms;
     background-color: rgba($bondiBlue, 0.12);
@@ -41,7 +41,7 @@
   }
 }
 
-.schedule-data{
+.schedule-data {
   @include text-style(17px, $kimberlyDark, Lato, $normalFontWeight);
   background-color: $clearDay;
   height: 50px;
