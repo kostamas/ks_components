@@ -7,6 +7,7 @@ import {Observable} from "rxjs/Observable";
 import {SchedulingMockData} from './schedulingMockData';
 import {TimeSlotTypes} from "../../ks-components/ks-calendar/constants/scheduler.constant";
 import {ISchedulerConfig} from '../../ks-components/ks-calendar/calendar/calendar.component';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-calendar-adapter',
@@ -41,7 +42,7 @@ export class CalendarAdapterComponent implements OnInit {
   }
 
   public onItemClick = (itemIndex) => {
-    if(this.selectedItemIndex !== itemIndex) {
+    if (this.selectedItemIndex !== itemIndex) {
       this.schedulerStoreService.notifyAvailability(SCHEDULER_STORE_TYPE.GET);
       this.schedulerStoreService.onAvailability((availability: number) => {
         if (availability === SCHEDULER_STORE_TYPE.SET) {
@@ -49,19 +50,18 @@ export class CalendarAdapterComponent implements OnInit {
         }
       });
     } else {
-      this.selectedItemIndex = -1;
       this.showSchedules();
     }
   };
 
   private getAvailability = (): Observable<any> => {
-    return Observable.of(this.schedulingMockData.availability)
+    return Observable.of(_.cloneDeep(this.schedulingMockData.availability))
       .delay(500);
   };
 
 
   private getSchedules = (): Observable<any> => {
-    return Observable.of(this.schedulingMockData.schedules)
+    return Observable.of(_.cloneDeep(this.schedulingMockData.schedules))
       .delay(500);
   };
 
@@ -87,16 +87,18 @@ export class CalendarAdapterComponent implements OnInit {
       }
     };
 
-    this.schedulingMockData.availability[year][month][dayInMonth][hour].data = false;
-    if(!this.schedulingMockData.schedules[year][month]){
+    if (!this.schedulingMockData.schedules[year][month]) {
       this.schedulingMockData.schedules[year][month] = {};
     }
-    if(!this.schedulingMockData.schedules[year][month][dayInMonth]){
+    if (!this.schedulingMockData.schedules[year][month][dayInMonth]) {
       this.schedulingMockData.schedules[year][month][dayInMonth] = {};
-      for(let i = 0 ; i < 24; i++){
+      for (let i = 0; i < 24; i++) {
         this.schedulingMockData.schedules[year][month][dayInMonth][i] = {};
       }
     }
+  debugger;
+    let x = this.schedulingMockData.availability[year][month][dayInMonth][hour];
+    this.schedulingMockData.availability[year][month][dayInMonth][hour].data = {isAvailable:false,textToShow:selectedItem.text};
     this.schedulingMockData.schedules[year][month][dayInMonth][hour].data = selectedItem.text;
     this.schedulerStoreService.notifyUpdateTimeSlot(timeSlotData);
   };

@@ -6,11 +6,11 @@ export class SchedulingMockData {
   public availability: any;
 
   constructor() {
-    this.schedules = this.buildMockData(this.getRandomText, ' ');
-    this.availability = this.buildMockData(true, false);
+    this.schedules = this.buildMockData('schedules');
+    this.availability = this.buildMockData('availability');
   }
 
-  public buildMockData(assignWhenTrue, assignWhenFalse) {
+  public buildMockData(type) {
     let obj = {};
     obj[new Date().getFullYear() - 1] = {};
     obj[new Date().getFullYear()] = {};
@@ -29,13 +29,23 @@ export class SchedulingMockData {
           if (Math.floor((Math.random() * 2))) {
             obj[year][month][day] = {};
             for (let hour = 0; hour < 24; hour++) {
-              if (!(this.schedules && this.schedules[year] && this.schedules[year][month] &&
-                  this.schedules[year][month][day] && this.schedules[year][month][day][hour])) {
-                obj[year][month][day][hour] = {
-                  data: Math.floor((Math.random() * 2)) ? (typeof assignWhenTrue == 'function' ? assignWhenTrue() : assignWhenTrue) : assignWhenFalse,
-                  hour: +hour,
-                  date: `${year} - ${+month + 1} - ${day}`
-                };
+
+              if (type === 'schedules') {
+                obj[year][month][day][hour] = {data: Math.floor((Math.random() * 2)) ? this.getRandomText() : ' ',};
+              }
+
+              if (type === 'availability') {
+                if ((this.schedules && this.schedules[year] && this.schedules[year][month] &&
+                    this.schedules[year][month][day] && this.schedules[year][month][day][hour] && this.schedules[year][month][day][hour].data)) {
+                  obj[year][month][day][hour] = {
+                    data: {
+                      isAvailable: false,
+                      textToShow: this.schedules[year][month][day][hour].data
+                    }
+                  };
+                } else {
+                  obj[year][month][day][hour] = {data: {isAvailable: Math.floor((Math.random() * 2)) > 0 }};
+                }
               }
             }
           }
@@ -45,7 +55,7 @@ export class SchedulingMockData {
     return obj;
   }
 
-  public  getRandomText() {
+  public getRandomText() {
     let text = ['11111', '222222', 'aabbcc', 'hello', 'Lorem ipsum', 'dolor sit amet', 'aliquam est sapien eros', 'arcu, risus ', 'vestibulum sed ', 'neque quam', 'ipsum purus'];
     return text[Math.floor((Math.random() * 10) + 1)];
   }

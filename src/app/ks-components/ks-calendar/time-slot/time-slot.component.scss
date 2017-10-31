@@ -29,7 +29,7 @@
   }
 
   .unavailable-time-slot {
-    @include text-style(17px, $kimberlyDark, Lato, $normalFontWeight);
+    @include text-style(15px, $kimberlyDark, Lato, $normalFontWeight);
 
   }
 
@@ -42,7 +42,7 @@
 }
 
 .schedule-data {
-  @include text-style(17px, $kimberlyDark, Lato, $normalFontWeight);
+  @include text-style(15px, $kimberlyDark, Lato, $normalFontWeight);
   background-color: $clearDay;
   height: 50px;
 }
