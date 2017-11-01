@@ -2,19 +2,19 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {
   SCHEDULER_STORE_TYPE,
   SchedulerStoreService
-} from "../../ks-components/ks-calendar/services/scheduler-store.service";
+} from "../../ks-components/ks-scheduler/services/scheduler-store.service";
 import {Observable} from "rxjs/Observable";
 import {SchedulingMockData} from './schedulingMockData';
-import {TimeSlotTypes} from "../../ks-components/ks-calendar/constants/scheduler.constant";
-import {ISchedulerConfig} from '../../ks-components/ks-calendar/calendar/calendar.component';
+import {TimeSlotTypes} from "../../ks-components/ks-scheduler/constants/scheduler.constant";
+import {ISchedulerConfig} from '../../ks-components/ks-scheduler/scheduler/scheduler.component';
 
 @Component({
-  selector: 'app-calendar-adapter',
-  templateUrl: './calendar-adapter.component.html',
-  styleUrls: ['./calendar-adapter.component.scss'],
+  selector: 'app-scheduler-adapter',
+  templateUrl: './scheduler-adapter.component.html',
+  styleUrls: ['./scheduler-adapter.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class CalendarAdapterComponent implements OnInit {
+export class SchedulerAdapterComponent implements OnInit {
   public schedulerConfig: ISchedulerConfig;  // todo - figure how and where to store scheduler types.
   public selectedItemIndex;
 

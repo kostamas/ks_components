@@ -1,0 +1,30 @@
+@import '../../assets/scss/main';
+
+.ks-img {
+  width: 250px;
+  height: 250px;
+  border-radius: 100%;
+  position: fixed;
+  top: 25px;
+  left: 25px;
+}
+
+.components-container {
+  display: flex;
+  width: 600px;
+  flex-wrap: wrap;
+  margin: 100px auto;
+
+  .component {
+    @include text-style(22px, $cornflowerBlue, Lato);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 200px;
+    background-color: white;
+    box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
+    margin: 30px;
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,60 @@
+<div class="scheduler-component">
+
+  <div class="scheduler-controls">
+    <div class="change-week-section">
+      <div class="change-week-title"> change week</div>
+
+      <div class="change-week-arrows">
+        <div style="cursor: pointer;" (click)="changeActiveWeek(-1)">
+          <div class="arrow-right"></div>
+        </div>
+        <div style="cursor: pointer;" (click)="changeActiveWeek(1)">
+          <div class="arrow-left"></div>
+        </div>
+      </div>
+    </div>
+
+    <span class="current-date-title">{{currentDate | date:'yyyy MM'}}</span>
+  </div>
+
+  <div class="scheduler-wrapper" [ngClass]="{'show-spinner': showSpinner}">
+    <scheduler-spinner></scheduler-spinner>
+
+
+
+    <div class="scheduler-header">
+      <div class="scheduler-header-column quicksand-14-b" *ngFor="let headerDate of headerDates; let i = index;">
+        {{headerDates[i] | date:'EEE d' }}
+      </div>
+    </div>
+
+    <div class="scheduler-content">
+      <div class="scheduler-cells-wrapper scrollbar-style"> <!--overflow hidden-->
+        <div class="scheduler-container-flex">
+          <div
+            *ngFor="let weekName of schedulerWeeks"
+            class="scheduler-weeks-container"
+            [ngStyle]="weeksStyles[weekName]"
+            [ngClass]="weekName">
+            <div class="scheduler-hours-wrapper">
+              <div class="scheduler-hours">
+                <div class="hour lato-12-n" *ngFor="let hour  of hours;">{{(hour) | SchedulerHoursPipe}}</div>
+              </div>
+            </div>
+
+            <div *ngFor="let b  of schedulerColumns; let column = index;">
+              <div *ngFor="let a of schedulerRows; let row = index;">
+                <app-time-slot
+                  [timeSlotData]="timeSlotData[weekName][column][hours[row]]">
+                </app-time-slot>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="scheduler-footer"></div>
+  </div>
+
+</div>

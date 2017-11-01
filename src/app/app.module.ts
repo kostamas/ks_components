@@ -5,7 +5,6 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import {TabsComponent} from './tabs/tabs.component';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {Routing} from './app.routes';
 import {Http, HttpModule} from '@angular/http';
@@ -20,7 +19,6 @@ export function HttpLoaderFactory(http: Http) {
   declarations: [
     AppComponent,
     HomeComponent,
-    TabsComponent,
     PageNotFoundComponent
   ],
   imports: [

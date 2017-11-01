@@ -1,7 +1,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
-@Pipe({name: 'CalendarHoursPipe'})
-export class CalendarHoursPipe implements PipeTransform {
+@Pipe({name: 'SchedulerHoursPipe'})
+export class SchedulerHoursPipe implements PipeTransform {
   transform(hour: number): string {
     let result;
 

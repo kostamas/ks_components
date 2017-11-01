@@ -10,14 +10,14 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
 @Component({
-  selector: 'app-calendar',
-  templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.scss'],
+  selector: 'app-scheduler',
+  templateUrl: './scheduler.component.html',
+  styleUrls: ['./scheduler.component.scss'],
   providers: [DatePipe],
   encapsulation: ViewEncapsulation.None
 })
 
-export class CalendarComponent implements OnChanges, OnInit {
+export class SchedulerComponent implements OnChanges, OnInit {
   public DYNAMIC_DEFAULT_VIEWS = TimeSlotConstant.DYNAMIC_DEFAULT_VIEWS;
   private currentOperationId = OperationTypes.SCHEDULES;
   public showSpinner = false;
@@ -35,9 +35,9 @@ export class CalendarComponent implements OnChanges, OnInit {
     [TimeSlotConstant.DYNAMIC_DEFAULT_VIEWS.UNAVAILABLE]: 'unavailable-slot'
   };
 
-  public calendarRows = new Array(SchedulerConstant.HOURS_IN_DAYS);
-  public calendarColumns = new Array(SchedulerConstant.DAYS_IN_WEEK);
-  public calendarWeeks = ['week_slide_0', 'week_slide_1', 'week_slide_2'];
+  public schedulerRows = new Array(SchedulerConstant.HOURS_IN_DAYS);
+  public schedulerColumns = new Array(SchedulerConstant.DAYS_IN_WEEK);
+  public schedulerWeeks = ['week_slide_0', 'week_slide_1', 'week_slide_2'];
   public weeksStyles = {
     week_slide_0: {left: '-900px', transition: '1sec'},
     week_slide_1: {left: '0px', transition: '1sec'},
@@ -150,8 +150,8 @@ export class CalendarComponent implements OnChanges, OnInit {
   public changeActiveWeek(weekDirection) {
     this.showSpinner = true;
 
-    const newActiveWeek = (this.current_week_slide - weekDirection) % this.calendarWeeks.length;
-    this.current_week_slide = newActiveWeek < 0 ? this.calendarWeeks.length - 1 : newActiveWeek;
+    const newActiveWeek = (this.current_week_slide - weekDirection) % this.schedulerWeeks.length;
+    this.current_week_slide = newActiveWeek < 0 ? this.schedulerWeeks.length - 1 : newActiveWeek;
     this.currentDate.setDate(this.currentDate.getDate() - weekDirection * 7);
     this.currentDate = new Date(this.currentDate);
 
@@ -162,12 +162,12 @@ export class CalendarComponent implements OnChanges, OnInit {
       left_style_pixels = this.weeksStyles[week_slide].left;
       left_style_pixels = +left_style_pixels.replace('px', '');
 
-      if (left_style_pixels + weekDirection * 900 > (this.calendarWeeks.length - 2) * 900) {
+      if (left_style_pixels + weekDirection * 900 > (this.schedulerWeeks.length - 2) * 900) {
         this.weeksStyles[week_slide].transition = 'none';
         this.weeksStyles[week_slide].left = '-900px';
       } else if (left_style_pixels + weekDirection * 900 < -900) {
         this.weeksStyles[week_slide].transition = 'none';
-        this.weeksStyles[week_slide].left = (this.calendarWeeks.length - 2) * 900 + 'px';
+        this.weeksStyles[week_slide].left = (this.schedulerWeeks.length - 2) * 900 + 'px';
       } else {
         this.weeksStyles[week_slide].transition = '0.6s left ease';
         this.weeksStyles[week_slide].left = weekDirection * 900 + left_style_pixels + 'px';
@@ -264,7 +264,7 @@ export class CalendarComponent implements OnChanges, OnInit {
         for (let hour = 0; hour < SchedulerConstant.HOURS_IN_DAYS; hour++) {
           dateDetails = this.schedulerService.getDateDetails(runningDate);
 
-          timeSlotData = this.timeSlotData[this.calendarWeeks[weekSlide]][i][hour];
+          timeSlotData = this.timeSlotData[this.schedulerWeeks[weekSlide]][i][hour];
           timeSlotData.data = this.extractData(data, dateDetails.year, dateDetails.month, dateDetails.dayOfMonth, hour);
           timeSlotData.metaData = this.metaDataGetterByTimeSlot(timeSlotData, operationType);
           timeSlotData.metaData.date = new Date(dateDetails.year, dateDetails.month, dateDetails.dayOfMonth, hour);
@@ -317,7 +317,7 @@ export class CalendarComponent implements OnChanges, OnInit {
   }
 
   private scheduleHandler(timeSlotsData) {
-    const weekSlide = this.calendarWeeks[this.current_week_slide];
+    const weekSlide = this.schedulerWeeks[this.current_week_slide];
     this.currentOperationId = OperationTypes.SCHEDULES;
 
     let _day, _hour, dateObj;
@@ -340,7 +340,6 @@ export class CalendarComponent implements OnChanges, OnInit {
     const endDate = new Date(new Date(this.currentDate).setDate(this.currentDate.getDate() + endOffset - this.currentDate.getDay()));
     return {startDate, endDate};
   }
-
 }
 
 export interface ISchedulerConfig {

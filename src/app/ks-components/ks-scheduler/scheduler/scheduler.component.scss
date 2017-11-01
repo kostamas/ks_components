@@ -1,7 +1,7 @@
 @import '../../../../assets/scss/main';
 
-$calendar-width: 900px;
-.calendar-component {
+$scheduler-width: 900px;
+.scheduler-component {
   width: 1200px;
   overflow: hidden;
   display: flex;
@@ -9,9 +9,9 @@ $calendar-width: 900px;
   padding-top: 60px;
   flex-direction: column;
 
-  .calendar-controls {
+  .scheduler-controls {
     display: flex;
-    width: $calendar-width;
+    width: $scheduler-width;
     padding-bottom: 20px;
 
     .change-week-section {
@@ -48,9 +48,9 @@ $calendar-width: 900px;
 
   }
 
-  .calendar-wrapper {
+  .scheduler-wrapper {
     position: relative; // todo - for test (schedule, reset buttons)
-    width: $calendar-width;
+    width: $scheduler-width;
     height: 578px;
     overflow: hidden;
 
@@ -59,7 +59,7 @@ $calendar-width: 900px;
       display: flex;
       flex-direction: row-reverse;
 
-      .calendar_cancel-btn {
+      .scheduler_cancel-btn {
         background-color: $hintOfRed;
         color: $bermuda;
         border: 1px solid $bermuda;
@@ -72,17 +72,17 @@ $calendar-width: 900px;
       }
     }
 
-    .calendar-header {
+    .scheduler-header {
       background-color: $ABC;
       display: flex;
       align-items: center;
-      width: $calendar-width;
+      width: $scheduler-width;
       height: 38px;
       padding-left: 45px;
       box-sizing: border-box;
       border-radius: 10px 10px 0 0;
 
-      .calendar-header-column {
+      .scheduler-header-column {
         flex-grow: 0;
         flex-shrink: 0;
         width: 120px;
@@ -95,14 +95,14 @@ $calendar-width: 900px;
       }
     }
 
-    .calendar-content {
+    .scheduler-content {
       display: flex;
       width: calc(3 * 886px);
       height: 400px;
       background-color: $white;
 
-      .calendar-hours-wrapper { // without ks-calendar-hours-wrapper the ks-calendar-hours won't grow because the parent has fixed height + overflow scroll
-        .calendar-hours {
+      .scheduler-hours-wrapper {
+        .scheduler-hours {
           display: flex;
           flex-direction: column;
           border-bottom: 1px solid $alto;
@@ -123,19 +123,19 @@ $calendar-width: 900px;
         }
       }
 
-      .calendar-cells-wrapper {
+      .scheduler-cells-wrapper {
         overflow-x: hidden;
         overflow-y: scroll;
-        width: $calendar-width;
+        width: $scheduler-width;
 
-        .calendar-container-flex {
+        .scheduler-container-flex {
           width: 5000px;
           display: flex;
           position: relative;
-          .calendar-weeks-container {
+          .scheduler-weeks-container {
             display: flex;
             height: 400px;
-            width: $calendar-width;
+            width: $scheduler-width;
             position: absolute;
             transform: translate3d(0, 0, 0);
           }
@@ -143,10 +143,10 @@ $calendar-width: 900px;
       }
     }
 
-    .calendar-footer {
+    .scheduler-footer {
       background-color: $alabaster;
       border-radius: 0 0 15px 15px;
-      width: $calendar-width;
+      width: $scheduler-width;
       height: 18px;
     }
   }
