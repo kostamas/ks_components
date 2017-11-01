@@ -30,6 +30,14 @@ export class SchedulerService {
     return dateObj.getTime();
   }
 
+  public getDateDetails(date: Date) {
+    let year = date.getFullYear();
+    let month = date.getMonth();
+    let dayOfMonth = date.getDate();
+    let hours = date.getHours();
+    return {year, month, dayOfMonth, hours};
+  }
+
   public runOnDateObject(dateObj, cbFunction, convertToUserTimezone?) {
     Object.keys(dateObj).forEach(year => {
       Object.keys(dateObj[year]).forEach(month => {
