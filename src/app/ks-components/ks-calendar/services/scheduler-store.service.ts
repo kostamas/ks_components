@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
 import {Subject} from 'rxjs/Subject';
-import {Observable} from "rxjs/Observable";
 
 @Injectable()
 export class SchedulerStoreService {
@@ -52,8 +51,8 @@ export class SchedulerStoreService {
 /*************************************** constants *******************************/
 
 export const SCHEDULER_STORE_TYPE = {
-  GET: 1,
-  SET: 2
+  OUT: 1,
+  IN: 2
 };
 
 export const TIME_SLOT_STORE_TYPE = {

@@ -8,6 +8,7 @@ export class SchedulingMockData {
   constructor() {
     this.schedules = this.buildMockData('schedules');
     this.availability = this.buildMockData('availability');
+    localStorage.setItem('x',JSON.stringify(this.availability));
   }
 
   public buildMockData(type) {
@@ -26,7 +27,7 @@ export class SchedulingMockData {
         const numOfDays = new Date(+year, +month + 1, 0).getDate();
         obj[year][month] = {};
         for (let day = 1; day <= numOfDays; day++) {
-          if (Math.floor((Math.random() * 2))) {
+          if (Math.floor((Math.random() * 2)) || type === 'availability') {
             obj[year][month][day] = {};
             for (let hour = 0; hour < 24; hour++) {
 

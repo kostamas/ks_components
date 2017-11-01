@@ -7,7 +7,6 @@ import {Observable} from "rxjs/Observable";
 import {SchedulingMockData} from './schedulingMockData';
 import {TimeSlotTypes} from "../../ks-components/ks-calendar/constants/scheduler.constant";
 import {ISchedulerConfig} from '../../ks-components/ks-calendar/calendar/calendar.component';
-import * as _ from 'lodash';
 
 @Component({
   selector: 'app-calendar-adapter',
@@ -43,9 +42,11 @@ export class CalendarAdapterComponent implements OnInit {
 
   public onItemClick = (itemIndex) => {
     if (this.selectedItemIndex !== itemIndex) {
-      this.schedulerStoreService.notifyAvailability(SCHEDULER_STORE_TYPE.GET);
+      let x = Date.now();
+      this.schedulerStoreService.notifyAvailability(SCHEDULER_STORE_TYPE.OUT);
+      console.log(Date.now() - x);
       this.schedulerStoreService.onAvailability((availability: number) => {
-        if (availability === SCHEDULER_STORE_TYPE.SET) {
+        if (availability === SCHEDULER_STORE_TYPE.IN) {
           this.selectedItemIndex = itemIndex;
         }
       });
@@ -55,13 +56,13 @@ export class CalendarAdapterComponent implements OnInit {
   };
 
   private getAvailability = (): Observable<any> => {
-    return Observable.of(_.cloneDeep(this.schedulingMockData.availability))
+    return Observable.of(this.schedulingMockData.availability)
       .delay(500);
   };
 
 
   private getSchedules = (): Observable<any> => {
-    return Observable.of(_.cloneDeep(this.schedulingMockData.schedules))
+    return Observable.of(this.schedulingMockData.schedules)
       .delay(500);
   };
 
@@ -96,15 +97,14 @@ export class CalendarAdapterComponent implements OnInit {
         this.schedulingMockData.schedules[year][month][dayInMonth][i] = {};
       }
     }
-  debugger;
-    let x = this.schedulingMockData.availability[year][month][dayInMonth][hour];
-    this.schedulingMockData.availability[year][month][dayInMonth][hour].data = {isAvailable:false,textToShow:selectedItem.text};
+
+    this.schedulingMockData.availability[year][month][dayInMonth][hour].data = {isAvailable:false, textToShow:selectedItem.text};
     this.schedulingMockData.schedules[year][month][dayInMonth][hour].data = selectedItem.text;
     this.schedulerStoreService.notifyUpdateTimeSlot(timeSlotData);
   };
 
   private showSchedules = () => {
     this.selectedItemIndex = -1;
-    this.schedulerStoreService.notifySchedules(SCHEDULER_STORE_TYPE.GET);
+    this.schedulerStoreService.notifySchedules(SCHEDULER_STORE_TYPE.OUT);
   }
 }
