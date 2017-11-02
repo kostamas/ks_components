@@ -7,6 +7,7 @@ import {Observable} from "rxjs/Observable";
 import {SchedulingMockData} from './schedulingMockData';
 import {TimeSlotTypes} from "../../ks-components/ks-scheduler/constants/scheduler.constant";
 import {ISchedulerConfig} from '../../ks-components/ks-scheduler/scheduler/scheduler.component';
+import {SchedulerService} from "../../ks-components/ks-scheduler/services/scheduler.service";
 
 @Component({
   selector: 'app-scheduler-adapter',
@@ -29,14 +30,16 @@ export class SchedulerAdapterComponent implements OnInit {
     {text: 'Item 8', id: 123, type: TimeSlotTypes.REGULAR},
     {text: 'Item 9', id: 123, type: TimeSlotTypes.REGULAR}];
 
-  constructor(private schedulerStoreService: SchedulerStoreService, private schedulingMockData: SchedulingMockData) {
+  constructor(private schedulerStoreService: SchedulerStoreService, private schedulingMockData: SchedulingMockData,
+              private schedulerService: SchedulerService) {
   }
 
   ngOnInit() {
     this.schedulerConfig = {
       getAvailability: this.getAvailability,
       getSchedules: this.getSchedules,
-      schedule: this.schedule
+      schedule: this.schedule,
+      deleteItem: this.deleteItem
     };
   }
 
@@ -55,54 +58,62 @@ export class SchedulerAdapterComponent implements OnInit {
 
   private getAvailability = (): Observable<any> => {
     return Observable.of(this.schedulingMockData.availability)
-      .delay(Math.floor(Math.random()*700));
+      .delay(Math.floor(Math.random() * 700));
   };
 
 
   private getSchedules = (): Observable<any> => {
     return Observable.of(this.schedulingMockData.schedules)
-      .delay(Math.floor(Math.random()*700));
+      .delay(Math.floor(Math.random() * 700));
   };
 
-  private schedule = ({timeSlotType, date}) => {
+  private schedule = ({data, date}) => {
     let selectedItemIndex = this.selectedItemIndex;
     let selectedItem = this.itemsToSchedule[selectedItemIndex];
     this.itemsToSchedule.splice(selectedItemIndex, 1);
-
     this.selectedItemIndex = -1;
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const dayInMonth = date.getDate();
-    const hour = date.getHours();
-    let timeSlotData = {
-      [year]: {
-        [month]: {
-          [dayInMonth]: {
-            [hour]: {
-              data: selectedItem.text
-            }
-          }
-        }
-      }
-    };
 
-    if (!this.schedulingMockData.schedules[year][month]) {
-      this.schedulingMockData.schedules[year][month] = {};
-    }
-    if (!this.schedulingMockData.schedules[year][month][dayInMonth]) {
-      this.schedulingMockData.schedules[year][month][dayInMonth] = {};
-      for (let i = 0; i < 24; i++) {
-        this.schedulingMockData.schedules[year][month][dayInMonth][i] = {};
-      }
-    }
+    this.updateDB(date, {isAvailable: false, textToShow: selectedItem.text}, 'availability');
+    let insertedItem = this.updateDB(date, selectedItem.text, 'schedules');
+    this.schedulerStoreService.notifyUpdateTimeSlot(insertedItem);
+  };
 
-    this.schedulingMockData.availability[year][month][dayInMonth][hour].data = {isAvailable:false, textToShow:selectedItem.text};
-    this.schedulingMockData.schedules[year][month][dayInMonth][hour].data = selectedItem.text;
-    this.schedulerStoreService.notifyUpdateTimeSlot(timeSlotData);
+  private deleteItem = ({data, date}) => {
+    this.itemsToSchedule.push({text: data, type: TimeSlotTypes.REGULAR}); // todo - id ?
+    let insertedItem = this.updateDB(date, {isAvailable: true}, 'availability');
+    this.updateDB(date, '', 'schedules');
+    this.schedulerStoreService.notifyUpdateTimeSlot(insertedItem); // todo - ?
   };
 
   private showSchedules = () => {
     this.selectedItemIndex = -1;
     this.schedulerStoreService.notifySchedules(SCHEDULER_STORE_TYPE.OUT);
+  };
+
+  private updateDB(date, data, collection) {
+    const dateDetails = this.schedulerService.getDateDetails(date);
+    if (!this.schedulingMockData[collection][dateDetails.year][dateDetails.month]) {
+      this.schedulingMockData[collection][dateDetails.year][dateDetails.month] = {};
+    }
+    if (!this.schedulingMockData[collection][dateDetails.year][dateDetails.month][dateDetails.dayOfMonth]) {
+      this.schedulingMockData[collection][dateDetails.year][dateDetails.month][dateDetails.dayOfMonth] = {};
+      for (let i = 0; i < 24; i++) {
+        this.schedulingMockData[collection][dateDetails.year][dateDetails.month][dateDetails.dayOfMonth][i] = {};
+      }
+    }
+    this.schedulingMockData[collection][dateDetails.year][dateDetails.month][dateDetails.dayOfMonth][dateDetails.hours].data = data;
+
+    return {
+      [dateDetails.year]: {
+        [dateDetails.month]: {
+          [dateDetails.dayOfMonth]: {
+            [dateDetails.hours]: {
+              data: data
+            }
+          }
+        }
+      }
+    };
   }
+
 }

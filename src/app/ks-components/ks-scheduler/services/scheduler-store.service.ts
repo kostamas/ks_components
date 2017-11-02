@@ -38,7 +38,7 @@ export class SchedulerStoreService {
     return this.timeSlotClick$.subscribe(cb);
   }
 
-  public notifyUpdateTimeSlot(data){
+  public notifyUpdateTimeSlot(data) {
     this.updateTimeSlots$.next(data);
   }
 
@@ -56,6 +56,7 @@ export const SCHEDULER_STORE_TYPE = {
 };
 
 export const TIME_SLOT_STORE_TYPE = {
-  AVAILABILITY: 1,
-  CUSTOM: 2
+  SCHEDULE: 1,
+  DELETE: 2,
+  CUSTOM: 3
 };

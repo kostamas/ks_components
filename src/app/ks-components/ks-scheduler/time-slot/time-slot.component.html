@@ -10,13 +10,18 @@
            (click)="availableSlotClick()">
       </div>
 
-      <div *ngSwitchCase="TIME_SLOT_VIEWS.UNAVAILABLE_TIME_SLOT_VIEW">
+      <div  class="unavailable" *ngSwitchCase="TIME_SLOT_VIEWS.UNAVAILABLE_TIME_SLOT_VIEW">
         {{timeSlotData.data.textToShow}}
       </div>
 
-      <div *ngSwitchCase="TIME_SLOT_VIEWS.SCHEDULE"
-           class="unavailable-time-slot">
-        {{timeSlotData.data}}
+      <div *ngSwitchCase="TIME_SLOT_VIEWS.SCHEDULE" class="schedule">
+        <div class="un-schedule-btn" (click)="deleteItem()">x</div>
+
+        <div class="text">{{timeSlotData.data | elipsis:13 }}
+          <div [ngClass]="{'hide-tooltip': timeSlotData.data.length < 13}" class="time-slot-data-tooltip">
+            {{timeSlotData.data }}
+          </div>
+        </div>
       </div>
 
     </div>

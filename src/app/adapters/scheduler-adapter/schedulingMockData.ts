@@ -32,7 +32,7 @@ export class SchedulingMockData {
             for (let hour = 0; hour < 24; hour++) {
 
               if (type === 'schedules') {
-                obj[year][month][day][hour] = {data: Math.floor((Math.random() * 2)) ? this.getRandomText() : ' ',};
+                obj[year][month][day][hour] = {data: Math.floor((Math.random() * 2)) ? this.getRandomText() : ''};
               }
 
               if (type === 'availability') {

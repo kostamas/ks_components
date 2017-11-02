@@ -28,21 +28,71 @@
     background-color: $white;
   }
 
-  .unavailable-time-slot {
+  .unavailable{
     @include text-style(15px, $kimberlyDark, Lato, $normalFontWeight);
+    position: relative;
+    top: 15px;
+    left: 5px;
+  }
 
+  .schedule {
+    position: relative;
+    .text {
+      @include text-style(15px, $kimberlyDark, Lato, $normalFontWeight);
+      position: relative;
+      top: 15px;
+      left: 5px;
+    }
+
+    .un-schedule-btn {
+      @include text-style(18px, $rollingStone);
+      position: absolute;
+      right: 3px;
+      top: -4px;
+      cursor: pointer;
+
+      &:hover{
+        opacity: 0.8;
+        color: #77A2E9;
+      }
+    }
+
+    .time-slot-data-tooltip {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 25px;
+      padding: 0 10px;
+      width: auto;
+      min-width: 90px;
+      height: 50px;
+      background-color: white;
+      box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.75);
+      z-index: 100;
+      transition: 0.2s;
+    }
+
+    .time-slot-data-tooltip.hide-tooltip{
+      display: none;
+    }
+  }
+
+  .text:hover {
+    .time-slot-data-tooltip:not(.hide-tooltip) {
+      display: flex;
+    }
   }
 
   .available-time-slot:hover {
-    cursor: pointer;
     transition: ease-out 100ms;
     background-color: rgba($bondiBlue, 0.12);
     border: dashed 2px $bondiBlue;
   }
-}
 
-.schedule-data {
-  @include text-style(15px, $kimberlyDark, Lato, $normalFontWeight);
-  background-color: $clearDay;
-  height: 50px;
+  .schedule-data {
+    @include text-style(15px, $kimberlyDark, Lato, $normalFontWeight);
+    background-color: $clearDay;
+    height: 50px;
+  }
 }

@@ -7,9 +7,10 @@ import {SchedulerService} from './services/scheduler.service';
 import {TimeSlotConstant} from './constants/timeSlot.constant';
 import {SchedulerConstant} from './constants/scheduler.constant';
 import {SchedulerHoursPipe} from './pipes/schedulerHoursPipe.pipe';
-import {KeysPipe} from '../../../pipes/keys';
+import {KeysPipe} from '../../../pipes/keys.pipe';
 import {SchedulerSpinnerComponent} from './schedularSppiner/scheduler-spinner.component';
 import {SchedulerStoreService} from './services/scheduler-store.service';
+import {EllipsisPipe} from '../../../pipes/ellipsis.pipe';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import {SchedulerStoreService} from './services/scheduler-store.service';
     TimeSlotComponent,
     SchedulerHoursPipe,
     KeysPipe,
+    EllipsisPipe,
     SchedulerSpinnerComponent
   ],
   exports: [

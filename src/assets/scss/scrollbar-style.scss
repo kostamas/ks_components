@@ -1,16 +1,15 @@
 @import './colors';
 
 .scrollbar-style {
-  ::-webkit-scrollbar,
   &::-webkit-scrollbar {
     height: 20px;
     width: 7px;
     background-color: $hintOfRed;
     border-radius: 100px;
   }
-  ::-webkit-scrollbar-thumb,
   &::-webkit-scrollbar-thumb {
     background-color: $gallery;
     -webkit-border-radius: 1ex;
+
   }
-};
+}
