@@ -3,7 +3,7 @@
 
 .scheduler-adapter-container {
   display: flex;
-  margin: 50px;
+  margin: 90px 70px;
   width: 1700px;
 
   .scheduler-operation-pan {
@@ -18,15 +18,15 @@
       justify-content: center;
       width: 200px;
       height: 40px;
-      background-color: $blueChill;
+      background-color: $ABC;
       border: 1px solid $nobel;
       color: $white;
       border-radius: 5px;
       cursor: pointer;
-      transition: 0.5s;
+      transition: 0.3s;
 
       &:hover {
-        background-color: $blueLagoon;
+        background-color: $portage;
       }
 
       &:active {

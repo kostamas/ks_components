@@ -14,13 +14,11 @@
       </div>
     </div>
 
-    <span class="current-date-title">{{currentDate | date:'yyyy MM'}}</span>
+    <span class="current-date-title">{{currentDate | date:'MM/yyyy '}}</span>
   </div>
 
   <div class="scheduler-wrapper" [ngClass]="{'show-spinner': showSpinner}">
     <scheduler-spinner></scheduler-spinner>
-
-
 
     <div class="scheduler-header">
       <div class="scheduler-header-column quicksand-14-b" *ngFor="let headerDate of headerDates; let i = index;">
