@@ -36,7 +36,7 @@ export class TimeSlotComponent {
     this.schedulerStoreService.notifyTimeSlot(TIME_SLOT_STORE_TYPE.SCHEDULE, this.timeSlotData.metaData.date, this.timeSlotData.data)
   }
 
-  public deleteItem(){
+  public deleteItem() {
     this.schedulerStoreService.notifyTimeSlot(TIME_SLOT_STORE_TYPE.DELETE, this.timeSlotData.metaData.date, this.timeSlotData.data)
 
   }
