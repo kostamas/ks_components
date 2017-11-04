@@ -17,6 +17,6 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.components = [
       {text: 'Scheduler', link: 'scheduler'}
-    ]
+    ];
   }
 }

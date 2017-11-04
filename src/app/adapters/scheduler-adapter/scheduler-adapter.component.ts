@@ -20,15 +20,15 @@ export class SchedulerAdapterComponent implements OnInit {
   public selectedItemIndex;
 
   public itemsToSchedule: any[] = [
-    {text: 'Item 1', id: 123, type: TimeSlotTypes.REGULAR},
-    {text: 'Item 2', id: 123, type: TimeSlotTypes.REGULAR},
-    {text: 'Item 3', id: 123, type: TimeSlotTypes.REGULAR, classToAdd: "custom-class-1"},
-    {text: 'Item 4', id: 123, type: TimeSlotTypes.REGULAR},
-    {text: 'Item 5', id: 123, type: TimeSlotTypes.REGULAR},
-    {text: 'Item 6', id: 123, type: TimeSlotTypes.REGULAR, classToAdd: "custom-class-2"},
-    {text: 'Item 7', id: 123, type: TimeSlotTypes.REGULAR},
-    {text: 'Item 8', id: 123, type: TimeSlotTypes.REGULAR},
-    {text: 'Item 9', id: 123, type: TimeSlotTypes.REGULAR}];
+    {text: 'Item 1', id: 123, timeSlotType: TimeSlotTypes.REGULAR},
+    {text: 'Item 2', id: 123, timeSlotType: TimeSlotTypes.REGULAR},
+    {text: 'Item 3', id: 123, timeSlotType: TimeSlotTypes.REGULAR, classToAdd: "custom-class-1"},
+    {text: 'Item 4', id: 123, timeSlotType: TimeSlotTypes.REGULAR},
+    {text: 'Item 5', id: 123, timeSlotType: TimeSlotTypes.REGULAR},
+    {text: 'Item 6', id: 123, timeSlotType: TimeSlotTypes.REGULAR, classToAdd: "custom-class-2"},
+    {text: 'Item 7', id: 123, timeSlotType: TimeSlotTypes.REGULAR},
+    {text: 'Item 8', id: 123, timeSlotType: TimeSlotTypes.REGULAR},
+    {text: 'Item 9', id: 123, timeSlotType: TimeSlotTypes.REGULAR}];
 
   constructor(private schedulerStoreService: SchedulerStoreService, private schedulingMockData: SchedulingMockData,
               private schedulerService: SchedulerService) {
@@ -54,33 +54,32 @@ export class SchedulerAdapterComponent implements OnInit {
     } else {
       this.showSchedules();
     }
-  };
+  }
 
-  private getAvailability = (): Observable<any> => {
+  private getAvailability = (startDate: Date, endDate: Date): Observable<any> => {
     return Observable.of(this.schedulingMockData.availability)
       .delay(Math.floor(Math.random() * 700));
-  };
+  }
 
 
-  private getSchedules = (): Observable<any> => {
+  private getSchedules = (startDate: Date, endDate: Date): Observable<any> => {
     return Observable.of(this.schedulingMockData.schedules)
       .delay(Math.floor(Math.random() * 700));
-  };
+  }
 
-  private schedule = ({data, date}) => {
-    let selectedItemIndex = this.selectedItemIndex;
-    let selectedItem = this.itemsToSchedule[selectedItemIndex];
-    this.itemsToSchedule.splice(selectedItemIndex, 1);
+  private schedule = ({date}) => {
+    const selectedItem = this.itemsToSchedule[this.selectedItemIndex];
+    this.itemsToSchedule.splice(this.selectedItemIndex, 1);
     this.selectedItemIndex = -1;
 
     this.updateDB(date, {isAvailable: false, textToShow: selectedItem.text}, 'availability');
-    let insertedItem = this.updateDB(date, selectedItem.text, 'schedules');
+    const insertedItem = this.updateDB(date, selectedItem.text, 'schedules');
     this.schedulerStoreService.notifyUpdateTimeSlot(insertedItem);
-  };
+  }
 
   private deleteItem = ({data, date}) => {
     this.itemsToSchedule.push({text: data, type: TimeSlotTypes.REGULAR}); // todo - id ?
-    let insertedItem = this.updateDB(date, {isAvailable: true}, 'availability');
+    const insertedItem = this.updateDB(date, {isAvailable: true}, 'availability');
     this.updateDB(date, '', 'schedules');
     this.schedulerStoreService.notifyUpdateTimeSlot(insertedItem); // todo - ?
   };
@@ -115,5 +114,4 @@ export class SchedulerAdapterComponent implements OnInit {
       }
     };
   }
-
 }

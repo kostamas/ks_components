@@ -1,9 +1,9 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {TimeSlotConstant} from '../constants/timeSlot.constant';
-import {OperationTypes, SchedulerConstant} from '../constants/scheduler.constant';
+import {OperationTypes, SchedulerConstant, TimeSlotTypes} from '../constants/scheduler.constant';
 import {SchedulerService} from '../services/scheduler.service';
 import {DatePipe} from '@angular/common';
-import {SCHEDULER_STORE_TYPE, SchedulerStoreService, TIME_SLOT_STORE_TYPE} from "../services/scheduler-store.service";
+import {SCHEDULER_STORE_TYPE, SchedulerStoreService, TIME_SLOT_STORE_TYPE} from '../services/scheduler-store.service';
 import * as _ from 'lodash';
 
 import {Observable} from 'rxjs/Observable';
@@ -149,7 +149,7 @@ export class SchedulerComponent implements  OnInit {
     const newActiveWeek = (this.current_week_slide - weekDirection) % this.schedulerWeeks.length;
     this.current_week_slide = newActiveWeek < 0 ? this.schedulerWeeks.length - 1 : newActiveWeek;
     this.currentDate.setDate(this.currentDate.getDate() - weekDirection * 7);
-    this.currentDate = new Date(this.currentDate);
+    this.currentDate = new Date(this.currentDate); // todo - ????
 
     this.updateHeaderDates(this.currentDate);
 
@@ -222,7 +222,7 @@ export class SchedulerComponent implements  OnInit {
     this.dynamicDefaultView.timeSlotClass = this.dynamicDefaultViewsMap[TimeSlotConstant.DYNAMIC_DEFAULT_VIEWS.UNAVAILABLE];
     if (availabilityStoreType === SCHEDULER_STORE_TYPE.OUT) {
       this.showSpinner = true;
-      const subscription = this.schedulerConfig.getAvailability(this.currentDate)
+      const subscription = this.schedulerConfig.getAvailability(startDate, endDate)
         .switchMap(data => {
           if (typeof startWeekSlide === 'function') {
             startWeekSlide = startWeekSlide.apply(this);
@@ -233,7 +233,7 @@ export class SchedulerComponent implements  OnInit {
           this.schedulerStoreService.notifyAvailability(SCHEDULER_STORE_TYPE.IN);
           this.showSpinner = false;
           subscription.unsubscribe();
-        })
+        });
     }
   };
 
@@ -242,7 +242,7 @@ export class SchedulerComponent implements  OnInit {
     this.currentOperationId = OperationTypes.SCHEDULES;
     this.dynamicDefaultView.timeSlotClass = this.dynamicDefaultViewsMap[TimeSlotConstant.DYNAMIC_DEFAULT_VIEWS.EMPTY];
 
-    const subscription = this.schedulerConfig.getSchedules().subscribe((schedules) => {
+    const subscription = this.schedulerConfig.getSchedules(startDate, endDate).subscribe((schedules) => {
       if (typeof startWeekSlide === 'function') {
         startWeekSlide = startWeekSlide.apply(this);
       }
@@ -263,6 +263,7 @@ export class SchedulerComponent implements  OnInit {
           timeSlotData = this.timeSlotData[this.schedulerWeeks[weekSlide]][i][hour];
           timeSlotData.data = this.extractData(data, dateDetails.year, dateDetails.month, dateDetails.dayOfMonth, hour);
           timeSlotData.metaData = this.metaDataGetterByTimeSlot(timeSlotData, operationType);
+          timeSlotData.metaData.timeSlotType = data.timeSlotType || TimeSlotTypes.REGULAR;
           timeSlotData.metaData.date = new Date(dateDetails.year, dateDetails.month, dateDetails.dayOfMonth, hour);
           timeSlotData.dynamicDefaultView = this.dynamicDefaultView;
         }
@@ -273,7 +274,7 @@ export class SchedulerComponent implements  OnInit {
     }
     this.showSpinner = false;
     return Observable.of({});
-  };
+  }
 
   private metaDataGetterByTimeSlot(timeSlotData, operationType) {
     switch (operationType) {
@@ -304,7 +305,7 @@ export class SchedulerComponent implements  OnInit {
   }
 
   public timeSlotHandler = (timeSlotData) => {
-    let {timeSlotType, date, data} = timeSlotData;
+    const {timeSlotType, date, data} = timeSlotData;
     switch (timeSlotType) {
       case TIME_SLOT_STORE_TYPE.SCHEDULE:
         this.schedulerConfig.schedule.call(this, {date, data});
@@ -346,8 +347,8 @@ export class SchedulerComponent implements  OnInit {
 }
 
 export interface ISchedulerConfig {
-  getAvailability: () => Observable<any>;
-  getSchedules: () => Observable<any>;
+  getAvailability: (startDate:Date, endDate:Date) => Observable<any>;
+  getSchedules: (startDate:Date, endDate:Date) => Observable<any>;
   schedule: (data: any) => any;
   deleteItem: (data, any) => any;
 }
