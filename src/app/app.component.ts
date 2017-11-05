@@ -1,19 +1,40 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  template: `
+    <div class="home-navigation" routerLink="/home" [routerLinkActive]="['home']">Home</div>
+    <router-outlet></router-outlet>`,
+  styles: [`.home-navigation {
+    width: 100px;
+    height: 50px;
+    background-color: #22d470;
+    box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    left: 80px;
+    top: 20px;
+    position: absolute;
+    font-size: 20px;
+  }
+
+  .home-navigation:hover {
+    opacity: 0.8;
+  }
+
+  .home-navigation.home {
+    display: none;
+  }
+  `]
 })
 export class AppComponent {
-  title = 'app';
 
   constructor(translate: TranslateService) {
-    // this language will be used as a fallback when a translation isn't found in the current language
     translate.setDefaultLang('en');
-
-    // the lang to use, if the lang isn't available, it will use the current loader to get them
     translate.use('en');
   }
 }

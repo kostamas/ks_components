@@ -1,17 +1,23 @@
 import {NgModule} from '@angular/core';
-import {CalendarAdapterComponent} from './calendar-adapter/calendar-adapter.component';
-import {CalendarModule} from '../ks-components/ks-calendar/calendar.module';
+import {SchedulerAdapterComponent} from './scheduler-adapter/scheduler-adapter.component';
+import {SchedulerModule} from '../ks-components/ks-scheduler/scheduler.module';
+import {CommonModule} from '@angular/common';
+import {SchedulingMockData} from './scheduler-adapter/schedulingMockData';
+import {DentistTimeSlotComponent} from './customTimeSlots/dentist-time-slot/dentist-time-slot.component';
 
 @NgModule({
   imports: [
-    CalendarModule
+    SchedulerModule,
+    CommonModule,
   ],
   declarations: [
-    CalendarAdapterComponent
+    SchedulerAdapterComponent,
+    DentistTimeSlotComponent
   ],
-  exports: [
-  ],
+  exports: [],
+  entryComponents: [DentistTimeSlotComponent],
   providers: [
+    SchedulingMockData
   ]
 })
 export class AdaptersModulesModule {

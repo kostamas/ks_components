@@ -1,0 +1,17 @@
+<div class="scheduler-adapter-container">
+
+  <div class="scheduler-operation-pan">
+    <div class="show-schedules-btn" (click)="showSchedules();">Show Schedules</div>
+
+    <div class="items-to-schedule">
+      <div class="items-to-schedule-title">Items To Schedule</div>
+      <div class="scroll-container scrollbar-style">
+        <div *ngFor="let item of itemsToSchedule; let i = index;">
+          <div class="item-to-schedule" [ngClass]="{'selectedItem': i === selectedItemIndex}" (click)="onItemClick(i)">{{item.title}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-scheduler [schedulerConfig]="schedulerConfig"></app-scheduler>
+</div>

@@ -1,0 +1,125 @@
+@import '../../../assets/scss/main';
+@import '../../../assets/scss/mixins';
+
+.scheduler-adapter-container {
+  display: flex;
+  margin: 90px 70px;
+  width: 1700px;
+
+  .scheduler-operation-pan {
+    padding-top: 50px;
+
+    display: flex;
+    flex-direction: column;
+
+    .show-schedules-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 200px;
+      height: 40px;
+      background-color: $ABC;
+      border: 1px solid $nobel;
+      color: $white;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+
+      &:hover {
+        background-color: $portage;
+      }
+
+      &:active {
+        opacity: 0.7;
+      }
+    }
+
+    .items-to-schedule {
+      display: flex;
+      flex-direction: column;
+      width: 320px;
+      height: 453px;
+      border: 1px solid $manatee;
+      margin-top: 25px;
+      margin-right: 150px;
+      background-color: $white;
+
+      .items-to-schedule-title {
+        @include text-style(21px, $white, Lato);
+        background-color: $ABC;
+        height: 35px;
+        text-align: center;
+        padding-top: 8px;
+      }
+
+      .scroll-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        overflow-y: auto;
+        height: 410px;
+        padding-bottom: 10px;
+        background-color: #b3c7fb;
+        box-sizing: border-box;
+
+        .item-to-schedule {
+          @include text-style(21px, $ABC, Lato);
+          width: 130px;
+          height: 60px;
+          margin: 30px 0;
+          background-color: $white;
+          color: $ABC;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
+          cursor: pointer;
+          transition: 0.2s;
+          box-sizing: border-box;
+          position: relative;
+
+          &:hover {
+            background-color: $silver;
+          }
+
+          &:active {
+            opacity: 0.4;
+          }
+
+          &.selectedItem {
+            transition: 0.1s;
+            border: 3px solid;
+            animation:0.3s mymove ease infinite;
+            box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
+            background-color: $portafino;
+          }
+        }
+      }
+    }
+  }
+
+  .scheduler-component {
+    position: relative;
+  }
+}
+
+@keyframes mymove {
+  0% {
+    transform: rotate(0deg);
+    left:1px;
+  }
+  25% {
+    transform: rotate(4deg);
+    top:1px;
+  }
+  50%{
+    transform: rotate(0deg);
+    top:0;
+    left:-1px;
+  }
+  75%{
+    transform: rotate(-4deg);
+    top:-1px;
+    left:0;
+  }
+}
