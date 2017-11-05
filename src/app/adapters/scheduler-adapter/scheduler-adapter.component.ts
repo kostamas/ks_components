@@ -35,11 +35,11 @@ export class SchedulerAdapterComponent implements OnInit {
       title: 'Course',
       timeSlotType: customTimeSlot,
       component: SimpleTimeSlotComponent,
-      inputs: [{title: 'Course'}, {backgroundColor: 'yellow'}, {color: 'black'}]
+      inputs: [{title: 'CS Course'}, {backgroundColor: 'yellow'}, {color: 'black'}]
     },
     {title: 'Item 3', data: 'Item 3', timeSlotType: regularTimeSlot, classToAdd: 'custom-class-1'},
     {
-      title: 'Wedding',
+      title: 'Wedding (NYC)',
       timeSlotType: customTimeSlot,
       component: SimpleTimeSlotComponent,
       inputs: [{title: 'Wedding'}, {backgroundColor: '#12bb05'}]
@@ -47,13 +47,18 @@ export class SchedulerAdapterComponent implements OnInit {
     {title: 'Item 4', data: 'Item 4', timeSlotType: regularTimeSlot},
     {title: 'Item 5', data: 'Item 5', timeSlotType: regularTimeSlot},
     {
-      title: 'Work',
+      title: 'Work (morning)',
       timeSlotType: customTimeSlot,
       component: SimpleTimeSlotComponent,
       inputs: [{title: 'Work'}]
     },
     {title: 'Item 6', data: 'Item 6', timeSlotType: regularTimeSlot, classToAdd: 'custom-class-2'},
-    {title: 'Item 7', data: 'Item 7', timeSlotType: regularTimeSlot}];
+    {
+      title: 'Work (night)',
+      timeSlotType: customTimeSlot,
+      component: SimpleTimeSlotComponent,
+      inputs: [{title: 'Work'}, {backgroundColor: '#9239BB'}]
+    },];
 
   constructor(private schedulerStoreService: SchedulerStoreService, private schedulingMockData: SchedulingMockData,
               private schedulerService: SchedulerService) {
@@ -103,11 +108,7 @@ export class SchedulerAdapterComponent implements OnInit {
     if (selectedItem.timeSlotType === TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR) {
       insertedItem = this.updateDB(metaData.date, selectedItem.data, 'schedules');
     } else {
-      const timeSlotData = {
-        timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM,
-        component: SimpleTimeSlotComponent,
-        inputs: selectedItem.inputs
-      };
+      const timeSlotData = selectedItem;
       insertedItem = this.updateDB(metaData.date, timeSlotData, 'schedules');
     }
     this.schedulerStoreService.notifyUpdateTimeSlot(insertedItem);
@@ -116,19 +117,14 @@ export class SchedulerAdapterComponent implements OnInit {
   private deleteItem = ({metaData, timeSlotData}) => {
     let itemToSchedule;
     if (metaData.timeSlotType === TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM) {
-      itemToSchedule = {
-        title: timeSlotData.componentRef.instance.title,
-        timeSlotType: customTimeSlot,
-        component: timeSlotData.data.component,
-        inputs: timeSlotData.data.inputs
-      };
+      itemToSchedule = timeSlotData.data;
     } else {
       itemToSchedule = {title: timeSlotData.data, data: 'timeSlotData.data', timeSlotType: regularTimeSlot};
     }
     this.itemsToSchedule.push(itemToSchedule);
     const insertedItem = this.updateDB(metaData.date, {isAvailable: true}, 'availability');
     this.updateDB(metaData.date, '', 'schedules');
-    this.schedulerStoreService.notifyUpdateTimeSlot(insertedItem); // todo - ?
+    this.schedulerStoreService.notifyUpdateTimeSlot(insertedItem);
   };
 
   private showSchedules = () => {
