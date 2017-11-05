@@ -27,6 +27,7 @@
   right: 3px;
   top: -4px;
   cursor: pointer;
+  z-index: 5;
 
   &:hover{
     opacity: 0.8;
@@ -47,6 +48,10 @@
     position: relative;
     top: 15px;
     left: 5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 110px;
   }
 
   .schedule {

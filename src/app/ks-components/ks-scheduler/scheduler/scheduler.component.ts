@@ -313,15 +313,14 @@ export class SchedulerComponent implements OnInit {
     }
   }
 
-  public timeSlotHandler = ({timeSlotStoreType, metaData, data}) => {
+  public timeSlotHandler = ({timeSlotStoreType, metaData, timeSlotData}) => {
     switch (timeSlotStoreType) {
       case TIME_SLOT_STORE_TYPE.SCHEDULE:
-        this.schedulerConfig.scheduleItem.call(this, {metaData, data});
+        this.schedulerConfig.scheduleItem({metaData, timeSlotData}); // todo - check if needed
         break;
       case TIME_SLOT_STORE_TYPE.DELETE:
-        this.schedulerConfig.deleteItem.call(this, {metaData, data});
+        this.schedulerConfig.deleteItem({metaData, timeSlotData});
     }
-
   };
 
   private getRegularStartWeekSlide() {

@@ -7,8 +7,11 @@ import {Observable} from 'rxjs/Observable';
 import {SchedulingMockData} from './schedulingMockData';
 import {ISchedulerConfig} from '../../ks-components/ks-scheduler/scheduler/scheduler.component';
 import {SchedulerService} from '../../ks-components/ks-scheduler/services/scheduler.service';
-import {DentistTimeSlotComponent} from '../customTimeSlots/dentist-time-slot/dentist-time-slot.component';
+import {SimpleTimeSlotComponent} from '../customTimeSlots/simple-time-slot/simple-time-slot.component';
 import {TimeSlotConstant} from "../../ks-components/ks-scheduler/constants/timeSlot.constant";
+
+const regularTimeSlot = TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR;
+const customTimeSlot = TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM;
 
 @Component({
   selector: 'app-scheduler-adapter',
@@ -21,33 +24,41 @@ export class SchedulerAdapterComponent implements OnInit {
   public selectedItemIndex;
 
   public itemsToSchedule: any[] = [
-    {title: 'Item 1', data: 'Item 1', id: 123, timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR},
-    {title: 'Item 2', data: 'Item 2', id: 123, timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR},
+    {title: 'Item 1', data: 'Item 1', timeSlotType: regularTimeSlot},
     {
       title: 'Dentist',
-      id: 123,
-      timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM,
-      component: DentistTimeSlotComponent
+      timeSlotType: customTimeSlot,
+      component: SimpleTimeSlotComponent,
+      inputs: [{title: 'Dentist'}, {backgroundColor: '#D44444'}]
     },
     {
-      title: 'Item 3',
-      data: 'Item 3',
-      id: 123,
-      timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR,
-      classToAdd: 'custom-class-1'
+      title: 'Course',
+      timeSlotType: customTimeSlot,
+      component: SimpleTimeSlotComponent,
+      inputs: [{title: 'CS Course'}, {backgroundColor: 'yellow'}, {color: 'black'}]
     },
-    {title: 'Item 4', data: 'Item 4', id: 123, timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR},
-    {title: 'Item 5', data: 'Item 5', id: 123, timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR},
+    {title: 'Item 3', data: 'Item 3', timeSlotType: regularTimeSlot, classToAdd: 'custom-class-1'},
     {
-      title: 'Item 6',
-      data: 'Item 6',
-      id: 123,
-      timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR,
-      classToAdd: 'custom-class-2'
+      title: 'Wedding (NYC)',
+      timeSlotType: customTimeSlot,
+      component: SimpleTimeSlotComponent,
+      inputs: [{title: 'Wedding'}, {backgroundColor: '#12bb05'}]
     },
-    {title: 'Item 7', data: 'Item 7', id: 123, timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR},
-    {title: 'Item 8', data: 'Item 8', id: 123, timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR},
-    {title: 'Item 9', data: 'Item 9', id: 123, timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR}];
+    {title: 'Item 4', data: 'Item 4', timeSlotType: regularTimeSlot},
+    {title: 'Item 5', data: 'Item 5', timeSlotType: regularTimeSlot},
+    {
+      title: 'Work (morning)',
+      timeSlotType: customTimeSlot,
+      component: SimpleTimeSlotComponent,
+      inputs: [{title: 'Work'}]
+    },
+    {title: 'Item 6', data: 'Item 6', timeSlotType: regularTimeSlot, classToAdd: 'custom-class-2'},
+    {
+      title: 'Work (night)',
+      timeSlotType: customTimeSlot,
+      component: SimpleTimeSlotComponent,
+      inputs: [{title: 'Work'}, {backgroundColor: '#9239BB'}]
+    },];
 
   constructor(private schedulerStoreService: SchedulerStoreService, private schedulingMockData: SchedulingMockData,
               private schedulerService: SchedulerService) {
@@ -97,27 +108,23 @@ export class SchedulerAdapterComponent implements OnInit {
     if (selectedItem.timeSlotType === TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR) {
       insertedItem = this.updateDB(metaData.date, selectedItem.data, 'schedules');
     } else {
-      const timeSlotData = {
-        timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM,
-        component: DentistTimeSlotComponent
-      };
+      const timeSlotData = selectedItem;
       insertedItem = this.updateDB(metaData.date, timeSlotData, 'schedules');
     }
     this.schedulerStoreService.notifyUpdateTimeSlot(insertedItem);
   }
 
-  private deleteItem = ({metaData, data}) => {
-    let title;
+  private deleteItem = ({metaData, timeSlotData}) => {
+    let itemToSchedule;
     if (metaData.timeSlotType === TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM) {
-      title = data.ref._component.title;
+      itemToSchedule = timeSlotData.data;
     } else {
-      title = data
+      itemToSchedule = {title: timeSlotData.data, data: 'timeSlotData.data', timeSlotType: regularTimeSlot};
     }
-
-    this.itemsToSchedule.push({title, type: TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR}); // todo - id ?
+    this.itemsToSchedule.push(itemToSchedule);
     const insertedItem = this.updateDB(metaData.date, {isAvailable: true}, 'availability');
     this.updateDB(metaData.date, '', 'schedules');
-    this.schedulerStoreService.notifyUpdateTimeSlot(insertedItem); // todo - ?
+    this.schedulerStoreService.notifyUpdateTimeSlot(insertedItem);
   };
 
   private showSchedules = () => {

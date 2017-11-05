@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DentistTimeSlotComponent } from './dentist-time-slot.component';
+import { DentistTimeSlotComponent } from './simple-time-slot.component';
 
 describe('DentistTimeSlotComponent', () => {
   let component: DentistTimeSlotComponent;
