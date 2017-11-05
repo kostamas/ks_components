@@ -5,7 +5,6 @@ import {
 import {trigger, state, style, animate, transition} from '@angular/animations';
 import {TimeSlotConstant} from '../constants/timeSlot.constant';
 import {SchedulerStoreService, TIME_SLOT_STORE_TYPE} from "../services/scheduler-store.service";
-import {isUndefined} from "util";
 
 @Component({
   selector: 'app-time-slot',
@@ -26,11 +25,12 @@ import {isUndefined} from "util";
 })
 export class TimeSlotComponent implements DoCheck {
 
-  @Input() timeSlotData: any;
   public TIME_SLOT_VIEWS = TimeSlotConstant.TIME_SLOT_VIEWS;
   public TIME_SLOTS_TYPES = TimeSlotConstant.TIME_SLOTS_TYPES;
-  @ViewChild('customTimeSlot', {read: ViewContainerRef}) customTimeSlot: ViewContainerRef;
   private customTimeSlotCompoRef;
+
+  @Input() timeSlotData: any;
+  @ViewChild('customTimeSlot', {read: ViewContainerRef}) customTimeSlot: ViewContainerRef;
 
   constructor(private schedulerStoreService: SchedulerStoreService, private componentFactoryResolver: ComponentFactoryResolver) {
   }
@@ -40,14 +40,11 @@ export class TimeSlotComponent implements DoCheck {
   }
 
   public deleteItem() {
-    let data: any = {};
+    let timeSlotData: any = this.timeSlotData;
     if (this.timeSlotData.metaData.timeSlotType === this.TIME_SLOTS_TYPES.CUSTOM) {
-      data.component = this.timeSlotData.data.component;
-      data.ref = this.customTimeSlotCompoRef;
-    } else {
-      data.component = this.timeSlotData.data;
+      timeSlotData.componentRef = this.customTimeSlotCompoRef;
     }
-    this.schedulerStoreService.notifyTimeSlot(TIME_SLOT_STORE_TYPE.DELETE, this.timeSlotData.metaData, data);
+    this.schedulerStoreService.notifyTimeSlot(TIME_SLOT_STORE_TYPE.DELETE, this.timeSlotData.metaData, timeSlotData);
   }
 
   ngDoCheck() {
@@ -66,6 +63,14 @@ export class TimeSlotComponent implements DoCheck {
   private compile() {
     const factory = this.componentFactoryResolver.resolveComponentFactory(this.timeSlotData.data.component);
     this.customTimeSlotCompoRef = this.customTimeSlot.createComponent(factory);
+    this.customTimeSlotCompoRef.instance.date = new Date(this.timeSlotData.metaData.date);
+    let inputName;
+    if (Array.isArray(this.timeSlotData.data.inputs)) {
+      this.timeSlotData.data.inputs.forEach(input => {
+        inputName = Object.keys(input)[0];
+        this.customTimeSlotCompoRef.instance[inputName] = input[inputName];
+      });
+    }
     this.customTimeSlotCompoRef.changeDetectorRef.detectChanges();
   }
 }
