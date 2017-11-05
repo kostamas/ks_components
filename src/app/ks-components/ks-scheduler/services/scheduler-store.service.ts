@@ -30,8 +30,8 @@ export class SchedulerStoreService {
     return this.schedules$.subscribe(cb);
   }
 
-  public notifyTimeSlot(timeSlotType: number, date: Date, data: any) {
-    this.timeSlotClick$.next({timeSlotType, date, data});
+  public notifyTimeSlot(timeSlotStoreType: number, metaData: any, data: any) {
+    this.timeSlotClick$.next({timeSlotStoreType, metaData, data});
   }
 
   public onTimeSlot(cb) {

@@ -6,6 +6,11 @@ export class TimeSlotConstant {
     SCHEDULE: 4
   };
 
+  public static TIME_SLOTS_TYPES = {
+    REGULAR: 1,
+    CUSTOM: 2
+  }
+
   public static DYNAMIC_DEFAULT_VIEWS = {
     EMPTY: 1,
     UNAVAILABLE: 2

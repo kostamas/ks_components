@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {TimeSlotConstant} from '../constants/timeSlot.constant';
-import {OperationTypes, SchedulerConstant, TimeSlotTypes} from '../constants/scheduler.constant';
+import {OperationTypes, SchedulerConstant} from '../constants/scheduler.constant';
 import {SchedulerService} from '../services/scheduler.service';
 import {DatePipe} from '@angular/common';
 import {SCHEDULER_STORE_TYPE, SchedulerStoreService, TIME_SLOT_STORE_TYPE} from '../services/scheduler-store.service';
@@ -8,6 +8,7 @@ import * as _ from 'lodash';
 
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
+import {assign} from "rxjs/util/assign";
 
 @Component({
   selector: 'app-scheduler',
@@ -17,7 +18,7 @@ import 'rxjs/add/observable/combineLatest';
   encapsulation: ViewEncapsulation.None
 })
 
-export class SchedulerComponent implements  OnInit {
+export class SchedulerComponent implements OnInit {
   public DYNAMIC_DEFAULT_VIEWS = TimeSlotConstant.DYNAMIC_DEFAULT_VIEWS;
   private currentOperationId = OperationTypes.SCHEDULES;
   public showSpinner = false;
@@ -263,7 +264,6 @@ export class SchedulerComponent implements  OnInit {
           timeSlotData = this.timeSlotData[this.schedulerWeeks[weekSlide]][i][hour];
           timeSlotData.data = this.extractData(data, dateDetails.year, dateDetails.month, dateDetails.dayOfMonth, hour);
           timeSlotData.metaData = this.metaDataGetterByTimeSlot(timeSlotData, operationType);
-          timeSlotData.metaData.timeSlotType = (timeSlotData.data && timeSlotData.data.timeSlotType) || TimeSlotTypes.REGULAR;
           timeSlotData.metaData.date = new Date(dateDetails.year, dateDetails.month, dateDetails.dayOfMonth, hour);
           timeSlotData.dynamicDefaultView = this.dynamicDefaultView;
         }
@@ -277,24 +277,33 @@ export class SchedulerComponent implements  OnInit {
   }
 
   private metaDataGetterByTimeSlot(timeSlotData, operationType) {
+    let metaData:any = {};
+
+    if (timeSlotData.data && timeSlotData.data.timeSlotType === TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM) {
+      metaData.timeSlotType = TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM
+    }
+
     switch (operationType) {
       case OperationTypes.AVAILABILITY:
         if (timeSlotData.data.isAvailable === true) {
-          return {view: TimeSlotConstant.TIME_SLOT_VIEWS.AVAILABLE_TIME_SLOT_VIEW};
+          metaData.view = TimeSlotConstant.TIME_SLOT_VIEWS.AVAILABLE_TIME_SLOT_VIEW;
         } else {
-          return {view: TimeSlotConstant.TIME_SLOT_VIEWS.UNAVAILABLE_TIME_SLOT_VIEW};
+          metaData.view = TimeSlotConstant.TIME_SLOT_VIEWS.UNAVAILABLE_TIME_SLOT_VIEW;
         }
-
+        break;
       case OperationTypes.SCHEDULES:
         if (!!timeSlotData.data) {
-          return {view: TimeSlotConstant.TIME_SLOT_VIEWS.SCHEDULE};
+          metaData.view = TimeSlotConstant.TIME_SLOT_VIEWS.SCHEDULE;
         } else {
-          return {view: TimeSlotConstant.TIME_SLOT_VIEWS.EMPTY};
+          metaData.view = TimeSlotConstant.TIME_SLOT_VIEWS.EMPTY;
         }
+        break;
       default:
-        return {view: TimeSlotConstant.TIME_SLOT_VIEWS.EMPTY};
+        metaData.view = TimeSlotConstant.TIME_SLOT_VIEWS.EMPTY;
     }
+    return metaData;
   }
+
 
   private extractData(data, year, month, dayInMonth, hour) {
     if (this.schedulerService.isDateExistByParams(data, year, month, dayInMonth, hour)) {
@@ -304,14 +313,13 @@ export class SchedulerComponent implements  OnInit {
     }
   }
 
-  public timeSlotHandler = (timeSlotData) => {
-    const {timeSlotType, date, data} = timeSlotData;
-    switch (timeSlotType) {
+  public timeSlotHandler = ({timeSlotStoreType, metaData, data}) => {
+    switch (timeSlotStoreType) {
       case TIME_SLOT_STORE_TYPE.SCHEDULE:
-        this.schedulerConfig.schedule.call(this, {date, data});
+        this.schedulerConfig.scheduleItem.call(this, {metaData, data});
         break;
       case TIME_SLOT_STORE_TYPE.DELETE:
-        this.schedulerConfig.deleteItem.call(this, {date, data});
+        this.schedulerConfig.deleteItem.call(this, {metaData, data});
     }
 
   };
@@ -321,22 +329,6 @@ export class SchedulerComponent implements  OnInit {
   }
 
   private scheduleHandler(timeSlotsData) {
-    // const weekSlide = this.schedulerWeeks[this.current_week_slide];
-    // this.currentOperationId = OperationTypes.SCHEDULES;
-
-    // let _day, _hour, dateObj, currentTimelot;
-    // this.schedulerService.runOnDateObject(timeSlotsData, (year, month, dayOfMonth, hour) => {
-    //   dateObj = new Date(year, month, dayOfMonth, hour);
-    //   _day = dateObj.getDay();
-    //   _hour = dateObj.getHours();
-    //   currentTimelot = this.timeSlotData[weekSlide][_day][_hour];
-    //   currentTimelot.data = timeSlotsData[year][month][dayOfMonth][hour].data;
-    //   currentTimelot.data = this.extractData(timeSlotsData, year, month, dayOfMonth, hour);
-    //   currentTimelot.metaData = this.metaDataGetterByTimeSlot(currentTimelot.data, this.currentOperationId);
-    //   currentTimelot.metaData.timeSlotType = currentTimelot.data.timeSlotType || TimeSlotTypes.REGULAR;
-    //   currentTimelot.metaData.date = new Date(year, month, dayOfMonth, hour);
-    //   currentTimelot.dynamicDefaultView = this.dynamicDefaultView;
-    // });
     this.updateDynamicDefaultView(this.DYNAMIC_DEFAULT_VIEWS.EMPTY);
     const startAndEndDates = this.getStartAndEndDates((-1) * SchedulerConstant.DAYS_IN_WEEK, 2 * SchedulerConstant.DAYS_IN_WEEK);
     this.schedulesHandler(startAndEndDates.startDate, startAndEndDates.endDate, this.getRegularStartWeekSlide);
@@ -350,8 +342,8 @@ export class SchedulerComponent implements  OnInit {
 }
 
 export interface ISchedulerConfig {
-  getAvailability: (startDate:Date, endDate:Date) => Observable<any>;
-  getSchedules: (startDate:Date, endDate:Date) => Observable<any>;
-  schedule: (data: any) => any;
+  getAvailability: (startDate: Date, endDate: Date) => Observable<any>;
+  getSchedules: (startDate: Date, endDate: Date) => Observable<any>;
+  scheduleItem: (data: any) => any;
   deleteItem: (data, any) => any;
 }

@@ -6,6 +6,7 @@
   border: 1px solid $alto;
   box-sizing: border-box;
   transition: 0.5s;
+  position: relative;
 }
 
 .time-slot-wrapper.empty-slot {
@@ -18,6 +19,19 @@
 
 .time-slot-wrapper.disable-time-slot {
   opacity: 0.6;
+}
+
+.un-schedule-btn {
+  @include text-style(18px, $rollingStone);
+  position: absolute;
+  right: 3px;
+  top: -4px;
+  cursor: pointer;
+
+  &:hover{
+    opacity: 0.8;
+    color: #77A2E9;
+  }
 }
 
 .time-slot-wrapper {
@@ -42,19 +56,6 @@
       position: relative;
       top: 15px;
       left: 5px;
-    }
-
-    .un-schedule-btn {
-      @include text-style(18px, $rollingStone);
-      position: absolute;
-      right: 3px;
-      top: -4px;
-      cursor: pointer;
-
-      &:hover{
-        opacity: 0.8;
-        color: #77A2E9;
-      }
     }
 
     .time-slot-data-tooltip {
@@ -94,5 +95,10 @@
     @include text-style(15px, $kimberlyDark, Lato, $normalFontWeight);
     background-color: $clearDay;
     height: 50px;
+  }
+
+  .custom-time-slot{
+    position: relative;
+    padding-top: 8px;
   }
 }

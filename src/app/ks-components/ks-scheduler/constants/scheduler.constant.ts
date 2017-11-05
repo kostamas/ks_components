@@ -7,8 +7,3 @@ export class OperationTypes {
   public static AVAILABILITY = 1;
   public static SCHEDULES = 2;
 }
-
-export class TimeSlotTypes{
-public static REGULAR = 1;
-public static CUSTOM = 2;
-}

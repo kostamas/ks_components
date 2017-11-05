@@ -5,10 +5,10 @@ import {
 } from '../../ks-components/ks-scheduler/services/scheduler-store.service';
 import {Observable} from 'rxjs/Observable';
 import {SchedulingMockData} from './schedulingMockData';
-import {TimeSlotTypes} from '../../ks-components/ks-scheduler/constants/scheduler.constant';
 import {ISchedulerConfig} from '../../ks-components/ks-scheduler/scheduler/scheduler.component';
 import {SchedulerService} from '../../ks-components/ks-scheduler/services/scheduler.service';
 import {DentistTimeSlotComponent} from '../customTimeSlots/dentist-time-slot/dentist-time-slot.component';
+import {TimeSlotConstant} from "../../ks-components/ks-scheduler/constants/timeSlot.constant";
 
 @Component({
   selector: 'app-scheduler-adapter',
@@ -21,16 +21,33 @@ export class SchedulerAdapterComponent implements OnInit {
   public selectedItemIndex;
 
   public itemsToSchedule: any[] = [
-    {text: 'Item 1', id: 123, timeSlotType: TimeSlotTypes.REGULAR},
-    {text: 'Item 2', id: 123, timeSlotType: TimeSlotTypes.REGULAR},
-    {text: 'Dentist', id: 123, timeSlotType: TimeSlotTypes.CUSTOM, component: DentistTimeSlotComponent},
-    {text: 'Item 3', id: 123, timeSlotType: TimeSlotTypes.REGULAR, classToAdd: 'custom-class-1'},
-    {text: 'Item 4', id: 123, timeSlotType: TimeSlotTypes.REGULAR},
-    {text: 'Item 5', id: 123, timeSlotType: TimeSlotTypes.REGULAR},
-    {text: 'Item 6', id: 123, timeSlotType: TimeSlotTypes.REGULAR, classToAdd: 'custom-class-2'},
-    {text: 'Item 7', id: 123, timeSlotType: TimeSlotTypes.REGULAR},
-    {text: 'Item 8', id: 123, timeSlotType: TimeSlotTypes.REGULAR},
-    {text: 'Item 9', id: 123, timeSlotType: TimeSlotTypes.REGULAR}];
+    {title: 'Item 1', data: 'Item 1', id: 123, timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR},
+    {title: 'Item 2', data: 'Item 2', id: 123, timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR},
+    {
+      title: 'Dentist',
+      id: 123,
+      timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM,
+      component: DentistTimeSlotComponent
+    },
+    {
+      title: 'Item 3',
+      data: 'Item 3',
+      id: 123,
+      timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR,
+      classToAdd: 'custom-class-1'
+    },
+    {title: 'Item 4', data: 'Item 4', id: 123, timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR},
+    {title: 'Item 5', data: 'Item 5', id: 123, timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR},
+    {
+      title: 'Item 6',
+      data: 'Item 6',
+      id: 123,
+      timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR,
+      classToAdd: 'custom-class-2'
+    },
+    {title: 'Item 7', data: 'Item 7', id: 123, timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR},
+    {title: 'Item 8', data: 'Item 8', id: 123, timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR},
+    {title: 'Item 9', data: 'Item 9', id: 123, timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR}];
 
   constructor(private schedulerStoreService: SchedulerStoreService, private schedulingMockData: SchedulingMockData,
               private schedulerService: SchedulerService) {
@@ -40,7 +57,7 @@ export class SchedulerAdapterComponent implements OnInit {
     this.schedulerConfig = {
       getAvailability: this.getAvailability,
       getSchedules: this.getSchedules,
-      schedule: this.schedule,
+      scheduleItem: this.scheduleItem,
       deleteItem: this.deleteItem
     };
   }
@@ -69,26 +86,37 @@ export class SchedulerAdapterComponent implements OnInit {
       .delay(Math.floor(Math.random() * 700));
   }
 
-  private schedule = ({date}) => {
+  private scheduleItem = ({metaData, data}) => {
     const selectedItem = this.itemsToSchedule[this.selectedItemIndex];
     this.itemsToSchedule.splice(this.selectedItemIndex, 1);
     this.selectedItemIndex = -1;
 
     let insertedItem;
-    this.updateDB(date, {isAvailable: false, textToShow: selectedItem.text}, 'availability');
-    if (selectedItem.timeSlotType === TimeSlotTypes.REGULAR) {
-      insertedItem = this.updateDB(date, selectedItem.text, 'schedules');
+
+    this.updateDB(metaData.date, {isAvailable: false, textToShow: selectedItem.title}, 'availability');
+    if (selectedItem.timeSlotType === TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR) {
+      insertedItem = this.updateDB(metaData.date, selectedItem.data, 'schedules');
     } else {
-      const timeSlotData = {timeSlotType: TimeSlotTypes.CUSTOM, component: DentistTimeSlotComponent};
-      insertedItem = this.updateDB(date, timeSlotData, 'schedules');
+      const timeSlotData = {
+        timeSlotType: TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM,
+        component: DentistTimeSlotComponent
+      };
+      insertedItem = this.updateDB(metaData.date, timeSlotData, 'schedules');
     }
     this.schedulerStoreService.notifyUpdateTimeSlot(insertedItem);
   }
 
-  private deleteItem = ({data, date}) => {
-    this.itemsToSchedule.push({text: data, type: TimeSlotTypes.REGULAR}); // todo - id ?
-    const insertedItem = this.updateDB(date, {isAvailable: true}, 'availability');
-    this.updateDB(date, '', 'schedules');
+  private deleteItem = ({metaData, data}) => {
+    let title;
+    if (metaData.timeSlotType === TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM) {
+      title = data.ref._component.title;
+    } else {
+      title = data
+    }
+
+    this.itemsToSchedule.push({title, type: TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR}); // todo - id ?
+    const insertedItem = this.updateDB(metaData.date, {isAvailable: true}, 'availability');
+    this.updateDB(metaData.date, '', 'schedules');
     this.schedulerStoreService.notifyUpdateTimeSlot(insertedItem); // todo - ?
   };
 
