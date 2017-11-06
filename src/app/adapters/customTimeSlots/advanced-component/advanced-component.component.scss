@@ -1,0 +1,39 @@
+@import '../../../../assets/scss/main';
+
+.advanced-component-container {
+  position: absolute;
+  top: 0;
+  width: 118px;
+  height: 48px;
+
+  background: #ECE9E6; /* fallback for old browsers */
+  background: linear-gradient(to left, #FFFFFF, #ECE9E6);
+
+  .title {
+    @include text-style(16px, $ABC, Lato);
+    width: 85px;
+    margin: 0 8px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .details-btn {
+    @include text-style(13px, $white, Lato);
+    width: 48px;
+    height: 17px;
+    margin-left: 8px;
+    margin-top: 7px;
+    border: 1px solid $silverChalice;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $malachite;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+      color: $alto;
+    }
+  }
+}
