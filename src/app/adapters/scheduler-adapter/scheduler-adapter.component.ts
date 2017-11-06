@@ -9,6 +9,7 @@ import {ISchedulerConfig} from '../../ks-components/ks-scheduler/scheduler/sched
 import {SchedulerService} from '../../ks-components/ks-scheduler/services/scheduler.service';
 import {SimpleTimeSlotComponent} from '../customTimeSlots/simple-time-slot/simple-time-slot.component';
 import {TimeSlotConstant} from "../../ks-components/ks-scheduler/constants/timeSlot.constant";
+import {AdvancedComponentComponent} from "../customTimeSlots/advanced-component/advanced-component.component";
 
 const regularTimeSlot = TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR;
 const customTimeSlot = TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM;
@@ -37,15 +38,26 @@ export class SchedulerAdapterComponent implements OnInit {
       component: SimpleTimeSlotComponent,
       inputs: [{title: 'CS Course'}, {backgroundColor: 'yellow'}, {color: 'black'}]
     },
-    {title: 'Item 3', data: 'Item 3', timeSlotType: regularTimeSlot, classToAdd: 'custom-class-1'},
+    {
+      title: 'Event (1)',
+      timeSlotType: customTimeSlot,
+      component: AdvancedComponentComponent,
+      inputs: [{title: 'Event 1'}, {eventId: 'event1'}]
+    },
+    {title: 'Item 2', data: 'Item 3', timeSlotType: regularTimeSlot, classToAdd: 'custom-class-1'},
     {
       title: 'Wedding (NYC)',
       timeSlotType: customTimeSlot,
       component: SimpleTimeSlotComponent,
       inputs: [{title: 'Wedding'}, {backgroundColor: '#12bb05'}]
     },
-    {title: 'Item 4', data: 'Item 4', timeSlotType: regularTimeSlot},
-    {title: 'Item 5', data: 'Item 5', timeSlotType: regularTimeSlot},
+    {
+      title: 'Event (2)',
+      timeSlotType: customTimeSlot,
+      component: AdvancedComponentComponent,
+      inputs: [{title: 'Event 2'}, {eventId: 'event2'}]
+    },
+    {title: 'Item 3', data: 'Item 5', timeSlotType: regularTimeSlot},
     {
       title: 'Work (morning)',
       timeSlotType: customTimeSlot,
@@ -90,7 +102,6 @@ export class SchedulerAdapterComponent implements OnInit {
     return Observable.of(this.schedulingMockData.availability)
       .delay(Math.floor(Math.random() * 700));
   }
-
 
   private getSchedules = (startDate: Date, endDate: Date): Observable<any> => {
     return Observable.of(this.schedulingMockData.schedules)
@@ -146,15 +157,7 @@ export class SchedulerAdapterComponent implements OnInit {
     this.schedulingMockData[collection][dateDetails.year][dateDetails.month][dateDetails.dayOfMonth][dateDetails.hours].data = data;
 
     return {
-      [dateDetails.year]: {
-        [dateDetails.month]: {
-          [dateDetails.dayOfMonth]: {
-            [dateDetails.hours]: {
-              data: data
-            }
-          }
-        }
-      }
+      [dateDetails.year]: {[dateDetails.month]: {[dateDetails.dayOfMonth]: {[dateDetails.hours]: {data: data}}}}
     };
   }
 }
