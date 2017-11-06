@@ -8,7 +8,6 @@ import * as _ from 'lodash';
 
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
-import {assign} from "rxjs/util/assign";
 
 @Component({
   selector: 'app-scheduler',
@@ -278,7 +277,7 @@ export class SchedulerComponent implements OnInit {
   }
 
   private metaDataGetterByTimeSlot(timeSlotData, operationType) {
-    let metaData:any = {};
+    let metaData: any = {};
 
     if (timeSlotData.data && timeSlotData.data.timeSlotType === TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM) {
       metaData.timeSlotType = TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM
@@ -340,14 +339,22 @@ export class SchedulerComponent implements OnInit {
     return {startDate, endDate};
   }
 
-  public changeWeekSlidesByDate(date){
+  public changeWeekSlidesByDate(date) {
     this.currentDate = new Date(date);
     this.currentDate.setDate(this.currentDate.getDate() - this.currentDate.getDay());
     this.updateHeaderDates(this.currentDate);
 
     let startAndEndDates = this.getStartAndEndDates(-1 * SchedulerConstant.DAYS_IN_WEEK, 2 * SchedulerConstant.DAYS_IN_WEEK);
     const startWeekSlide = this.current_week_slide - 1;
-    this.schedulesHandler(startAndEndDates.startDate, startAndEndDates.endDate, startWeekSlide);
+
+    switch (this.currentOperationId) {
+      case OperationTypes.SCHEDULES:
+        this.schedulesHandler(startAndEndDates.startDate, startAndEndDates.endDate, startWeekSlide);
+        break;
+      case OperationTypes.AVAILABILITY:
+        this.availabilityHandler(startAndEndDates.startDate, startAndEndDates.endDate, this.getRegularStartWeekSlide, SCHEDULER_STORE_TYPE.OUT);
+        break;
+    }
   }
 }
 
