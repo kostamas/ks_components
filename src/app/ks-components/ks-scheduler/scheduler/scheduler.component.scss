@@ -12,7 +12,6 @@ $scheduler-width: 900px;
   .scheduler-controls {
     display: flex;
     width: $scheduler-width;
-    padding-bottom: 20px;
 
     .change-week-section {
       display: flex;
@@ -46,6 +45,10 @@ $scheduler-width: 900px;
       @include text-style(27px, $kimberlyDark, Lato, $normalFontWeight);
     }
 
+    .mat-input-container {
+      margin-left: 50px;
+      bottom: 13px;
+    }
   }
 
   .scheduler-wrapper {

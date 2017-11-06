@@ -29,6 +29,7 @@ export class SchedulerComponent implements OnInit {
   public emptyDay;
   public current_week_slide;
   public currentDate;
+  public mdDate;
 
   public dynamicDefaultView = {timeSlotClass: ''};
   public dynamicDefaultViewsMap = {
@@ -337,6 +338,16 @@ export class SchedulerComponent implements OnInit {
     const startDate = new Date(new Date(this.currentDate).setDate(this.currentDate.getDate() + startOffset - this.currentDate.getDay()));
     const endDate = new Date(new Date(this.currentDate).setDate(this.currentDate.getDate() + endOffset - this.currentDate.getDay()));
     return {startDate, endDate};
+  }
+
+  public changeWeekSlidesByDate(date){
+    this.currentDate = new Date(date);
+    this.currentDate.setDate(this.currentDate.getDate() - this.currentDate.getDay());
+    this.updateHeaderDates(this.currentDate);
+
+    let startAndEndDates = this.getStartAndEndDates(-1 * SchedulerConstant.DAYS_IN_WEEK, 2 * SchedulerConstant.DAYS_IN_WEEK);
+    const startWeekSlide = this.current_week_slide - 1;
+    this.schedulesHandler(startAndEndDates.startDate, startAndEndDates.endDate, startWeekSlide);
   }
 }
 

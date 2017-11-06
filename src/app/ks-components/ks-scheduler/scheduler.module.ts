@@ -1,21 +1,36 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {SchedulerComponent} from './scheduler/scheduler.component';
-import {TimeSlotComponent} from './time-slot/time-slot.component';
+import {MatDatepickerModule, MatNativeDateModule} from '@angular/material';
+import { MatFormFieldModule } from '@angular/material';
+import { MatInputModule } from '@angular/material';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+
 import {SchedulerService} from './services/scheduler.service';
+
 import {TimeSlotConstant} from './constants/timeSlot.constant';
 import {SchedulerConstant} from './constants/scheduler.constant';
+
 import {SchedulerHoursPipe} from './pipes/schedulerHoursPipe.pipe';
 import {KeysPipe} from '../../../pipes/keys.pipe';
-import {SchedulerSpinnerComponent} from './schedularSppiner/scheduler-spinner.component';
-import {SchedulerStoreService} from './services/scheduler-store.service';
 import {EllipsisPipe} from '../../../pipes/ellipsis.pipe';
+
+import {SchedulerStoreService} from './services/scheduler-store.service';
+
+import {SchedulerSpinnerComponent} from './schedularSppiner/scheduler-spinner.component';
+import {SchedulerComponent} from './scheduler/scheduler.component';
+import {TimeSlotComponent} from './time-slot/time-slot.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    TranslateModule
+    TranslateModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatNativeDateModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   declarations: [
     SchedulerComponent,
@@ -23,7 +38,7 @@ import {EllipsisPipe} from '../../../pipes/ellipsis.pipe';
     SchedulerHoursPipe,
     KeysPipe,
     EllipsisPipe,
-    SchedulerSpinnerComponent
+    SchedulerSpinnerComponent,
   ],
   exports: [
     TranslateModule,

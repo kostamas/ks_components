@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {Observable} from "rxjs/Observable";
 
 @Injectable()
 export class SchedulingMockData {
@@ -8,7 +9,7 @@ export class SchedulingMockData {
   constructor() {
     this.schedules = this.buildMockData('schedules');
     this.availability = this.buildMockData('availability');
-    localStorage.setItem('x',JSON.stringify(this.availability));
+    localStorage.setItem('x', JSON.stringify(this.availability));
   }
 
   public buildMockData(type) {
@@ -45,7 +46,7 @@ export class SchedulingMockData {
                     }
                   };
                 } else {
-                  obj[year][month][day][hour] = {data: {isAvailable: Math.floor((Math.random() * 2)) > 0 }};
+                  obj[year][month][day][hour] = {data: {isAvailable: Math.floor((Math.random() * 2)) > 0}};
                 }
               }
             }
@@ -59,5 +60,35 @@ export class SchedulingMockData {
   public getRandomText() {
     let text = ['11111', '222222', 'aabbcc', 'hello', 'Lorem ipsum', 'dolor sit amet', 'aliquam est sapien eros', 'arcu, risus ', 'vestibulum sed ', 'neque quam', 'ipsum purus'];
     return text[Math.floor((Math.random() * 10) + 1)];
+  }
+
+  public getEventById(id) {
+    const eventList = [
+      {
+        id: 'event1',
+        title: 'Event No. 1',
+        description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+          incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
+          nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum 
+          dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia 
+          deserunt mollit anim id est laborum.`,
+        icon: 'star rate'
+      },
+      {
+        id: 'event2',
+        title: 'Event No. 2',
+        description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+          incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
+          nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum 
+          dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia 
+          deserunt mollit anim id est laborum.`,
+        icon: 'flight'
+      },
+    ];
+
+    return Observable.of(
+      eventList.filter(event => {
+        return event.id === id;
+      })[0]).delay(Math.random()*1000 +  600);
   }
 }
