@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {
   SCHEDULER_STORE_TYPE,
   SchedulerStoreService
@@ -18,9 +18,10 @@ const customTimeSlot = TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM;
   selector: 'app-scheduler-adapter',
   templateUrl: './scheduler-adapter.component.html',
   styleUrls: ['./scheduler-adapter.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  providers:[SchedulerStoreService]
 })
-export class SchedulerAdapterComponent implements OnInit,OnDestroy {
+export class SchedulerAdapterComponent implements OnInit{
   public schedulerConfig: ISchedulerConfig;  // todo - figure how and where to store scheduler types.
   public selectedItemIndex;
 
@@ -159,9 +160,5 @@ export class SchedulerAdapterComponent implements OnInit,OnDestroy {
     return {
       [dateDetails.year]: {[dateDetails.month]: {[dateDetails.dayOfMonth]: {[dateDetails.hours]: {data: data}}}}
     };
-  }
-
-  ngOnDestroy(){
-    this.schedulerStoreService.unSubscribeAll();
   }
 }

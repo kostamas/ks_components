@@ -1,10 +1,10 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
 import {Subject} from 'rxjs/Subject';
 
 @Injectable()
-export class SchedulerStoreService {
+export class SchedulerStoreService implements OnDestroy {
   private availability$ = new Subject<number>();
   private schedules$ = new Subject<number>();
 
@@ -67,6 +67,11 @@ export class SchedulerStoreService {
     this.subscriptions.forEach(subscription=>{
       subscription.unsubscribe();
     })
+  };
+
+  ngOnDestroy(){
+    this.unSubscribeAll();
+    this.subscriptions = [];
   }
 }
 
