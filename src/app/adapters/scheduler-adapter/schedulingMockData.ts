@@ -9,7 +9,6 @@ export class SchedulingMockData {
   constructor() {
     this.schedules = this.buildMockData('schedules');
     this.availability = this.buildMockData('availability');
-    localStorage.setItem('x', JSON.stringify(this.availability));
   }
 
   public buildMockData(type) {
@@ -58,7 +57,7 @@ export class SchedulingMockData {
   }
 
   public getRandomText() {
-    let text = ['11111', '222222', 'aabbcc', 'hello', 'Lorem ipsum', 'dolor sit amet', 'aliquam est sapien eros', 'arcu, risus ', 'vestibulum sed ', 'neque quam', 'ipsum purus'];
+    let text = ['11111', '222222', 'aabbcc', 'hello world', 'Lorem ipsum', 'dolor sit amet', 'aliquam est sapien eros', 'arcu, risus ', 'vestibulum ', 'neque quam', 'ipsum purus'];
     return text[Math.floor((Math.random() * 10) + 1)];
   }
 

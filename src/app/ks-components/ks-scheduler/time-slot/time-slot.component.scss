@@ -22,16 +22,21 @@
 }
 
 .un-schedule-btn {
-  @include text-style(18px, $rollingStone);
   position: absolute;
-  right: 3px;
-  top: -4px;
+  right: 1px;
+  top: 0;
   cursor: pointer;
   z-index: 5;
 
   &:hover{
     opacity: 0.8;
     color: #77A2E9;
+  }
+
+  .mat-icon{
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
   }
 }
 

@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {
   SCHEDULER_STORE_TYPE,
   SchedulerStoreService
@@ -20,7 +20,7 @@ const customTimeSlot = TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM;
   styleUrls: ['./scheduler-adapter.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class SchedulerAdapterComponent implements OnInit {
+export class SchedulerAdapterComponent implements OnInit,OnDestroy {
   public schedulerConfig: ISchedulerConfig;  // todo - figure how and where to store scheduler types.
   public selectedItemIndex;
 
@@ -44,7 +44,7 @@ export class SchedulerAdapterComponent implements OnInit {
       component: AdvancedComponentComponent,
       inputs: [{title: 'Event 1'}, {eventId: 'event1'}]
     },
-    {title: 'Item 2', data: 'Item 3', timeSlotType: regularTimeSlot, classToAdd: 'custom-class-1'},
+    {title: 'Item 2', data: 'Item 2', timeSlotType: regularTimeSlot, classToAdd: 'custom-class-1'},
     {
       title: 'Wedding (NYC)',
       timeSlotType: customTimeSlot,
@@ -57,7 +57,7 @@ export class SchedulerAdapterComponent implements OnInit {
       component: AdvancedComponentComponent,
       inputs: [{title: 'Event 2'}, {eventId: 'event2'}]
     },
-    {title: 'Item 3', data: 'Item 5', timeSlotType: regularTimeSlot},
+    {title: 'Item 3', data: 'Item 3', timeSlotType: regularTimeSlot},
     {
       title: 'Work (morning)',
       timeSlotType: customTimeSlot,
@@ -70,7 +70,7 @@ export class SchedulerAdapterComponent implements OnInit {
       timeSlotType: customTimeSlot,
       component: SimpleTimeSlotComponent,
       inputs: [{title: 'Work'}, {backgroundColor: '#9239BB'}]
-    },];
+    }];
 
   constructor(private schedulerStoreService: SchedulerStoreService, private schedulingMockData: SchedulingMockData,
               private schedulerService: SchedulerService) {
@@ -123,14 +123,14 @@ export class SchedulerAdapterComponent implements OnInit {
       insertedItem = this.updateDB(metaData.date, timeSlotData, 'schedules');
     }
     this.schedulerStoreService.notifyUpdateTimeSlot(insertedItem);
-  }
+  };
 
   private deleteItem = ({metaData, timeSlotData}) => {
     let itemToSchedule;
     if (metaData.timeSlotType === TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM) {
       itemToSchedule = timeSlotData.data;
     } else {
-      itemToSchedule = {title: timeSlotData.data, data: 'timeSlotData.data', timeSlotType: regularTimeSlot};
+      itemToSchedule = {title: timeSlotData.data, data: timeSlotData.data, timeSlotType: regularTimeSlot};
     }
     this.itemsToSchedule.push(itemToSchedule);
     const insertedItem = this.updateDB(metaData.date, {isAvailable: true}, 'availability');
@@ -159,5 +159,9 @@ export class SchedulerAdapterComponent implements OnInit {
     return {
       [dateDetails.year]: {[dateDetails.month]: {[dateDetails.dayOfMonth]: {[dateDetails.hours]: {data: data}}}}
     };
+  }
+
+  ngOnDestroy(){
+    this.schedulerStoreService.unSubscribeAll();
   }
 }
