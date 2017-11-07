@@ -9,19 +9,7 @@ import {SchedulerStoreService, TIME_SLOT_STORE_TYPE} from "../services/scheduler
 @Component({
   selector: 'app-time-slot',
   templateUrl: './time-slot.component.html',
-  styleUrls: ['./time-slot.component.scss'],
-  animations: [
-    trigger('flyInOut', [
-      state('in', style({opacity: '1'})),
-      transition('void => *', [
-        style({opacity: '0'}),
-        animate(200)
-      ]),
-      transition('* => void', [
-        animate(200, style({opacity: '1'}))
-      ])
-    ])
-  ]
+  styleUrls: ['./time-slot.component.scss']
 })
 export class TimeSlotComponent implements DoCheck {
 
@@ -50,7 +38,7 @@ export class TimeSlotComponent implements DoCheck {
   ngDoCheck() {
     if (this.timeSlotData.metaData.timeSlotType === TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM) {
       if (!this.customTimeSlotCompoRef) {
-        this.compile();
+        this.compileComponent();
       }
     } else {
       if (!!this.customTimeSlotCompoRef) {
@@ -60,7 +48,7 @@ export class TimeSlotComponent implements DoCheck {
     }
   }
 
-  private compile() {
+  private compileComponent() {
     const factory = this.componentFactoryResolver.resolveComponentFactory(this.timeSlotData.data.component);
     this.customTimeSlotCompoRef = this.customTimeSlot.createComponent(factory);
     this.customTimeSlotCompoRef.instance.date = new Date(this.timeSlotData.metaData.date);

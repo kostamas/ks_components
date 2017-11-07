@@ -11,6 +11,8 @@ export class SchedulerStoreService {
   private timeSlotClick$ = new Subject<any>();
   private updateTimeSlots$ = new Subject<any>();
 
+  private subscriptions = [];
+
   constructor() {
   }
 
@@ -19,7 +21,8 @@ export class SchedulerStoreService {
   }
 
   public onAvailability(cb) {
-    return this.availability$.subscribe(cb);
+    this.subscriptions.push(this.availability$.subscribe(cb));
+    return this.subscriptions[this.subscriptions.length - 1];
   }
 
   public notifySchedules(storeType) {
@@ -27,7 +30,9 @@ export class SchedulerStoreService {
   }
 
   public onSchedules(cb) {
-    return this.schedules$.subscribe(cb);
+    this.subscriptions.push(this.schedules$.subscribe(cb));
+    return this.subscriptions[this.subscriptions.length - 1];
+
   }
 
   public notifyTimeSlot(timeSlotStoreType: number, metaData: any, timeSlotData: any) {
@@ -35,7 +40,9 @@ export class SchedulerStoreService {
   }
 
   public onTimeSlot(cb) {
-    return this.timeSlotClick$.subscribe(cb);
+    this.subscriptions.push(this.timeSlotClick$.subscribe(cb));
+    return this.subscriptions[this.subscriptions.length - 1];
+
   }
 
   public notifyUpdateTimeSlot(data) {
@@ -43,7 +50,23 @@ export class SchedulerStoreService {
   }
 
   public onUpdateTimeSlot(cb) {
-    return this.updateTimeSlots$.subscribe(cb);
+    this.subscriptions.push(this.updateTimeSlots$.subscribe(cb));
+    return this.subscriptions[this.subscriptions.length - 1];
+
+  }
+
+  public unSubscribe = (cb) =>{
+    const index = this.subscriptions.indexOf(cb);
+    if(index > -1){
+      this.subscriptions[index].unsubscribe(cb);
+      this.subscriptions.splice(index, 1);
+    }
+  };
+
+  public unSubscribeAll =()=>{
+    this.subscriptions.forEach(subscription=>{
+      subscription.unsubscribe();
+    })
   }
 }
 

@@ -1,10 +1,10 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {MatDatepickerModule, MatNativeDateModule} from '@angular/material';
-import { MatFormFieldModule } from '@angular/material';
-import { MatInputModule } from '@angular/material';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {
+  MatInputModule, MatIconModule, MatFormFieldModule, MatDatepickerModule, MatNativeDateModule
+} from '@angular/material';
 
 import {SchedulerService} from './services/scheduler.service';
 
@@ -30,7 +30,8 @@ import {TimeSlotComponent} from './time-slot/time-slot.component';
     MatInputModule,
     MatNativeDateModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatIconModule
   ],
   declarations: [
     SchedulerComponent,
@@ -51,5 +52,5 @@ import {TimeSlotComponent} from './time-slot/time-slot.component';
     SchedulerStoreService
   ]
 })
-export class SchedulerModule{
+export class SchedulerModule {
 }
