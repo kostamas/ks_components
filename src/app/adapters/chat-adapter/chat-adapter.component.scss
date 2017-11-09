@@ -1,0 +1,11 @@
+.chat-adapter-container{
+  margin: 200px auto;
+  width: 1300px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  .ks-chat-wrapper{
+    margin-top: 20px;
+  }
+}

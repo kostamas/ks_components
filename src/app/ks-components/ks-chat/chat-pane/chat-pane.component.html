@@ -1,3 +1,17 @@
-<p>
-  chat-pane works!
-</p>
+<div class="chat-board-wrapper">
+  <div class="chat-board-header">
+    <!--<svg-icon name="znk-chat-close-icon" ng-click="d.closeChat()"></svg-icon>-->
+  </div>
+  <div class="board-wrapper">
+    <div class="messages-container">
+      <div class="messages-wrapper znk-scrollbar">
+        <!--orderBy:'time'-->
+        <div class="message-repeater" *ngFor="let message of chatMessages">
+          <app-chat-message></app-chat-message>
+        </div>
+      </div>
+    </div>
+
+    <textarea class="chat-textarea"></textarea>
+  </div>
+</div>

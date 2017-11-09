@@ -1,3 +1,10 @@
-<p>
-  chatter works!
-</p>
+<div class="chatter-wrapper"
+     [ngClass]="onlineIndicatorMap[chatter.presence]">
+  <div class="online-indicator"></div>
+  <div class="chatter-name">{{chatter.name}}</div>
+  <div class="message-not-seen"
+       [ngClass]="{'ten-or-more-unseen-messages': chatter.messagesNotSeen >= MAX_UN_SEEN_MESSAGES}"
+       *ngIf="chatter.messagesNotSeen > 0">
+    {{chatter.messagesNotSeen >= MAX_UN_SEEN_MESSAGES ? '10' : chatter.messagesNotSeen}}
+  </div>
+</div>

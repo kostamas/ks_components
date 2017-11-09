@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {MAX_UN_SEEN_MESSAGES} from "../znk-chat.constant";
 
 @Component({
   selector: 'app-chatter',
@@ -6,10 +7,23 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./chatter.component.scss']
 })
 export class ChatterComponent implements OnInit {
+  public MAX_UN_SEEN_MESSAGES = MAX_UN_SEEN_MESSAGES;
 
-  constructor() { }
+
+  public onlineIndicatorMap = {
+    ['2']: 'online',
+    ['1']: 'idle',
+    ['0']: 'offline'
+  };
+
+  @Input() chatter;
+  @Input() localUser;
+
+  constructor() {
+  }
 
   ngOnInit() {
+
   }
 
 }

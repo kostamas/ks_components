@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {ChatStoreService} from '../services/chat-store.service';
 
 @Component({
   selector: 'app-chat-participants',
@@ -6,10 +7,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./chat-participants.component.scss']
 })
 export class ChatParticipantsComponent implements OnInit {
+  public chattersArray;
 
-  constructor() { }
-
-  ngOnInit() {
+  @Input() localUser;
+  constructor(public chatStoreService: ChatStoreService) {
   }
 
+  ngOnInit() {
+    this.chatStoreService.onChatParticipants(participants => this.chattersArray = participants)
+  }
+
+  public changeActiveChat(chat){
+    this.chatStoreService.notifyActiveChat(chat);
+  }
 }

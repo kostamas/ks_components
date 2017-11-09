@@ -7,9 +7,9 @@ import {Observable} from 'rxjs/Observable';
 import {SchedulingMockData} from './schedulingMockData';
 import {ISchedulerConfig} from '../../ks-components/ks-scheduler/scheduler/scheduler.component';
 import {SchedulerService} from '../../ks-components/ks-scheduler/services/scheduler.service';
-import {SimpleTimeSlotComponent} from '../customTimeSlots/simple-time-slot/simple-time-slot.component';
+import {SimpleTimeSlotComponent} from './customTimeSlots/simple-time-slot/simple-time-slot.component';
 import {TimeSlotConstant} from "../../ks-components/ks-scheduler/constants/timeSlot.constant";
-import {AdvancedComponentComponent} from "../customTimeSlots/advanced-component/advanced-component.component";
+import {AdvancedComponentComponent} from "./customTimeSlots/advanced-component/advanced-component.component";
 
 const regularTimeSlot = TimeSlotConstant.TIME_SLOTS_TYPES.REGULAR;
 const customTimeSlot = TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM;

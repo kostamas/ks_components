@@ -1,3 +1,11 @@
-<p>
-  chat-participants works!
-</p>
+<div class="chat-participants">
+  <div class="my-chat-title">chat title</div>
+
+  <div class="chatter-repeater-wrapper znk-scrollbar">
+    <div class="chatter-repeater" *ngFor="let chatter of chattersArray">
+      <div class="chatter-drv-wrapper">
+        <app-chatter  [chatter]="chatter" [localUser]="localUser" (click)="changeActiveChat(chatter)"></app-chatter>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {TimeSlotDetailsModalComponent} from './time-slot-details-modal/time-slot-details-modal.component';
 import {MatDialog} from '@angular/material';
-import {SchedulingMockData} from '../../scheduler-adapter/schedulingMockData';
+import {SchedulingMockData} from '../../schedulingMockData';
 
 @Component({
   selector: 'app-advanced-component',
