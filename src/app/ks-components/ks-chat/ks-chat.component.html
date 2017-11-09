@@ -1,17 +1,17 @@
-<div class="ks-chat-container">
+<!--<div class="ks-chat-container">-->
 
-  <div class="chat-button-wrapper" [hidden]="currentChatView !== CHAT_VIEWS.CHAT_BUTTON_VIEW" (click)="openChat()">
-    <div class="unseen-messages"
-         [ngClass]="{'ten-or-more-unseen-messages': numOfUnSeenMessages >=  maxNumUnseenMessages}"
-         *ngIf="numOfUnSeenMessages > 0">
-      {{numOfUnSeenMessages}}
-    </div>
-    <!--<svg-icon name="znk-chat-chat-icon"></svg-icon>-->
-  </div>
+  <!--<div class="chat-button-wrapper" [hidden]="currentChatView !== CHAT_VIEWS.CHAT_BUTTON_VIEW" (click)="openChat()">-->
+    <!--<div class="unseen-messages"-->
+         <!--[ngClass]="{'ten-or-more-unseen-messages': numOfUnSeenMessages >=  maxNumUnseenMessages}"-->
+         <!--*ngIf="numOfUnSeenMessages > 0">-->
+      <!--{{numOfUnSeenMessages}}-->
+    <!--</div>-->
+    <!--&lt;!&ndash;<svg-icon name="znk-chat-chat-icon"></svg-icon>&ndash;&gt;-->
+  <!--</div>-->
 
-  <div class="chat-container" [hidden]="currentChatView !== CHAT_VIEWS.CHAT_VIEW">
-    <!--<app-chat-participants></app-chat-participants>-->
+  <!--<div class="chat-container" [hidden]="currentChatView !== CHAT_VIEWS.CHAT_VIEW">-->
+    <!--&lt;!&ndash;<app-chat-participants></app-chat-participants>&ndash;&gt;-->
 
-    <!--<app-chat-pane></app-chat-pane>-->
-  </div>
-</div>
+    <!--&lt;!&ndash;<app-chat-pane></app-chat-pane>&ndash;&gt;-->
+  <!--</div>-->
+<!--</div>-->
