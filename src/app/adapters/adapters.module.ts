@@ -14,7 +14,8 @@ import {TimeSlotDetailsModalComponent} from './scheduler-adapter/customTimeSlots
 import {ChatAdapterComponent} from './chat-adapter/chat-adapter.component';
 import {KsChat} from '../ks-components/ks-chat/ks-chat.module';
 import {ChatMock} from './chat-adapter/chat-mock';
-import {ChatService} from "../ks-components/ks-chat/services/chat.service";
+import {ChatService} from '../ks-components/ks-chat/services/chat.service';
+import {ChatAdapterWrapperComponent} from './chat-adapter/chat-wrapper.component';
 
 @NgModule({
   imports: [
@@ -31,7 +32,8 @@ import {ChatService} from "../ks-components/ks-chat/services/chat.service";
     SimpleTimeSlotComponent,
     AdvancedComponentComponent,
     TimeSlotDetailsModalComponent,
-    ChatAdapterComponent
+    ChatAdapterComponent,
+    ChatAdapterWrapperComponent
   ],
   exports: [],
   entryComponents: [
@@ -43,10 +45,14 @@ import {ChatService} from "../ks-components/ks-chat/services/chat.service";
     SchedulingMockData,
     {
       provide: ChatService,
-      useFactory: function(){ return new ChatService() }
-    },
+      useFactory: chatServiceConfigFn
+    }
   ],
 })
 export class AdaptersModulesModule {
+}
+
+export function chatServiceConfigFn() {
+  return new ChatService(ChatMock.chatDataHandler());
 }
 

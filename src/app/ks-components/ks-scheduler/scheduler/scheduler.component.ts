@@ -300,7 +300,7 @@ export class SchedulerComponent implements OnInit, OnDestroy {
     this.currentDate.setDate(this.currentDate.getDate() - this.currentDate.getDay());
     this.updateHeaderDates(this.currentDate);
 
-    let startAndEndDates = this.getStartAndEndDates(-1 * SchedulerConstant.DAYS_IN_WEEK, 2 * SchedulerConstant.DAYS_IN_WEEK);
+    const startAndEndDates = this.getStartAndEndDates(-1 * SchedulerConstant.DAYS_IN_WEEK, 2 * SchedulerConstant.DAYS_IN_WEEK);
     switch (this.currentOperationId) {
       case OperationTypes.SCHEDULES:
         this.schedulesHandler(startAndEndDates.startDate, startAndEndDates.endDate, this.getRegularStartWeekSlide);

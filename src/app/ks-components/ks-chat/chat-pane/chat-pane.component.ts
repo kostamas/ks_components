@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ChatStoreService} from "../services/chat-store.service";
+import {ChatStoreService} from '../services/chat-store.service';
 
 @Component({
   selector: 'app-chat-pane',
@@ -7,7 +7,7 @@ import {ChatStoreService} from "../services/chat-store.service";
   styleUrls: ['./chat-pane.component.scss']
 })
 export class ChatPaneComponent implements OnInit {
-  public activeChat;
+  public activeChat: any;
 
   constructor(public chatStoreService: ChatStoreService) {
   }

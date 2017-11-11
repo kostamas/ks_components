@@ -1,7 +1,18 @@
 import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
 
 @Injectable()
 export class ChatMock {
+  public static currentDate = new Date();
+
+  public static mockMessages: any = [
+    'Lorem ipsum dolor sit amet',
+    'consectetur adipiscing elit',
+    'sed do eiusmod tempor incididunt ut labore',
+    'et dolore magna aliqua.',
+    'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut',
+    'aliquip ex ea commodo consequat. Duis'];
+
   public static chats = [
     ChatMock.buildMockChat('chatId1', ['User1', 'User2'], 3),
     ChatMock.buildMockChat('chatId2', ['User1', 'User3'], 7),
@@ -11,7 +22,6 @@ export class ChatMock {
     ChatMock.buildMockChat('chatId6', ['User3', 'User4'], 2),
   ];
 
-  private static currentDate = new Date();
   public static mockUsers = [
     {
       name: 'MR. Bean',
@@ -43,23 +53,21 @@ export class ChatMock {
     return {
       id: chatId,
       users: users,
-      messages: ChatMock.buildChatMessages(numOfMessages)
+      messages: ChatMock.buildChatMessages(numOfMessages, users)
     };
   }
 
-  private static buildChatMessages(numOfMessages) {
-    let messages = [], message;
+  private static buildChatMessages(numOfMessages, users) {
+    const messages = [];
+    let message;
     for (let i = 0; i < numOfMessages; i++) {
-      message = '';
-
-      for (let j = 0; j < Math.random() * 10 + 1; j++) {
-        message += i
-      }
+      message = ChatMock.mockMessages[Math.floor(Math.random() * 6)];
 
       messages.push({
         timeStamp: new Date().setDate(ChatMock.currentDate.getDate() - numOfMessages - i),
-        text: message
-      })
+        text: message,
+        user: users[Math.floor(Math.random() * 2)]
+      });
     }
     return messages;
   }
@@ -67,9 +75,12 @@ export class ChatMock {
   public static chatDataHandler() {
     return {
       getChatById: (chatId) => {
-        return this.chats[chatId];
+        return Observable.of(this.chats.filter(chat => chat.id === chatId)[0]);
+      },
+      getChatParticipants: (userId) => {
+        return Observable.of(ChatMock.mockUsers.filter(user => user.id !== userId));
       }
-    }
+    };
   }
 }
 

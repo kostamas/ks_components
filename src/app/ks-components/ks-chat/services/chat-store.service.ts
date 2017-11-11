@@ -1,7 +1,7 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/filter';
 
 @Injectable()
