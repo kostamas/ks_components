@@ -9,7 +9,6 @@ import {MAX_UN_SEEN_MESSAGES} from "../ks-chat.constant";
 export class ChatterComponent implements OnInit {
   public MAX_UN_SEEN_MESSAGES = MAX_UN_SEEN_MESSAGES;
 
-
   public onlineIndicatorMap = {
     ['2']: 'online',
     ['1']: 'idle',

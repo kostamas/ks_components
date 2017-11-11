@@ -19,6 +19,10 @@ export class ChatService {
     return this.chatDataHandler.getChatParticipants(userId);
   }
 
+  public updateMessages(newMessage, chat) {
+    this.chatDataHandler(newMessage, chat);
+  }
+
   public getChatIdByTwoIdsArray(chatIdsArr1, chatIdsArr2) {
     for (let i = 0; i < chatIdsArr1.length; i++) {
       for (let j = 0; j < chatIdsArr2.length; j++) {

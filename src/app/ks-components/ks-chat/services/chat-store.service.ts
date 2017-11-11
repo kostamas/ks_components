@@ -8,8 +8,8 @@ import 'rxjs/add/operator/filter';
 export class ChatStoreService implements OnDestroy {
   private chatParticipants$ = new BehaviorSubject<any>(null);
   private activeChat$ = new BehaviorSubject<any>(null);
+  private chats$ = new BehaviorSubject<any>(null);
   private subscriptions = [];
-
 
   constructor() {
   }
@@ -32,6 +32,17 @@ export class ChatStoreService implements OnDestroy {
   public onActiveChat(cb) {
     this.subscriptions.push(this.activeChat$
       .filter(data => data && data !== null)
+      .subscribe(cb));
+    return this.subscriptions[this.subscriptions.length - 1];
+  }
+
+  public notifyChats(chat: any) {
+    this.chats$.next(chat);
+  }
+
+  public onChats(cb, userId) {
+    this.subscriptions.push(this.activeChat$
+      .filter(chat => chat && chat.users.indexOf(userId) > -1)
       .subscribe(cb));
     return this.subscriptions[this.subscriptions.length - 1];
   }

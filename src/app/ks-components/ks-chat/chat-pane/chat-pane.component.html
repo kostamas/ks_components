@@ -12,6 +12,6 @@
       </div>
     </div>
 
-    <textarea class="chat-textarea"></textarea>
+    <textarea (keypress)="keyPressHandler($event.keyCode)" [(ngModel)]="message" class="chat-textarea"></textarea>
   </div>
 </div>

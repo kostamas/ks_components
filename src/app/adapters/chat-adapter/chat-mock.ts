@@ -79,6 +79,10 @@ export class ChatMock {
       },
       getChatParticipants: (userId) => {
         return Observable.of(ChatMock.mockUsers.filter(user => user.id !== userId));
+      },
+      updateMessages : (newMessage, chat) => {
+        const chatToUpdate = this.chats.filter(_chat => _chat.id === chat.id)[0];
+        chatToUpdate.messages.push(newMessage);
       }
     };
   }

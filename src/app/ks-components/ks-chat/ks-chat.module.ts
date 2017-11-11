@@ -5,10 +5,12 @@ import {ChatPaneComponent} from './chat-pane/chat-pane.component';
 import {ChatMessageComponent} from './chat-message/chat-message.component';
 import {KsChatComponent} from './ks-chat.component';
 import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule
   ],
   declarations: [
     ChatMessageComponent,
