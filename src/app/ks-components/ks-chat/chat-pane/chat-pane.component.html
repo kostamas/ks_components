@@ -7,7 +7,7 @@
       <div class="messages-wrapper znk-scrollbar">
         <!--orderBy:'time'-->
         <div class="message-repeater" *ngFor="let message of activeChat.messages">
-          <app-chat-message [message]="message"></app-chat-message>
+          <app-chat-message [localUser]="localUser" [message]="message"></app-chat-message>
         </div>
       </div>
     </div>

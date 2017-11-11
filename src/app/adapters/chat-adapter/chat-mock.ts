@@ -66,7 +66,7 @@ export class ChatMock {
       messages.push({
         timeStamp: new Date().setDate(ChatMock.currentDate.getDate() - numOfMessages - i),
         text: message,
-        user: users[Math.floor(Math.random() * 2)]
+        userId: users[Math.floor(Math.random() * 2)]
       });
     }
     return messages;

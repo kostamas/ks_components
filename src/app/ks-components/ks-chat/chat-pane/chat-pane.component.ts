@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ChatStoreService} from '../services/chat-store.service';
 
 @Component({
@@ -9,6 +9,7 @@ import {ChatStoreService} from '../services/chat-store.service';
 export class ChatPaneComponent implements OnInit {
   public activeChat: any;
 
+  @Input() localUser;
   constructor(public chatStoreService: ChatStoreService) {
   }
 

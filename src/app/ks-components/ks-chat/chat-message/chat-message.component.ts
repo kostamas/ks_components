@@ -6,11 +6,15 @@ import {Component, Input, OnInit} from '@angular/core';
   styleUrls: ['./chat-message.component.scss']
 })
 export class ChatMessageComponent implements OnInit {
+  public messageStyleClass;
 
   @Input() message;
-  constructor() { }
+  @Input() localUser;
 
-  ngOnInit() {
+  constructor() {
   }
 
+  ngOnInit() {
+    this.messageStyleClass = this.localUser.id === this.message.userId ? 'myMessage' : 'otherMessage';
+  }
 }

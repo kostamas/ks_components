@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {MAX_UN_SEEN_MESSAGES} from './znk-chat.constant';
+import {MAX_UN_SEEN_MESSAGES} from './ks-chat.constant';
 import {ChatService} from './services/chat.service';
 import {ChatStoreService} from './services/chat-store.service';
 

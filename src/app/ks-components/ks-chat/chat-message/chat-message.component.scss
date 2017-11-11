@@ -1,6 +1,6 @@
 @import '../../../../assets/scss/main';
 
-chat-message {
+.chat-message-container {
   .message-wrapper {
     @include text-style(14px, $emperor, Lato, $normalFontWeight);
     text-align: center;
@@ -32,7 +32,7 @@ chat-message {
       float: right;
 
       .bottom-triangle{
-        border-top: 12px solid $minehaft;
+        border-top: 12px solid $mantis;
         transform: rotate(-25deg);
         right: 8px;
         border-left: 8px solid transparent;
@@ -44,11 +44,11 @@ chat-message {
   &.otherMessage {
     .message-wrapper .message {
       @include text-style(14px, $emperor, Lato, $normalFontWeight);
-      background-color: $apple;
+      background-color: $gallery;
       float: left;
 
       .bottom-triangle{
-        border-top: 12px solid $minehaft;
+        border-top: 12px solid $gallery;
         left: 8px;
         transform: rotate(25deg);
         border-left: 3px solid transparent;
