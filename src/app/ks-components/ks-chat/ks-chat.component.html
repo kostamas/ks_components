@@ -11,9 +11,9 @@
   </div>
 
   <div [hidden]="currentChatView !== CHAT_VIEWS.CHAT_VIEW">
-    <div class="chat-container" >
+    <div class="chat-container">
       <app-chat-participants [localUser]="localUser"></app-chat-participants>
-      <app-chat-pane [localUser]="localUser"></app-chat-pane>
+      <app-chat-pane [actions]="actions" [localUser]="localUser"></app-chat-pane>
     </div>
   </div>
 </div>

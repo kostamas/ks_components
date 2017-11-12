@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {ChatStoreService} from '../services/chat-store.service';
 import {ChatService} from '../services/chat.service';
 
@@ -18,16 +18,17 @@ export class ChatParticipantsComponent implements OnInit {
   ngOnInit() {
     this.chatStoreService.onChatParticipants(participants => {
       this.chattersArray = participants;
-      this.changeActiveChat(participants[0]);
+      this.changeCurrentChat(participants[0]);
     });
   }
 
-  public changeActiveChat(chatter) {
+
+  public changeCurrentChat(chatter) {
     const chatId = this.chatService.getChatIdByTwoIdsArray(chatter.chatIds, this.localUser.chatIds);
     if (chatId) {
-      this.chatService.getChatById(chatId).subscribe(chat => {
-        this.chatStoreService.notifyActiveChat(chat);
-      });
+      this.chatStoreService.notifyActiveChatter(chatter);
+    } else {
+      // connect local user with this chatter
     }
   }
 }

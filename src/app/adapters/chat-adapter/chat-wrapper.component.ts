@@ -19,6 +19,6 @@ export class ChatAdapterWrapperComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.chatStoreService.notifyActiveChat(undefined);
+    // this.chatStoreService.notifyActiveChatter(undefined);
   }
 }

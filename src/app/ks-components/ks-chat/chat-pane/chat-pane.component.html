@@ -1,12 +1,12 @@
-<div class="chat-board-wrapper">
-  <div class="chat-board-header">
+<div class="chat-pane-wrapper">
+  <div class="chat-pane-header">
     <!--<svg-icon name="znk-chat-close-icon" ng-click="d.closeChat()"></svg-icon>-->
   </div>
-  <div class="board-wrapper">
+  <div class="pane-wrapper">
     <div class="messages-container">
-      <div class="messages-wrapper znk-scrollbar">
+      <div class="messages-wrapper scrollbar-style" #chatScrollBar>
         <!--orderBy:'time'-->
-        <div class="message-repeater" *ngFor="let message of activeChat.messages">
+        <div class="message-repeater" *ngFor="let message of activeChatter.chat.messages">
           <app-chat-message [localUser]="localUser" [message]="message"></app-chat-message>
         </div>
       </div>

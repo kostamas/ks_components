@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
+import {Subject} from "rxjs/Subject";
 
 @Injectable()
 export class ChatMock {
   public static currentDate = new Date();
-
+  private static messagesSubjectsMap = {};
   public static mockMessages: any = [
     'Lorem ipsum dolor sit amet',
     'consectetur adipiscing elit',
@@ -78,11 +79,37 @@ export class ChatMock {
         return Observable.of(this.chats.filter(chat => chat.id === chatId)[0]);
       },
       getChatParticipants: (userId) => {
-        return Observable.of(ChatMock.mockUsers.filter(user => user.id !== userId));
+        let chatParticipants = [];
+        ChatMock.mockUsers.map(user => {
+          if (user.id !== userId) {
+            chatParticipants.push(Object.assign({}, user));
+          }
+        });
+        return Observable.of(chatParticipants);
       },
-      updateMessages : (newMessage, chat) => {
-        const chatToUpdate = this.chats.filter(_chat => _chat.id === chat.id)[0];
-        chatToUpdate.messages.push(newMessage);
+      updateMessages: (newMessage, chat, localUser) => {
+        let chatToUpdate = this.chats.filter(_chat => _chat.id === chat.id)[0];
+        const chatToUpdateIndex = this.chats.indexOf(chatToUpdate);
+        chatToUpdate = Object.assign({}, chatToUpdate);
+        this.chats.splice(chatToUpdateIndex, 1, chatToUpdate);
+
+        chatToUpdate.messages = [...chatToUpdate.messages, {
+          timestamp: Date.now(),
+          text: newMessage,
+          userId: localUser.userId
+        }];
+
+        chat.users.forEach(userId => {
+          ChatMock.messagesSubjectsMap[`${userId}_${chatToUpdate.id}`].next(chatToUpdate.messages);
+        })
+      },
+      listenToMessages: (chatId, userId) => {
+        const chatterChatKey = `${userId}_${chatId}`;
+        if (!ChatMock.messagesSubjectsMap[chatterChatKey]) {
+          ChatMock.messagesSubjectsMap[chatterChatKey] = new Subject<any[]>();
+          return ChatMock.messagesSubjectsMap[chatterChatKey]
+
+        }
       }
     };
   }

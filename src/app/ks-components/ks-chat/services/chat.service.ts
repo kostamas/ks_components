@@ -19,17 +19,23 @@ export class ChatService {
     return this.chatDataHandler.getChatParticipants(userId);
   }
 
-  public updateMessages(newMessage, chat) {
-    this.chatDataHandler(newMessage, chat);
+  public updateMessages(newMessage, chat, localUser) {
+    this.chatDataHandler.updateMessages(newMessage, chat, localUser);
   }
 
   public getChatIdByTwoIdsArray(chatIdsArr1, chatIdsArr2) {
     for (let i = 0; i < chatIdsArr1.length; i++) {
       for (let j = 0; j < chatIdsArr2.length; j++) {
         if (chatIdsArr1[i] === chatIdsArr2[j]) {
-          return chatIdsArr1[j];
+          return chatIdsArr1[i];
         }
       }
     }
   };
+
+  public listenToMessages(chatId, userID): Observable<any> {
+    return this.chatDataHandler.listenToMessages(chatId, userID);
+  }
+
+
 }

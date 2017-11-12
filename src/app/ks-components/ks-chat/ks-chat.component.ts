@@ -13,6 +13,7 @@ export class KsChatComponent implements OnInit {
   public numOfUnSeenMessages;
   public CHAT_VIEWS = {CHAT_BUTTON_VIEW: 1, CHAT_VIEW: 2};
   public currentChatView;
+  public actions = {};
 
   @Input() localUser: any;
 
@@ -21,9 +22,14 @@ export class KsChatComponent implements OnInit {
 
   ngOnInit() {
     this.currentChatView = this.CHAT_VIEWS.CHAT_VIEW;
-    this.chatService.getChatParticipants(this.localUser.id).subscribe(chatParticipants => {
-      this.chatStoreService.notifyChatParticipants(chatParticipants);
-    });
+    this.chatService.getChatParticipants(this.localUser.id)
+      .map(chatParticipants => {
+        chatParticipants.map(chatter => chatter.chat = {});
+        return chatParticipants;
+      })
+      .subscribe(chatParticipants => {
+        this.chatStoreService.notifyChatParticipants(chatParticipants);
+      });
   }
 
   public openChat() {
