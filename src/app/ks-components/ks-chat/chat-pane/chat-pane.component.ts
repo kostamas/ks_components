@@ -30,7 +30,6 @@ export class ChatPaneComponent implements OnInit, AfterViewChecked {
     if (keyCode === 13) {
       this.chatService.updateMessages(this.message, this.activeChatter.chat, this.localUser);
       this.message = '';
-      this.scrollToBottom();
     }
   }
 

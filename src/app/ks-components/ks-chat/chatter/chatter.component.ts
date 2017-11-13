@@ -52,14 +52,13 @@ export class ChatterComponent implements OnInit {
 
   private newMessagesHandler = ({newMessages, chatId}) => {
     newMessages.sort((m1, m2) => m1.timestamp - m2.timestamp);
-    this.chatStoreService.onActiveChatter(activeUser => {
-      if (this.chatter === activeUser) {
+      if (this.chatter.isActive) {
         this.chatter.chat.lastSeenMessages[this.chatter.id] = newMessages[newMessages.length - 1];
-        this.chatService.updateLastSeenMessages(this.chatter.chat.lastSeenMessages, chatId)
+        this.chatService.updateLastSeenMessages(this.chatter.chat.lastSeenMessages, chatId);
+        this.chatter.numOfUnseenMessages = 0;
       } else {
-        this.chatter.unseenMessages = this.chatter.unseenMessages ? 1 : this.chatter.unseenMessages + 1
+        this.chatter.numOfUnseenMessages++;
       }
-    });
     this.chatStoreService.notifyScrollToBottom();
     this.chatter.chat.messages = newMessages;
 
