@@ -30,7 +30,17 @@ export class ChatterComponent implements OnInit {
   private initChatListeners() {
     const chatId = this.chatService.getChatIdByTwoIdsArray(this.chatter.chatIds, this.localUser.chatIds);
     if (chatId) {
-      setTimeout(() => this.chatService.getChatById(chatId).subscribe(chat => this.chatter.chat = chat)); // todo - fix with another way
+      setTimeout(() => this.chatService.getChatById(chatId).subscribe(chat => {   // todo - fix this in another way
+        this.chatter.chat = chat;
+        if (!this.chatter.isActive) {
+          let lastSeenMessage = this.chatter.chat.lastSeenMessages[this.chatter.id];
+          let numOfUnseenMessages = 0;
+          this.chatter.chat.messages.forEach(message => {
+            numOfUnseenMessages = lastSeenMessage.timestamp < message.timestamp ? numOfUnseenMessages + 1 : numOfUnseenMessages;
+          });
+          this.chatter.numOfUnseenMessages = numOfUnseenMessages;
+        }
+      }));
       this.listenToMessages(chatId)
     }
   }
@@ -40,8 +50,18 @@ export class ChatterComponent implements OnInit {
       .subscribe(this.newMessagesHandler)
   }
 
-  private newMessagesHandler = (newMessagesArray) => {
+  private newMessagesHandler = ({newMessages, chatId}) => {
+    newMessages.sort((m1, m2) => m1.timestamp - m2.timestamp);
+    this.chatStoreService.onActiveChatter(activeUser => {
+      if (this.chatter === activeUser) {
+        this.chatter.chat.lastSeenMessages[this.chatter.id] = newMessages[newMessages.length - 1];
+        this.chatService.updateLastSeenMessages(this.chatter.chat.lastSeenMessages, chatId)
+      } else {
+        this.chatter.unseenMessages = this.chatter.unseenMessages ? 1 : this.chatter.unseenMessages + 1
+      }
+    });
     this.chatStoreService.notifyScrollToBottom();
-    this.chatter.chat.messages = newMessagesArray;
+    this.chatter.chat.messages = newMessages;
+
   }
 }

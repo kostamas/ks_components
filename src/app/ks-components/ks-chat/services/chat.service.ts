@@ -23,6 +23,10 @@ export class ChatService {
     this.chatDataHandler.updateMessages(newMessage, chat, localUser);
   }
 
+  public updateLastSeenMessages(lastSeenMessage, chatId) {
+    this.chatDataHandler.updateLastSeenMessages(lastSeenMessage, chatId);
+  }
+
   public getChatIdByTwoIdsArray(chatIdsArr1, chatIdsArr2) {
     for (let i = 0; i < chatIdsArr1.length; i++) {
       for (let j = 0; j < chatIdsArr2.length; j++) {
