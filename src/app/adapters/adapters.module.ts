@@ -8,9 +8,14 @@ import {MatIconModule} from '@angular/material';
 import {SchedulingMockData} from './scheduler-adapter/schedulingMockData';
 
 import {SchedulerAdapterComponent} from './scheduler-adapter/scheduler-adapter.component';
-import {SimpleTimeSlotComponent} from './customTimeSlots/simple-time-slot/simple-time-slot.component';
-import {AdvancedComponentComponent} from './customTimeSlots/advanced-component/advanced-component.component';
-import {TimeSlotDetailsModalComponent} from './customTimeSlots/advanced-component/time-slot-details-modal/time-slot-details-modal.component';
+import {SimpleTimeSlotComponent} from './scheduler-adapter/customTimeSlots/simple-time-slot/simple-time-slot.component';
+import {AdvancedComponentComponent} from './scheduler-adapter/customTimeSlots/advanced-component/advanced-component.component';
+import {TimeSlotDetailsModalComponent} from './scheduler-adapter/customTimeSlots/advanced-component/time-slot-details-modal/time-slot-details-modal.component';
+import {ChatAdapterComponent} from './chat-adapter/chat-adapter.component';
+import {KsChat} from '../ks-components/ks-chat/ks-chat.module';
+import {ChatMock} from './chat-adapter/chat-mock';
+import {ChatService} from '../ks-components/ks-chat/services/chat.service';
+import {ChatAdapterWrapperComponent} from './chat-adapter/chat-wrapper.component';
 
 @NgModule({
   imports: [
@@ -19,13 +24,16 @@ import {TimeSlotDetailsModalComponent} from './customTimeSlots/advanced-componen
     BrowserAnimationsModule,
     MatDialogModule,
     MatIconModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    KsChat,
   ],
   declarations: [
     SchedulerAdapterComponent,
     SimpleTimeSlotComponent,
     AdvancedComponentComponent,
-    TimeSlotDetailsModalComponent
+    TimeSlotDetailsModalComponent,
+    ChatAdapterComponent,
+    ChatAdapterWrapperComponent
   ],
   exports: [],
   entryComponents: [
@@ -34,8 +42,17 @@ import {TimeSlotDetailsModalComponent} from './customTimeSlots/advanced-componen
     TimeSlotDetailsModalComponent
   ],
   providers: [
-    SchedulingMockData
-  ]
+    SchedulingMockData,
+    {
+      provide: ChatService,
+      useFactory: chatServiceConfigFn
+    }
+  ],
 })
 export class AdaptersModulesModule {
 }
+
+export function chatServiceConfigFn() {
+  return new ChatService(ChatMock.chatDataHandler());
+}
+

@@ -1,0 +1,19 @@
+<div class="ks-chat-container">
+  <div [hidden]="currentChatView !== CHAT_VIEWS.CHAT_BUTTON_VIEW">
+    <div class="chat-button-wrapper" (click)="openChat()">
+      <div class="unseen-messages"
+           [ngClass]="{'ten-or-more-unseen-messages': numOfUnSeenMessages >=  MAX_UN_SEEN_MESSAGES}"
+           *ngIf="MAX_UN_SEEN_MESSAGES > 0">
+        {{MAX_UN_SEEN_MESSAGES}}
+      </div>
+      <!--&lt;!&ndash;<svg-icon name="znk-chat-chat-icon"></svg-icon>&ndash;&gt;-->
+    </div>
+  </div>
+
+  <div [hidden]="currentChatView !== CHAT_VIEWS.CHAT_VIEW">
+    <div class="chat-container">
+      <app-chat-participants [localUser]="localUser"></app-chat-participants>
+      <app-chat-pane [actions]="actions" [localUser]="localUser"></app-chat-pane>
+    </div>
+  </div>
+</div>
