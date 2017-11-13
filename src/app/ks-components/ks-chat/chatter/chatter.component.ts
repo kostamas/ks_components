@@ -42,6 +42,7 @@ export class ChatterComponent implements OnInit {
 
   private newMessagesHandler = (newMessagesArray) => {
     this.chatStoreService.notifyScrollToBottom();
+    debugger;
     this.chatter.chat.messages = newMessagesArray;
   }
 }
