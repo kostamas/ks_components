@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {MAX_UN_SEEN_MESSAGES} from './ks-chat.constant';
 import {ChatService} from './services/chat.service';
 import {ChatStoreService} from './services/chat-store.service';
@@ -8,13 +8,13 @@ import {ChatStoreService} from './services/chat-store.service';
   templateUrl: './ks-chat.component.html',
   styleUrls: ['./ks-chat.component.scss']
 })
-export class KsChatComponent implements OnInit {
+export class KsChatComponent implements OnInit, OnDestroy {
   public MAX_UN_SEEN_MESSAGES = MAX_UN_SEEN_MESSAGES;
   public numOfUnSeenMessages;
   public CHAT_VIEWS = {CHAT_BUTTON_VIEW: 1, CHAT_VIEW: 2};
   public currentChatView;
   public actions = {};
-
+  public getChatParticipantsSubscription;
   @Input() localUser: any;
 
   constructor(private chatService: ChatService, private chatStoreService: ChatStoreService) {
@@ -22,7 +22,7 @@ export class KsChatComponent implements OnInit {
 
   ngOnInit() {
     this.currentChatView = this.CHAT_VIEWS.CHAT_VIEW;
-    this.chatService.getChatParticipants(this.localUser.id)
+    this.getChatParticipantsSubscription = this.chatService.getChatParticipants(this.localUser.id)
       .map(chatParticipants => {
         chatParticipants.map(chatter => chatter.chat = {});
         return chatParticipants;
@@ -36,4 +36,8 @@ export class KsChatComponent implements OnInit {
 
   }
 
+  ngOnDestroy() {
+    this.chatService.onDestroy();
+    this.getChatParticipantsSubscription.unsubscribe();
+  }
 }

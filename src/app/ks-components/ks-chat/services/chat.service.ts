@@ -37,5 +37,7 @@ export class ChatService {
     return this.chatDataHandler.listenToMessages(chatId, userID);
   }
 
-
+  public onDestroy() {
+    return this.chatDataHandler.onDestroy();
+  }
 }

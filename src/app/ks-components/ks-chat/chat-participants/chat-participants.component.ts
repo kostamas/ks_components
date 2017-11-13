@@ -9,7 +9,7 @@ import {ChatService} from '../services/chat.service';
 })
 export class ChatParticipantsComponent implements OnInit {
   public chattersArray;
-
+  public activeChatter;
   @Input() localUser;
 
   constructor(public chatStoreService: ChatStoreService, private chatService: ChatService) {
@@ -24,6 +24,7 @@ export class ChatParticipantsComponent implements OnInit {
 
 
   public changeCurrentChat(chatter) {
+    this.activeChatter = chatter;
     const chatId = this.chatService.getChatIdByTwoIdsArray(chatter.chatIds, this.localUser.chatIds);
     if (chatId) {
       this.chatStoreService.notifyActiveChatter(chatter);

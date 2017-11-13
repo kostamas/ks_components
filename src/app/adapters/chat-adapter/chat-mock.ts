@@ -108,8 +108,10 @@ export class ChatMock {
         if (!ChatMock.messagesSubjectsMap[chatterChatKey]) {
           ChatMock.messagesSubjectsMap[chatterChatKey] = new Subject<any[]>();
           return ChatMock.messagesSubjectsMap[chatterChatKey]
-
         }
+      },
+      onDestroy: () => {
+        ChatMock.messagesSubjectsMap = {};
       }
     };
   }
