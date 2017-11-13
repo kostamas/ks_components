@@ -96,7 +96,7 @@ export class ChatMock {
         chatToUpdate.messages = [...chatToUpdate.messages, {
           timestamp: Date.now(),
           text: newMessage,
-          userId: localUser.userId
+          userId: localUser.id
         }];
 
         chat.users.forEach(userId => {
