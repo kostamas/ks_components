@@ -9,7 +9,7 @@ import {ChatService} from '../services/chat.service';
 })
 export class ChatParticipantsComponent implements OnInit {
   public chattersArray;
-  public activeChatter;
+  public activeChatter: any = {};
   @Input() localUser;
 
   constructor(public chatStoreService: ChatStoreService, private chatService: ChatService) {
@@ -24,12 +24,15 @@ export class ChatParticipantsComponent implements OnInit {
 
 
   public changeCurrentChat(chatter) {
+    this.activeChatter.isActive = false;
     this.activeChatter = chatter;
+    this.activeChatter.isActive = true;
+    this.activeChatter.numOfUnseenMessages = 0;
     const chatId = this.chatService.getChatIdByTwoIdsArray(chatter.chatIds, this.localUser.chatIds);
     if (chatId) {
       this.chatStoreService.notifyActiveChatter(chatter);
     } else {
-      // connect local user with this chatter
+      // connect between local user with this chatter
     }
   }
 }

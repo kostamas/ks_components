@@ -28,34 +28,43 @@ export class ChatMock {
       name: 'MR. Bean',
       id: 'User1',
       chatIds: ['chatId1', 'chatId2', 'chatId3'],
-      messagesNotSeen: 12
     },
     {
       name: 'Charlie Chaplin',
       id: 'User2',
       chatIds: ['chatId1', 'chatId4', 'chatId5'],
-      messagesNotSeen: 0
     },
     {
       name: 'Jim Carrey',
       id: 'User3',
-      chatIds: ['chatId2', 'chatId4', 'chatId16'],
-      messagesNotSeen: 2
+      chatIds: ['chatId2', 'chatId4', 'chatId6'],
     },
     {
       name: 'van damme',
       id: 'User4',
       chatIds: ['chatId6', 'chatId5', 'chatId3'],
-      messagesNotSeen: 5
     },
   ];
 
   private static buildMockChat(chatId, users, numOfMessages) {
-    return {
+    const mockChat: any = {
       id: chatId,
       users: users,
       messages: ChatMock.buildChatMessages(numOfMessages, users)
     };
+
+    mockChat.lastSeenMessages = ChatMock.buildLastSeenMessages(mockChat);
+    return mockChat;
+  }
+
+  private static buildLastSeenMessages(mockChat) {
+    let lastSeenMessages = {}, randomMessage, lastMessage;
+    mockChat.users.forEach(userId => {
+      randomMessage = mockChat.messages[Math.floor(Math.random()*(mockChat.messages.length - 1))];
+      lastMessage = mockChat.messages[mockChat.messages.length - 1];
+      lastSeenMessages[userId] = Math.random() > 0.4 ? lastMessage : randomMessage;
+    });
+    return lastSeenMessages;
   }
 
   private static buildChatMessages(numOfMessages, users) {
@@ -65,7 +74,7 @@ export class ChatMock {
       message = ChatMock.mockMessages[Math.floor(Math.random() * 6)];
 
       messages.push({
-        timeStamp: new Date().setDate(ChatMock.currentDate.getDate() - numOfMessages - i),
+        timestamp: new Date().setDate(ChatMock.currentDate.getDate() - (numOfMessages) + i),
         text: message,
         userId: users[Math.floor(Math.random() * 2)]
       });
@@ -73,48 +82,71 @@ export class ChatMock {
     return messages;
   }
 
+  // *************************** chatDataHandler **********************************/
+  private static getChatById = (chatId) => {
+    return Observable.of(ChatMock.chats.filter(chat => chat.id === chatId)[0]);
+  }
+
+  private static getChatParticipants = (userId) => {
+
+    let chatParticipants = [];
+    ChatMock.mockUsers.map(user => {
+      if (user.id !== userId) {
+        chatParticipants.push(Object.assign({}, user));
+      }
+    });
+    return Observable.of(chatParticipants);
+  }
+
+  private static updateMessages = (newMessage, chat, localUser) => {
+    let chatToUpdate = ChatMock.chats.filter(_chat => _chat.id === chat.id)[0];
+    const chatToUpdateIndex = ChatMock.chats.indexOf(chatToUpdate);
+    chatToUpdate = Object.assign({}, chatToUpdate);
+    ChatMock.chats.splice(chatToUpdateIndex, 1, chatToUpdate);
+
+    chatToUpdate.messages = [...chatToUpdate.messages, {
+      timestamp: Date.now(),
+      text: newMessage,
+      userId: localUser.id
+    }];
+
+    chat.users.forEach(userId => {
+      ChatMock.messagesSubjectsMap[`${userId}_${chatToUpdate.id}`].next({
+        newMessages: chatToUpdate.messages,
+        chatId: chatToUpdate.id
+      });
+    })
+  };
+
+  private static listenToMessages = (chatId, userId) => {
+    const chatterChatKey = `${userId}_${chatId}`;
+    if (!ChatMock.messagesSubjectsMap[chatterChatKey]) {
+      ChatMock.messagesSubjectsMap[chatterChatKey] = new Subject<any[]>();
+      return ChatMock.messagesSubjectsMap[chatterChatKey]
+    }
+  }
+
+  private static updateLastSeenMessages(lastSeenMessage, chatId) {
+
+  }
+
+  private static onDestroy = () => {
+    ChatMock.messagesSubjectsMap = {};
+  }
+
   public static chatDataHandler() {
     return {
-      getChatById: (chatId) => {
-        return Observable.of(this.chats.filter(chat => chat.id === chatId)[0]);
-      },
-      getChatParticipants: (userId) => {
-        let chatParticipants = [];
-        ChatMock.mockUsers.map(user => {
-          if (user.id !== userId) {
-            chatParticipants.push(Object.assign({}, user));
-          }
-        });
-        return Observable.of(chatParticipants);
-      },
-      updateMessages: (newMessage, chat, localUser) => {
-        let chatToUpdate = this.chats.filter(_chat => _chat.id === chat.id)[0];
-        const chatToUpdateIndex = this.chats.indexOf(chatToUpdate);
-        chatToUpdate = Object.assign({}, chatToUpdate);
-        this.chats.splice(chatToUpdateIndex, 1, chatToUpdate);
-
-        chatToUpdate.messages = [...chatToUpdate.messages, {
-          timestamp: Date.now(),
-          text: newMessage,
-          userId: localUser.id
-        }];
-
-        chat.users.forEach(userId => {
-          ChatMock.messagesSubjectsMap[`${userId}_${chatToUpdate.id}`].next(chatToUpdate.messages);
-        })
-      },
-      listenToMessages: (chatId, userId) => {
-        const chatterChatKey = `${userId}_${chatId}`;
-        if (!ChatMock.messagesSubjectsMap[chatterChatKey]) {
-          ChatMock.messagesSubjectsMap[chatterChatKey] = new Subject<any[]>();
-          return ChatMock.messagesSubjectsMap[chatterChatKey]
-        }
-      },
-      onDestroy: () => {
-        ChatMock.messagesSubjectsMap = {};
-      }
+      getChatById: ChatMock.getChatById,
+      getChatParticipants: ChatMock.getChatParticipants,
+      updateMessages: ChatMock.updateMessages,
+      listenToMessages: ChatMock.listenToMessages,
+      onDestroy: ChatMock.onDestroy,
+      updateLastSeenMessages: ChatMock.updateLastSeenMessages
     };
   }
+
+  // *************************** chatDataHandler **********************************/
+
 }
 
 
