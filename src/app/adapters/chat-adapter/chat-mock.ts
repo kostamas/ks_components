@@ -84,8 +84,7 @@ export class ChatMock {
         name: 'Chat Group 1',
         id: 'Chat Group 1',
         chatIds: ['chatId7']
-      },
-      {
+      }, {
         name: 'Chat Group 2',
         id: 'Chat Group 2',
         chatIds: ['chatId8']
