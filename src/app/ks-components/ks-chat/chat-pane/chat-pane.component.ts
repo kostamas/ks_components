@@ -27,7 +27,7 @@ export class ChatPaneComponent implements OnInit, AfterViewChecked {
   }
 
   public keyPressHandler(keyCode) {
-    if (keyCode === 13) {
+    if (keyCode === 13 && this.message.length > 0) {
       this.chatService.updateMessages(this.message, this.activeChatter.chat, this.localUser);
       this.message = '';
     }

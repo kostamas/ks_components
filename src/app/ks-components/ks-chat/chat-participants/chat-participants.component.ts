@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ChatStoreService} from '../services/chat-store.service';
 import {ChatService} from '../services/chat.service';
 
@@ -11,6 +11,8 @@ export class ChatParticipantsComponent implements OnInit {
   public chattersArray;
   public activeChatter: any = {};
   @Input() localUser;
+  @Output() chatParticipants: EventEmitter<any> = new EventEmitter();
+;
 
   constructor(public chatStoreService: ChatStoreService, private chatService: ChatService) {
   }
@@ -19,6 +21,7 @@ export class ChatParticipantsComponent implements OnInit {
     this.chatStoreService.onChatParticipants(participants => {
       this.chattersArray = participants;
       this.changeCurrentChat(participants[0]);
+      this.chatParticipants.emit(participants);
     });
   }
 

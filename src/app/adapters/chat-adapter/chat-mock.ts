@@ -21,6 +21,7 @@ export class ChatMock {
     ChatMock.buildMockChat('chatId4', ['User2', 'User3'], 5),
     ChatMock.buildMockChat('chatId5', ['User2', 'User4'], 20),
     ChatMock.buildMockChat('chatId6', ['User3', 'User4'], 2),
+    ChatMock.buildMockChat('chatId6', ['User3', 'User4'], 2),
   ];
 
   public static mockUsers = [
@@ -60,7 +61,7 @@ export class ChatMock {
   private static buildLastSeenMessages(mockChat) {
     let lastSeenMessages = {}, randomMessage, lastMessage;
     mockChat.users.forEach(userId => {
-      randomMessage = mockChat.messages[Math.floor(Math.random()*(mockChat.messages.length - 1))];
+      randomMessage = mockChat.messages[Math.floor(Math.random() * (mockChat.messages.length - 1))];
       lastMessage = mockChat.messages[mockChat.messages.length - 1];
       lastSeenMessages[userId] = Math.random() > 0.4 ? lastMessage : randomMessage;
     });
@@ -124,15 +125,16 @@ export class ChatMock {
       ChatMock.messagesSubjectsMap[chatterChatKey] = new Subject<any[]>();
       return ChatMock.messagesSubjectsMap[chatterChatKey]
     }
-  }
+  };
 
   private static updateLastSeenMessages(lastSeenMessage, chatId) {
-
+    let chat = ChatMock.chats.filter(chat => chat.id === chatId)[0];
+    chat.updateLastSeenMessages = lastSeenMessage;
   }
 
   private static onDestroy = () => {
     ChatMock.messagesSubjectsMap = {};
-  }
+  };
 
   public static chatDataHandler() {
     return {

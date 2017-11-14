@@ -51,6 +51,7 @@ export class ChatterComponent implements OnInit {
   }
 
   private newMessagesHandler = ({newMessages, chatId}) => {
+    this.chatStoreService.notifyGeneralChatMessage(newMessages);
     newMessages.sort((m1, m2) => m1.timestamp - m2.timestamp);
       if (this.chatter.isActive) {
         this.chatter.chat.lastSeenMessages[this.chatter.id] = newMessages[newMessages.length - 1];
@@ -59,7 +60,6 @@ export class ChatterComponent implements OnInit {
       } else {
         this.chatter.numOfUnseenMessages++;
       }
-    this.chatStoreService.notifyScrollToBottom();
     this.chatter.chat.messages = newMessages;
 
   }

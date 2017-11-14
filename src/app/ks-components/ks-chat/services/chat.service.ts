@@ -23,7 +23,7 @@ export class ChatService {
     this.chatDataHandler.updateMessages(newMessage, chat, localUser);
   }
 
-  public updateLastSeenMessages(lastSeenMessage, chatId) {
+  public updateLastSeenMessages(lastSeenMessage,chatId) {
     this.chatDataHandler.updateLastSeenMessages(lastSeenMessage, chatId);
   }
 
