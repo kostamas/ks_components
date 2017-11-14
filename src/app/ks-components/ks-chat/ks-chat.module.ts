@@ -6,11 +6,13 @@ import {ChatMessageComponent} from './chat-message/chat-message.component';
 import {KsChatComponent} from './ks-chat.component';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
+import {MatIconModule} from '@angular/material';
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    MatIconModule
   ],
   declarations: [
     ChatMessageComponent,

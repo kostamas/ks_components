@@ -21,30 +21,85 @@ export class ChatMock {
     ChatMock.buildMockChat('chatId4', ['User2', 'User3'], 5),
     ChatMock.buildMockChat('chatId5', ['User2', 'User4'], 20),
     ChatMock.buildMockChat('chatId6', ['User3', 'User4'], 2),
+    ChatMock.buildMockChat('chatId7', ['User1', 'User2', 'User3', 'User4'], 4),
+    ChatMock.buildMockChat('chatId8', ['User1', 'User3'], 4),
+
   ];
+
 
   public static mockUsers = [
     {
       name: 'MR. Bean',
       id: 'User1',
-      chatIds: ['chatId1', 'chatId2', 'chatId3'],
+      chatIds: ['chatId1', 'chatId2', 'chatId3', 'chatId7', 'chatId8']
     },
     {
       name: 'Charlie Chaplin',
       id: 'User2',
-      chatIds: ['chatId1', 'chatId4', 'chatId5'],
+      chatIds: ['chatId1', 'chatId4', 'chatId5', 'chatId7'],
     },
     {
       name: 'Jim Carrey',
       id: 'User3',
-      chatIds: ['chatId2', 'chatId4', 'chatId6'],
+      chatIds: ['chatId2', 'chatId4', 'chatId6', 'chatId7', 'chatId8'],
     },
     {
       name: 'van damme',
       id: 'User4',
-      chatIds: ['chatId6', 'chatId5', 'chatId3'],
+      chatIds: ['chatId6', 'chatId5', 'chatId3', 'chatId7'],
     },
   ];
+
+  private static chatParticipants = {
+    User1: [
+      Object.assign({},ChatMock.mockUsers[1]),
+      Object.assign({},ChatMock.mockUsers[2]),
+      Object.assign({},ChatMock.mockUsers[3]),
+      {
+        name: 'Chat Group 1',
+        id: 'Chat Group 1',
+        chatIds: ['chatId7']
+      },
+      {
+        name: 'Chat Group 2',
+        id: 'Chat Group 2',
+        chatIds: ['chatId8']
+      }
+    ],
+    User2: [
+      Object.assign({},ChatMock.mockUsers[0]),
+      Object.assign({},ChatMock.mockUsers[2]),
+      Object.assign({},ChatMock.mockUsers[3]),
+      {
+        name: 'Chat Group 1',
+        id: 'Chat Group 1',
+        chatIds: ['chatId7']
+      }
+    ],
+    User3: [
+      Object.assign({},ChatMock.mockUsers[0]),
+      Object.assign({},ChatMock.mockUsers[1]),
+      Object.assign({},ChatMock.mockUsers[3]),
+      {
+        name: 'Chat Group 1',
+        id: 'Chat Group 1',
+        chatIds: ['chatId7']
+      }, {
+        name: 'Chat Group 2',
+        id: 'Chat Group 2',
+        chatIds: ['chatId8']
+      }
+    ],
+    User4: [
+      Object.assign({},ChatMock.mockUsers[1]),
+      Object.assign({},ChatMock.mockUsers[2]),
+      {
+        name: 'Chat Group 1',
+        id: 'Chat Group 1',
+        chatIds: ['chatId7']
+      }
+    ]
+  };
 
   private static buildMockChat(chatId, users, numOfMessages) {
     const mockChat: any = {
@@ -60,7 +115,7 @@ export class ChatMock {
   private static buildLastSeenMessages(mockChat) {
     let lastSeenMessages = {}, randomMessage, lastMessage;
     mockChat.users.forEach(userId => {
-      randomMessage = mockChat.messages[Math.floor(Math.random()*(mockChat.messages.length - 1))];
+      randomMessage = mockChat.messages[Math.floor(Math.random() * (mockChat.messages.length - 1))];
       lastMessage = mockChat.messages[mockChat.messages.length - 1];
       lastSeenMessages[userId] = Math.random() > 0.4 ? lastMessage : randomMessage;
     });
@@ -88,15 +143,8 @@ export class ChatMock {
   }
 
   private static getChatParticipants = (userId) => {
-
-    let chatParticipants = [];
-    ChatMock.mockUsers.map(user => {
-      if (user.id !== userId) {
-        chatParticipants.push(Object.assign({}, user));
-      }
-    });
-    return Observable.of(chatParticipants);
-  }
+    return Observable.of(ChatMock.chatParticipants[userId]);
+  };
 
   private static updateMessages = (newMessage, chat, localUser) => {
     let chatToUpdate = ChatMock.chats.filter(_chat => _chat.id === chat.id)[0];
@@ -124,15 +172,16 @@ export class ChatMock {
       ChatMock.messagesSubjectsMap[chatterChatKey] = new Subject<any[]>();
       return ChatMock.messagesSubjectsMap[chatterChatKey]
     }
-  }
+  };
 
   private static updateLastSeenMessages(lastSeenMessage, chatId) {
-
+    let chat = ChatMock.chats.filter(chat => chat.id === chatId)[0];
+    chat.updateLastSeenMessages = lastSeenMessage;
   }
 
   private static onDestroy = () => {
     ChatMock.messagesSubjectsMap = {};
-  }
+  };
 
   public static chatDataHandler() {
     return {

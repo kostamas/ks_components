@@ -1,18 +1,22 @@
-<div class="ks-chat-container">
+<div class="ks-chat-container" [ngClass]="chatViewsClassMap[currentChatView]">
+
+  <mat-icon (click)="closeChat()" class="clear">clear</mat-icon>
+
   <div [hidden]="currentChatView !== CHAT_VIEWS.CHAT_BUTTON_VIEW">
     <div class="chat-button-wrapper" (click)="openChat()">
       <div class="unseen-messages"
-           [ngClass]="{'ten-or-more-unseen-messages': numOfUnSeenMessages >=  MAX_UN_SEEN_MESSAGES}"
-           *ngIf="MAX_UN_SEEN_MESSAGES > 0">
-        {{MAX_UN_SEEN_MESSAGES}}
+           *ngIf="numOfUnseenMessages > 0"
+           [ngClass]="{'ten-or-more-unseen-messages': numOfUnseenMessages >=  MAX_UN_SEEN_MESSAGES}">
+        {{numOfUnseenMessages >= MAX_UN_SEEN_MESSAGES ? '10' : numOfUnseenMessages}}
       </div>
-      <!--&lt;!&ndash;<svg-icon name="znk-chat-chat-icon"></svg-icon>&ndash;&gt;-->
+      <mat-icon svgIcon="chat-icon" class="chat-icon"></mat-icon>
     </div>
   </div>
 
   <div [hidden]="currentChatView !== CHAT_VIEWS.CHAT_VIEW">
     <div class="chat-container">
-      <app-chat-participants [localUser]="localUser"></app-chat-participants>
+      <app-chat-participants (chatParticipants)="onChatParticipants($event)"
+                             [localUser]="localUser"></app-chat-participants>
       <app-chat-pane [actions]="actions" [localUser]="localUser"></app-chat-pane>
     </div>
   </div>

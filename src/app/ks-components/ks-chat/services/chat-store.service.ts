@@ -3,13 +3,14 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/filter';
+import {Subject} from "rxjs/Subject";
 
 @Injectable()
 export class ChatStoreService implements OnDestroy {
   private chatParticipants$ = new BehaviorSubject<any>(null);
   private activeChatter$ = new BehaviorSubject<any>(null);
-  private chats$ = new BehaviorSubject<any>(null);
-  private notifyScrollToBottom$ = new BehaviorSubject<any>(null);
+  private generalChatMessage$ = new Subject<any>();
+
   private subscriptions = [];
 
   constructor() {
@@ -20,10 +21,11 @@ export class ChatStoreService implements OnDestroy {
   }
 
   public onChatParticipants(cb) {
-    this.subscriptions.push(this.chatParticipants$
+    const subscription = this.chatParticipants$
       .filter(data => Array.isArray(data))
-      .subscribe(cb));
-    return this.subscriptions[this.subscriptions.length - 1];
+      .subscribe(cb);
+    this.addSubscription(subscription, cb);
+    return subscription;
   }
 
   public notifyActiveChatter(chatter: any) {
@@ -31,39 +33,45 @@ export class ChatStoreService implements OnDestroy {
   }
 
   public onActiveChatter(cb) {
-    this.subscriptions.push(this.activeChatter$
-      .filter(data => data && data !== null)
-      .subscribe(cb));
+    let subscription = this.activeChatter$.filter(data => data && data !== null).subscribe(cb);
+    this.addSubscription(subscription, cb);
+    return subscription;
+  }
+
+  public notifyGeneralChatMessage(generalMessage: any) {
+    this.generalChatMessage$.next(generalMessage);
+  }
+
+  public onGeneralChatMessage(cb) {
+    const subscription = this.generalChatMessage$.subscribe(cb);
+    this.addSubscription(subscription, cb);
     return this.subscriptions[this.subscriptions.length - 1];
-  }
-
-  public notifyChats(chat: any) {
-    this.chats$.next(chat);
-  }
-
-  public onChats(cb, userId) {
-    this.subscriptions.push(this.activeChatter$
-      .filter(chat => chat && chat.users.indexOf(userId) > -1)
-      .subscribe(cb));
-    return this.subscriptions[this.subscriptions.length - 1];
-  }
-  public notifyScrollToBottom(){
-
   }
 
   public unSubscribe = (cb) => {
-    const index = this.subscriptions.indexOf(cb);
+    let index = -1;
+    for (let i = 0; i < this.subscriptions.length; i++) {
+      if(this.subscriptions[i].cb === cb){
+        index = i;
+        break;
+      }
+    }
+
     if (index > -1) {
-      this.subscriptions[index].unsubscribe(cb);
+      this.subscriptions[index].subscription.unsubscribe(cb);
       this.subscriptions.splice(index, 1);
     }
   };
 
   public unSubscribeAll = () => {
-    this.subscriptions.forEach(subscription => {
-      subscription.unsubscribe();
+    this.subscriptions.forEach(subscriptionData => {
+      subscriptionData.subscription.unsubscribe();
     })
   };
+
+  private addSubscription(subscription, cb) {
+    this.subscriptions.push({subscription, cb})
+  }
 
   ngOnDestroy() {
     this.unSubscribeAll();

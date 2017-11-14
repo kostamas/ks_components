@@ -1,6 +1,15 @@
 @import '../../../assets/scss/main';
 
 .ks-chat-container {
+  position: relative;
+  .mat-icon.clear {
+    @include text-style(20px, $emperor);
+    position: absolute;
+    right: 2px;
+    top: 3px;
+    cursor: pointer;
+  }
+
   .chat-button-wrapper {
     @include dimension(45px, 45px);
     position: relative;
@@ -10,7 +19,11 @@
     justify-content: center;
     border-radius: 35px;
     background-color: $gallery;
-    border:1px solid $lochinvar;
+    border: 1px solid $rollingStone;
+
+    .chat-icon {
+
+    }
 
     .unseen-messages {
       @include dimension(auto, 15px);
@@ -62,7 +75,13 @@
 
 }
 
-.animate-chat{
+.ks-chat-container.button-view{
+  .mat-icon.clear{
+    display: none;
+  }
+}
+
+.animate-chat {
   .button-wrapper {
     transition: linear 0.13s;
   }
