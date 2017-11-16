@@ -20,8 +20,8 @@ export class SchedulerStoreService extends KsStore implements OnDestroy {
     this.availability$.next(storeType);
   }
 
-  public onAvailability(cb) {
-    this.addSubscription(this.availability$.subscribe(cb), cb);
+  public onAvailability(cb,id?) {
+    this.addSubscription(this.availability$.subscribe(cb), cb, id);
     return this.subscriptions[this.subscriptions.length - 1].subscription;
   }
 

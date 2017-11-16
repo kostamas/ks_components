@@ -19,9 +19,9 @@ const customTimeSlot = TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM;
   templateUrl: './scheduler-adapter.component.html',
   styleUrls: ['./scheduler-adapter.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  providers:[SchedulerStoreService]
+  providers: [SchedulerStoreService]
 })
-export class SchedulerAdapterComponent implements OnInit{
+export class SchedulerAdapterComponent implements OnInit {
   public schedulerConfig: ISchedulerConfig;  // todo - figure how and where to store scheduler types.
   public selectedItemIndex;
 

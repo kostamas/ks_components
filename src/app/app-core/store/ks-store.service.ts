@@ -1,19 +1,16 @@
-export class KsStore{
+export class KsStore {
 
   protected subscriptions = [];
 
-  public unSubscribe = (cb) => {
-    let index = -1;
+  public unSubscribe = (cb, id?) => {
     for (let i = 0; i < this.subscriptions.length; i++) {
-      if (this.subscriptions[i].cb === cb) {
-        index = i;
+      if (id && this.subscriptions[i].id === id) {
+        this.removeSubscription(i);
+        break;
+      } else if (this.subscriptions[i].cb === cb) {
+        this.removeSubscription(i);
         break;
       }
-    }
-
-    if (index > -1) {
-      this.subscriptions[index].subscription.unsubscribe(cb);
-      this.subscriptions.splice(index, 1);
     }
   };
 
@@ -24,7 +21,12 @@ export class KsStore{
     this.subscriptions = [];
   };
 
-  public addSubscription(subscription, cb) {
-    this.subscriptions.push({subscription, cb})
+  public addSubscription(subscription, cb, id?) {
+    this.subscriptions.push({subscription, cb, id: id})
+  }
+
+  private removeSubscription(index) {
+    this.subscriptions[index].subscription.unsubscribe();
+    this.subscriptions.splice(index, 1);
   }
 }
