@@ -23,8 +23,8 @@
 
 .un-schedule-btn {
   position: absolute;
-  right: 1px;
-  top: 0;
+  right: -1px;
+  top: 1px;
   cursor: pointer;
   z-index: 5;
 
@@ -34,7 +34,7 @@
   }
 
   .mat-icon{
-    font-size: 16px;
+    font-size: 13px;
     width: 16px;
     height: 16px;
   }

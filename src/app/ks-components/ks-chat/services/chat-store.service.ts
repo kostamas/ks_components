@@ -45,7 +45,7 @@ export class ChatStoreService implements OnDestroy {
   public onGeneralChatMessage(cb) {
     const subscription = this.generalChatMessage$.subscribe(cb);
     this.addSubscription(subscription, cb);
-    return this.subscriptions[this.subscriptions.length - 1];
+    return this.subscriptions[this.subscriptions.length - 1].subscription;
   }
 
   public unSubscribe = (cb) => {
@@ -66,7 +66,8 @@ export class ChatStoreService implements OnDestroy {
   public unSubscribeAll = () => {
     this.subscriptions.forEach(subscriptionData => {
       subscriptionData.subscription.unsubscribe();
-    })
+    });
+    this.subscriptions = [];
   };
 
   private addSubscription(subscription, cb) {

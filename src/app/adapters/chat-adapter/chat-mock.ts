@@ -54,7 +54,6 @@ export class ChatMock {
     User1: [
       Object.assign({},ChatMock.mockUsers[1]),
       Object.assign({},ChatMock.mockUsers[2]),
-      Object.assign({},ChatMock.mockUsers[3]),
       {
         name: 'Chat Group 1',
         id: 'Chat Group 1',

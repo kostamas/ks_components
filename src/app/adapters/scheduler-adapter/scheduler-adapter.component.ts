@@ -19,9 +19,9 @@ const customTimeSlot = TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM;
   templateUrl: './scheduler-adapter.component.html',
   styleUrls: ['./scheduler-adapter.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  providers:[SchedulerStoreService]
+  providers: [SchedulerStoreService]
 })
-export class SchedulerAdapterComponent implements OnInit{
+export class SchedulerAdapterComponent implements OnInit {
   public schedulerConfig: ISchedulerConfig;  // todo - figure how and where to store scheduler types.
   public selectedItemIndex;
 
@@ -89,11 +89,13 @@ export class SchedulerAdapterComponent implements OnInit{
   public onItemClick = (itemIndex) => {
     if (this.selectedItemIndex !== itemIndex) {
       this.schedulerStoreService.notifyAvailability(SCHEDULER_STORE_TYPE.OUT);
-      this.schedulerStoreService.onAvailability((availability: number) => {
+      let availabilityHandler = (availability: number) => {
         if (availability === SCHEDULER_STORE_TYPE.IN) {
           this.selectedItemIndex = itemIndex;
         }
-      });
+        this.schedulerStoreService.unSubscribe(availabilityHandler);
+      };
+      this.schedulerStoreService.onAvailability(availabilityHandler);
     } else {
       this.showSchedules();
     }

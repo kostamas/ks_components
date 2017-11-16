@@ -65,6 +65,8 @@ export class SchedulerComponent implements OnInit, OnDestroy {
 
     this.currentDate = new Date();
     this.currentDate.setDate(this.currentDate.getDate() - this.currentDate.getDay());
+    this.mdDate = this.currentDate;
+
     this.current_week_slide = 1;
 
     this.updateHeaderDates(this.currentDate);
@@ -134,6 +136,7 @@ export class SchedulerComponent implements OnInit, OnDestroy {
 
     const relevantWeek: Date = new Date(this.currentDate);
     relevantWeek.setDate(relevantWeek.getDate() - relevantWeek.getDay());
+    this.mdDate = relevantWeek;
 
     let startAndEndDates, startWeekSlide;
 
