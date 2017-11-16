@@ -89,11 +89,13 @@ export class SchedulerAdapterComponent implements OnInit{
   public onItemClick = (itemIndex) => {
     if (this.selectedItemIndex !== itemIndex) {
       this.schedulerStoreService.notifyAvailability(SCHEDULER_STORE_TYPE.OUT);
-      this.schedulerStoreService.onAvailability((availability: number) => {
+      let availabilityHandler = (availability: number) => {
         if (availability === SCHEDULER_STORE_TYPE.IN) {
           this.selectedItemIndex = itemIndex;
         }
-      });
+        this.schedulerStoreService.unSubscribe(availabilityHandler);
+      };
+      this.schedulerStoreService.onAvailability(availabilityHandler);
     } else {
       this.showSchedules();
     }

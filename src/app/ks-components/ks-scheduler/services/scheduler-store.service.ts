@@ -21,8 +21,8 @@ export class SchedulerStoreService implements OnDestroy {
   }
 
   public onAvailability(cb) {
-    this.subscriptions.push(this.availability$.subscribe(cb));
-    return this.subscriptions[this.subscriptions.length - 1];
+    this.addSubscription(this.availability$.subscribe(cb), cb);
+    return this.subscriptions[this.subscriptions.length - 1].subscription;
   }
 
   public notifySchedules(storeType) {
@@ -30,8 +30,8 @@ export class SchedulerStoreService implements OnDestroy {
   }
 
   public onSchedules(cb) {
-    this.subscriptions.push(this.schedules$.subscribe(cb));
-    return this.subscriptions[this.subscriptions.length - 1];
+    this.addSubscription(this.schedules$.subscribe(cb), cb);
+    return this.subscriptions[this.subscriptions.length - 1].subscription;
 
   }
 
@@ -40,8 +40,8 @@ export class SchedulerStoreService implements OnDestroy {
   }
 
   public onTimeSlot(cb) {
-    this.subscriptions.push(this.timeSlotClick$.subscribe(cb));
-    return this.subscriptions[this.subscriptions.length - 1];
+    this.addSubscription(this.timeSlotClick$.subscribe(cb), cb);
+    return this.subscriptions[this.subscriptions.length - 1].subscription;
 
   }
 
@@ -50,31 +50,41 @@ export class SchedulerStoreService implements OnDestroy {
   }
 
   public onUpdateTimeSlot(cb) {
-    this.subscriptions.push(this.updateTimeSlots$.subscribe(cb));
-    return this.subscriptions[this.subscriptions.length - 1];
-
+    this.addSubscription(this.updateTimeSlots$.subscribe(cb), cb);
+    return this.subscriptions[this.subscriptions.length - 1].subscription;
   }
 
-  public unSubscribe = (cb) =>{
-    const index = this.subscriptions.indexOf(cb);
-    if(index > -1){
-      this.subscriptions[index].unsubscribe(cb);
+  public unSubscribe = (cb) => {
+    let index = -1;
+    for (let i = 0; i < this.subscriptions.length; i++) {
+      if(this.subscriptions[i].cb === cb){
+        index = i;
+        break;
+      }
+    }
+
+    if (index > -1) {
+      this.subscriptions[index].subscription.unsubscribe(cb);
       this.subscriptions.splice(index, 1);
     }
   };
 
-  public unSubscribeAll =()=>{
-    this.subscriptions.forEach(subscription=>{
-      subscription.unsubscribe();
-    })
+  public unSubscribeAll = () => {
+    this.subscriptions.forEach(subscriptionData => {
+      subscriptionData.subscription.unsubscribe();
+    });
+    this.subscriptions = [];
   };
 
-  ngOnDestroy(){
+  private addSubscription(subscription, cb) {
+    this.subscriptions.push({subscription, cb})
+  }
+
+  ngOnDestroy() {
     this.unSubscribeAll();
     this.subscriptions = [];
   }
 }
-
 
 /*************************************** constants *******************************/
 
