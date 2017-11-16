@@ -4,17 +4,13 @@ import 'rxjs/add/operator/delay';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/filter';
 import {Subject} from "rxjs/Subject";
+import {KsStore} from "../../../app-core/store/ks-store.service";
 
 @Injectable()
-export class ChatStoreService implements OnDestroy {
+export class ChatStoreService  extends KsStore implements OnDestroy {
   private chatParticipants$ = new BehaviorSubject<any>(null);
   private activeChatter$ = new BehaviorSubject<any>(null);
   private generalChatMessage$ = new Subject<any>();
-
-  private subscriptions = [];
-
-  constructor() {
-  }
 
   public notifyChatParticipants(chatParticipants: any) {
     this.chatParticipants$.next(chatParticipants);
@@ -46,32 +42,6 @@ export class ChatStoreService implements OnDestroy {
     const subscription = this.generalChatMessage$.subscribe(cb);
     this.addSubscription(subscription, cb);
     return this.subscriptions[this.subscriptions.length - 1].subscription;
-  }
-
-  public unSubscribe = (cb) => {
-    let index = -1;
-    for (let i = 0; i < this.subscriptions.length; i++) {
-      if(this.subscriptions[i].cb === cb){
-        index = i;
-        break;
-      }
-    }
-
-    if (index > -1) {
-      this.subscriptions[index].subscription.unsubscribe(cb);
-      this.subscriptions.splice(index, 1);
-    }
-  };
-
-  public unSubscribeAll = () => {
-    this.subscriptions.forEach(subscriptionData => {
-      subscriptionData.subscription.unsubscribe();
-    });
-    this.subscriptions = [];
-  };
-
-  private addSubscription(subscription, cb) {
-    this.subscriptions.push({subscription, cb})
   }
 
   ngOnDestroy() {
