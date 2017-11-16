@@ -2,7 +2,6 @@ import {
   Component, ComponentFactoryResolver, DoCheck, Input, ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import {trigger, state, style, animate, transition} from '@angular/animations';
 import {TimeSlotConstant} from '../constants/timeSlot.constant';
 import {SchedulerStoreService, TIME_SLOT_STORE_TYPE} from "../services/scheduler-store.service";
 
@@ -36,6 +35,8 @@ export class TimeSlotComponent implements DoCheck {
   }
 
   ngDoCheck() {
+    if(this.timeSlotData.metaData.timeSlotType === TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM){
+    }
     if (this.timeSlotData.metaData.timeSlotType === TimeSlotConstant.TIME_SLOTS_TYPES.CUSTOM) {
       if (!this.customTimeSlotCompoRef) {
         this.compileComponent();

@@ -141,7 +141,7 @@ export class SchedulerAdapterComponent implements OnInit {
     this.schedulerStoreService.notifyUpdateTimeSlot(insertedItem);
   };
 
-  private showSchedules = () => {
+  public showSchedules = () => {
     this.selectedItemIndex = -1;
     this.schedulerStoreService.notifySchedules(SCHEDULER_STORE_TYPE.OUT);
   };

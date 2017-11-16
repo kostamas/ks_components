@@ -178,6 +178,22 @@ export class SchedulerComponent implements OnInit, OnDestroy {
     });
   }
 
+  public changeWeekSlidesByDate(date) {
+    this.currentDate = new Date(date);
+    this.currentDate.setDate(this.currentDate.getDate() - this.currentDate.getDay());
+    this.updateHeaderDates(this.currentDate);
+
+    const startAndEndDates = this.getStartAndEndDates(-1 * SchedulerConstant.DAYS_IN_WEEK, 2 * SchedulerConstant.DAYS_IN_WEEK);
+    switch (this.currentOperationId) {
+      case OperationTypes.SCHEDULES:
+        this.schedulesHandler(startAndEndDates.startDate, startAndEndDates.endDate, this.getRegularStartWeekSlide);
+        break;
+      case OperationTypes.AVAILABILITY:
+        this.availabilityHandler(startAndEndDates.startDate, startAndEndDates.endDate, this.getRegularStartWeekSlide, SCHEDULER_STORE_TYPE.OUT);
+        break;
+    }
+  }
+
   private availabilityHandler = (startDate, endDate, startWeekSlide, availabilityStoreType: number) => {
     this.currentOperationId = OperationTypes.AVAILABILITY;
     this.dynamicDefaultView.timeSlotClass = this.dynamicDefaultViewsMap[TimeSlotConstant.DYNAMIC_DEFAULT_VIEWS.UNAVAILABLE];
@@ -214,11 +230,11 @@ export class SchedulerComponent implements OnInit, OnDestroy {
 
   private updateTimeSlotsWithData = (data, startData, endDate, weekSlide, operationType) => {
     const runningDate: Date = new Date(startData);
-    let dateDetails, timeSlotData;
+    let dateDetails, timeSlotData,i, hour;
 
     while (runningDate <= endDate) {
-      for (let i = 0; i < SchedulerConstant.DAYS_IN_WEEK; i++) {
-        for (let hour = 0; hour < SchedulerConstant.HOURS_IN_DAYS; hour++) {
+      for (i = 0; i < SchedulerConstant.DAYS_IN_WEEK; i++) {
+        for (hour = 0; hour < SchedulerConstant.HOURS_IN_DAYS; hour++) {
           dateDetails = this.schedulerService.getDateDetails(runningDate);
 
           timeSlotData = this.timeSlotData[this.schedulerWeeks[weekSlide]][i][hour];
@@ -296,22 +312,6 @@ export class SchedulerComponent implements OnInit, OnDestroy {
     const startDate = new Date(new Date(this.currentDate).setDate(this.currentDate.getDate() + startOffset - this.currentDate.getDay()));
     const endDate = new Date(new Date(this.currentDate).setDate(this.currentDate.getDate() + endOffset - this.currentDate.getDay()));
     return {startDate, endDate};
-  }
-
-  public changeWeekSlidesByDate(date) {
-    this.currentDate = new Date(date);
-    this.currentDate.setDate(this.currentDate.getDate() - this.currentDate.getDay());
-    this.updateHeaderDates(this.currentDate);
-
-    const startAndEndDates = this.getStartAndEndDates(-1 * SchedulerConstant.DAYS_IN_WEEK, 2 * SchedulerConstant.DAYS_IN_WEEK);
-    switch (this.currentOperationId) {
-      case OperationTypes.SCHEDULES:
-        this.schedulesHandler(startAndEndDates.startDate, startAndEndDates.endDate, this.getRegularStartWeekSlide);
-        break;
-      case OperationTypes.AVAILABILITY:
-        this.availabilityHandler(startAndEndDates.startDate, startAndEndDates.endDate, this.getRegularStartWeekSlide, SCHEDULER_STORE_TYPE.OUT);
-        break;
-    }
   }
 
   ngOnDestroy() {
