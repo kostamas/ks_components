@@ -2,18 +2,18 @@ import {Injectable, OnDestroy} from '@angular/core';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
 import {Subject} from 'rxjs/Subject';
+import {KsStore} from "../../../app-core/store/ks-store.service";
 
 @Injectable()
-export class SchedulerStoreService implements OnDestroy {
+export class SchedulerStoreService extends KsStore implements OnDestroy {
   private availability$ = new Subject<number>();
   private schedules$ = new Subject<number>();
 
   private timeSlotClick$ = new Subject<any>();
   private updateTimeSlots$ = new Subject<any>();
 
-  private subscriptions = [];
-
   constructor() {
+    super();
   }
 
   public notifyAvailability(storeType: number) {
@@ -52,32 +52,6 @@ export class SchedulerStoreService implements OnDestroy {
   public onUpdateTimeSlot(cb) {
     this.addSubscription(this.updateTimeSlots$.subscribe(cb), cb);
     return this.subscriptions[this.subscriptions.length - 1].subscription;
-  }
-
-  public unSubscribe = (cb) => {
-    let index = -1;
-    for (let i = 0; i < this.subscriptions.length; i++) {
-      if(this.subscriptions[i].cb === cb){
-        index = i;
-        break;
-      }
-    }
-
-    if (index > -1) {
-      this.subscriptions[index].subscription.unsubscribe(cb);
-      this.subscriptions.splice(index, 1);
-    }
-  };
-
-  public unSubscribeAll = () => {
-    this.subscriptions.forEach(subscriptionData => {
-      subscriptionData.subscription.unsubscribe();
-    });
-    this.subscriptions = [];
-  };
-
-  private addSubscription(subscription, cb) {
-    this.subscriptions.push({subscription, cb})
   }
 
   ngOnDestroy() {
