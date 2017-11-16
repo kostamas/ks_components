@@ -1,0 +1,115 @@
+@import 'mixins';
+@import 'colors';
+@import 'variables';
+
+.btn-type-1{
+  @include button-style($bondiBlue, 50px, 154px, 35px);
+  @include text-style(14px, $white, Lato, $normalFontWeight, null, uppercase);
+
+  &:hover{
+    background-color: $blueChill;
+  }
+  &:active{
+    background-color: $blueLagoon;
+  }
+  &:disabled{
+    background-color: $halfBaked;
+    cursor: default;
+  }
+}
+
+.btn-type-2{
+  @include button-style($white, 50px, 154px, 35px, 1px solid $bondiBlue);
+  @include text-style(14px, $bondiBlue, Lato, $normalFontWeight, null, uppercase);
+
+  &:hover{
+    background-color: $catskillWhite;
+  }
+  &:active{
+    background-color: $botticelli;
+  }
+  &:disabled{
+    background-color: $alabaster;
+    cursor: default;
+  }
+}
+
+.btn-type-3{
+  @include button-style($bondiBlue, 50px, 132px, 28px);
+  @include text-style(14px, $white, Lato, $normalFontWeight);
+
+  &:hover{
+    background-color: $blueChill;
+  }
+  &:active{
+    background-color: $blueLagoon;
+  }
+  &:disabled{
+    background-color: $halfBaked;
+    cursor: default;
+  }
+}
+
+.btn-type-4{
+  @include button-style($bondiBlue, 50px, 102px, 22px);
+  @include text-style(12px, $white, Lato, $normalFontWeight);
+
+  &:hover{
+    background-color: $blueChill;
+  }
+  &:active{
+    background-color: $blueLagoon;
+  }
+  &:disabled{
+    background-color: $halfBaked;
+    cursor: default;
+  }
+}
+
+.btn-type-5{
+  @include button-style($bondiBlue, 50px, 90px, 28px);
+  @include text-style(14px, $white, Lato, $normalFontWeight);
+
+  &:hover{
+    background-color: $blueChill;
+  }
+  &:active{
+    background-color: $blueLagoon;
+  }
+  &:disabled{
+    background-color: $halfBaked;
+    cursor: default;
+  }
+}
+
+.btn-type-6{
+  @include button-style($bondiBlue, 50px, 102px, 28px);
+  @include text-style(12px, $white, Lato, $normalFontWeight);
+
+  &:hover{
+    background-color: $blueChill;
+  }
+  &:active{
+    background-color: $blueLagoon;
+  }
+  &:disabled{
+    background-color: $halfBaked;
+    cursor: default;
+  }
+}
+
+.btn-type-7{
+  @include button-style($mantis, 50px, 322px, 35px);
+  @include text-style(18px, $white, Lato, $normalFontWeight);
+
+  &:hover{
+    background-color: $sushi;
+  }
+  &:active{
+    background-color: $oliveDrab;
+  }
+  &:disabled{
+    background-color: $feijoa;
+    cursor: default;
+  }
+}
