@@ -1,0 +1,55 @@
+@import './colors';
+@import './mixins';
+@import './variables';
+
+md-tooltip-component{
+  .mat-tooltip {
+    background-color: $white;
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.35) ;
+    color: $emperor !important;
+    font-family: Lato !important;
+    font-size: 14px !important;
+    font-weight: $normalFontWeight !important;
+  }
+}
+
+md-input-container{
+  width: 330px;
+
+  .mat-input-wrapper{
+
+    .mat-input-table{
+      position: relative;
+      .mat-input-infix{
+        input{
+          height: 37px;
+          border: 1px solid $rollingStone;
+          padding-left: 10px;
+          @include text-style(14px, $emperor, Lato, $lightFontWeight);
+        }
+        .mat-input-placeholder-wrapper{
+          left: 0;
+          top: -2px;
+          .mat-input-placeholder{
+            text-transform: none;
+            text-align: left;
+            padding-left: 10px;
+            @include text-style(14px, $emperor, Lato, $lightFontWeight);
+          }
+        }
+      }
+      .mat-input-suffix{
+        position: absolute;
+        top: 13px;
+        right: 17px;
+      }
+    }
+
+    .mat-input-underline{
+      border-top-width: 0;
+      .mat-input-ripple{
+        background-color: $transparent;
+      }
+    }
+  }
+}
