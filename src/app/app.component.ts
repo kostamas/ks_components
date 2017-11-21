@@ -7,8 +7,8 @@ import {TranslateService} from '@ngx-translate/core';
     <div class="home-navigation" routerLink="/home" [routerLinkActive]="['home']">Home</div>
     <router-outlet></router-outlet>`,
   styles: [`.home-navigation {
-    width: 100px;
-    height: 50px;
+    width: 80px;
+    height: 40px;
     background-color: #22d470;
     box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
     color: white;
@@ -16,10 +16,10 @@ import {TranslateService} from '@ngx-translate/core';
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    left: 80px;
+    left: 50px;
     top: 20px;
     position: absolute;
-    font-size: 20px;
+    font-size: 19px;
   }
 
   .home-navigation:hover {

@@ -3,8 +3,8 @@
 
 .scheduler-adapter-container {
   display: flex;
-  margin: 90px 70px;
-  width: 1700px;
+  margin: 45px 40px;
+  width: 1260px;
 
   .scheduler-operation-pan {
     padding-top: 50px;
@@ -12,11 +12,10 @@
     flex-direction: column;
 
     .show-schedules-btn {
+      @include dimension(150px, 30px);
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 200px;
-      height: 40px;
       background-color: $ABC;
       border: 1px solid $nobel;
       color: $white;
@@ -34,13 +33,12 @@
     }
 
     .items-to-schedule {
+      @include dimension(270px, 450px);
       display: flex;
       flex-direction: column;
-      width: 320px;
-      height: 453px;
       border: 1px solid $manatee;
       margin-top: 25px;
-      margin-right: 150px;
+      margin-right: 40px;
       background-color: $white;
 
       .items-to-schedule-title {
@@ -62,9 +60,8 @@
         box-sizing: border-box;
 
         .item-to-schedule {
-          @include text-style(21px, $ABC, Lato);
-          width: 130px;
-          height: 60px;
+          @include text-style(18px, $ABC, Lato);
+          @include dimension(110px, 50px);
           margin: 30px 0;
           background-color: $white;
           color: $ABC;

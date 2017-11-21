@@ -28,15 +28,16 @@
   cursor: pointer;
   z-index: 5;
 
-  &:hover{
+  &:hover {
     opacity: 0.8;
     color: #77A2E9;
   }
 
-  .mat-icon{
+  .mat-icon {
     font-size: 13px;
     width: 16px;
     height: 16px;
+    color: $kimberlyDark;
   }
 }
 
@@ -48,7 +49,7 @@
     background-color: $white;
   }
 
-  .unavailable{
+  .unavailable {
     @include text-style(15px, $kimberlyDark, Lato, $normalFontWeight);
     position: relative;
     top: 15px;
@@ -84,7 +85,7 @@
       transition: 0.2s;
     }
 
-    .time-slot-data-tooltip.hide-tooltip{
+    .time-slot-data-tooltip.hide-tooltip {
       display: none;
     }
   }
@@ -107,7 +108,7 @@
     height: 50px;
   }
 
-  .custom-time-slot{
+  .custom-time-slot {
     position: relative;
     padding-top: 8px;
   }

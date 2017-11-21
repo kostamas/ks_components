@@ -1,12 +1,13 @@
 @import '../../../../assets/scss/main';
 
 $scheduler-width: 900px;
+
 .scheduler-component {
-  width: 1200px;
+  width: 900px;
   overflow: hidden;
   display: flex;
   position: relative;
-  padding-top: 60px;
+  padding-top: 40px;
   flex-direction: column;
 
   .scheduler-controls {
