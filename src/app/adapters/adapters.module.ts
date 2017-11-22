@@ -16,6 +16,8 @@ import {KsChat} from '../ks-components/ks-chat/ks-chat.module';
 import {ChatMock} from './chat-adapter/chat-mock';
 import {ChatService} from '../ks-components/ks-chat/services/chat.service';
 import {ChatAdapterWrapperComponent} from './chat-adapter/chat-wrapper.component';
+import { ImageZoomerAdapterComponent } from './image-zoomer-adapter/image-zoomer-adapter.component';
+import {ImageZoomer} from '../ks-components/image-zoomer/image-zommer.module';
 
 @NgModule({
   imports: [
@@ -26,6 +28,7 @@ import {ChatAdapterWrapperComponent} from './chat-adapter/chat-wrapper.component
     MatIconModule,
     MatProgressBarModule,
     KsChat,
+    ImageZoomer
   ],
   declarations: [
     SchedulerAdapterComponent,
@@ -33,7 +36,8 @@ import {ChatAdapterWrapperComponent} from './chat-adapter/chat-wrapper.component
     AdvancedComponentComponent,
     TimeSlotDetailsModalComponent,
     ChatAdapterComponent,
-    ChatAdapterWrapperComponent
+    ChatAdapterWrapperComponent,
+    ImageZoomerAdapterComponent,
   ],
   exports: [],
   entryComponents: [

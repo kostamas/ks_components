@@ -163,6 +163,7 @@ export class ChatMock {
         chatId: chatToUpdate.id
       });
     })
+    debugger;
   };
 
   private static listenToMessages = (chatId, userId) => {
