@@ -3,12 +3,14 @@ import {NgModule} from '@angular/core';
 // import {FormsModule} from '@angular/forms';
 // import {MatIconModule} from '@angular/material';
 import {ImageZoomerDirective} from './image-zoomer.directive';
+import {ImageZoomerComponent} from "./image-zoomer.component";
 
 @NgModule({
     imports: [
     ],
     declarations: [
-        ImageZoomerDirective
+        ImageZoomerDirective,
+        ImageZoomerComponent
     ],
     exports: [
         ImageZoomerDirective
