@@ -1,0 +1,13 @@
+.expanded-image-modal {
+  .mat-dialog-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    box-shadow: none;
+  }
+}
+
+.image-wrapper {
+  margin: 0 auto;
+}
