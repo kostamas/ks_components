@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ImageZoomerAdapterComponent } from './image-zoomer-adapter.component';
+import { ImageZoomerAdapterComponent } from './image-expander-adapter.component';
 
 describe('ImageZoomerAdapterComponent', () => {
   let component: ImageZoomerAdapterComponent;

@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
     this.components = [
       {text: 'Scheduler', link: '/scheduler'},
       {text: 'Chat', link: '/chat'},
-      {text: 'Image Zoomer', link: '/image-zoomer'}
+      {text: 'Image Expander', link: '/image-expander'}
     ];
   }
 }

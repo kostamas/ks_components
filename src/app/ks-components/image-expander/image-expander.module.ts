@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {ImageZoomerDirective} from './image-zoomer.directive';
+import {ImageExpanderDirective} from './image-expander.directive';
 import {MatDialogModule} from '@angular/material/dialog';
 import {ExpandedImageModalComponent} from './expanded-image-modal/expanded-image-modal.component';
 
@@ -8,16 +8,16 @@ import {ExpandedImageModalComponent} from './expanded-image-modal/expanded-image
     MatDialogModule
   ],
   declarations: [
-    ImageZoomerDirective,
+    ImageExpanderDirective,
     ExpandedImageModalComponent
   ],
   entryComponents: [
     ExpandedImageModalComponent
   ],
   exports: [
-    ImageZoomerDirective
+    ImageExpanderDirective
   ],
   providers: []
 })
-export class ImageZoomer {
+export class ImageExpander {
 }
