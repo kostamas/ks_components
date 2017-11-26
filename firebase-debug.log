@@ -1,0 +1,23 @@
+[debug] [2017-11-26T11:02:30.196Z] ----------------------------------------------------------------------
+[debug] [2017-11-26T11:02:30.212Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\dell\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy
+[debug] [2017-11-26T11:02:30.214Z] CLI Version:   3.15.2
+[debug] [2017-11-26T11:02:30.214Z] Platform:      win32
+[debug] [2017-11-26T11:02:30.214Z] Node Version:  v6.10.2
+[debug] [2017-11-26T11:02:30.216Z] Time:          Sun Nov 26 2017 13:02:30 GMT+0200 (שעון רגיל ירושלים)
+[debug] [2017-11-26T11:02:30.216Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2017-11-26T11:02:30.299Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2017-11-26T11:02:30.300Z] > authorizing via signed-in user
+[debug] [2017-11-26T11:02:30.313Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/ks-components  
+ Sun Nov 26 2017 13:02:30 GMT+0200 (שעון רגיל ירושלים)
+[debug] [2017-11-26T11:02:31.846Z] <<< HTTP RESPONSE 200
+[debug] [2017-11-26T11:02:31.846Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/ks-components/tokens  
+ Sun Nov 26 2017 13:02:31 GMT+0200 (שעון רגיל ירושלים)
+[debug] [2017-11-26T11:02:32.629Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'ks-components'...
+[info] 
+[info] i  deploying hosting
+[info] i  hosting: preparing public directory for upload...
+[debug] [2017-11-26T11:02:35.583Z] >>> HTTP REQUEST PUT https://deploy.firebase.com/v1/hosting/ks-components/uploads/-Kzrz_YfknXmy9WZeTJQ?fileCount=23&message=  
+ Sun Nov 26 2017 13:02:35 GMT+0200 (שעון רגיל ירושלים)

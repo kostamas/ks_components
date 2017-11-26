@@ -1,7 +1,7 @@
 <div class="chat-message-container" [ngClass]="messageStyleClass">
-  <div class="message-wrapper" >
+  <div class="message-wrapper">
     <div class="message">
-      {{message.text}}
+      <span class="user-name">{{message.userName ? message.userName + ':' : ''}}</span> {{message.text}}
       <div class="bottom-triangle"></div>
     </div>
   </div>
