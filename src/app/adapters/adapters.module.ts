@@ -4,6 +4,7 @@ import {CommonModule} from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatDialogModule, MatProgressBarModule} from '@angular/material';
 import {MatIconModule} from '@angular/material';
+import {MatButtonModule} from '@angular/material';
 
 import {SchedulingMockData} from './scheduler-adapter/schedulingMockData';
 
@@ -16,6 +17,8 @@ import {KsChat} from '../ks-components/ks-chat/ks-chat.module';
 import {ChatMock} from './chat-adapter/chat-mock';
 import {ChatService} from '../ks-components/ks-chat/services/chat.service';
 import {ChatAdapterWrapperComponent} from './chat-adapter/chat-wrapper.component';
+import {ImageExpanderAdapterComponent} from './image-expander-adapter/image-expander-adapter.component';
+import {ImageExpander} from '../ks-components/image-expander/image-expander.module';
 
 @NgModule({
   imports: [
@@ -26,6 +29,8 @@ import {ChatAdapterWrapperComponent} from './chat-adapter/chat-wrapper.component
     MatIconModule,
     MatProgressBarModule,
     KsChat,
+    ImageExpander,
+    MatButtonModule
   ],
   declarations: [
     SchedulerAdapterComponent,
@@ -33,7 +38,8 @@ import {ChatAdapterWrapperComponent} from './chat-adapter/chat-wrapper.component
     AdvancedComponentComponent,
     TimeSlotDetailsModalComponent,
     ChatAdapterComponent,
-    ChatAdapterWrapperComponent
+    ChatAdapterWrapperComponent,
+    ImageExpanderAdapterComponent,
   ],
   exports: [],
   entryComponents: [
