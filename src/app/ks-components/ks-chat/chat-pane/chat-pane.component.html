@@ -5,13 +5,12 @@
   <div class="pane-wrapper">
     <div class="messages-container">
       <div class="messages-wrapper scrollbar-style" #chatScrollBar>
-        <!--orderBy:'time'-->
         <div class="message-repeater" *ngFor="let message of activeChatter.chat.messages">
           <app-chat-message [localUser]="localUser" [message]="message"></app-chat-message>
         </div>
       </div>
     </div>
 
-    <textarea (keypress)="keyPressHandler($event.keyCode)" [(ngModel)]="message" class="chat-textarea"></textarea>
+    <textarea (keypress)="keyPressHandler($event)" [(ngModel)]="message" class="chat-textarea"></textarea>
   </div>
 </div>
