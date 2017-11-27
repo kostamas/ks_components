@@ -19,6 +19,8 @@ import {ChatService} from '../ks-components/ks-chat/services/chat.service';
 import {ChatAdapterWrapperComponent} from './chat-adapter/chat-wrapper.component';
 import {ImageExpanderAdapterComponent} from './image-expander-adapter/image-expander-adapter.component';
 import {ImageExpander} from '../ks-components/image-expander/image-expander.module';
+import {TransparentShapeModalModule} from '../ks-components/transparent-shape-modal/transparent-shape-modal.module';
+import {TransparentShapeModalAdapterComponent} from './transparent-shape-modal-adapter/transparent-shape-modal-adapter.component';
 
 @NgModule({
   imports: [
@@ -30,7 +32,8 @@ import {ImageExpander} from '../ks-components/image-expander/image-expander.modu
     MatProgressBarModule,
     KsChat,
     ImageExpander,
-    MatButtonModule
+    MatButtonModule,
+    TransparentShapeModalModule
   ],
   declarations: [
     SchedulerAdapterComponent,
@@ -40,6 +43,7 @@ import {ImageExpander} from '../ks-components/image-expander/image-expander.modu
     ChatAdapterComponent,
     ChatAdapterWrapperComponent,
     ImageExpanderAdapterComponent,
+    TransparentShapeModalAdapterComponent
   ],
   exports: [],
   entryComponents: [
