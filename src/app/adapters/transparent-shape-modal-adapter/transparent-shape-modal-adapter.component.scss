@@ -5,5 +5,7 @@
   @include dimension(100%, 100%);
   background: url("http://setinparis.com/wp-content/uploads/2014/12/bgcurtain.jpeg");
   background-size: 100% 100%;
-  position:fixed;
+  position: fixed;
+  left: 0;
+  top: 0;
 }
