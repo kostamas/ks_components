@@ -1,3 +1,19 @@
-<p>
-  transparent-shape-modal works!
-</p>
+<div class="transparent-circle-drv-wrapper" (click)="transparentShapeModalClick()">
+
+  <div class="top-block bg-color" [ngStyle]="{height: topBlocHeight}"></div>
+
+  <div class="circle-and-text-wrapper" [ngStyle]="{
+        left: circleLeftPosition ,
+        top: circleTopPosition ,
+        width :circleRadius ,
+        height: circleRadius}">
+    <div class="circle-wrapper" [ngStyle]="{width :circleRadiusPx,height: circleRadiusPx}">
+      <div (click)="circleClick()" class="circle"
+           [ngStyle]="{width :circleRadiusPx  ,height: circleRadiusPx}"></div>
+    </div>
+  </div>
+
+  <div class="left-block bg-color" [ngStyle]="{height: leftBlockHeight, width: leftBlockWidth}"></div>
+  <div class="right-block bg-color" [ngStyle]="{height: rightBlockHeight, width: rightBlockWidth}"></div>
+  <div class="bottom-block bg-color"></div>
+</div>
