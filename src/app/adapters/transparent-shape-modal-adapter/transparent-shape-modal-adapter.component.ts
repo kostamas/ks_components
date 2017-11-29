@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {TransparentShapeModalService} from "../../ks-components/transparent-shape-modal/services/transparent-shape-modal.service";
+import {TransparentShapeModalService} from '../../ks-components/transparent-shape-modal/services/transparent-shape-modal.service';
 
 @Component({
   selector: 'app-transparent-shape-modal-adapter',
@@ -10,11 +10,10 @@ import {TransparentShapeModalService} from "../../ks-components/transparent-shap
 export class TransparentShapeModalAdapterComponent implements OnInit, OnDestroy {
   private interval;
   private timeout;
-  private isModalOpen = false;
-  private noop = () => {
-  };
-
+  public isModalOpen = false;
   public radius = 150;
+
+  private noop = () => {};
 
   constructor(private transparentShapeModalService: TransparentShapeModalService) {
   }
@@ -43,13 +42,13 @@ export class TransparentShapeModalAdapterComponent implements OnInit, OnDestroy 
       return;
     }
 
-    let x, y, circleRadius = 200, degree = 0;
+    let x, y, circleRadius = 150, degree = 0;
     this.isModalOpen = true;
 
 
     this.interval = setInterval(() => {
       x = circleRadius * Math.cos((degree * Math.PI) / 180) + 600;
-      y = circleRadius * Math.sin((degree * Math.PI) / 180) + 360;
+      y = circleRadius * Math.sin((degree * Math.PI) / 180) + 300;
 
       this.transparentShapeModalService.openTransparentShapeModal({left: x, top: y}, this.radius, this.noop, this.noop);
       this.timeout = setTimeout(this.transparentShapeModalService.closeModal, 80);
