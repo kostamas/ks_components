@@ -5,6 +5,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatDialogModule, MatProgressBarModule} from '@angular/material';
 import {MatIconModule} from '@angular/material';
 import {MatButtonModule} from '@angular/material';
+import {MatSliderModule} from '@angular/material';
 
 import {SchedulingMockData} from './scheduler-adapter/schedulingMockData';
 
@@ -33,7 +34,8 @@ import {TransparentShapeModalAdapterComponent} from './transparent-shape-modal-a
     KsChat,
     ImageExpander,
     MatButtonModule,
-    TransparentShapeModalModule
+    TransparentShapeModalModule,
+    MatSliderModule
   ],
   declarations: [
     SchedulerAdapterComponent,
