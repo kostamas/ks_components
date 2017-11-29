@@ -2,7 +2,7 @@
 
 .transparent-circle-drv-wrapper {
   @include dimension(100%, 100%);
-  z-index: 1;
+  z-index: 1000;
   position: absolute;
   top: 0;
   left: 0;
@@ -26,7 +26,7 @@
   }
 
   .bottom-block {
-    @include dimension(100%, 100%);
+    width: 100%;
     clear: both;
   }
 

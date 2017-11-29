@@ -1,5 +1,4 @@
-import {Component, Inject, Input, OnInit, Optional, ViewEncapsulation} from '@angular/core';
-import {MAT_DIALOG_DATA} from "@angular/material";
+import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 
 @Component({
   selector: 'app-transparent-shape-modal',
@@ -16,21 +15,21 @@ export class TransparentShapeModalComponent implements OnInit {
   public rightBlockWidth;
   public rightBlockHeight;
   public circleRadiusPx;
-  public showModal = false;
+  public bottomBlockHeight;
 
   @Input() position: any;
   @Input() circleRadius: number;
-  @Input() circleClickHandler: any;
+  @Input() transparentShapeClickHandler: any;
+  @Input() backgroundClickHandler;
+  @Input() shape = 'circle';
 
-  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public data: any) {
-    // todo: check if @Optional works
+  constructor() {
   }
 
   ngOnInit() {
-    let left = (this.data && this.data.position && this.data.position.left) || this.position.left;
-    let top = (this.data && this.data.position && this.data.position.top) || this.position.top;
-    let radius = (this.data && this.data.radius) || this.circleRadius;
-    var windowWidth = window.innerWidth;
+    let left =  this.position.left;
+    let top = this.position.top;
+    let radius = this.circleRadius;
 
     this.circleLeftPosition = left + 'px';
     this.circleTopPosition = top + 'px';
@@ -40,17 +39,13 @@ export class TransparentShapeModalComponent implements OnInit {
     this.rightBlockHeight = radius + 'px';
 
     this.leftBlockWidth = left + 'px';
-    this.rightBlockWidth = windowWidth - (radius + left) + 'px';
+    this.rightBlockWidth = `calc(100vw - ${radius + left}px)`;
+
+    this.bottomBlockHeight = `calc(100vh - ${radius + top}px)`;
 
     this.circleRadiusPx = radius + 'px';
   }
 
-  public circleClick() {
 
-  }
-
-  public transparentShapeModalClick() {
-    this.data.close()
-  }
 }
 
