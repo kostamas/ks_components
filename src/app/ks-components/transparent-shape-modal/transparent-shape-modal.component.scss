@@ -1,0 +1,70 @@
+@import '../../../assets/scss/main';
+
+.transparent-circle-drv-wrapper {
+  @include dimension(100%, 100%);
+  z-index: 1000;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  .bg-color {
+    @include dimension(100%, 100%);
+    background: rgba(0, 0, 0, 0.75);
+  }
+
+  .top-block {
+    @include dimension(100%, 0px);
+    clear: both;
+  }
+
+  .left-block {
+    float: left;
+  }
+
+  .right-block {
+    float: right;
+  }
+
+  .bottom-block {
+    width: 100%;
+    clear: both;
+  }
+
+  .circle-and-text-wrapper {
+    @include dimension(205px, 205px);
+    position: absolute;
+    background-color: transparent;
+    text-align: center;
+
+    .circle-wrapper {
+      @include dimension(205px, 205px);
+      background-color: transparent;
+      overflow: hidden;
+      position: absolute;
+
+      .circle {
+        background-color: transparent;
+        position: relative;
+        top: -75px;
+        left: -75px;
+        border-radius: 50%;
+        border: 75px solid rgba(0, 0, 0, 0.75);
+      }
+    }
+  }
+}
+
+.transparent-shape-modal {
+  @include dimension(100%, 100%);
+  background: transparent;
+
+  .mat-dialog-container {
+    @include dimension(100%, 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    box-shadow: none;
+    overflow: hidden;
+  }
+}

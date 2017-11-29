@@ -1,0 +1,25 @@
+<div class="transparent-circle-drv-wrapper" (click)="backgroundClickHandler($event)">
+
+  <div class="top-block bg-color" [ngStyle]="{height: topBlocHeight}"></div>
+
+  <div [ngSwitch]="shape">
+
+    <div *ngSwitchCase="'circle'" class="circle-and-text-wrapper" [ngStyle]="{
+        left: circleLeftPosition ,
+        top: circleTopPosition ,
+        width :circleRadius ,
+        height: circleRadius}">
+      <div class="circle-wrapper" [ngStyle]="{width :circleRadiusPx,height: circleRadiusPx}">
+
+        <div (click)="transparentShapeClickHandler()"
+             class="circle"
+             [ngStyle]="{width :circleRadiusPx  ,height: circleRadiusPx}"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="left-block bg-color" [ngStyle]="{height: leftBlockHeight, width: leftBlockWidth}"></div>
+  <div class="right-block bg-color" [ngStyle]="{height: rightBlockHeight, width: rightBlockWidth}"></div>
+  <div class="bottom-block bg-color" [ngStyle]="{'height': bottomBlockHeight}"></div>
+</div>

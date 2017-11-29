@@ -1,23 +1,24 @@
-[debug] [2017-11-26T11:02:30.196Z] ----------------------------------------------------------------------
-[debug] [2017-11-26T11:02:30.212Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\dell\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy
-[debug] [2017-11-26T11:02:30.214Z] CLI Version:   3.15.2
-[debug] [2017-11-26T11:02:30.214Z] Platform:      win32
-[debug] [2017-11-26T11:02:30.214Z] Node Version:  v6.10.2
-[debug] [2017-11-26T11:02:30.216Z] Time:          Sun Nov 26 2017 13:02:30 GMT+0200 (שעון רגיל ירושלים)
-[debug] [2017-11-26T11:02:30.216Z] ----------------------------------------------------------------------
+[debug] [2017-11-29T21:00:55.018Z] ----------------------------------------------------------------------
+[debug] [2017-11-29T21:00:55.018Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\dell\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy
+[debug] [2017-11-29T21:00:55.034Z] CLI Version:   3.15.2
+[debug] [2017-11-29T21:00:55.034Z] Platform:      win32
+[debug] [2017-11-29T21:00:55.034Z] Node Version:  v6.10.2
+[debug] [2017-11-29T21:00:55.034Z] Time:          Wed Nov 29 2017 23:00:55 GMT+0200 (שעון רגיל ירושלים)
+[debug] [2017-11-29T21:00:55.034Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2017-11-26T11:02:30.299Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2017-11-26T11:02:30.300Z] > authorizing via signed-in user
-[debug] [2017-11-26T11:02:30.313Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/ks-components  
- Sun Nov 26 2017 13:02:30 GMT+0200 (שעון רגיל ירושלים)
-[debug] [2017-11-26T11:02:31.846Z] <<< HTTP RESPONSE 200
-[debug] [2017-11-26T11:02:31.846Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/ks-components/tokens  
- Sun Nov 26 2017 13:02:31 GMT+0200 (שעון רגיל ירושלים)
-[debug] [2017-11-26T11:02:32.629Z] <<< HTTP RESPONSE 200
-[info] 
-[info] === Deploying to 'ks-components'...
-[info] 
-[info] i  deploying hosting
-[info] i  hosting: preparing public directory for upload...
-[debug] [2017-11-26T11:02:35.583Z] >>> HTTP REQUEST PUT https://deploy.firebase.com/v1/hosting/ks-components/uploads/-Kzrz_YfknXmy9WZeTJQ?fileCount=23&message=  
- Sun Nov 26 2017 13:02:35 GMT+0200 (שעון רגיל ירושלים)
+[debug] [2017-11-29T21:00:55.080Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2017-11-29T21:00:55.080Z] > authorizing via signed-in user
+[debug] [2017-11-29T21:00:55.096Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2017-11-29T21:00:55.096Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token { refresh_token: '1/FJgIqt3z3_iwxqj14pA0tBHHlfdpjuB2bBNWQwpcDiU91GihTCIHzwmO7wDp9n4s',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Wed Nov 29 2017 23:00:55 GMT+0200 (שעון רגיל ירושלים)
+[debug] [2017-11-29T21:00:55.673Z] <<< HTTP RESPONSE 200
+[debug] [2017-11-29T21:00:55.689Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/ks-components  
+ Wed Nov 29 2017 23:00:55 GMT+0200 (שעון רגיל ירושלים)
+[debug] [2017-11-29T21:00:57.891Z] <<< HTTP RESPONSE 200
+[debug] [2017-11-29T21:00:57.891Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/ks-components/tokens  
+ Wed Nov 29 2017 23:00:57 GMT+0200 (שעון רגיל ירושלים)
+[debug] [2017-11-29T21:00:58.892Z] <<< HTTP RESPONSE 200

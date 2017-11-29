@@ -1,0 +1,63 @@
+@import '../../../assets/scss/main';
+@import '../../../assets/scss/mixins';
+
+.transparent-shape-modal-container {
+  @include dimension(100%, 100%);
+  background: url("http://accn11zqho4gx96dld17q11f.wpengine.netdna-cdn.com/wp-content/uploads/2017/04/Neon-Tubes-Stage-Design-1000x470.jpg");
+  background-size: 100% 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
+.options-container {
+  @include dimension(250px, auto);
+  position: relative;
+  margin-top: 200px;
+  margin-left: 20px;
+
+  .option {
+    @include text-style(20px, $roofTerracotta, Lato);
+    @include dimension(230px, 50px);
+    margin-top: 10px;
+    background-color: $white;
+    box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $alto;
+      transition: 0.1s;
+    }
+  }
+
+  .stop-run-modal-in-circles {
+    position: relative;
+    z-index: 1001;
+  }
+
+  .radius-slider {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+
+    .mat-slider-track-fill, .mat-slider-thumb {
+      background-color: $candlelight;
+    }
+
+    .mat-slider-track-background {
+      background-color: $white;
+    }
+  }
+
+  .mat-slider-horizontal {
+    width: 235px;
+  }
+
+  .circle-radius {
+    @include text-style(20px, $white, Lato);
+  }
+}
