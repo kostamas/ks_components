@@ -1,5 +1,11 @@
-import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {TransparentShapeModalService} from '../../ks-components/transparent-shape-modal/services/transparent-shape-modal.service';
+import {Component, Inject, OnDestroy, OnInit, Renderer2, ViewEncapsulation} from '@angular/core';
+import {
+  ITransparentShapeModalConfig,
+  TransparentShapeModalService
+} from '../../ks-components/transparent-shape-modal/services/transparent-shape-modal.service';
+import {DOCUMENT} from '@angular/common';
+import {Observable} from 'rxjs/Rx';
+
 
 @Component({
   selector: 'app-transparent-shape-modal-adapter',
@@ -13,9 +19,11 @@ export class TransparentShapeModalAdapterComponent implements OnInit, OnDestroy 
   public isModalOpen = false;
   public radius = 150;
 
-  private noop = () => {};
+  private noop = () => {
+  };
 
-  constructor(private transparentShapeModalService: TransparentShapeModalService) {
+  constructor(private transparentShapeModalService: TransparentShapeModalService,
+              @Inject(DOCUMENT) private document: Document) {
   }
 
   ngOnInit() {
@@ -24,7 +32,7 @@ export class TransparentShapeModalAdapterComponent implements OnInit, OnDestroy 
   public openTransShapeModalByPos($event) {
     if (!this.isModalOpen) {
       const position = {left: $event.clientX, top: $event.clientY};
-      this.transparentShapeModalService.openTransparentShapeModal(position, this.radius, null, this.closeModal);
+      this.transparentShapeModalService.openTransparentShapeModal(position, this.radius, {backgroundClickHandler: this.closeModal});
       this.isModalOpen = true;
     }
   }
@@ -32,7 +40,7 @@ export class TransparentShapeModalAdapterComponent implements OnInit, OnDestroy 
   public openTransShapeModal() {
     if (!this.isModalOpen) {
       const position = {left: 700, top: 300};
-      this.transparentShapeModalService.openTransparentShapeModal(position, this.radius, null, this.closeModal);
+      this.transparentShapeModalService.openTransparentShapeModal(position, this.radius, {backgroundClickHandler: this.closeModal});
       this.isModalOpen = true;
     }
   }
@@ -42,7 +50,8 @@ export class TransparentShapeModalAdapterComponent implements OnInit, OnDestroy 
       return;
     }
 
-    let x, y, circleRadius = 150, degree = 0;
+    let x, y, degree = 0;
+    const circleRadius = 150;
     this.isModalOpen = true;
 
 
@@ -50,11 +59,28 @@ export class TransparentShapeModalAdapterComponent implements OnInit, OnDestroy 
       x = circleRadius * Math.cos((degree * Math.PI) / 180) + 600;
       y = circleRadius * Math.sin((degree * Math.PI) / 180) + 300;
 
-      this.transparentShapeModalService.openTransparentShapeModal({left: x, top: y}, this.radius, this.noop, this.noop);
+      const config: ITransparentShapeModalConfig = {backgroundClickHandler: this.noop, circleClickHandler: this.noop};
+      this.transparentShapeModalService.openTransparentShapeModal({left: x, top: y}, this.radius, config);
+
       this.timeout = setTimeout(this.transparentShapeModalService.closeModal, 80);
       degree += 20;
       degree = degree % 360;
-    }, 160);
+    }, 150);
+  }
+
+  public playOnDrag() {
+    this.isModalOpen = true;
+
+    Observable.fromEvent(this.document.body, 'click')
+      .skip(1)
+      .switchMap(({clientX, clientY}) => {
+        this.transparentShapeModalService.openTransparentShapeModal({left: clientX, top: clientY}, this.radius, {});
+        return Observable.fromEvent(this.document.body, 'mousemove');
+      })
+      .subscribe(({clientX, clientY}) => {
+        this.closeModal();
+        this.transparentShapeModalService.openTransparentShapeModal({left: clientX, top: clientY}, this.radius, {});
+      });
   }
 
   public closeModal = () => {

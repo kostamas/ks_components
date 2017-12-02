@@ -27,9 +27,9 @@ export class TransparentShapeModalComponent implements OnInit {
   }
 
   ngOnInit() {
-    let left =  this.position.left;
-    let top = this.position.top;
-    let radius = this.circleRadius;
+    const left =  this.position.left;
+    const top = this.position.top;
+    const radius = this.circleRadius;
 
     this.circleLeftPosition = left + 'px';
     this.circleTopPosition = top + 'px';
@@ -37,15 +37,12 @@ export class TransparentShapeModalComponent implements OnInit {
     this.topBlocHeight = top + 'px';
     this.leftBlockHeight = radius + 'px';
     this.rightBlockHeight = radius + 'px';
-
     this.leftBlockWidth = left + 'px';
     this.rightBlockWidth = `calc(100vw - ${radius + left}px)`;
-
     this.bottomBlockHeight = `calc(100vh - ${radius + top}px)`;
 
     this.circleRadiusPx = radius + 'px';
   }
-
 
 }
 

@@ -3,6 +3,7 @@
 <div class="options-container">
   <div class="option" (click)="openTransShapeModal()">Open transparent shape</div>
   <div class="option" (click)="runModalInCircles()">Play in circles</div>
+  <div class="option" (click)="playOnDrag()">On mouse drag</div>
   <div class="option stop-run-modal-in-circles" *ngIf="isModalOpen" (click)="closeModal()">Stop</div>
 
   <mat-slider
