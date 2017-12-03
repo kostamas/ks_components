@@ -29,6 +29,7 @@ export class TransparentShapeModalService {
     this.componentRef.instance.circleRadius = radius;
     this.componentRef.instance.transparentShapeClickHandler = circleClickHandler || TransparentShapeModalService.noop;
     this.componentRef.instance.backgroundClickHandler = backgroundClickHandler || this.closeModal;
+    this.componentRef.instance.shape = config.shape || 'circle';
 
     this.appRef.attachView(this.componentRef.hostView);
 
@@ -47,4 +48,5 @@ export class TransparentShapeModalService {
 export interface ITransparentShapeModalConfig {
   circleClickHandler?: any;
   backgroundClickHandler?: any;
+  shape?: string
 }

@@ -19,8 +19,8 @@ export class TransparentShapeModalComponent implements OnInit {
 
   @Input() position: any;
   @Input() circleRadius: number;
-  @Input() transparentShapeClickHandler: any;
-  @Input() backgroundClickHandler;
+  @Input() transparentShapeClickHandler: any = ()=>{};
+  @Input() backgroundClickHandler: any = ()=>{};
   @Input() shape = 'circle';
 
   constructor() {

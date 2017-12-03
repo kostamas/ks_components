@@ -10,13 +10,22 @@
   top: 0;
 }
 
-.options-container {
+.operations-container {
   @include dimension(250px, auto);
   position: relative;
-  margin-top: 180px;
+  margin-top: 250px;
   margin-left: 20px;
 
-  .option {
+  .select-shape-container {
+    @include text-style(20px, $roofTerracotta, Lato, $normalFontWeight);
+    @include dimension(auto, 40px);
+    min-width: 220px;
+    margin-bottom: 50px;
+    box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
+    cursor: pointer;
+  }
+
+  .operation {
     @include text-style(20px, $roofTerracotta, Lato);
     @include dimension(230px, 50px);
     margin-top: 10px;
@@ -62,8 +71,8 @@
   }
 }
 
-.options-container.on-mouse-move-selected{
-  .on-move-btn{
+.operations-container.on-mouse-move-selected {
+  .on-move-btn {
     background-color: $silverChalice;
     border: 1px solid $roofTerracotta;
     box-sizing: border-box;

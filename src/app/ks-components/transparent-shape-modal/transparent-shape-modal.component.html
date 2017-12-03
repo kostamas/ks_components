@@ -2,19 +2,22 @@
 
   <div class="top-block bg-color" [ngStyle]="{height: topBlocHeight}"></div>
 
-  <div [ngSwitch]="shape">
+  <div [ngSwitch]="shape" [ngClass]="shape">
 
-    <div *ngSwitchCase="'circle'" class="circle-and-text-wrapper" [ngStyle]="{
+    <div class="shape-wrapper" [ngStyle]="{
         left: circleLeftPosition ,
         top: circleTopPosition ,
         width :circleRadius ,
         height: circleRadius}">
-      <div class="circle-wrapper" [ngStyle]="{width :circleRadiusPx,height: circleRadiusPx}">
 
-        <div (click)="transparentShapeClickHandler()"
-             class="circle"
-             [ngStyle]="{width :circleRadiusPx  ,height: circleRadiusPx}"></div>
+      <div *ngSwitchCase="'circle'" class="circle-wrapper" [ngStyle]="{width :circleRadiusPx,height: circleRadiusPx}">
+
+        <div (click)="transparentShapeClickHandler()" class="circle"
+              [ngStyle]="{width :circleRadiusPx  ,height: circleRadiusPx}"></div>
       </div>
+
+      <div *ngSwitchCase="'square'" class="square-wrapper"
+           [ngStyle]="{width :circleRadiusPx,height: circleRadiusPx}"></div>
     </div>
 
   </div>

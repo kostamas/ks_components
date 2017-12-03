@@ -6,6 +6,7 @@ import {MatDialogModule, MatProgressBarModule} from '@angular/material';
 import {MatIconModule} from '@angular/material';
 import {MatButtonModule} from '@angular/material';
 import {MatSliderModule} from '@angular/material';
+import { FormsModule } from '@angular/forms';
 
 import {SchedulingMockData} from './scheduler-adapter/schedulingMockData';
 
@@ -35,7 +36,8 @@ import {TransparentShapeModalAdapterComponent} from './transparent-shape-modal-a
     ImageExpander,
     MatButtonModule,
     TransparentShapeModalModule,
-    MatSliderModule
+    MatSliderModule,
+    FormsModule
   ],
   declarations: [
     SchedulerAdapterComponent,
