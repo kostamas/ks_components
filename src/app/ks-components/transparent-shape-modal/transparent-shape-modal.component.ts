@@ -34,9 +34,6 @@ export class TransparentShapeModalComponent implements OnInit {
     let top = this.position.top;
     const radius = this.circleRadius;
 
-    // console.log('left:' + left  + '      this.windowRef.nativeWindow.innerWidth: ' + this.windowRef.nativeWindow.innerWidth);
-    // console.log('top:' + top +  '     this.windowRef.nativeWindow.top: ' + this.windowRef.nativeWindow.innerHeight);
-
     const viewPortHeight = this.windowRef.nativeWindow.innerHeight;
     const viewPortWidth = this.windowRef.nativeWindow.innerWidth;
 
@@ -48,13 +45,10 @@ export class TransparentShapeModalComponent implements OnInit {
       left = left > viewPortWidth - radius ? viewPortWidth - radius : 0;
     }
 
-    console.log('left: ' + left, 'view: ' + viewPortWidth);
-
-
-    this.calcPosition(left, top, radius);
+    this.setPosition(left, top, radius);
   }
 
-  private calcPosition(left, top, radius) {
+  private setPosition(left, top, radius) {
 
     this.circleLeftPosition = left;
     this.circleTopPosition = top;

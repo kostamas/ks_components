@@ -14,7 +14,6 @@ import {Observable} from 'rxjs/Rx';
 })
 export class TransparentShapeModalAdapterComponent implements OnInit, OnDestroy {
   private interval;
-  private timeout;
   public radius = 150;
   public VIEW_STATES = {
     MODAL_CLOSED: 1,
@@ -106,10 +105,6 @@ export class TransparentShapeModalAdapterComponent implements OnInit, OnDestroy 
   public closeModal = () => {
     if (this.interval || this.interval === 0) {
       clearInterval(this.interval);
-    }
-
-    if (this.timeout || this.timeout === 0) {
-      clearTimeout(this.timeout);
     }
 
     this.transparentShapeModalService.closeModal();
