@@ -2,7 +2,7 @@ import {Component, Inject, OnDestroy, OnInit, ViewEncapsulation} from '@angular/
 import {
   ITransparentShapeModalConfig,
   TransparentShapeModalService
-} from '../../ks-components/transparent-shape-modal/services/transparent-shape-modal.service';
+} from '../../ks-components/transparent-shape-modal/transparent-shape-modal.service';
 import {DOCUMENT} from '@angular/common';
 import {Observable} from 'rxjs/Rx';
 

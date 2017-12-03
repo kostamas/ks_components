@@ -1,5 +1,5 @@
 import {ApplicationRef, ComponentFactoryResolver, EmbeddedViewRef, Injectable, Injector} from '@angular/core';
-import {TransparentShapeModalComponent} from '../transparent-shape-modal.component';
+import {TransparentShapeModalComponent} from './transparent-shape-modal.component';
 
 
 @Injectable()
@@ -32,12 +32,10 @@ export class TransparentShapeModalService {
 
     this.appRef.attachView(this.componentRef.hostView);
 
-
     const domElem = (this.componentRef.hostView as EmbeddedViewRef<any>)
       .rootNodes[0] as HTMLElement;
 
     document.body.appendChild(domElem);
-
   }
 
   public closeModal = () => {

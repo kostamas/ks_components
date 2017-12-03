@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import {TransparentShapeModalComponent} from './transparent-shape-modal.component';
 
-import {TransparentShapeModalService} from './services/transparent-shape-modal.service';
+import {TransparentShapeModalService} from './transparent-shape-modal.service';
 
 @NgModule({
   imports: [
