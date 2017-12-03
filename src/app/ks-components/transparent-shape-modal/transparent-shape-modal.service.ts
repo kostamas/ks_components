@@ -40,8 +40,10 @@ export class TransparentShapeModalService {
   }
 
   public closeModal = () => {
-    this.appRef.detachView(this.componentRef.hostView);
-    this.componentRef.destroy();
+    if(this.componentRef){
+      this.appRef.detachView(this.componentRef.hostView);
+      this.componentRef.destroy();
+    }
   }
 }
 

@@ -24,7 +24,7 @@ export class TransparentShapeModalAdapterComponent implements OnInit, OnDestroy 
   public currentViewState = this.VIEW_STATES.MODAL_CLOSED;
   public selectedButton = '';
 
-  public shapes = ['circle', 'square'];
+  public shapes = ['circle', 'square', 'triangle'];
   public selectedShape = this.shapes[0];
 
   public config: ITransparentShapeModalConfig;
@@ -71,12 +71,11 @@ export class TransparentShapeModalAdapterComponent implements OnInit, OnDestroy 
       y = circleRadius * Math.sin((degree * Math.PI) / 180) + 300;
 
       this.config = {backgroundClickHandler: this.noop, circleClickHandler: this.noop, shape: this.selectedShape};
+      this.transparentShapeModalService.closeModal();
       this.transparentShapeModalService.openTransparentShapeModal({left: x, top: y}, this.radius, this.config);
-
-      this.timeout = setTimeout(this.transparentShapeModalService.closeModal, 80);
-      degree += 20;
+      degree += 10;
       degree = degree % 360;
-    }, 150);
+    }, 30);
   }
 
   public playOnMouseEMove() {
