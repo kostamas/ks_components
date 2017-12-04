@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Inject, OnInit, Optional, ViewEncapsulation} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material';
 
 @Component({
@@ -10,15 +10,17 @@ import {MAT_DIALOG_DATA} from '@angular/material';
 export class ExpandedImageModalComponent implements OnInit {
   public imgData;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
-    this.imgData = {
-      src: data.img.src,
-      width: (data.img.style.width || data.img.clientWidth) * 2,
-      height: (data.img.style.height || data.img.height ) * 2
-    };
+  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
   ngOnInit() {
+    if(this.data && this.data.img){
+      this.imgData = {
+        src: this.data.img.src,
+        width: (this.data.img.style.width || this.data.img.clientWidth) * 2,
+        height: (this.data.img.style.height || this.data.img.height ) * 2
+      };
+    }
   }
 
 }

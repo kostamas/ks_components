@@ -1,11 +1,11 @@
 <div class="chat-pane-wrapper">
   <div class="chat-pane-header">
-    {{activeChatter.name}}
+    {{activeChatter?.name}}
   </div>
   <div class="pane-wrapper">
     <div class="messages-container">
       <div class="messages-wrapper scrollbar-style" #chatScrollBar>
-        <div class="message-repeater" *ngFor="let message of activeChatter.chat.messages">
+        <div class="message-repeater" *ngFor="let message of activeChatter?.chat.messages">
           <app-chat-message [localUser]="localUser" [message]="message"></app-chat-message>
         </div>
       </div>

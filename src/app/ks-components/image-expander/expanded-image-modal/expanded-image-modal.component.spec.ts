@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ExpandedImageModalComponent } from './expanded-image-modal.component';
+import {ImageExpanderDirective} from "../image-expander.directive";
+import {ImageExpanderAdapterComponent} from "../../../adapters/image-expander-adapter/image-expander-adapter.component";
 
 describe('ExpandedImageModalComponent', () => {
   let component: ExpandedImageModalComponent;
@@ -8,7 +10,11 @@ describe('ExpandedImageModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ExpandedImageModalComponent ]
+      declarations: [
+        ExpandedImageModalComponent,
+        ImageExpanderDirective,
+        ImageExpanderAdapterComponent
+      ]
     })
     .compileComponents();
   }));
@@ -16,7 +22,7 @@ describe('ExpandedImageModalComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ExpandedImageModalComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    // fixture.detectChanges();
   });
 
   it('should create', () => {
