@@ -1,5 +1,10 @@
-import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {TransparentShapeModalService} from '../../ks-components/transparent-shape-modal/services/transparent-shape-modal.service';
+import {Component, Inject, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {
+  ITransparentShapeModalConfig,
+  TransparentShapeModalService
+} from '../../ks-components/transparent-shape-modal/transparent-shape-modal.service';
+import {DOCUMENT} from '@angular/common';
+import {Observable} from 'rxjs/Rx';
 
 @Component({
   selector: 'app-transparent-shape-modal-adapter',
@@ -9,52 +14,92 @@ import {TransparentShapeModalService} from '../../ks-components/transparent-shap
 })
 export class TransparentShapeModalAdapterComponent implements OnInit, OnDestroy {
   private interval;
-  private timeout;
-  public isModalOpen = false;
   public radius = 150;
+  public VIEW_STATES = {
+    MODAL_CLOSED: 1,
+    MODAL_OPENED: 2,
+    MODAL_AND_STOP_BTN_OPENED: 3
+  };
+  public currentViewState = this.VIEW_STATES.MODAL_CLOSED;
+  public selectedButton = '';
 
-  private noop = () => {};
+  public shapes = ['circle', 'square', 'triangle'];
+  public selectedShape = this.shapes[0];
 
-  constructor(private transparentShapeModalService: TransparentShapeModalService) {
+  public config: ITransparentShapeModalConfig;
+
+  private noop = () => {
+  };
+
+  constructor(private transparentShapeModalService: TransparentShapeModalService,
+              @Inject(DOCUMENT) private document: Document) {
   }
 
   ngOnInit() {
   }
 
   public openTransShapeModalByPos($event) {
-    if (!this.isModalOpen) {
+    if (this.currentViewState === this.VIEW_STATES.MODAL_CLOSED) {
       const position = {left: $event.clientX, top: $event.clientY};
-      this.transparentShapeModalService.openTransparentShapeModal(position, this.radius, null, this.closeModal);
-      this.isModalOpen = true;
+      this.config = {backgroundClickHandler: this.closeModal, shape: this.selectedShape};
+      this.transparentShapeModalService.openTransparentShapeModal(position, this.radius, this.config);
+      this.currentViewState = this.VIEW_STATES.MODAL_AND_STOP_BTN_OPENED;
     }
   }
 
   public openTransShapeModal() {
-    if (!this.isModalOpen) {
+    if (this.currentViewState === this.VIEW_STATES.MODAL_CLOSED) {
       const position = {left: 700, top: 300};
-      this.transparentShapeModalService.openTransparentShapeModal(position, this.radius, null, this.closeModal);
-      this.isModalOpen = true;
+      this.config = {backgroundClickHandler: this.closeModal, shape: this.selectedShape};
+      this.transparentShapeModalService.openTransparentShapeModal(position, this.radius, this.config);
+      this.currentViewState = this.VIEW_STATES.MODAL_AND_STOP_BTN_OPENED;
     }
   }
 
   public runModalInCircles() {
-    if (this.isModalOpen) {
+    if (this.currentViewState !== this.VIEW_STATES.MODAL_CLOSED) {
       return;
     }
 
-    let x, y, circleRadius = 150, degree = 0;
-    this.isModalOpen = true;
-
+    let x, y, degree = 0;
+    const circleRadius = 150;
+    this.currentViewState = this.VIEW_STATES.MODAL_AND_STOP_BTN_OPENED;
 
     this.interval = setInterval(() => {
       x = circleRadius * Math.cos((degree * Math.PI) / 180) + 600;
       y = circleRadius * Math.sin((degree * Math.PI) / 180) + 300;
 
-      this.transparentShapeModalService.openTransparentShapeModal({left: x, top: y}, this.radius, this.noop, this.noop);
-      this.timeout = setTimeout(this.transparentShapeModalService.closeModal, 80);
-      degree += 20;
+      this.config = {backgroundClickHandler: this.noop, circleClickHandler: this.noop, shape: this.selectedShape};
+      this.transparentShapeModalService.closeModal();
+      this.transparentShapeModalService.openTransparentShapeModal({left: x, top: y}, this.radius, this.config);
+      degree += 10;
       degree = degree % 360;
-    }, 160);
+    }, 30);
+  }
+
+  public playOnMouseEMove() {
+    if (this.currentViewState !== this.VIEW_STATES.MODAL_CLOSED) {
+      return;
+    }
+
+    let position;
+    this.currentViewState = this.VIEW_STATES.MODAL_OPENED;
+    this.selectedButton = 'on-mouse-move-selected';
+    Observable.fromEvent(this.document.body, 'click')
+      .skip(1)
+      .switchMap(({clientX, clientY}) => {
+        this.config = {shape: this.selectedShape};
+        position = {left: clientX, top: clientY};
+        this.transparentShapeModalService.openTransparentShapeModal(position, this.radius, this.config);
+        return Observable.fromEvent(this.document.body, 'mousemove');
+      })
+      .takeUntil(Observable.fromEvent(this.document.body, 'click').skip(2))
+      .subscribe(({clientX, clientY}) => {
+        this.closeModal();
+        this.config = {shape: this.selectedShape};
+        position = {left: clientX, top: clientY};
+        this.transparentShapeModalService.openTransparentShapeModal(position, this.radius, this.config);
+      });
   }
 
   public closeModal = () => {
@@ -62,17 +107,13 @@ export class TransparentShapeModalAdapterComponent implements OnInit, OnDestroy 
       clearInterval(this.interval);
     }
 
-    if (this.timeout || this.timeout === 0) {
-      clearTimeout(this.timeout);
-    }
-
     this.transparentShapeModalService.closeModal();
-    this.isModalOpen = false;
+    this.currentViewState = this.VIEW_STATES.MODAL_CLOSED;
+    this.selectedButton = '';
   };
 
-
   ngOnDestroy() {
-    if (this.isModalOpen) {
+    if (this.currentViewState !== this.VIEW_STATES.MODAL_CLOSED) {
       this.closeModal();
     }
   }

@@ -1,25 +1,40 @@
 <div class="transparent-circle-drv-wrapper" (click)="backgroundClickHandler($event)">
 
-  <div class="top-block bg-color" [ngStyle]="{height: topBlocHeight}"></div>
+  <div class="top-block bg-color" [ngStyle]="{'height.px': topBlocHeight}"></div>
 
   <div [ngSwitch]="shape">
 
-    <div *ngSwitchCase="'circle'" class="circle-and-text-wrapper" [ngStyle]="{
-        left: circleLeftPosition ,
-        top: circleTopPosition ,
-        width :circleRadius ,
-        height: circleRadius}">
-      <div class="circle-wrapper" [ngStyle]="{width :circleRadiusPx,height: circleRadiusPx}">
+    <div class="shape-wrapper" [ngStyle]="{
+        'left.px': circleLeftPosition ,
+        'top.px': circleTopPosition ,
+        'width.px' :circleRadius ,
+        'height.px': circleRadius}">
 
-        <div (click)="transparentShapeClickHandler()"
-             class="circle"
-             [ngStyle]="{width :circleRadiusPx  ,height: circleRadiusPx}"></div>
+      <div *ngSwitchCase="'circle'" class="circle-wrapper" [ngStyle]="{'width.px' :circleRadius,'height.px': circleRadius}">
+        <div (click)="transparentShapeClickHandler()" class="circle"
+             [ngStyle]="{'width.px' :circleRadius  ,'height.px': circleRadius}"></div>
+      </div>
+
+      <div *ngSwitchCase="'square'" [ngStyle]="{'width.px' :circleRadius,'height.px': circleRadius}"></div>
+
+      <div *ngSwitchCase="'triangle'" class="triangle"
+           [ngStyle]="{'border-left-width.px' : circleRadius/2,
+           'border-right-width.px': circleRadius/2,
+           'border-bottom-width.px':circleRadius/2}">
+        <div class="triangle-fill"
+             [ngStyle]="{
+          'left.px': 0,
+          'top.px' : circleRadius/2,
+          'width.px': circleRadius,
+          'height.px': circleRadius/2
+          }">
+        </div>
       </div>
     </div>
 
   </div>
 
-  <div class="left-block bg-color" [ngStyle]="{height: leftBlockHeight, width: leftBlockWidth}"></div>
-  <div class="right-block bg-color" [ngStyle]="{height: rightBlockHeight, width: rightBlockWidth}"></div>
+  <div class="left-block bg-color" [ngStyle]="{'height.px': leftBlockHeight, 'width.px': leftBlockWidth}"></div>
+  <div class="right-block bg-color" [ngStyle]="{'height.px': rightBlockHeight, 'width': rightBlockWidth}"></div>
   <div class="bottom-block bg-color" [ngStyle]="{'height': bottomBlockHeight}"></div>
 </div>

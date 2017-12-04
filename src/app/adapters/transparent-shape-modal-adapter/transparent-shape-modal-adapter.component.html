@@ -1,15 +1,24 @@
 <div class="transparent-shape-modal-container" (click)="openTransShapeModalByPos($event)"></div>
 
-<div class="options-container">
-  <div class="option" (click)="openTransShapeModal()">Open transparent shape</div>
-  <div class="option" (click)="runModalInCircles()">Play in circles</div>
-  <div class="option stop-run-modal-in-circles" *ngIf="isModalOpen" (click)="closeModal()">Stop</div>
+<div class="operations-container" [ngClass]="selectedButton">
+
+  <select class="select-shape-container" [(ngModel)]="selectedShape">
+    <option *ngFor="let shape of shapes" [ngValue]="shape">
+      <div > {{shape}} </div>
+    </option>
+  </select>
+
+  <div (click)="openTransShapeModal()" class="operation">Open transparent shape</div>
+  <div (click)="runModalInCircles()" class="operation">Play in circles</div>
+  <div (click)="playOnMouseEMove()" class="operation on-move-btn">On mouse move</div>
+  <div (click)="closeModal()" class="operation close-modal"
+       *ngIf="currentViewState === VIEW_STATES.MODAL_AND_STOP_BTN_OPENED">Stop
+  </div>
 
   <mat-slider
     class="radius-slider"
     [max]="200"
     [min]="50"
-    [step]="1"
     (input)="radius = $event.value"
     [value]="radius">
   </mat-slider>

@@ -30,7 +30,7 @@
     clear: both;
   }
 
-  .circle-and-text-wrapper {
+  .shape-wrapper {
     @include dimension(205px, 205px);
     position: absolute;
     background-color: transparent;
@@ -51,6 +51,19 @@
         border: 75px solid rgba(0, 0, 0, 0.75);
       }
     }
+
+    .triangle{
+      width: 0;
+      height: 0;
+      border-left: 5px solid rgba(0, 0, 0, 0.75);
+      border-right: 5px solid rgba(0, 0, 0, 0.75);
+      border-bottom: 5px solid transparent;
+
+      .triangle-fill{
+        background-color: rgba(0, 0, 0, 0.75);
+        position: absolute;
+      }
+    }
   }
 }
 
@@ -67,4 +80,8 @@
     box-shadow: none;
     overflow: hidden;
   }
+}
+
+body {
+  overflow: hidden;
 }

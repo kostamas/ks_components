@@ -3,20 +3,29 @@
 
 .transparent-shape-modal-container {
   @include dimension(100%, 100%);
-  background: url("http://accn11zqho4gx96dld17q11f.wpengine.netdna-cdn.com/wp-content/uploads/2017/04/Neon-Tubes-Stage-Design-1000x470.jpg");
+  background: url("https://www.wildlifearchives.com/wp-content/uploads/2016/03/waterfalls-1457991254n4k8g.jpg");
   background-size: 100% 100%;
   position: fixed;
   left: 0;
   top: 0;
 }
 
-.options-container {
+.operations-container {
   @include dimension(250px, auto);
   position: relative;
-  margin-top: 200px;
+  margin-top: 250px;
   margin-left: 20px;
 
-  .option {
+  .select-shape-container {
+    @include text-style(20px, $roofTerracotta, Lato, $normalFontWeight);
+    @include dimension(auto, 40px);
+    min-width: 220px;
+    margin-bottom: 50px;
+    box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
+    cursor: pointer;
+  }
+
+  .operation {
     @include text-style(20px, $roofTerracotta, Lato);
     @include dimension(230px, 50px);
     margin-top: 10px;
@@ -33,7 +42,7 @@
     }
   }
 
-  .stop-run-modal-in-circles {
+  .close-modal {
     position: relative;
     z-index: 1001;
   }
@@ -59,5 +68,14 @@
 
   .circle-radius {
     @include text-style(20px, $white, Lato);
+  }
+}
+
+.operations-container.on-mouse-move-selected {
+  .on-move-btn {
+    background-color: $silverChalice;
+    border: 1px solid $roofTerracotta;
+    box-sizing: border-box;
+    transition: 0.3s;
   }
 }

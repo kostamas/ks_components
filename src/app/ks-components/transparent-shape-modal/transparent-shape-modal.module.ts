@@ -1,10 +1,11 @@
 import {NgModule} from '@angular/core';
 import {MatDialogModule} from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
+import { WindowRef } from '../../core/window-ref.service';
 
 import {TransparentShapeModalComponent} from './transparent-shape-modal.component';
 
-import {TransparentShapeModalService} from './services/transparent-shape-modal.service';
+import {TransparentShapeModalService} from './transparent-shape-modal.service';
 
 @NgModule({
   imports: [
@@ -20,7 +21,10 @@ import {TransparentShapeModalService} from './services/transparent-shape-modal.s
   exports: [
     TransparentShapeModalComponent
   ],
-  providers: [TransparentShapeModalService]
+  providers: [
+    TransparentShapeModalService,
+    WindowRef
+  ]
 })
 export class TransparentShapeModalModule {
 }
