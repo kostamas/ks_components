@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DentistTimeSlotComponent } from './simple-time-slot.component';
+import { SimpleTimeSlotComponent } from './simple-time-slot.component';
 
-describe('DentistTimeSlotComponent', () => {
-  let component: DentistTimeSlotComponent;
-  let fixture: ComponentFixture<DentistTimeSlotComponent>;
+describe('SimpleTimeSlotComponent', () => {
+  let component: SimpleTimeSlotComponent;
+  let fixture: ComponentFixture<SimpleTimeSlotComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DentistTimeSlotComponent ]
+      declarations: [ SimpleTimeSlotComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DentistTimeSlotComponent);
+    fixture = TestBed.createComponent(SimpleTimeSlotComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

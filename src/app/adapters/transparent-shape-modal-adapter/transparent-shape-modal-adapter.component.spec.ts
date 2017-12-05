@@ -1,6 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TransparentShapeModalAdapterComponent } from './transparent-shape-modal-adapter.component';
+import {CommonModule} from '@angular/common';
+import {MatDialogModule, MatSliderModule} from '@angular/material';
+import {FormsModule} from "@angular/forms";
+import {TransparentShapeModalService} from "../../ks-components/transparent-shape-modal/transparent-shape-modal.service";
+import {WindowRef} from "../../core/window-ref.service";
 
 describe('TransparentShapeModalAdapterComponent', () => {
   let component: TransparentShapeModalAdapterComponent;
@@ -8,7 +13,19 @@ describe('TransparentShapeModalAdapterComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TransparentShapeModalAdapterComponent ]
+      imports:[
+        MatDialogModule,
+        CommonModule,
+        FormsModule,
+        MatSliderModule
+      ],
+      declarations: [
+        TransparentShapeModalAdapterComponent
+      ],
+      providers:[
+        TransparentShapeModalService,
+        WindowRef
+      ]
     })
     .compileComponents();
   }));

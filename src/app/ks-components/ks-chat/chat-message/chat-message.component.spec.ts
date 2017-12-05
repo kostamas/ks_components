@@ -8,7 +8,9 @@ describe('ChatMessageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ChatMessageComponent ]
+      declarations: [
+        ChatMessageComponent
+      ]
     })
     .compileComponents();
   }));
@@ -16,6 +18,18 @@ describe('ChatMessageComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ChatMessageComponent);
     component = fixture.componentInstance;
+
+    component.localUser = {
+      name: 'MR. Bean',
+      id: 'User1',
+      chatIds: ['chatId1', 'chatId2', 'chatId3', 'chatId7', 'chatId8']
+    };
+    component.message = {
+      timestamp: 11223,
+      text: 'asdasdasd',
+      userId: 'tyrtyrty',
+      userName: 'User2'
+    };
     fixture.detectChanges();
   });
 

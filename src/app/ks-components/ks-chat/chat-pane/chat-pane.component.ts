@@ -12,7 +12,7 @@ export class ChatPaneComponent implements OnInit, AfterViewChecked {
   public message;
 
   @Input() localUser;
-  @Input() actions;
+  @Input() actions: any = {};
   @ViewChild('chatScrollBar') private myScrollContainer: ElementRef;
 
   constructor(private chatStoreService: ChatStoreService, private chatService: ChatService) {
