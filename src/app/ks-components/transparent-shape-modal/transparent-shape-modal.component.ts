@@ -31,15 +31,15 @@ export class TransparentShapeModalComponent implements AfterViewInit {
     switch (shapeType) {
       case 'circle': {
         this.circlePosition(shapeElement, top, left, radius);
-        break
+        break;
       }
       case 'square': {
         this.squarePosition(shapeElement, top, left, radius);
-        break
+        break;
       }
       case 'star': {
         this.starPosition(shapeElement, top, left, radius);
-        break
+        break;
       }
     }
   }
@@ -58,10 +58,12 @@ export class TransparentShapeModalComponent implements AfterViewInit {
   }
 
   private starPosition(shapeElement, top, left, radius) {
-    let viewBox = (96 / radius) * 96;
+    const viewBox = (96 / radius) * 96;
+    const leftOffset = (100 / (viewBox - 2)) * 100;
+    const rightOffset = (125 / (viewBox + 13)) * 125;
     shapeElement.setAttribute('viewBox', `0 0 ${viewBox} ${viewBox}`);
-    shapeElement.setAttribute('x', left - 150);
-    shapeElement.setAttribute('y', top - 150);
+    shapeElement.setAttribute('x', left - leftOffset);
+    shapeElement.setAttribute('y', top - rightOffset);
   }
 }
 
