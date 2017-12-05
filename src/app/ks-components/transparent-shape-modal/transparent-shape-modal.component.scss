@@ -1,87 +1,13 @@
 @import '../../../assets/scss/main';
 
-.transparent-circle-drv-wrapper {
+.transparent-shape-modal-container {
   @include dimension(100%, 100%);
-  z-index: 1000;
-  position: absolute;
+  z-index: 2;
+  position: fixed;
   top: 0;
   left: 0;
 
-  .bg-color {
+  svg {
     @include dimension(100%, 100%);
-    background: rgba(0, 0, 0, 0.75);
   }
-
-  .top-block {
-    @include dimension(100%, 0px);
-    clear: both;
-  }
-
-  .left-block {
-    float: left;
-  }
-
-  .right-block {
-    float: right;
-  }
-
-  .bottom-block {
-    width: 100%;
-    clear: both;
-  }
-
-  .shape-wrapper {
-    @include dimension(205px, 205px);
-    position: absolute;
-    background-color: transparent;
-    text-align: center;
-
-    .circle-wrapper {
-      @include dimension(205px, 205px);
-      background-color: transparent;
-      overflow: hidden;
-      position: absolute;
-
-      .circle {
-        background-color: transparent;
-        position: relative;
-        top: -75px;
-        left: -75px;
-        border-radius: 50%;
-        border: 75px solid rgba(0, 0, 0, 0.75);
-      }
-    }
-
-    .triangle{
-      width: 0;
-      height: 0;
-      border-left: 5px solid rgba(0, 0, 0, 0.75);
-      border-right: 5px solid rgba(0, 0, 0, 0.75);
-      border-bottom: 5px solid transparent;
-
-      .triangle-fill{
-        background-color: rgba(0, 0, 0, 0.75);
-        position: absolute;
-      }
-    }
-  }
-}
-
-.transparent-shape-modal {
-  @include dimension(100%, 100%);
-  background: transparent;
-
-  .mat-dialog-container {
-    @include dimension(100%, 100%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: transparent;
-    box-shadow: none;
-    overflow: hidden;
-  }
-}
-
-body {
-  overflow: hidden;
 }

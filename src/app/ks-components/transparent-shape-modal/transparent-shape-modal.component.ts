@@ -1,5 +1,4 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
-import {WindowRef} from "../../core/window-ref.service";
+import {AfterViewInit, Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
 
 @Component({
   selector: 'app-transparent-shape-modal',
@@ -7,58 +6,62 @@ import {WindowRef} from "../../core/window-ref.service";
   styleUrls: ['./transparent-shape-modal.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class TransparentShapeModalComponent implements OnInit {
-  public circleLeftPosition;
-  public circleTopPosition;
-  public topBlocHeight;
-  public leftBlockHeight;
-  public leftBlockWidth;
-  public rightBlockWidth;
-  public rightBlockHeight;
-  public circleRadiusPx;
-  public bottomBlockHeight;
+export class TransparentShapeModalComponent implements AfterViewInit {
+  private shapeElement;
 
   @Input() position: any;
-  @Input() circleRadius: number;
+  @Input() radius: number;
   @Input() transparentShapeClickHandler: any = () => {
   };
   @Input() backgroundClickHandler: any = () => {
   };
   @Input() shape = 'circle';
 
-  constructor(private windowRef: WindowRef) {
+  @ViewChild('svg') svg;
+
+  constructor() {
   }
 
-  ngOnInit() {
-    let left = this.position.left;
-    let top = this.position.top;
-    const radius = this.circleRadius;
-
-    const viewPortHeight = this.windowRef.nativeWindow.innerHeight;
-    const viewPortWidth = this.windowRef.nativeWindow.innerWidth;
-
-    if (top > viewPortHeight - radius || top < 0) {
-      top = top > viewPortHeight - radius ? viewPortHeight - radius : 0;
-    }
-
-    if (left > viewPortWidth - radius || left < 0) {
-      left = left > viewPortWidth - radius ? viewPortWidth - radius : 0;
-    }
-
-    this.setPosition(left, top, radius);
+  ngAfterViewInit() {
+    this.shapeElement = this.svg.nativeElement.getElementById(`t-s-${this.shape}`);
+    this.setPosition(this.shape, this.shapeElement, this.position.top, this.position.left, this.radius);
   }
 
-  private setPosition(left, top, radius) {
+  private setPosition(shapeType, shapeElement, top, left, radius) {
+    switch (shapeType) {
+      case 'circle': {
+        this.circlePosition(shapeElement, top, left, radius);
+        break
+      }
+      case 'square': {
+        this.squarePosition(shapeElement, top, left, radius);
+        break
+      }
+      case 'star': {
+        this.starPosition(shapeElement, top, left, radius);
+        break
+      }
+    }
+  }
 
-    this.circleLeftPosition = left;
-    this.circleTopPosition = top;
+  private circlePosition(shapeElement, top, left, radius) {
+    shapeElement.style.cy = top;
+    shapeElement.style.cx = left;
+    shapeElement.style.r = radius;
+  }
 
-    this.topBlocHeight = top;
-    this.leftBlockHeight = radius;
-    this.rightBlockHeight = radius;
-    this.leftBlockWidth = left;
-    this.rightBlockWidth = `calc(100vw - ${radius + left}px)`;
-    this.bottomBlockHeight = `calc(100vh - ${radius + top}px)`;
+  private squarePosition(shapeElement, top, left, radius) {
+    shapeElement.style.y = top;
+    shapeElement.style.x = left;
+    shapeElement.style.width = radius;
+    shapeElement.style.height = radius;
+  }
+
+  private starPosition(shapeElement, top, left, radius) {
+    let viewBox = (96 / radius) * 96;
+    shapeElement.setAttribute('viewBox', `0 0 ${viewBox} ${viewBox}`);
+    shapeElement.setAttribute('x', left - 150);
+    shapeElement.setAttribute('y', top - 150);
   }
 }
 

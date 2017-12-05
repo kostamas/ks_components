@@ -26,7 +26,7 @@ export class TransparentShapeModalService {
       .create(this.injector);
 
     this.componentRef.instance.position = position;
-    this.componentRef.instance.circleRadius = radius;
+    this.componentRef.instance.radius = radius;
     this.componentRef.instance.transparentShapeClickHandler = circleClickHandler || TransparentShapeModalService.noop;
     this.componentRef.instance.backgroundClickHandler = backgroundClickHandler || this.closeModal;
     this.componentRef.instance.shape = config.shape || 'circle';

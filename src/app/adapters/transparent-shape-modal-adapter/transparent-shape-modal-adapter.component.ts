@@ -14,7 +14,7 @@ import {Observable} from 'rxjs/Rx';
 })
 export class TransparentShapeModalAdapterComponent implements OnInit, OnDestroy {
   private interval;
-  public radius = 150;
+  public radius = 100;
   public VIEW_STATES = {
     MODAL_CLOSED: 1,
     MODAL_OPENED: 2,
@@ -23,7 +23,7 @@ export class TransparentShapeModalAdapterComponent implements OnInit, OnDestroy 
   public currentViewState = this.VIEW_STATES.MODAL_CLOSED;
   public selectedButton = '';
 
-  public shapes = ['circle', 'square', 'triangle'];
+  public shapes = ['circle', 'square', 'star'];
   public selectedShape = this.shapes[0];
 
   public config: ITransparentShapeModalConfig;
@@ -67,7 +67,7 @@ export class TransparentShapeModalAdapterComponent implements OnInit, OnDestroy 
 
     this.interval = setInterval(() => {
       x = circleRadius * Math.cos((degree * Math.PI) / 180) + 600;
-      y = circleRadius * Math.sin((degree * Math.PI) / 180) + 300;
+      y = circleRadius * Math.sin((degree * Math.PI) / 180) + 400;
 
       this.config = {backgroundClickHandler: this.noop, circleClickHandler: this.noop, shape: this.selectedShape};
       this.transparentShapeModalService.closeModal();
