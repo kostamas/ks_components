@@ -1,7 +1,7 @@
 @import '../../../assets/scss/main';
 @import '../../../assets/scss/mixins';
 
-.transparent-shape-modal-container {
+.transparent-shape-modal-adapter-container {
   @include dimension(100%, 100%);
   background: url("https://www.wildlifearchives.com/wp-content/uploads/2016/03/waterfalls-1457991254n4k8g.jpg");
   background-size: 100% 100%;
@@ -13,7 +13,7 @@
 .operations-container {
   @include dimension(250px, auto);
   position: relative;
-  margin-top: 250px;
+  margin-top: 200px;
   margin-left: 20px;
 
   .select-shape-container {

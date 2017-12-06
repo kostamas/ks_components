@@ -1,4 +1,4 @@
-<div class="transparent-shape-modal-container" (click)="openTransShapeModalByPos($event)"></div>
+<div class="transparent-shape-modal-adapter-container" (click)="openTransShapeModalByPos($event)"></div>
 
 <div class="operations-container" [ngClass]="selectedButton">
 
@@ -17,8 +17,8 @@
 
   <mat-slider
     class="radius-slider"
-    [max]="200"
-    [min]="50"
+    [max]="150"
+    [min]="20"
     (input)="radius = $event.value"
     [value]="radius">
   </mat-slider>
