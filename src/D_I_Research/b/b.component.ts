@@ -13,7 +13,7 @@ export class BComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.testService.x += 'b-';
+    this.testService.x += 'b changed testService ';
     console.log(this.testService.x);
   }
 }

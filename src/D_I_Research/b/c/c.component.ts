@@ -14,7 +14,7 @@ export class CComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.testService.x += 'c-';
+    this.testService.x += 'c changed testService';
     console.log(this.testService.x);
   }
 
