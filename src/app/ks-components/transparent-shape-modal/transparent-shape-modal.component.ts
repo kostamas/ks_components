@@ -57,10 +57,10 @@ export class TransparentShapeModalComponent implements AfterViewInit {
   private starPosition(shapeElement, top, left, radius) {
     const viewBox = (96 / radius) * 96;
     const leftOffset = (100 / (viewBox - 2)) * 100;
-    const rightOffset = (125 / (viewBox + 13)) * 125;
+    const topOffset = (125 / (viewBox + 13)) * 125;
     shapeElement.setAttribute('viewBox', `0 0 ${viewBox} ${viewBox}`);
     shapeElement.setAttribute('x', left - leftOffset);
-    shapeElement.setAttribute('y', top - rightOffset);
+    shapeElement.setAttribute('y', top - topOffset);
   }
 }
 
