@@ -4,8 +4,10 @@ import {TranslateService} from '@ngx-translate/core';
 @Component({
   selector: 'app-root',
   template: `
-    <div class="home-navigation" routerLink="/home" [routerLinkActive]="['home']">Home</div>
-    <router-outlet></router-outlet>`,
+    <app-a></app-a>
+    <app-b></app-b>
+    <app-c></app-c>`
+,
   styles: [`.home-navigation {
     width: 80px;
     height: 40px;

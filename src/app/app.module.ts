@@ -11,6 +11,8 @@ import {Http, HttpModule} from '@angular/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AdaptersModulesModule} from './adapters/adapters.module';
 import {KsChat} from './ks-components/ks-chat/ks-chat.module';
+import {BModule} from "../D_I_Research/B.module";
+import {AModule} from "../D_I_Research/A.module";
 
 export function HttpLoaderFactory(http: Http) {
   return new TranslateHttpLoader(http, '../assets/locale/', '.json');
@@ -35,9 +37,10 @@ export function HttpLoaderFactory(http: Http) {
     AdaptersModulesModule,
     Routing,
     HttpModule,
-    KsChat
+    KsChat,
+    AModule,
+    BModule
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

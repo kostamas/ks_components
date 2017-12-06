@@ -6,9 +6,10 @@ import {SchedulerAdapterComponent} from './adapters/scheduler-adapter/scheduler-
 import {ChatAdapterComponent} from './adapters/chat-adapter/chat-adapter.component';
 import {ImageExpanderAdapterComponent} from './adapters/image-expander-adapter/image-expander-adapter.component';
 import {TransparentShapeModalAdapterComponent} from './adapters/transparent-shape-modal-adapter/transparent-shape-modal-adapter.component';
+import {AppComponent} from "./app.component";
 
 export const routes: Routes = [
-  {path: '', redirectTo: '/home', pathMatch: 'full'},
+  {path: '', component: AppComponent},
   {path: 'home', component: HomeComponent,},
   {path: 'scheduler', component: SchedulerAdapterComponent},
   {path: 'chat', component: ChatAdapterComponent},

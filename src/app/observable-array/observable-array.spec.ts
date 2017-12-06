@@ -112,7 +112,7 @@ describe('ObservableArray testing', () => {
     });
   });
 
-  describe('test arrayChange$ events', () => {
+  describe('D_I_Research arrayChange$ events', () => {
     let arrChangeEmitter;
 
     beforeEach(() => {
@@ -144,7 +144,7 @@ describe('ObservableArray testing', () => {
     });
   });
 
-  describe('test itemsUpdates$ events', () => {
+  describe('D_I_Research itemsUpdates$ events', () => {
     let arrChangeEmitter;
 
     beforeEach(() => {
@@ -233,14 +233,14 @@ describe('ObservableArray testing', () => {
       oa.itemsUpdates$.subscribe(() => null);
     });
 
-    it('adding performance test', () => {
+    it('adding performance D_I_Research', () => {
       const start = performance.now();
       oa.update(mockItemsArr);
       const executionTime = performance.now() - start;
       expect(executionTime).toBeLessThan(MAX_EXECUTION_TIME_IN_MS_FOR_BATCH_UPDATE);
     });
 
-    it('deleting performance test', () => {
+    it('deleting performance D_I_Research', () => {
       oa.update(mockItemsArr);
       const start = performance.now();
       oa.delete(mockItemsArr);
@@ -248,7 +248,7 @@ describe('ObservableArray testing', () => {
       expect(executionTime).toBeLessThan(MAX_EXECUTION_TIME_IN_MS_FOR_BATCH_UPDATE);
     });
 
-    it('editing performance test', () => {
+    it('editing performance D_I_Research', () => {
       oa.update(mockItemsArr);
       const mockItemsArrClone = _.map(mockItemsArr, (item) => {
         return {...item};
