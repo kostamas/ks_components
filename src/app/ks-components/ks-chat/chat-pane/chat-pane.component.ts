@@ -12,7 +12,7 @@ export class ChatPaneComponent implements OnInit, AfterViewChecked {
   public message;
 
   @Input() localUser;
-  @Input() actions;
+  @Input() actions: any = {};
   @ViewChild('chatScrollBar') private myScrollContainer: ElementRef;
 
   constructor(private chatStoreService: ChatStoreService, private chatService: ChatService) {
@@ -26,8 +26,9 @@ export class ChatPaneComponent implements OnInit, AfterViewChecked {
     this.actions.scrollToBottom = this.scrollToBottom;
   }
 
-  public keyPressHandler(keyCode) {
-    if (keyCode === 13 && this.message.length > 0) {
+  public keyPressHandler($event) {
+    if ($event.keyCode === 13 && this.message.length > 0) {
+      $event.preventDefault();
       this.chatService.updateMessages(this.message, this.activeChatter.chat, this.localUser);
       this.message = '';
     }

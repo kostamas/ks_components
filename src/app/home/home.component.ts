@@ -17,7 +17,9 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.components = [
       {text: 'Scheduler', link: '/scheduler'},
-      {text: 'Chat', link: '/chat'}
+      {text: 'Chat', link: '/chat'},
+      {text: 'Image Expander', link: '/image-expander'},
+      {text: 'Transparent Shape Modal', link: '/transparent-shape-modal'}
     ];
   }
 }

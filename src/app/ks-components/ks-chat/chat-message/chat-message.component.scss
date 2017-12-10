@@ -18,6 +18,10 @@
         position: absolute;
         bottom: -7px;
       }
+
+      .user-name{
+        @include text-style(13px, $blueRibbon, Lato);
+      }
     }
 
     .message-date{

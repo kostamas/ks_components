@@ -1,0 +1,97 @@
+<div class="image-expander-adapter-container">
+  <div class="expand-button-wrapper">
+    <button class="expand-button" mat-button (click)="expand = true">Add Expand Ability To Images</button>
+  </div>
+
+  <div class="content" appImageExpander [expand]="expand">
+    <h2>Lorem Ipsum</h2>
+    <p><strong>Lorem Ipsum</strong>dolor sit amet, quis potenti wisi nec eleifend porta. Nulla ante maecenas elit
+      euismod dignissim donec, non nascetur, a donec orci ut eleifend. Nascetur rhoncus, et mollis elementum urna sem
+      egestas viverra. Tristique leo volutpat proin ac ornare, donec orci amet eu sed, eleifend t mollis elementum
+      ipsum. Elit montes morbi, tortor interdum volutpat neque dictum vel consectetuer. Aenean elit, ac nunc, wisi.
+    </p>
+    <div style="width:200px; height: 150px; margin: 0 auto;">
+      <img src="../../../assets/images-to-expand/expandImage1.png">
+    </div>
+
+    <p>lorem feugiat nulla sit, aliquet sit elit. Sapien nunc cupidatat nulla condimentum aenean mollis, sed cras
+      turpis, adipiscing montes amet dolor tincidunt, lorem donec vitae adipiscing vestibulum. Nec dictumst euismod
+      sit mauris magna dignissim, recusandae aenean lorem a labore dolor sit, sollicitudin ut wisi comm.</p>
+    <img width="150" height="150" src="http://www.sigmapoint.pl/images/icons/technologies_icons-06.png">
+
+    <h2>Dui massa mollis imperdiet in sodales</h2>
+    <p>Sit magna enim, fermentum eget venenatis vel suscipit, arcu ultricies sit. Pharetra nibh, justo est suspendisse
+      penatibus metus nullam eleifend, quam augue nam vivamus quam at, sed ipsum odio magna tempor vestibulum, metus
+      quam lobortis. Leo placerat, elementum sodales irure turpis, molestie quam tortor lacinia tristique turpis
+      vestibulum, nunc id odio curabitur sapien. Semper volutpat fringilla consequat arcu. Et tempus non risus auctor,
+      risus viverra dictum sed pellentesque amet dolor, vel morbi orci adipiscing nec, porttitor ac feugiat. Lorem
+      nunc. Tincidunt nulla, aliquam aenean hac tincidunt proin, et condimentum lectus ullamcorper amet, faucibus
+      massa mauris lacus sit eu et. In dis purus tincidunt feugiat duis, integer neque, dolor hac egestas metus.
+      Maecenas nec id, luctus maecenas bibendum, magna imperdiet wisi tempor, nunc neque.</p>
+
+    <img src="https://avatars.githubusercontent.com/u/8855235?v=2">
+
+    <h3>Elementum sodales irure turpis</h3>
+    <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+      magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+      consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+      pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
+      laborum."</p>
+    <div style="width:400px; height: 400px; margin: 0 auto;">
+
+      <img
+        src="data:image/png;base64,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">
+    </div>
+
+    <h3>Perspiciatis a dui dicta suscipit</h3>
+    <p>"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem
+      aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
+      enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos
+      qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
+      consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam
+      quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam,
+      nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse
+      quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"</p>
+    <h3>Nec dictumst euismod sit mauris </h3>
+    <p>Mi nisl varius, turpis donec donec accumsan wisi, congue magnis, amet sit egestas pellentesque gravida,
+      perspiciatis a dui dicta suscipit. Feugiat luctus facilisis ut, in rhoncus ac ante nec ut, sed dignissim,
+      posuere eros mi mollis, a ante mi. Nunc eros, in fermentum rutrum pulvinar. At vulputate, primis aenean leo,
+      donec orci ante vel, ipsum tempus ac, dui eget dui. Suspendisse odio tincidunt at nunc ipsum, lorem feugiat
+      nulla sit, aliquet sit elit. Sapien nunc cupidatat nulla condimentum aenean mollis, sed cras faucibus adipiscing
+      tristique mi necessitatibus, consectetuer sed praesent sem vivamus. Dui massa mollis imperdiet in sodales quam,
+      vitae natoque consectetuer vel in et ut. Risus vitae dapibus, ac purus quis erat turpis, adipiscing montes amet
+      dolor tincidunt, lorem donec vitae adipiscing vestibulum. Nec dictumst euismod sit mauris magna dignissim,
+      recusandae aenean lorem a labore dolor sit, sollicitudin ut wisi commodo lobortis, eu convallis pretium varius
+      enim penatibus, sem dis amet e</p>
+
+    <div
+      style="border:2px solid #290980; width: 200px; height: 250px; margin: 0 auto; text-align: center; padding: 15px;">
+      <div style="color:red; font-size: 20px;">Small images will not be expanded</div>
+      <br>
+      <img width="90" height="90px" src="http://ibooks.oxfordsecondary.co.uk/img/a-level-skills-icon.png">
+    </div>
+
+    <h3>Ridiculus ligula elit scelerisque</h3>
+    <p>"At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque
+      corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in
+      culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et
+      expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id
+      <img src="https://cdn.geekwire.com/wp-content/uploads/2015/01/code-fellows-logo-shield-266x300.png">
+      quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem
+      quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et
+      molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus
+      maiores alias consequatur aut perferendis doloribus asperiores repellat."</p>
+    <h3>Aenean lorem a labore</h3>
+    <p>Donec accumsan wisi, congue magnis, amet sit egestas pellentesque gravida, perspiciatis a dui dicta suscipit.
+      Feugiat luctus facilisis ut, in rhoncus ac ante nec ut, sed dignissim, posuere eros mi mollis, a ante mi. Nunc
+      eros, in fermentum rutrum pulvinar. At vulputate, primis aenean leo, donec orci ante vel, ipsum tempus ac, dui
+      eget dui. Suspendisse odio tincidunt at nunc ipsum, lorem feugiat nulla sit, aliquet sit elit. Sapien nunc
+      cupidatat nulla condimentum aenean mollis, sed cras faucibus adipiscing tristique mi necessitatibus,
+      consectetuer sed praesent sem vivamus. Dui massa mollis imperdiet in sodales quam, vitae natoque consectetuer
+      vel in et ut. Risus vitae dapibus, ac purus quis erat turpis, adipiscing montes amet dolor tincidunt, lorem
+      donec vitae adipiscing vestibulum. Nec dictumst euismod sit mauris magna dignissim, recusandae aenean lorem a
+      labore dolor sit, sollicitudin ut wisi commodo lobortis, eu convallis pretium varius enim penatibus, sem dis
+      amet e</p>
+
+  </div>
+</div>

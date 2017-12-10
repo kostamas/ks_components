@@ -12,7 +12,6 @@ export class ChatParticipantsComponent implements OnInit {
   public activeChatter: any = {};
   @Input() localUser;
   @Output() chatParticipants: EventEmitter<any> = new EventEmitter();
-;
 
   constructor(public chatStoreService: ChatStoreService, private chatService: ChatService) {
   }
@@ -24,7 +23,6 @@ export class ChatParticipantsComponent implements OnInit {
       this.chatParticipants.emit(participants);
     });
   }
-
 
   public changeCurrentChat(chatter) {
     this.activeChatter.isActive = false;

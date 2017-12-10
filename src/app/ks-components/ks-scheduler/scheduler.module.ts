@@ -20,6 +20,7 @@ import {SchedulerStoreService} from './services/scheduler-store.service';
 import {SchedulerSpinnerComponent} from './schedularSppiner/scheduler-spinner.component';
 import {SchedulerComponent} from './scheduler/scheduler.component';
 import {TimeSlotComponent} from './time-slot/time-slot.component';
+import {SchedulingMockData} from "../../adapters/scheduler-adapter/schedulingMockData";
 
 @NgModule({
   imports: [
@@ -39,7 +40,7 @@ import {TimeSlotComponent} from './time-slot/time-slot.component';
     SchedulerHoursPipe,
     KeysPipe,
     EllipsisPipe,
-    SchedulerSpinnerComponent,
+    SchedulerSpinnerComponent
   ],
   exports: [
     TranslateModule,
@@ -49,7 +50,8 @@ import {TimeSlotComponent} from './time-slot/time-slot.component';
     TimeSlotConstant,
     SchedulerService,
     SchedulerConstant,
-    SchedulerStoreService
+    SchedulerStoreService,
+    SchedulingMockData
   ]
 })
 export class SchedulerModule {

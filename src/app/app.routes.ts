@@ -4,12 +4,16 @@ import {ModuleWithProviders} from '@angular/core';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {SchedulerAdapterComponent} from './adapters/scheduler-adapter/scheduler-adapter.component';
 import {ChatAdapterComponent} from './adapters/chat-adapter/chat-adapter.component';
+import {ImageExpanderAdapterComponent} from './adapters/image-expander-adapter/image-expander-adapter.component';
+import {TransparentShapeModalAdapterComponent} from './adapters/transparent-shape-modal-adapter/transparent-shape-modal-adapter.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: '/home', pathMatch: 'full'},
   {path: 'home', component: HomeComponent,},
   {path: 'scheduler', component: SchedulerAdapterComponent},
   {path: 'chat', component: ChatAdapterComponent},
+  {path: 'image-expander', component: ImageExpanderAdapterComponent},
+  {path: 'transparent-shape-modal', component: TransparentShapeModalAdapterComponent},
   {path: '**', component: PageNotFoundComponent}
 ];
 

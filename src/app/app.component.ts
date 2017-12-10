@@ -20,6 +20,7 @@ import {TranslateService} from '@ngx-translate/core';
     top: 20px;
     position: absolute;
     font-size: 19px;
+    z-index: 10;
   }
 
   .home-navigation:hover {
