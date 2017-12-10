@@ -1,4 +1,4 @@
-@import '../../../../assets/scss/main';
+@import '../../../scss/main';
 
 $scheduler-width: 900px;
 
@@ -24,9 +24,8 @@ $scheduler-width: 900px;
       }
 
       .change-week-arrows {
+        @include dimension(30px);
         position: relative;
-        width: 30px;
-        height: 30px;
         bottom: 4px;
 
         .arrow-right, .arrow-left {
@@ -53,9 +52,8 @@ $scheduler-width: 900px;
   }
 
   .scheduler-wrapper {
+    @include dimension($scheduler-width,578px);
     position: relative;
-    width: $scheduler-width;
-    height: 578px;
     overflow: hidden;
 
     .buttons-and-filters-wrapper {
@@ -77,20 +75,18 @@ $scheduler-width: 900px;
     }
 
     .scheduler-header {
+      @include dimension($scheduler-width, 38px);
       background-color: $ABC;
       display: flex;
       align-items: center;
-      width: $scheduler-width;
-      height: 38px;
       padding-left: 45px;
       box-sizing: border-box;
       border-radius: 10px 10px 0 0;
 
       .scheduler-header-column {
+        @include dimension(120px, 30px);
         flex-grow: 0;
         flex-shrink: 0;
-        width: 120px;
-        height: 30px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -99,9 +95,8 @@ $scheduler-width: 900px;
     }
 
     .scheduler-content {
+      @include dimension(calc(3 * 886px), 400px);
       display: flex;
-      width: calc(3 * 886px);
-      height: 400px;
       background-color: $white;
 
       .scheduler-hours-wrapper {
@@ -113,9 +108,8 @@ $scheduler-width: 900px;
           background-color: white;
 
           .hour {
+            @include dimension(45px, 47.95px);
             padding-top: 2px;
-            height: 47.95px;
-            width: 45px;
             display: flex;
             justify-content: center;
             align-items: center;

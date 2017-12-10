@@ -1,7 +1,7 @@
 <div class="chat-participants">
   <div class="my-chat-title">{{localUser.name}}</div>
 
-  <div class="chatter-repeater-wrapper znk-scrollbar">
+  <div class="chatter-repeater-wrapper">
     <div class="chatter-repeater"  (click)="changeCurrentChat(chatter)" *ngFor="let chatter of chattersArray">
       <div class="chatter-wrapper" [ngClass]="{'active-chatter':chatter === activeChatter}">
         <app-chatter

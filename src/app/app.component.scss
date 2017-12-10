@@ -1,0 +1,25 @@
+@import 'scss/main';
+
+
+.home-navigation {
+  @include dimension(80px, 40px);
+  @include text-style(19px, $white, Lato);
+  background-color: $mountainMeadow;
+  box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  left: 50px;
+  top: 20px;
+  position: absolute;
+  z-index: 10;
+}
+
+.home-navigation:hover {
+  opacity: 0.8;
+}
+
+.home-navigation.home {
+  display: none;
+}

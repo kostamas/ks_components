@@ -1,5 +1,5 @@
-@import '../../../assets/scss/main';
-@import '../../../assets/scss/mixins';
+@import '../../scss/main';
+@import '../../scss/mixins';
 
 .chat-adapter-container {
   margin: 10px auto;
@@ -13,10 +13,9 @@
     margin-top: 20px;
 
     .ks-chat-container.button-view {
+      @include dimension(530px,277px);
       display: flex;
       flex-direction: row-reverse;
-      width: 530px;
-      height: 277px;
     }
   }
 

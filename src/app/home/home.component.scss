@@ -1,8 +1,7 @@
-@import '../../assets/scss/main';
+@import '../scss/main';
 
 .ks-img {
-  width: 250px;
-  height: 250px;
+  @include dimension(250px, 250px);
   border-radius: 100%;
   position: fixed;
   top: 25px;
@@ -17,11 +16,10 @@
 
   .component {
     @include text-style(22px, $cornflowerBlue, Lato);
+    @include dimension(200px, 200px);
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 200px;
-    height: 200px;
     background-color: white;
     box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
     margin: 30px;

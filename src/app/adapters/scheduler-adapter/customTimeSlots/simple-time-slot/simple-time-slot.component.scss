@@ -1,10 +1,9 @@
-@import '../../../../../assets/scss/main';
+@import '../../../../scss/main';
 
 .simple-time-slot-container{
+  @include dimension(118px, 48px);
   position: absolute;
   top: 0;
-  width: 118px;
-  height: 48px;
 
   .title{
     @include text-style(16px,$white,Lato);
