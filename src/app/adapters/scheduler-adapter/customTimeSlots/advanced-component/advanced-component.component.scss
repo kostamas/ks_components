@@ -1,13 +1,12 @@
-@import '../../../../../assets/scss/main';
+@import '../../../../scss/main';
 
 .advanced-component-container {
+  @include dimension(118px, 48px);
   position: absolute;
   top: 0;
-  width: 118px;
-  height: 48px;
 
-  background: #ECE9E6; /* fallback for old browsers */
-  background: linear-gradient(to left, #FFFFFF, #ECE9E6);
+  background: $catskillWhite; /* fallback for old browsers */
+  background: linear-gradient(to left, #FFFFFF, $catskillWhite);
 
   .title {
     @include text-style(16px, $ABC, Lato);
@@ -20,8 +19,7 @@
 
   .details-btn {
     @include text-style(13px, $white, Lato);
-    width: 48px;
-    height: 17px;
+    @include dimension(48px, 17px);
     margin-left: 8px;
     margin-top: 7px;
     border: 1px solid $silverChalice;

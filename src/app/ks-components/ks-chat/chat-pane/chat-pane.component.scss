@@ -1,4 +1,4 @@
-@import '../../../../assets/scss/main';
+@import '../../../scss/main';
 
 :host(app-chat-pane){
   width: 100%;
@@ -14,18 +14,6 @@
     align-items: center;
     border-bottom: 1px solid $gallery;
     height: 45px;
-
-    .znk-chat-close-icon {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      cursor: pointer;
-      svg line {
-        stroke: $rollingStone;
-        stroke-width: 6px;
-
-      }
-    }
 
     chatter .chatter-wrapper {
       .chatter-name {

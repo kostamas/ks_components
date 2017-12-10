@@ -1,5 +1,4 @@
-@import '../../../assets/scss/main';
-@import '../../../assets/scss/mixins';
+@import '../../scss/main';
 
 .scheduler-adapter-container {
   display: flex;
@@ -13,12 +12,12 @@
 
     .show-schedules-btn {
       @include dimension(150px, 30px);
+      @include text-style(16px, $white);
       display: flex;
       align-items: center;
       justify-content: center;
       background-color: $ABC;
       border: 1px solid $nobel;
-      color: $white;
       border-radius: 5px;
       cursor: pointer;
       transition: 0.3s;
@@ -86,7 +85,7 @@
           &.selectedItem {
             transition: 0.1s;
             border: 3px solid;
-            animation:0.3s mymove ease infinite;
+            animation:0.3s rotateAnimation ease infinite;
             box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
             background-color: $portafino;
           }
@@ -100,7 +99,7 @@
   }
 }
 
-@keyframes mymove {
+@keyframes rotateAnimation {
   0% {
     transform: rotate(0deg);
     left:1px;

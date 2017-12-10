@@ -1,4 +1,4 @@
-@import '../../../../assets/scss/main';
+@import '../../../scss/main';
 
 .chat-participants {
   @include dimension(200px, 372px);
@@ -59,7 +59,7 @@
     }
   }
 
-  .chatter-repeater-wrapper.znk-scrollbar {
+  .chatter-repeater-wrapper {
     ::-webkit-scrollbar,
     &::-webkit-scrollbar {
       width: 6px;

@@ -1,4 +1,4 @@
-@import '../../../../../../assets/scss/main';
+@import '../../../../../scss/main';
 
 .time-slot-details-modal-container {
   .details-tooltip {
@@ -16,10 +16,9 @@
       width: 400px;
 
       .mat-icon {
+        @include dimension(50px,50px);
         font-size: 50px;
         margin-top: 30px;
-        width: 50px;
-        height: 50px;
       }
     }
   }
