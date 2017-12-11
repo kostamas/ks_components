@@ -199,7 +199,8 @@ export class SchedulerComponent implements OnInit, OnDestroy {
     this.dynamicDefaultView.timeSlotClass = this.dynamicDefaultViewsMap[TimeSlotConstant.DYNAMIC_DEFAULT_VIEWS.UNAVAILABLE];
     if (availabilityStoreType === SCHEDULER_STORE_TYPE.OUT) {
       this.showSpinner = true;
-      const subscription = this.schedulerConfig.getAvailability(startDate, endDate)
+      this.schedulerConfig.getAvailability(startDate, endDate)
+        .take(1)
         .switchMap(data => {
           if (typeof startWeekSlide === 'function') {
             startWeekSlide = startWeekSlide.apply(this);
@@ -209,7 +210,6 @@ export class SchedulerComponent implements OnInit, OnDestroy {
         .subscribe(() => {
           this.schedulerStoreService.notifyAvailability(SCHEDULER_STORE_TYPE.IN);
           this.showSpinner = false;
-          subscription.unsubscribe();
         });
     }
   };
@@ -219,12 +219,13 @@ export class SchedulerComponent implements OnInit, OnDestroy {
     this.currentOperationId = OperationTypes.SCHEDULES;
     this.dynamicDefaultView.timeSlotClass = this.dynamicDefaultViewsMap[TimeSlotConstant.DYNAMIC_DEFAULT_VIEWS.EMPTY];
 
-    const subscription = this.schedulerConfig.getSchedules(startDate, endDate).subscribe((schedules) => {
+    this.schedulerConfig.getSchedules(startDate, endDate)
+      .take(1)
+      .subscribe((schedules) => {
       if (typeof startWeekSlide === 'function') {
         startWeekSlide = startWeekSlide.apply(this);
       }
       this.updateTimeSlotsWithData(schedules, startDate, endDate, startWeekSlide, OperationTypes.SCHEDULES);
-      subscription.unsubscribe();
     });
   };
 
@@ -302,7 +303,7 @@ export class SchedulerComponent implements OnInit, OnDestroy {
     return this.current_week_slide === 0 ? 2 : (this.current_week_slide - 1) % 3;
   }
 
-  private scheduleHandler(timeSlotsData) {
+  private scheduleHandler() {
     this.updateDynamicDefaultView(this.DYNAMIC_DEFAULT_VIEWS.EMPTY);
     const startAndEndDates = this.getStartAndEndDates((-1) * SchedulerConstant.DAYS_IN_WEEK, 2 * SchedulerConstant.DAYS_IN_WEEK);
     this.schedulesHandler(startAndEndDates.startDate, startAndEndDates.endDate, this.getRegularStartWeekSlide);
