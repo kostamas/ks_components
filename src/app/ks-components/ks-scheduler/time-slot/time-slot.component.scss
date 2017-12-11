@@ -4,7 +4,6 @@
   @include dimension(120px, 50px);
   border: 1px solid $alto;
   box-sizing: border-box;
-  transition: 0.5s;
   position: relative;
 }
 
@@ -92,7 +91,6 @@
   }
 
   .available-time-slot:hover {
-    transition: ease-out 100ms;
     background-color: rgba($bondiBlue, 0.12);
     border: dashed 2px $bondiBlue;
   }
