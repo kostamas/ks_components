@@ -23,7 +23,6 @@ export class BackgammonComponent implements AfterViewInit {
     const background = new Image();
 
     background.src = "assets/images/backgammon.jpg";
-    background.style.zIndex = '-1px';
     background.onload = function () {
       CanvasContext.context.drawImage(background, 0, 0);
       new BackgammonMap();
