@@ -19,7 +19,8 @@ export class HomeComponent implements OnInit {
       {text: 'Scheduler', link: '/scheduler'},
       {text: 'Chat', link: '/chat'},
       {text: 'Image Expander', link: '/image-expander'},
-      {text: 'Transparent Shape Modal', link: '/transparent-shape-modal'}
+      {text: 'Transparent Shape Modal', link: '/transparent-shape-modal'},
+      {text: 'Backgammon', link: '/backgammon'}
     ];
   }
 }

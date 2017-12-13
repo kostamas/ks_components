@@ -6,6 +6,7 @@ import {SchedulerAdapterComponent} from './adapters/scheduler-adapter/scheduler-
 import {ChatAdapterComponent} from './adapters/chat-adapter/chat-adapter.component';
 import {ImageExpanderAdapterComponent} from './adapters/image-expander-adapter/image-expander-adapter.component';
 import {TransparentShapeModalAdapterComponent} from './adapters/transparent-shape-modal-adapter/transparent-shape-modal-adapter.component';
+import {BackgammonAdapterComponent} from './adapters/backgammon-adapter/backgammon-adapter.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -14,6 +15,7 @@ export const routes: Routes = [
   {path: 'chat', component: ChatAdapterComponent},
   {path: 'image-expander', component: ImageExpanderAdapterComponent},
   {path: 'transparent-shape-modal', component: TransparentShapeModalAdapterComponent},
+  {path: 'backgammon', component: BackgammonAdapterComponent},
   {path: '**', component: PageNotFoundComponent}
 ];
 

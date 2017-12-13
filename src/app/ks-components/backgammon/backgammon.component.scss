@@ -1,0 +1,6 @@
+@import '../../scss/main';
+
+.canvas-wrapper{
+  @include dimension(768px, 646px);
+  margin: 20px auto;
+}

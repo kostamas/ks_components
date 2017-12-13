@@ -23,6 +23,8 @@ import {ImageExpanderAdapterComponent} from './image-expander-adapter/image-expa
 import {ImageExpander} from '../ks-components/image-expander/image-expander.module';
 import {TransparentShapeModalModule} from '../ks-components/transparent-shape-modal/transparent-shape-modal.module';
 import {TransparentShapeModalAdapterComponent} from './transparent-shape-modal-adapter/transparent-shape-modal-adapter.component';
+import {BackgammonModule} from '../ks-components/backgammon/backgammon.module';
+import {BackgammonAdapterComponent} from './backgammon-adapter/backgammon-adapter.component';
 
 @NgModule({
   imports: [
@@ -37,7 +39,8 @@ import {TransparentShapeModalAdapterComponent} from './transparent-shape-modal-a
     MatButtonModule,
     TransparentShapeModalModule,
     MatSliderModule,
-    FormsModule
+    FormsModule,
+    BackgammonModule
   ],
   declarations: [
     SchedulerAdapterComponent,
@@ -47,7 +50,8 @@ import {TransparentShapeModalAdapterComponent} from './transparent-shape-modal-a
     ChatAdapterComponent,
     ChatAdapterWrapperComponent,
     ImageExpanderAdapterComponent,
-    TransparentShapeModalAdapterComponent
+    TransparentShapeModalAdapterComponent,
+    BackgammonAdapterComponent
   ],
   exports: [],
   entryComponents: [
