@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
-import {BackgammonMap} from './backgammonMap';
-import {CanvasContext} from "./canvasContext";
+import {Canvas} from "./canvas";
+import {StateManager} from "./stateManager";
+import {GameController} from "./gameController";
 
 @Component({
   selector: 'app-backgammon',
@@ -19,13 +20,9 @@ export class BackgammonComponent implements AfterViewInit {
   }
 
   private init() {
-    CanvasContext.context = this.canvas.nativeElement.getContext("2d");
-    const background = new Image();
-
-    background.src = "assets/images/backgammon.jpg";
-    background.onload = function () {
-      CanvasContext.context.drawImage(background, 0, 0);
-      new BackgammonMap();
-    }​
+    Canvas.canvas = this.canvas.nativeElement;
+    Canvas.context = this.canvas.nativeElement.getContext("2d");
+    new StateManager();
+    new GameController();
   }
 }

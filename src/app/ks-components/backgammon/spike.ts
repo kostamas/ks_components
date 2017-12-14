@@ -1,7 +1,7 @@
 import {Checker} from './checker';
+import {BACKGAMMON_CONSTANTS} from './backgammonConstants';
 
 export class Spike {
-  private static CHECKER_SIZE = 34;
 
   private checkers: Checker [];
   private x: number;
@@ -15,12 +15,15 @@ export class Spike {
     this.checkers = [];
   }
 
-  public addChecker(type) {
-    let yOffset = this.checkers.length * Spike.CHECKER_SIZE;
+  public addChecker(checker) {
+    this.checkers.push(checker);
+  }
+
+  public getNextCheckerPosition() {
+    let yOffset = this.checkers.length * BACKGAMMON_CONSTANTS.CHECKERS_SIZE;
     let y = this.y;
     y += this.direction === 'down' ? yOffset : -yOffset;
 
-    let checker = new Checker(this.x, y, type);
-    this.checkers.push(checker);
+    return {x: this.x, y};
   }
 }

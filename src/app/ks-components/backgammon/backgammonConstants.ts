@@ -1,0 +1,3 @@
+export const BACKGAMMON_CONSTANTS = {
+  CHECKERS_SIZE: 34
+}
