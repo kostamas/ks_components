@@ -3,22 +3,22 @@ import {Spike} from './spike';
 export class BackgammonMap {
   private map: Spike[];
   private spikesPositions = [
-    {x: 656, y: 48}, {x: 608, y: 48}, {x: 559, y: 48}, {x: 511, y: 48}, {x: 465, y: 48}, {x: 421, y: 48},
-    {x: 307, y: 48}, {x: 258, y: 48}, {x: 207, y: 48}, {x: 161, y: 48}, {x: 117, y: 48}, {x: 66, y: 48},
+    {x: 583, y: 42}, {x: 541, y: 42}, {x: 497, y: 42}, {x: 455, y: 42}, {x: 413, y: 42}, {x: 374, y: 42},
+    {x: 272, y: 42}, {x: 229, y: 42}, {x: 183, y: 42}, {x: 141, y: 42}, {x: 101, y: 42}, {x: 56, y: 42},
 
-    {x: 70, y: 561}, {x: 118, y: 561}, {x: 212, y: 561}, {x: 164, y: 561}, {x: 257, y: 561}, {x: 303, y: 561},
-    {x: 424, y: 561}, {x: 470, y: 561}, {x: 514, y: 561}, {x: 560, y: 561}, {x: 606, y: 561}, {x: 655, y: 561},
+    {x: 62, y: 495},{x: 104, y: 495},{x: 145, y: 495}, {x: 188, y: 495}, {x: 228, y: 495}, {x: 272, y: 495},
+    {x: 375, y: 495}, {x: 417, y: 495}, {x: 457, y: 495}, {x: 497, y: 495}, {x: 539, y: 495}, {x: 583, y: 495},
   ];
 
   private checkers = {
-    ['0']: {type: 'white-player', num: 2},
-    ['5']: {type: 'black-player ', num: 5},
-    ['7']: {type: 'black-player', num: 3},
-    ['11']: {type: 'white-player', num: 5},
-    ['12']: {type: 'black-player', num: 5},
-    ['16']: {type: 'white-player', num: 3},
-    ['18']: {type: 'white-player', num: 5},
-    ['23']: {type: 'black-player', num: 1}
+    ['0']: {type: 'black-player', num: 2},
+    ['5']: {type: 'white-player', num: 5},
+    ['7']: {type: 'white-player', num: 3},
+    ['11']: {type: 'black-player', num: 5},
+    ['12']: {type: 'white-player', num: 5},
+    ['16']: {type: 'black-player', num: 3},
+    ['18']: {type: 'black-player', num: 5},
+    ['23']: {type: 'white-player', num: 2},
   };
 
   constructor() {
