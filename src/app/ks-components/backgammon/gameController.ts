@@ -1,8 +1,8 @@
 import {Spike} from './spike';
-import {Canvas} from "./canvas";
-import {Observable} from "rxjs/Observable";
-import {Checker} from "./checker";
-import {StateManager} from "./stateManager";
+import {Canvas} from './canvas';
+import {Observable} from 'rxjs/Observable';
+import {Checker} from './checker';
+import {StateManager} from './stateManager';
 
 export class GameController {
   private spikes: Spike[];
@@ -39,7 +39,7 @@ export class GameController {
     this.drawBackground().subscribe(() => {
       this.initSpikes();
       this.initCheckers();
-    })
+    });
   }
 
   private initSpikes() {
@@ -64,7 +64,7 @@ export class GameController {
         this.checkers.push(checker);
         this.spikes[spikeIndex].addChecker(checker);
       }
-    })
+    });
   }
 
   public drawBackground() {
@@ -75,13 +75,11 @@ export class GameController {
         Canvas.context.drawImage(background, 0, 0);
         observer.next();
         observer.complete();
-      }
-    })
+      };
+    });
   }
 
   public redrawHandler = () => {
-    // Canvas.context.clearRect(0, 0, Canvas.canvas.width, Canvas.canvas.height);
-
     this.drawBackground().subscribe(() => {
       this.checkers.forEach(checker => checker.drawChecker());
     });

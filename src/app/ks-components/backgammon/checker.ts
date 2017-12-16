@@ -1,8 +1,8 @@
-import {Canvas} from "./canvas";
-import {StateManager} from "./stateManager";
-import {BACKGAMMON_CONSTANTS} from "./backgammonConstants";
-import {isOverlap} from "./backgammonUtils";
-import {calcPointsCircle, getCheckerSvg} from "./helpers/uiHelper";
+import {Canvas} from './canvas';
+import {StateManager} from './stateManager';
+import {BACKGAMMON_CONSTANTS} from './backgammonConstants';
+import {isOverlap} from './helpers/backgammonUtils';
+import {calcPointsCircle, getCheckerSvg} from './helpers/uiHelper';
 
 export class Checker {
   private static checkersCount = 0;
@@ -41,6 +41,7 @@ export class Checker {
 
   private mouseMoveHandler = ({x, y}) => {
     if (this.isClicked) {
+      StateManager.notifySelectedCheckerMove({x, y, checkerId: this.id});
       StateManager.notifyRedraw();
       this.x = x - this.radius * 1.5;
       this.y = y - this.radius * 1.5;

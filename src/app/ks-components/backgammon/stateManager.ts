@@ -1,16 +1,19 @@
 import {Subject} from 'rxjs/Subject';
-import {Canvas} from "./canvas";
+import {Canvas} from './canvas';
 
 export class StateManager {
   private static mouseMove$: Subject<any>;
   private static mouseClick$: Subject<any>;
   private static redraw$: Subject<any>;
+  private static selectedCheckerMove$: Subject<any>;
   private static subscriptions;
 
   constructor() {
     StateManager.mouseMove$ = new Subject();
     StateManager.mouseClick$ = new Subject();
     StateManager.redraw$ = new Subject();
+    StateManager.selectedCheckerMove$ = new Subject();
+
     StateManager.subscriptions = {move: [], click: []};
     StateManager.init();
   }
@@ -39,6 +42,14 @@ export class StateManager {
 
   public static onRedraw(cb, id?) {
     StateManager.subscriptions.move.push({id, subscription: StateManager.redraw$.subscribe(cb)});
+  }
+
+  public static notifySelectedCheckerMove(data) {
+    StateManager.selectedCheckerMove$.next(data);
+  }
+
+  public static onSelectedCheckerMove(cb, id?) {
+    StateManager.subscriptions.move.push({id, subscription: StateManager.selectedCheckerMove$.subscribe(cb)});
   }
 
   public static removeSubscriptions() {
