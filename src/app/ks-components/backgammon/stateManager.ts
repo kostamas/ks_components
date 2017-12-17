@@ -2,10 +2,11 @@ import {Subject} from 'rxjs/Subject';
 import {Canvas} from './canvas';
 
 export class StateManager {
-  private static mouseMove$: Subject<any>;
+  public static mouseMove$: Subject<any>;
   private static mouseClick$: Subject<any>;
   private static redraw$: Subject<any>;
   private static selectedCheckerMove$: Subject<any>;
+  private static selectedCheckerDrop$: Subject<any>;
   private static subscriptions;
 
   constructor() {
@@ -13,6 +14,7 @@ export class StateManager {
     StateManager.mouseClick$ = new Subject();
     StateManager.redraw$ = new Subject();
     StateManager.selectedCheckerMove$ = new Subject();
+    StateManager.selectedCheckerDrop$ = new Subject();
 
     StateManager.subscriptions = {move: [], click: []};
     StateManager.init();
@@ -50,6 +52,14 @@ export class StateManager {
 
   public static onSelectedCheckerMove(cb, id?) {
     StateManager.subscriptions.move.push({id, subscription: StateManager.selectedCheckerMove$.subscribe(cb)});
+  }
+
+  public static notifySelectedCheckerDrop(data) {
+    StateManager.selectedCheckerDrop$.next(data);
+  }
+
+  public static onSelectedCheckerDrop(cb, id?) {
+    StateManager.subscriptions.move.push({id, subscription: StateManager.selectedCheckerDrop$.subscribe(cb)});
   }
 
   public static removeSubscriptions() {

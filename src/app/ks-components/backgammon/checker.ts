@@ -1,16 +1,17 @@
 import {Canvas} from './canvas';
 import {StateManager} from './stateManager';
-import {BACKGAMMON_CONSTANTS} from './backgammonConstants';
+import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
 import {isOverlap} from './helpers/backgammonUtils';
 import {calcPointsCircle, getCheckerSvg} from './helpers/uiHelper';
 
 export class Checker {
   private static checkersCount = 0;
+  private id;
   private checkerSvgImg;
-  private type;
   private x;
   private y;
-  private id;
+  public type; // todo use readonly
+  public currentSpike; // todo use readonly
   private radius;
   private isHovered;
   private isClicked;
@@ -18,13 +19,14 @@ export class Checker {
   private animFrame = null;
   private timeout = null;
 
-  constructor(x, y, type) {
+  constructor(x, y, type, currentSpike) {
     Checker.checkersCount++;
     this.id = Checker.checkersCount;
     this.checkerSvgImg = new Image();
     this.type = type;
     this.x = x;
     this.y = y;
+    this.currentSpike = currentSpike;
     this.radius = BACKGAMMON_CONSTANTS.CHECKERS_SIZE / 2;
     this.init();
   }
@@ -34,9 +36,14 @@ export class Checker {
     this.subscribeToMouseEvents();
   }
 
+  public setPosition({x, y}) {
+    this.x = x;
+    this.y = y;
+  }
+
   private subscribeToMouseEvents = () => {
-    StateManager.onMouseMove(this.mouseMoveHandler, this.id);
     StateManager.onMouseClick(this.mouseClickHandler, this.id);
+    StateManager.onMouseMove(this.mouseMoveHandler, this.id);
   };
 
   private mouseMoveHandler = ({x, y}) => {
@@ -65,6 +72,7 @@ export class Checker {
 
   private mouseClickHandler = ({x, y}) => {
     if (this.isClicked) {
+      StateManager.notifySelectedCheckerDrop({x, y, diceResult: [2, 4], checker: this});
       this.isClicked = false;
       window.cancelAnimationFrame(this.animFrame);
       clearTimeout(this.timeout);
@@ -73,18 +81,20 @@ export class Checker {
     } else {
       if (isOverlap(x, y, this.x, this.y, BACKGAMMON_CONSTANTS.CHECKERS_SIZE, BACKGAMMON_CONSTANTS.CHECKERS_SIZE)) {
         this.isClicked = true;
-        this.animateSelectedChecker(0);
+        this.animateSelectedChecker();
+
       }
     }
   };
 
-  private animateSelectedChecker = (degrees) => {
+  private animateSelectedChecker = () => {
+    let degrees = 0;
     const animatFn = () => {
       this.drawChecker();
       Canvas.context.save();
       Canvas.context.translate(this.x + this.radius, this.y + this.radius);
       Canvas.context.rotate(degrees * (Math.PI / 180));
-      calcPointsCircle(0, 0, this.radius - 1, 1, Canvas.context);
+      calcPointsCircle(0, 0, this.radius - 1, 1);
       Canvas.context.rotate(-degrees * (Math.PI / 180));
       Canvas.context.translate((this.x + this.radius) * -1, (this.y + this.radius) * -1);
       Canvas.context.restore();
@@ -115,6 +125,10 @@ export class Checker {
     const DOMURL = _window.URL || _window.webkitURL || _window;
     Canvas.context.drawImage(this.checkerSvgImg, x || this.x, y || this.y);
     DOMURL.revokeObjectURL(this.svgData.url);
+  }
+
+  public getCheckerId() {
+    return this.id;
   }
 
   // todo - create clear functions for mousemove, click, subscriptions...
