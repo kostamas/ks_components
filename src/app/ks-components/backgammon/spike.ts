@@ -34,16 +34,6 @@ export class Spike {
   }
 
   private init() {
-    StateManager.onSelectedCheckerMove(this.checkerMoveHandler, Spike.spikesCount);
-  }
-
-  private checkerMoveHandler = ({x, y, checkerId}) => {
-    const targetY = this.direction === 'down' ? this.y - 10 : this.y - 160 + 10;
-    if (isOverlap(x, y - 10, this.x + 10, targetY, 20, 180) && !this.isContainChecker(checkerId)) {
-      this.showValidMove = true;
-    } else {
-      this.showValidMove = false;
-    }
   }
 
   private isContainChecker(checkerId) {

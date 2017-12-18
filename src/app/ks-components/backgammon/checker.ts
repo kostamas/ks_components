@@ -3,6 +3,7 @@ import {StateManager} from './stateManager';
 import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
 import {isOverlap} from './helpers/backgammonUtils';
 import {calcPointsCircle, getCheckerSvg} from './helpers/uiHelper';
+import {Players} from "./players";
 
 export class Checker {
   private static checkersCount = 0;
@@ -72,7 +73,7 @@ export class Checker {
 
   private mouseClickHandler = ({x, y}) => {
     if (this.isClicked) {
-      StateManager.notifySelectedCheckerDrop({x, y, diceResult: [2, 4], checker: this});
+      StateManager.notifySelectedCheckerDrop({x, y, checker: this});
       this.isClicked = false;
       window.cancelAnimationFrame(this.animFrame);
       clearTimeout(this.timeout);
@@ -82,7 +83,7 @@ export class Checker {
       if (isOverlap(x, y, this.x, this.y, BACKGAMMON_CONSTANTS.CHECKERS_SIZE, BACKGAMMON_CONSTANTS.CHECKERS_SIZE)) {
         this.isClicked = true;
         this.animateSelectedChecker();
-
+        StateManager.notifySelectChecker({x, y, checker: this});
       }
     }
   };
@@ -105,11 +106,11 @@ export class Checker {
   };
 
   private initPosition() {
-    let svgData = getCheckerSvg(this.type);
+    let svgAsString = getCheckerSvg(Players.playersNamesMap[this.type]);
     const _window: any = window;
     const DOMURL = _window.URL || _window.webkitURL || _window;
 
-    const svgBlob = new Blob([svgData], {type: 'image/svg+xml'});
+    const svgBlob = new Blob([svgAsString], {type: 'image/svg+xml'});
     const url = DOMURL.createObjectURL(svgBlob);
 
     this.svgData = {svgBlob: url};

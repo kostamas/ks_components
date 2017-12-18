@@ -4,12 +4,15 @@ import {Observable} from 'rxjs/Observable';
 import {Checker} from './checker';
 import {StateManager} from './stateManager';
 import {isOverlap} from "./helpers/backgammonUtils";
+import {Dices} from "./dices";
+import {Players} from "./players";
 
 export class GameController {
   private spikes: Spike[];
   private checkers: Checker[] = [];
+  private dices;
 
-  private backgroundimgUrl = 'assets/images/backgammon.jpg';
+  private backgroundImgUrl = 'assets/images/backgammon.jpg';
 
   private spikesPositions = [
     {x: 583, y: 42}, {x: 541, y: 42}, {x: 497, y: 42}, {x: 455, y: 42}, {x: 413, y: 42}, {x: 374, y: 42},
@@ -20,19 +23,20 @@ export class GameController {
   ];
 
   private checkersInitData = {
-    ['0']: {type: 'black-player', num: 2},
-    ['2']: {type: 'white-player', num: 1},
-    ['4']: {type: 'white-player', num: 5},
-    ['7']: {type: 'white-player', num: 3},
-    ['11']: {type: 'black-player', num: 5},
-    ['12']: {type: 'white-player', num: 5},
-    ['16']: {type: 'black-player', num: 3},
-    ['18']: {type: 'black-player', num: 5},
-    ['23']: {type: 'white-player', num: 2},
+    ['0']: {type: Players.playersMap.black, num: 2},
+    ['2']: {type: Players.playersMap.white, num: 1},
+    ['4']: {type: Players.playersMap.white, num: 5},
+    ['7']: {type: Players.playersMap.white, num: 3},
+    ['11']: {type: Players.playersMap.black, num: 5},
+    ['12']: {type: Players.playersMap.white, num: 5},
+    ['16']: {type: Players.playersMap.black, num: 3},
+    ['18']: {type: Players.playersMap.black, num: 5},
+    ['23']: {type: Players.playersMap.white, num: 2},
   };
 
   constructor() {
     this.init();
+    StateManager.onSelectChecker(this.selectCheckerHandler);
   }
 
   public init() {
@@ -41,6 +45,7 @@ export class GameController {
     this.drawBackground().subscribe(() => {
       this.initSpikes();
       this.initCheckers();
+      this.dices = new Dices();
     });
   }
 
@@ -72,7 +77,7 @@ export class GameController {
   public drawBackground() {
     return Observable.create((observer) => {
       const background = new Image();
-      background.src = this.backgroundimgUrl;
+      background.src = this.backgroundImgUrl;
       background.onload = () => {
         Canvas.context.drawImage(background, 0, 0);
         observer.next();
@@ -83,29 +88,29 @@ export class GameController {
 
   public redrawHandler = () => {
     this.drawBackground().subscribe(() => {
+      this.dices.drawDices();
       this.checkers.forEach(checker => checker.drawChecker());
       this.spikes.forEach(spikes => spikes.drawSpike());
     });
   }
 
-  public selectedCheckerDropHandler = ({x, y, diceResult, checker}) => {
-    const relevantSpikes = [
-      this.spikes[checker.currentSpike + diceResult[0]],
-      this.spikes[checker.currentSpike + diceResult[1]]
-    ];
-    let spikeCheckers;
+  public selectedCheckerDropHandler = ({x, y, checker}) => {
+    let diceResult, relevantSpikes = [], spikeCheckers;
 
+    if (this.dices && this.dices.dices && this.dices.dices.length > 0) {
+      diceResult = this.dices.dices;
+    }
+    diceResult.forEach(diceResult => relevantSpikes.push(this.spikes[checker.currentSpike + diceResult]));
     for (let i = 0; i < relevantSpikes.length; i++) {
       if (relevantSpikes[i]) {
         const targetY = relevantSpikes[i].direction === 'down' ? relevantSpikes[i].y - 10 : relevantSpikes[i].y - 150;
         spikeCheckers = relevantSpikes[i].checkers;
 
-        if (isOverlap(x, y - 10, relevantSpikes[i].x + 10, targetY, 20, 180)) { // todo - duplicate (same check inside spike class)
+        if (isOverlap(x, y - 10, relevantSpikes[i].x + 10, targetY, 20, 180)) {
           const isSpikeContainChecker = spikeCheckers.indexOf(checker) > -1;
 
           if (!isSpikeContainChecker && (spikeCheckers.length < 2 || spikeCheckers[0].type === checker.type)) {
-            const spikeIndex = diceResult[i] + checker.currentSpike;
-            this.moveChecker(checker, relevantSpikes[i], this.spikes[checker.currentSpike], spikeIndex);
+            this.moveChecker(checker, relevantSpikes[i], this.spikes[checker.currentSpike], diceResult[i]);
             return;
           }
         }
@@ -119,7 +124,9 @@ export class GameController {
     this.redrawHandler();
   };
 
-  private moveChecker(checker, newSpike, oldSpike, newSpikeIndex) {
+  private moveChecker(checker, newSpike, oldSpike, diceResult) {
+    const newSpikeIndex = diceResult + checker.currentSpike;
+
     if (newSpike.checkers.length === 1 && newSpike.checkers[0].type !== checker.type) {
       this.checkerHitHandler(newSpike.checkers.pop());
     }
@@ -131,8 +138,21 @@ export class GameController {
 
     checker.setPosition(newPosition);
     checker.currentSpike = newSpikeIndex;
+
+    const diceIndex = this.dices.dices.indexOf(diceResult);
+    this.dices.dices.splice(diceIndex, 1);
+    if (this.dices.dices.length === 0) {
+      this.dices.setShowRollButton(true);
+    }
     this.redrawHandler();
   }
+
+  private selectCheckerHandler = ({x, y, checker}) => {
+    this.dices.dices.forEach(diceResult => {
+      this.spikes[checker.currentSpike + diceResult].setShowValidMove(true);
+    });
+    this.redrawHandler();
+  };
 
   private checkerHitHandler(checker) {
     checker.setPosition({x: 325, y: 275});

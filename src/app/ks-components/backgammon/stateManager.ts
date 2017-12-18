@@ -6,7 +6,9 @@ export class StateManager {
   private static mouseClick$: Subject<any>;
   private static redraw$: Subject<any>;
   private static selectedCheckerMove$: Subject<any>;
-  private static selectedCheckerDrop$: Subject<any>;
+  private static mouseDrop$: Subject<any>;
+  private static selectChecker$: Subject<any>;
+
   private static subscriptions;
 
   constructor() {
@@ -14,9 +16,11 @@ export class StateManager {
     StateManager.mouseClick$ = new Subject();
     StateManager.redraw$ = new Subject();
     StateManager.selectedCheckerMove$ = new Subject();
-    StateManager.selectedCheckerDrop$ = new Subject();
+    StateManager.mouseDrop$ = new Subject();
+    StateManager.selectChecker$ = new Subject();
 
     StateManager.subscriptions = {move: [], click: []};
+
     StateManager.init();
   }
 
@@ -50,18 +54,22 @@ export class StateManager {
     StateManager.selectedCheckerMove$.next(data);
   }
 
-  public static onSelectedCheckerMove(cb, id?) {
-    StateManager.subscriptions.move.push({id, subscription: StateManager.selectedCheckerMove$.subscribe(cb)});
-  }
 
   public static notifySelectedCheckerDrop(data) {
-    StateManager.selectedCheckerDrop$.next(data);
+    StateManager.mouseDrop$.next(data);
   }
 
   public static onSelectedCheckerDrop(cb, id?) {
-    StateManager.subscriptions.move.push({id, subscription: StateManager.selectedCheckerDrop$.subscribe(cb)});
+    StateManager.subscriptions.move.push({id, subscription: StateManager.mouseDrop$.subscribe(cb)});
   }
 
+  public static notifySelectChecker(data) {
+    StateManager.selectChecker$.next(data);
+  }
+
+  public static onSelectChecker(cb, id?) {
+    StateManager.subscriptions.move.push({id, subscription: StateManager.selectChecker$.subscribe(cb)});
+  }
   public static removeSubscriptions() {
   }
 }
