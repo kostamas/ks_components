@@ -25,7 +25,6 @@ export class Dices {
 
     for (let diceNum = 1; diceNum < 7; diceNum++) {
 
-
       let svgAsString = getDiceSvg(diceNum);
       const _window: any = window;
       const DOMURL = _window.URL || _window.webkitURL || _window;

@@ -11,6 +11,7 @@ export class GameController {
   private spikes: Spike[];
   private checkers: Checker[] = [];
   private dices;
+  private gamePlayers: Players;
 
   private backgroundImgUrl = 'assets/images/backgammon.jpg';
 
@@ -24,7 +25,6 @@ export class GameController {
 
   private checkersInitData = {
     ['0']: {type: Players.playersMap.black, num: 2},
-    ['2']: {type: Players.playersMap.white, num: 1},
     ['4']: {type: Players.playersMap.white, num: 5},
     ['7']: {type: Players.playersMap.white, num: 3},
     ['11']: {type: Players.playersMap.black, num: 5},
@@ -46,12 +46,23 @@ export class GameController {
       this.initSpikes();
       this.initCheckers();
       this.dices = new Dices();
+      this.gamePlayers = new Players();
     });
   }
 
   private initSpikes() {
     let spike, direction;
     this.spikes = [];
+
+    this.spikes['-1'] = {
+      [Players.playersNamesMap[Players.playersMap.white]]: [],
+      [Players.playersNamesMap[Players.playersMap.black]]: [],
+      getNextCheckerPosition: playerType => playerType === Players.playersMap.black ? {x: 325, y: 235} : {
+        x: 325,
+        y: 385
+      }
+    };
+
     for (let i = 0; i < this.spikesPositions.length; i++) {
       direction = i < this.spikesPositions.length / 2 ? 'down' : 'up';
       spike = new Spike(this.spikesPositions[i].x, this.spikesPositions[i].y, direction);
@@ -88,19 +99,30 @@ export class GameController {
 
   public redrawHandler = () => {
     this.drawBackground().subscribe(() => {
-      this.dices.drawDices();
       this.checkers.forEach(checker => checker.drawChecker());
       this.spikes.forEach(spikes => spikes.drawSpike());
+      this.dices.drawDices();
+      this.gamePlayers.drawPlayer();
     });
-  }
+  };
 
   public selectedCheckerDropHandler = ({x, y, checker}) => {
-    let diceResult, relevantSpikes = [], spikeCheckers;
+    let diceResult, relevantSpikes = [], spikeCheckers, currentCheckerPosition;
+
+    if (checker.currentSpike > -1) {
+      const checkerIndex = this.spikes[checker.currentSpike].checkers.indexOf(checker);
+      if (checkerIndex < this.spikes[checker.currentSpike].checkers.length) {
+        this.alignCheckersInSpike(checkerIndex, checker);
+      }
+    }
 
     if (this.dices && this.dices.dices && this.dices.dices.length > 0) {
       diceResult = this.dices.dices;
     }
     diceResult.forEach(diceResult => relevantSpikes.push(this.spikes[checker.currentSpike + diceResult]));
+
+    relevantSpikes.forEach(spike => spike.setShowValidMove(false));
+
     for (let i = 0; i < relevantSpikes.length; i++) {
       if (relevantSpikes[i]) {
         const targetY = relevantSpikes[i].direction === 'down' ? relevantSpikes[i].y - 10 : relevantSpikes[i].y - 150;
@@ -110,21 +132,27 @@ export class GameController {
           const isSpikeContainChecker = spikeCheckers.indexOf(checker) > -1;
 
           if (!isSpikeContainChecker && (spikeCheckers.length < 2 || spikeCheckers[0].type === checker.type)) {
-            this.moveChecker(checker, relevantSpikes[i], this.spikes[checker.currentSpike], diceResult[i]);
+            this.moveChecker(checker, relevantSpikes[i], diceResult[i]);
             return;
           }
         }
       }
     }
 
-    this.spikes[checker.currentSpike].checkers.pop();
-    const currentCheckerPosition = this.spikes[checker.currentSpike].getNextCheckerPosition();
-    checker.setPosition(currentCheckerPosition);
-    this.spikes[checker.currentSpike].checkers.push(checker);
+    if (checker.currentSpike > -1) {
+      this.spikes[checker.currentSpike].checkers.pop();
+      currentCheckerPosition = this.spikes[checker.currentSpike].getNextCheckerPosition();
+      checker.setPosition(currentCheckerPosition);
+      this.spikes[checker.currentSpike].checkers.push(checker);
+    } else {
+      currentCheckerPosition = this.spikes['-1'].getNextCheckerPosition(checker.type);
+      checker.setPosition(currentCheckerPosition);
+    }
+
     this.redrawHandler();
   };
 
-  private moveChecker(checker, newSpike, oldSpike, diceResult) {
+  private moveChecker(checker, newSpike, diceResult) {
     const newSpikeIndex = diceResult + checker.currentSpike;
 
     if (newSpike.checkers.length === 1 && newSpike.checkers[0].type !== checker.type) {
@@ -134,7 +162,11 @@ export class GameController {
     const newPosition = newSpike.getNextCheckerPosition();
     newSpike.setShowValidMove(false);
     newSpike.checkers.push(checker);
-    oldSpike.checkers.pop();
+    if (checker.currentSpike > -1) {
+      this.spikes[checker.currentSpike].checkers.pop();
+    } else {
+      this.spikes['-1']['black'].pop();
+    }
 
     checker.setPosition(newPosition);
     checker.currentSpike = newSpikeIndex;
@@ -143,18 +175,34 @@ export class GameController {
     this.dices.dices.splice(diceIndex, 1);
     if (this.dices.dices.length === 0) {
       this.dices.setShowRollButton(true);
+      Players.nextPlayer();
     }
     this.redrawHandler();
   }
 
   private selectCheckerHandler = ({x, y, checker}) => {
+    let spikeCheckers;
     this.dices.dices.forEach(diceResult => {
-      this.spikes[checker.currentSpike + diceResult].setShowValidMove(true);
+      spikeCheckers = this.spikes[checker.currentSpike + diceResult];
+      if (spikeCheckers.checkers.length <= 1 || spikeCheckers.checkers[0].type === checker.type) {
+        this.spikes[checker.currentSpike + diceResult].setShowValidMove(true);
+      }
     });
     this.redrawHandler();
   };
 
   private checkerHitHandler(checker) {
-    checker.setPosition({x: 325, y: 275});
+    checker.setPosition(this.spikes['-1'].getNextCheckerPosition(checker.type));
+    this.spikes['-1'][Players.playersNamesMap[checker.type]].push(checker);
+    checker.currentSpike = -1;
+  }
+
+  private alignCheckersInSpike(indexToAlign, currentChecker) {
+    const currentSpike = this.spikes[currentChecker.currentSpike];
+    const checkerToAlign = currentSpike.checkers[currentSpike.checkers.length - 1];
+    const nextPosition = this.spikes[currentChecker.currentSpike].getNextCheckerPosition(indexToAlign);
+    checkerToAlign.setPosition(nextPosition);
+    currentSpike.checkers.splice(indexToAlign, 1, checkerToAlign);
+    currentSpike.checkers.push(currentChecker);
   }
 }

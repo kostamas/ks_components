@@ -7,6 +7,7 @@ import {Players} from "./players";
 
 export class Checker {
   private static checkersCount = 0;
+  public static selectedCheckers: any = {};
   private id;
   private checkerSvgImg;
   private x;
@@ -48,6 +49,10 @@ export class Checker {
   };
 
   private mouseMoveHandler = ({x, y}) => {
+    if (this.type !== Players.currentState) {
+      return;
+    }
+
     if (this.isClicked) {
       StateManager.notifySelectedCheckerMove({x, y, checkerId: this.id});
       StateManager.notifyRedraw();
@@ -72,16 +77,23 @@ export class Checker {
   };
 
   private mouseClickHandler = ({x, y}) => {
+    if (this.type !== Players.currentState) {
+      return;
+    }
+
     if (this.isClicked) {
       StateManager.notifySelectedCheckerDrop({x, y, checker: this});
       this.isClicked = false;
+      Checker.selectedCheckers[this.type] = false;
       window.cancelAnimationFrame(this.animFrame);
       clearTimeout(this.timeout);
       this.animFrame = null;
       this.drawChecker();
     } else {
-      if (isOverlap(x, y, this.x, this.y, BACKGAMMON_CONSTANTS.CHECKERS_SIZE, BACKGAMMON_CONSTANTS.CHECKERS_SIZE)) {
+      if (!Checker.selectedCheckers[this.type] &&
+        isOverlap(x, y, this.x, this.y, BACKGAMMON_CONSTANTS.CHECKERS_SIZE, BACKGAMMON_CONSTANTS.CHECKERS_SIZE)) {
         this.isClicked = true;
+        Checker.selectedCheckers[this.type] = true;
         this.animateSelectedChecker();
         StateManager.notifySelectChecker({x, y, checker: this});
       }

@@ -1,7 +1,5 @@
 import {Checker} from './checker';
 import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
-import {StateManager} from './stateManager';
-import {isOverlap} from "./helpers/backgammonUtils";
 import {drawArrow} from "./helpers/uiHelper";
 
 export class Spike {
@@ -26,8 +24,13 @@ export class Spike {
     this.checkers.push(checker);
   }
 
-  public getNextCheckerPosition() {
-    const yOffset = this.checkers.length * BACKGAMMON_CONSTANTS.CHECKERS_SIZE;
+  public getNextCheckerPosition(index?) {
+    let yOffset;
+    if(index || index === 0){
+      yOffset = index * BACKGAMMON_CONSTANTS.CHECKERS_SIZE
+    } else {
+      yOffset = this.checkers.length * BACKGAMMON_CONSTANTS.CHECKERS_SIZE;
+    }
     let y = this.y;
     y += this.direction === 'down' ? yOffset : -yOffset;
     return {x: this.x, y};
@@ -36,21 +39,13 @@ export class Spike {
   private init() {
   }
 
-  private isContainChecker(checkerId) {
-    for (let i = 0; i < this.checkers.length; i++) {
-      if (this.checkers[i].getCheckerId() === checkerId) {
-        return true;
-      }
-    }
-  }
-
   public drawSpike() {
     if (this.showValidMove) {
       let p1, p2;
 
       if (this.direction === 'down') {
-        p1 = [this.x + BACKGAMMON_CONSTANTS.CHECKERS_SIZE / 2, this.y + 248];
-        p2 = [this.x + BACKGAMMON_CONSTANTS.CHECKERS_SIZE / 2, this.y + 218]
+        p1 = [this.x + BACKGAMMON_CONSTANTS.CHECKERS_SIZE / 2 + 3, this.y + 248];
+        p2 = [this.x + BACKGAMMON_CONSTANTS.CHECKERS_SIZE / 2 + 3, this.y + 218]
       } else {
         p1 = [this.x + BACKGAMMON_CONSTANTS.CHECKERS_SIZE / 2, this.y - 210];
         p2 = [this.x + BACKGAMMON_CONSTANTS.CHECKERS_SIZE / 2, this.y - 180];
