@@ -26,24 +26,24 @@ export class GameController {
 
   private checkersInitData = {
 
-    ['0']: {type: Players.playersMap.black, num: 2},
-    ['1']: {type: Players.playersMap.white, num: 5},
-    ['2']: {type: Players.playersMap.white, num: 3},
-    ['3']: {type: Players.playersMap.white, num: 5},
-    ['4']: {type: Players.playersMap.white, num: 5},
-    ['5']: {type: Players.playersMap.white, num: 3},
-    ['6']: {type: Players.playersMap.white, num: 5},
-    ['7']: {type: Players.playersMap.white, num: 2},
-
-
     // ['0']: {type: Players.playersMap.black, num: 2},
-    // ['5']: {type: Players.playersMap.white, num: 5},
-    // ['7']: {type: Players.playersMap.white, num: 3},
-    // ['11']: {type: Players.playersMap.black, num: 5},
-    // ['12']: {type: Players.playersMap.white, num: 5},
-    // ['16']: {type: Players.playersMap.black, num: 3},
-    // ['18']: {type: Players.playersMap.black, num: 5},
-    // ['23']: {type: Players.playersMap.white, num: 2},
+    // ['1']: {type: Players.playersMap.white, num: 5},
+    // ['2']: {type: Players.playersMap.white, num: 3},
+    // ['3']: {type: Players.playersMap.white, num: 5},
+    // ['4']: {type: Players.playersMap.white, num: 5},
+    // ['5']: {type: Players.playersMap.white, num: 3},
+    // ['6']: {type: Players.playersMap.white, num: 5},
+    // ['7']: {type: Players.playersMap.white, num: 2},
+
+
+    ['0']: {type: Players.playersMap.black, num: 2},
+    ['5']: {type: Players.playersMap.white, num: 5},
+    ['7']: {type: Players.playersMap.white, num: 3},
+    ['11']: {type: Players.playersMap.black, num: 5},
+    ['12']: {type: Players.playersMap.white, num: 5},
+    ['16']: {type: Players.playersMap.black, num: 3},
+    ['18']: {type: Players.playersMap.black, num: 5},
+    ['23']: {type: Players.playersMap.white, num: 2},
   };
 
   constructor() {
@@ -232,9 +232,9 @@ export class GameController {
       this.dices.drawDices();
       this.gamePlayers.drawPlayer();
 
-      if (Players.currentState !== this.currentPlayerType) {
+      if (Players.currentState !== this.currentPlayerType && Players.currentState % 2 === 1) {
         this.currentPlayerType = Players.currentState;
-        const showNextPlayerBtn = this.checkIfPossibleMovesExits(Players.getCurrentPlayerByState(this.currentPlayerType));
+        const showNextPlayerBtn = this.checkIfPossibleMovesExits(this.currentPlayerType);
         if (showNextPlayerBtn) {
           Players.showsSkipButton = true;
           this.gamePlayers.drawPlayer();
@@ -244,7 +244,7 @@ export class GameController {
   };
 
   private checkIfPossibleMovesExits(playerType) {
-    let checkersArr, checker, showNextPlayerBtn = true;
+    let currSpike, checker, showNextPlayerBtn = true;
     let spikeDirection = playerType === Players.playersMap.black ? 1 : -1;
 
     for (let i = 0; i < this.spikes.length && showNextPlayerBtn; i++) {
@@ -253,8 +253,11 @@ export class GameController {
 
       if (checker) {
         this.dices.dices.forEach(diceResult => {
-          checkersArr = this.spikes[i + diceResult * spikeDirection].checkers;
-          if ((checkersArr.length <= 1 || checkersArr[0].type === checker.type)) {
+          currSpike = this.spikes[i + diceResult * spikeDirection];
+          // if (currSpike || !currSpike.checkers) {
+          //   debugger;
+          // }
+          if (currSpike && (currSpike.checkers.length <= 1 || currSpike.checkers[0].type === checker.type)) {
             showNextPlayerBtn = false;
           }
         })

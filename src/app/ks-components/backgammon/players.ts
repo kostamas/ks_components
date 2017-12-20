@@ -27,9 +27,7 @@ export class Players {
   public static nextPlayer() {
     Players.currentState = (Players.currentState + 1) % 4;
   }
-
-  public static getCurrentPlayerByState = (state) => state < 2 ? Players.playersMap.black : Players.playersMap.white;
-
+  
   constructor() {
     this.init()
   }
