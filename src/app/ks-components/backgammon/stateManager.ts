@@ -8,6 +8,7 @@ export class StateManager {
   private static selectedCheckerMove$: Subject<any>;
   private static mouseDrop$: Subject<any>;
   private static selectChecker$: Subject<any>;
+  private static skipPlayer$: Subject<any>;
 
   private static subscriptions;
 
@@ -18,6 +19,7 @@ export class StateManager {
     StateManager.selectedCheckerMove$ = new Subject();
     StateManager.mouseDrop$ = new Subject();
     StateManager.selectChecker$ = new Subject();
+    StateManager.skipPlayer$ = new Subject();
 
     StateManager.subscriptions = {move: [], click: []};
 
@@ -70,6 +72,15 @@ export class StateManager {
   public static onSelectChecker(cb, id?) {
     StateManager.subscriptions.move.push({id, subscription: StateManager.selectChecker$.subscribe(cb)});
   }
+
+  public static notifySkipPlayer() {
+    StateManager.skipPlayer$.next();
+  }
+
+  public static onSkipPlayer(cb, id?) {
+    StateManager.subscriptions.move.push({id, subscription: StateManager.skipPlayer$.subscribe(cb)});
+  }
+
   public static removeSubscriptions() {
   }
 }

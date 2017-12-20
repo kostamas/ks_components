@@ -12,6 +12,7 @@ export class GameController {
   private checkers: Checker[] = [];
   private dices;
   private gamePlayers: Players;
+  private currentPlayerType;
 
   private backgroundImgUrl = 'assets/images/backgammon.jpg';
 
@@ -24,14 +25,25 @@ export class GameController {
   ];
 
   private checkersInitData = {
+
     ['0']: {type: Players.playersMap.black, num: 2},
-    ['5']: {type: Players.playersMap.white, num: 5},
-    ['7']: {type: Players.playersMap.white, num: 3},
-    ['11']: {type: Players.playersMap.black, num: 5},
-    ['12']: {type: Players.playersMap.white, num: 5},
-    ['16']: {type: Players.playersMap.black, num: 3},
-    ['18']: {type: Players.playersMap.black, num: 5},
-    ['23']: {type: Players.playersMap.white, num: 2},
+    ['1']: {type: Players.playersMap.white, num: 5},
+    ['2']: {type: Players.playersMap.white, num: 3},
+    ['3']: {type: Players.playersMap.white, num: 5},
+    ['4']: {type: Players.playersMap.white, num: 5},
+    ['5']: {type: Players.playersMap.white, num: 3},
+    ['6']: {type: Players.playersMap.white, num: 5},
+    ['7']: {type: Players.playersMap.white, num: 2},
+
+
+    // ['0']: {type: Players.playersMap.black, num: 2},
+    // ['5']: {type: Players.playersMap.white, num: 5},
+    // ['7']: {type: Players.playersMap.white, num: 3},
+    // ['11']: {type: Players.playersMap.black, num: 5},
+    // ['12']: {type: Players.playersMap.white, num: 5},
+    // ['16']: {type: Players.playersMap.black, num: 3},
+    // ['18']: {type: Players.playersMap.black, num: 5},
+    // ['23']: {type: Players.playersMap.white, num: 2},
   };
 
   constructor() {
@@ -42,6 +54,8 @@ export class GameController {
   public init() {
     StateManager.onSelectedCheckerDrop(this.selectedCheckerDropHandler);
     StateManager.onRedraw(this.redrawHandler);
+    StateManager.onSkipPlayer(this.skipPlayerHandler);
+
     this.drawBackground().subscribe(() => {
       this.initSpikes();
       this.initCheckers();
@@ -166,12 +180,16 @@ export class GameController {
   private selectCheckerHandler = ({x, y, checker}) => {
     let checkersArr;
     let spikeDirection = checker.type === Players.playersMap.black ? 1 : -1;
+
+    this.checkIfPossibleMovesExits(checker.type);
+
     this.dices.dices.forEach(diceResult => {
       checkersArr = this.spikes[checker.currentSpike + diceResult * spikeDirection].checkers;
       if (!this.hasOtherOutChecker(checker) && (checkersArr.length <= 1 || checkersArr[0].type === checker.type)) {
         this.spikes[checker.currentSpike + diceResult * spikeDirection].setShowValidMove(true);
       }
     });
+
     this.redrawHandler();
   };
 
@@ -213,6 +231,41 @@ export class GameController {
       this.spikes.forEach(spikes => spikes.drawSpike());
       this.dices.drawDices();
       this.gamePlayers.drawPlayer();
+
+      if (Players.currentState !== this.currentPlayerType) {
+        this.currentPlayerType = Players.currentState;
+        const showNextPlayerBtn = this.checkIfPossibleMovesExits(Players.getCurrentPlayerByState(this.currentPlayerType));
+        if (showNextPlayerBtn) {
+          Players.showsSkipButton = true;
+          this.gamePlayers.drawPlayer();
+        }
+      }
     });
   };
+
+  private checkIfPossibleMovesExits(playerType) {
+    let checkersArr, checker, showNextPlayerBtn = true;
+    let spikeDirection = playerType === Players.playersMap.black ? 1 : -1;
+
+    for (let i = 0; i < this.spikes.length && showNextPlayerBtn; i++) {
+      checker = this.spikes[i].checkers.length > 0 && this.spikes[i].checkers[0].type === playerType
+        ? this.spikes[i].checkers[0] : null;
+
+      if (checker) {
+        this.dices.dices.forEach(diceResult => {
+          checkersArr = this.spikes[i + diceResult * spikeDirection].checkers;
+          if ((checkersArr.length <= 1 || checkersArr[0].type === checker.type)) {
+            showNextPlayerBtn = false;
+          }
+        })
+      }
+    }
+
+    return showNextPlayerBtn;
+  }
+
+  private skipPlayerHandler = () => {
+    this.dices.dices = [];
+    this.dices.setShowRollButton(true);
+  }
 }

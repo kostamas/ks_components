@@ -1,4 +1,6 @@
 import {Canvas} from "./canvas";
+import {StateManager} from "./stateManager";
+import {isOverlap} from "./helpers/backgammonUtils";
 
 export class Players {
   public static playersMap = {
@@ -20,15 +22,20 @@ export class Players {
 
   public static currentState = 0;
 
+  public static showsSkipButton = false;
+
   public static nextPlayer() {
     Players.currentState = (Players.currentState + 1) % 4;
   }
+
+  public static getCurrentPlayerByState = (state) => state < 2 ? Players.playersMap.black : Players.playersMap.white;
 
   constructor() {
     this.init()
   }
 
   private init() {
+    StateManager.onMouseClick(this.mouseClickHandler, 'player');
     this.drawPlayer();
   }
 
@@ -43,5 +50,23 @@ export class Players {
     Canvas.context.strokeStyle = Players.currentState < 2 ? '#000' : '#fff';
     Canvas.context.lineTo(110, 22);
     Canvas.context.stroke();
+
+    if (Players.showsSkipButton) {
+      Canvas.context.font = '25px serif';
+      Canvas.context.fillStyle = 'white';
+      Canvas.context.fillText('Skip', 160, 30);
+    }
+  }
+
+  private mouseClickHandler({x, y}) {
+    if (Players.showsSkipButton && isOverlap(x, y, 160, 10, 60, 40)) {
+      if (Players.currentState < 2) {
+        Players.currentState = 2;
+      } else {
+        Players.currentState = 0
+      }
+      StateManager.notifySkipPlayer();
+      StateManager.notifyRedraw();
+    }
   }
 }
