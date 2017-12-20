@@ -25,7 +25,7 @@ export class GameController {
 
   private checkersInitData = {
     ['0']: {type: Players.playersMap.black, num: 2},
-    ['4']: {type: Players.playersMap.white, num: 5},
+    ['5']: {type: Players.playersMap.white, num: 5},
     ['7']: {type: Players.playersMap.white, num: 3},
     ['11']: {type: Players.playersMap.black, num: 5},
     ['12']: {type: Players.playersMap.white, num: 5},
@@ -57,10 +57,9 @@ export class GameController {
     this.spikes['-1'] = {
       [Players.playersNamesMap[Players.playersMap.white]]: [],
       [Players.playersNamesMap[Players.playersMap.black]]: [],
-      getNextCheckerPosition: playerType => playerType === Players.playersMap.black ? {x: 325, y: 235} : {
-        x: 325,
-        y: 385
-      }
+      getNextCheckerPosition: playerType => playerType === Players.playersMap.black ?
+        {x: 325, y: 235 + this.spikes['-1'][Players.playersNamesMap[Players.playersMap.black]].length * 7} :
+        {x: 325, y: 385 + this.spikes['-1'][Players.playersNamesMap[Players.playersMap.white]].length * 7}
     };
 
     for (let i = 0; i < this.spikesPositions.length; i++) {
@@ -97,21 +96,13 @@ export class GameController {
     });
   }
 
-  public redrawHandler = () => {
-    this.drawBackground().subscribe(() => {
-      this.checkers.forEach(checker => checker.drawChecker());
-      this.spikes.forEach(spikes => spikes.drawSpike());
-      this.dices.drawDices();
-      this.gamePlayers.drawPlayer();
-    });
-  };
-
   public selectedCheckerDropHandler = ({x, y, checker}) => {
-    let diceResult, relevantSpikes = [], spikeCheckers, currentCheckerPosition;
+    let diceResult, relevantSpikes = [], currentCheckerPosition;
+    let spikeDirection = checker.type === Players.playersMap.black ? 1 : -1;
 
     if (checker.currentSpike > -1) {
       const checkerIndex = this.spikes[checker.currentSpike].checkers.indexOf(checker);
-      if (checkerIndex < this.spikes[checker.currentSpike].checkers.length) {
+      if (checkerIndex < this.spikes[checker.currentSpike].checkers.length - 1) {
         this.alignCheckersInSpike(checkerIndex, checker);
       }
     }
@@ -119,23 +110,13 @@ export class GameController {
     if (this.dices && this.dices.dices && this.dices.dices.length > 0) {
       diceResult = this.dices.dices;
     }
-    diceResult.forEach(diceResult => relevantSpikes.push(this.spikes[checker.currentSpike + diceResult]));
+    diceResult.forEach(diceResult => relevantSpikes.push(this.spikes[checker.currentSpike + diceResult * spikeDirection]));
 
     relevantSpikes.forEach(spike => spike.setShowValidMove(false));
 
     for (let i = 0; i < relevantSpikes.length; i++) {
-      if (relevantSpikes[i]) {
-        const targetY = relevantSpikes[i].direction === 'down' ? relevantSpikes[i].y - 10 : relevantSpikes[i].y - 150;
-        spikeCheckers = relevantSpikes[i].checkers;
-
-        if (isOverlap(x, y - 10, relevantSpikes[i].x + 10, targetY, 20, 180)) {
-          const isSpikeContainChecker = spikeCheckers.indexOf(checker) > -1;
-
-          if (!isSpikeContainChecker && (spikeCheckers.length < 2 || spikeCheckers[0].type === checker.type)) {
-            this.moveChecker(checker, relevantSpikes[i], diceResult[i]);
-            return;
-          }
-        }
+      if (relevantSpikes[i] && this.canMoveChecker(x, y, relevantSpikes, i, checker)) {
+        this.moveChecker(checker, relevantSpikes[i], diceResult[i]);
       }
     }
 
@@ -153,7 +134,8 @@ export class GameController {
   };
 
   private moveChecker(checker, newSpike, diceResult) {
-    const newSpikeIndex = diceResult + checker.currentSpike;
+    const spikeDirection = checker.type === Players.playersMap.black ? 1 : -1;
+    const newSpikeIndex = checker.currentSpike + diceResult * spikeDirection;
 
     if (newSpike.checkers.length === 1 && newSpike.checkers[0].type !== checker.type) {
       this.checkerHitHandler(newSpike.checkers.pop());
@@ -162,10 +144,11 @@ export class GameController {
     const newPosition = newSpike.getNextCheckerPosition();
     newSpike.setShowValidMove(false);
     newSpike.checkers.push(checker);
+
     if (checker.currentSpike > -1) {
       this.spikes[checker.currentSpike].checkers.pop();
     } else {
-      this.spikes['-1']['black'].pop();
+      this.spikes['-1'][Players.playersNamesMap[checker.type]].pop();
     }
 
     checker.setPosition(newPosition);
@@ -181,11 +164,12 @@ export class GameController {
   }
 
   private selectCheckerHandler = ({x, y, checker}) => {
-    let spikeCheckers;
+    let checkersArr;
+    let spikeDirection = checker.type === Players.playersMap.black ? 1 : -1;
     this.dices.dices.forEach(diceResult => {
-      spikeCheckers = this.spikes[checker.currentSpike + diceResult];
-      if (spikeCheckers.checkers.length <= 1 || spikeCheckers.checkers[0].type === checker.type) {
-        this.spikes[checker.currentSpike + diceResult].setShowValidMove(true);
+      checkersArr = this.spikes[checker.currentSpike + diceResult * spikeDirection].checkers;
+      if (!this.hasOtherOutChecker(checker) && (checkersArr.length <= 1 || checkersArr[0].type === checker.type)) {
+        this.spikes[checker.currentSpike + diceResult * spikeDirection].setShowValidMove(true);
       }
     });
     this.redrawHandler();
@@ -203,6 +187,32 @@ export class GameController {
     const nextPosition = this.spikes[currentChecker.currentSpike].getNextCheckerPosition(indexToAlign);
     checkerToAlign.setPosition(nextPosition);
     currentSpike.checkers.splice(indexToAlign, 1, checkerToAlign);
+    currentSpike.checkers.pop();
     currentSpike.checkers.push(currentChecker);
   }
+
+  private hasOtherOutChecker(checker) {
+    return this.spikes['-1'][Players.playersNamesMap[checker.type]].length > 0 &&
+      this.spikes['-1'][Players.playersNamesMap[checker.type]].indexOf(checker) === -1;
+  }
+
+  private canMoveChecker(x, y, relevantSpikes, spikeIndex, checker) {
+    const targetY = relevantSpikes[spikeIndex].direction === 'down' ? relevantSpikes[spikeIndex].y - 10 : relevantSpikes[spikeIndex].y - 150;
+    const spikeCheckers = relevantSpikes[spikeIndex].checkers;
+    const isSpikeContainChecker = spikeCheckers.indexOf(checker) > -1;
+
+    return !isSpikeContainChecker &&
+      (spikeCheckers.length < 2 || spikeCheckers[0].type === checker.type) &&
+      isOverlap(x, y - 10, relevantSpikes[spikeIndex].x + 10, targetY, 20, 180) &&
+      !this.hasOtherOutChecker(checker)
+  }
+
+  public redrawHandler = () => {
+    this.drawBackground().subscribe(() => {
+      this.checkers.forEach(checker => checker.drawChecker());
+      this.spikes.forEach(spikes => spikes.drawSpike());
+      this.dices.drawDices();
+      this.gamePlayers.drawPlayer();
+    });
+  };
 }

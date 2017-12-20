@@ -29,7 +29,9 @@ export class Spike {
     if(index || index === 0){
       yOffset = index * BACKGAMMON_CONSTANTS.CHECKERS_SIZE
     } else {
-      yOffset = this.checkers.length * BACKGAMMON_CONSTANTS.CHECKERS_SIZE;
+      yOffset = this.checkers.length < 5 ?
+        this.checkers.length * BACKGAMMON_CONSTANTS.CHECKERS_SIZE :
+        (this.checkers.length % 5) * BACKGAMMON_CONSTANTS.CHECKERS_SIZE + 10;
     }
     let y = this.y;
     y += this.direction === 'down' ? yOffset : -yOffset;
