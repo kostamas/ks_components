@@ -27,13 +27,13 @@ export class Players {
   public static nextPlayer() {
     Players.currentState = (Players.currentState + 1) % 4;
   }
-  
+
   constructor() {
     this.init()
   }
 
   private init() {
-    StateManager.onMouseClick(this.mouseClickHandler, 'player');
+    StateManager.onMouseClick(this.skipTurn, 'player');
     this.drawPlayer();
   }
 
@@ -56,7 +56,7 @@ export class Players {
     }
   }
 
-  private mouseClickHandler({x, y}) {
+  private skipTurn({x, y}) {
     if (Players.showsSkipButton && isOverlap(x, y, 160, 10, 60, 40)) {
       if (Players.currentState < 2) {
         Players.currentState = 2;
@@ -65,6 +65,7 @@ export class Players {
       }
       StateManager.notifySkipPlayer();
       StateManager.notifyRedraw();
+      Players.showsSkipButton = false;
     }
   }
 }

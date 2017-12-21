@@ -39,6 +39,7 @@ export class Spike {
   }
 
   private init() {
+
   }
 
   public drawSpike() {

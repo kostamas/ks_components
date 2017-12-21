@@ -1,5 +1,6 @@
 import {Canvas} from "../canvas";
 import {distance} from "./backgammonUtils";
+import {Observable} from "rxjs/Observable";
 
 const calcPointsCircle = (cx, cy, rad, dashLength) => {
   let n = rad / dashLength,
@@ -143,4 +144,16 @@ const getDiceSvg = (diceNum) => {
 `
 }
 
-export {calcPointsCircle, drawArrow, getCheckerSvg, getDiceSvg};
+
+const drawBackground = (backgroundImgUrl) => {
+  return Observable.create((observer) => {
+    const background = new Image();
+    background.src = backgroundImgUrl;
+    background.onload = () => {
+      Canvas.context.drawImage(background, 0, 0);
+      observer.next();
+      observer.complete();
+    };
+  });
+}
+export {calcPointsCircle, drawArrow, getCheckerSvg, getDiceSvg, drawBackground};
