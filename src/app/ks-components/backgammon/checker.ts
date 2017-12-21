@@ -14,6 +14,7 @@ export class Checker {
   private y;
   public type; // todo use readonly
   public currentSpike; // todo use readonly
+  public isOffBoard = false; // todo use readonly
   private radius;
   private isHovered;
   private isClicked;
