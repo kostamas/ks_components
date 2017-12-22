@@ -56,7 +56,7 @@ export class Dices {
     Canvas.context.strokeStyle = '#003300';
     Canvas.context.stroke();
     Canvas.context.font = '25px serif';
-    Canvas.context.fillStyle = "#fff";
+    Canvas.context.fillStyle = '#fff';
     Canvas.context.fillText('Roll', 576, 296);
   }
 
