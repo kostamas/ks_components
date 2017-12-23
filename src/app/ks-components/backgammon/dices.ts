@@ -1,8 +1,8 @@
-import {getDiceSvg} from "./helpers/uiHelper";
-import {Canvas} from "./canvas";
-import {StateManager} from "./stateManager";
-import {isOverlap} from "./helpers/backgammonUtils";
-import {Players} from "./players";
+import {getDiceSvg} from './helpers/uiHelper';
+import {Canvas} from './canvas';
+import {StateManager} from './stateManager';
+import {isOverlap} from './helpers/backgammonUtils';
+import {Players} from './players';
 
 export class Dices {
   public dices = [];
@@ -62,6 +62,7 @@ export class Dices {
 
   private rollDicesHandler() {
     this.dices = [Math.floor(Math.random() * 6 + 1), Math.floor(Math.random() * 6 + 1)];
+    this.dices = [5, 6];
     this.showRollButton = false;
     StateManager.notifyRedraw();
   }

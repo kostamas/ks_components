@@ -27,23 +27,22 @@ export class GameController {
   ];
 
   private checkersInitData = {
-    ['0']: {type: Players.playersMap.black, num: 2},
-    ['5']: {type: Players.playersMap.white, num: 5},
-    ['7']: {type: Players.playersMap.white, num: 3},
-    ['11']: {type: Players.playersMap.black, num: 5},
-    ['12']: {type: Players.playersMap.white, num: 5},
-    ['16']: {type: Players.playersMap.black, num: 3},
-    ['18']: {type: Players.playersMap.black, num: 5},
-    ['23']: {type: Players.playersMap.white, num: 2},
+    // ['0']: {type: Players.playersMap.black, num: 2},
+    // ['5']: {type: Players.playersMap.white, num: 5},
+    // ['7']: {type: Players.playersMap.white, num: 3},
+    // ['11']: {type: Players.playersMap.black, num: 5},
+    // ['12']: {type: Players.playersMap.white, num: 5},
+    // ['16']: {type: Players.playersMap.black, num: 3},
+    // ['18']: {type: Players.playersMap.black, num: 5},
+    // ['23']: {type: Players.playersMap.white, num: 2},
 
-    // ['0']: {type: Players.playersMap.white, num: 2},
-    // ['1']: {type: Players.playersMap.white, num: 5},
-    // ['2']: {type: Players.playersMap.white, num: 3},
-    // ['4']: {type: Players.playersMap.white, num: 5},
-    // ['20']: {type: Players.playersMap.black, num: 5},
-    // ['21']: {type: Players.playersMap.black, num: 4},
-    // ['22']: {type: Players.playersMap.black, num: 5},
-    // ['15']: {type: Players.playersMap.black, num: 1},
+    ['0']: {type: Players.playersMap.white, num: 2},
+    ['1']: {type: Players.playersMap.white, num: 5},
+    ['2']: {type: Players.playersMap.white, num: 3},
+    ['4']: {type: Players.playersMap.white, num: 5},
+    ['20']: {type: Players.playersMap.black, num: 5},
+    ['21']: {type: Players.playersMap.black, num: 5},
+    ['22']: {type: Players.playersMap.black, num: 5},
   };
 
   constructor() {
@@ -114,6 +113,15 @@ export class GameController {
       }
     }
 
+    if (this.outsideBoard.showArrow[Players.playersNamesMap[checker.type]]) {
+      const position = this.outsideBoard.getPosition(checker.type);
+      const dimensions = this.outsideBoard.getDimensions();
+      if (isOverlap(x, y, position.x, position.y, dimensions.width, dimensions.height)) {
+        this.bearingOff(checker);
+        return;
+      }
+    }
+
     diceResult = this.dices && this.dices.dices;
     diceResult.forEach(_diceResult => {                                       // get the possible spikes to move
       spikeIndex = checker.currentSpike + _diceResult * spikeDirection;
@@ -173,6 +181,25 @@ export class GameController {
     checker.currentSpike = newSpikeIndex;
 
     const diceIndex = this.dices.dices.indexOf(diceResult);
+    this.dices.dices.splice(diceIndex, 1);
+    if (this.dices.dices.length === 0) {
+      this.dices.setShowRollButton(true);
+      Players.nextPlayer();
+    }
+    this.redrawHandler();
+  }
+
+  private bearingOff(checker: Checker) {
+    const position = this.outsideBoard.getNextCheckerPosition(checker.type);
+    checker.setPosition(position);
+    this.spikes[checker.currentSpike].checkers.pop();
+    checker.currentSpike = null;
+    checker.isOffBoard = true;
+    this.outsideBoard.showArrow[Players.playersNamesMap[checker.type]] = false;
+    this.outsideBoard.checkers[Players.playersNamesMap[checker.type]].push(checker);
+
+    const maxDice = Math.max(...this.dices.dices);
+    const diceIndex = this.dices.dices.indexOf(maxDice);
     this.dices.dices.splice(diceIndex, 1);
     if (this.dices.dices.length === 0) {
       this.dices.setShowRollButton(true);

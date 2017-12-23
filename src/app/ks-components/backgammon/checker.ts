@@ -78,7 +78,7 @@ export class Checker {
   };
 
   private mouseClickHandler = ({x, y}) => {
-    if (this.type !== Players.currentState) {
+    if (this.type !== Players.currentState || this.isOffBoard) {
       return;
     }
 
