@@ -62,13 +62,13 @@ export class Dices {
 
   private rollDicesHandler() {
     this.dices = [Math.floor(Math.random() * 6 + 1), Math.floor(Math.random() * 6 + 1)];
-    this.dices = [5, 6];
+
     this.showRollButton = false;
     StateManager.notifyRedraw();
   }
 
   private clickHandler = ({x, y}) => {
-    if (isOverlap(x, y, this.rollButtonPosition.x - 30, this.rollButtonPosition.y - 30, 60, 60)) {
+    if (this.showRollButton && isOverlap(x, y, this.rollButtonPosition.x - 30, this.rollButtonPosition.y - 30, 60, 60)) {
       this.rollDicesHandler();
       Players.nextPlayer();
     }

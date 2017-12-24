@@ -22,12 +22,12 @@ export class OutsideBoard {
 
     this.position = {
       [Players.playersNamesMap[Players.playersMap.black]]: {x: 643, y: 360},
-      [Players.playersNamesMap[Players.playersMap.white]]: {x: 643, y: 135}
+      [Players.playersNamesMap[Players.playersMap.white]]: {x: 643, y: 95}
     };
 
     this.dimensions = {
       width: 35,
-      height: 80
+      height: 120
     };
 
     this.init();

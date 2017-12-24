@@ -4,7 +4,7 @@ import {drawArrow} from "./helpers/uiHelper";
 
 export class Spike {
   private static spikesCount = 0;
-
+  public spikeIndex;
   public checkers: Checker [];
   public x: number;  // todo - check readonly usage
   public y: number;
@@ -12,6 +12,7 @@ export class Spike {
   private showValidMove;
 
   constructor(x: number, y: number, direction: string) {
+    this.spikeIndex = Spike.spikesCount;
     Spike.spikesCount++;
     this.x = x;
     this.y = y;

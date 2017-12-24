@@ -28,6 +28,8 @@ export class Players {
     Players.currentState = (Players.currentState + 1) % 4;
   }
 
+  private winningPlayer = -1;
+
   constructor() {
     this.init()
   }
@@ -54,6 +56,10 @@ export class Players {
       Canvas.context.fillStyle = 'white';
       Canvas.context.fillText('Skip', 160, 30);
     }
+
+    if(this.winningPlayer >= 0 ){
+      this.showWinningPlayer(this.winningPlayer)
+    }
   }
 
   private skipTurn({x, y}) {
@@ -67,5 +73,15 @@ export class Players {
       StateManager.notifyRedraw();
       Players.showsSkipButton = false;
     }
+  }
+
+  public showWinningPlayer(playerType){
+    this.winningPlayer = playerType;
+    Canvas.context.fillStyle='rgba(0,0,0,0.5)';
+    Canvas.context.fillRect(0,0,684,575);
+
+    Canvas.context.font = '40px serif';
+    Canvas.context.fillStyle = 'white';
+    Canvas.context.fillText(`${Players.playersNamesMap[playerType]} Won!`, 250, 270);
   }
 }

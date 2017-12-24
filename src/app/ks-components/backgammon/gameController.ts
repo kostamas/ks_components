@@ -36,13 +36,14 @@ export class GameController {
     // ['18']: {type: Players.playersMap.black, num: 5},
     // ['23']: {type: Players.playersMap.white, num: 2},
 
-    ['0']: {type: Players.playersMap.white, num: 2},
-    ['1']: {type: Players.playersMap.white, num: 5},
-    ['2']: {type: Players.playersMap.white, num: 3},
-    ['4']: {type: Players.playersMap.white, num: 5},
-    ['20']: {type: Players.playersMap.black, num: 5},
+    ['20']: {type: Players.playersMap.black, num: 2},
+    ['2']: {type: Players.playersMap.white, num: 5},
+    ['3']: {type: Players.playersMap.white, num: 3},
     ['21']: {type: Players.playersMap.black, num: 5},
-    ['22']: {type: Players.playersMap.black, num: 5},
+    ['4']: {type: Players.playersMap.white, num: 5},
+    ['22']: {type: Players.playersMap.black, num: 3},
+    ['23']: {type: Players.playersMap.black, num: 5},
+    ['1']: {type: Players.playersMap.white, num: 2},
   };
 
   constructor() {
@@ -134,7 +135,7 @@ export class GameController {
 
     for (let i = 0; i < relevantSpikes.length; i++) {
       if (this.canMoveChecker(x, y, relevantSpikes, i, checker)) {
-        this.moveChecker(checker, relevantSpikes[i], diceResult[i]);
+        this.moveChecker(checker, relevantSpikes[i]);
         if (this.dices.dices.length > 0) {
           const showNextPlayerBtn = this.showSkipBtn(this.currentPlayerType);
           if (showNextPlayerBtn) {
@@ -158,7 +159,8 @@ export class GameController {
     this.redrawHandler();
   };
 
-  private moveChecker(checker, newSpike, diceResult) {
+  private moveChecker(checker, newSpike) {
+    const diceResult = Math.abs(checker.currentSpike - newSpike.spikeIndex);
     const spikeDirection = this.getSpikeDirection(checker.type);
     const newSpikeIndex = checker.currentSpike + diceResult * spikeDirection;
 
@@ -186,6 +188,7 @@ export class GameController {
       this.dices.setShowRollButton(true);
       Players.nextPlayer();
     }
+    this.outsideBoard.showArrow[Players.playersNamesMap[checker.type]] = false;
     this.redrawHandler();
   }
 
@@ -201,6 +204,16 @@ export class GameController {
     const maxDice = Math.max(...this.dices.dices);
     const diceIndex = this.dices.dices.indexOf(maxDice);
     this.dices.dices.splice(diceIndex, 1);
+    this.spikes.forEach(spike => spike.setShowValidMove(false));
+
+    const numOfOffBoardCheckers = this.checkers
+      .filter(_checker => _checker.type === checker.type)
+      .reduce((counter: number, _checker: Checker) => _checker.isOffBoard ? counter + 1 : counter, 0);
+
+    if (numOfOffBoardCheckers === BACKGAMMON_CONSTANTS.NUM_OF_CHECKERS / 2) {
+      this.winningHandler(checker.type);
+    }
+
     if (this.dices.dices.length === 0) {
       this.dices.setShowRollButton(true);
       Players.nextPlayer();
@@ -367,5 +380,9 @@ export class GameController {
   private hasOtherOutChecker(checker) {
     return this.bar.checkers[Players.playersNamesMap[checker.type]].length > 0 &&
       this.bar.checkers[Players.playersNamesMap[checker.type]].indexOf(checker) === -1;
+  }
+
+  private winningHandler(playerType) {
+    this.gamePlayers.showWinningPlayer(playerType);
   }
 }
