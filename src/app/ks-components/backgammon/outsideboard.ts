@@ -10,19 +10,19 @@ export class OutsideBoard {
 
   constructor() {
     this.checkers = {
-        [Players.playersNamesMap[Players.playersMap.white]]: [],
-        [Players.playersNamesMap[Players.playersMap.black]]: []
+        [Players.playersNamesMap[Players.playersMap.White]]: [],
+        [Players.playersNamesMap[Players.playersMap.Black]]: []
 
     };
 
     this.showArrow = {
-      [Players.playersNamesMap[Players.playersMap.black]]: false,
-      [Players.playersNamesMap[Players.playersMap.white]]: false
+      [Players.playersNamesMap[Players.playersMap.Black]]: false,
+      [Players.playersNamesMap[Players.playersMap.White]]: false
     };
 
     this.position = {
-      [Players.playersNamesMap[Players.playersMap.black]]: {x: 643, y: 360},
-      [Players.playersNamesMap[Players.playersMap.white]]: {x: 643, y: 95}
+      [Players.playersNamesMap[Players.playersMap.Black]]: {x: 643, y: 360},
+      [Players.playersNamesMap[Players.playersMap.White]]: {x: 643, y: 95}
     };
 
     this.dimensions = {
@@ -53,16 +53,16 @@ export class OutsideBoard {
     Canvas.context.lineWidth = 1;
     Canvas.context.strokeStyle = '#003b0d';
 
-    if (this.showArrow[Players.playersNamesMap[Players.playersMap.black]]) {
-      x = this.position[Players.playersNamesMap[Players.playersMap.black]].x;
-      y = this.position[Players.playersNamesMap[Players.playersMap.black]].y;
+    if (this.showArrow[Players.playersNamesMap[Players.playersMap.Black]]) {
+      x = this.position[Players.playersNamesMap[Players.playersMap.Black]].x;
+      y = this.position[Players.playersNamesMap[Players.playersMap.Black]].y;
       drawArrow([660, 320], [660, 350]);
       Canvas.context.rect(x, y, this.dimensions.width, this.dimensions.height);
       Canvas.context.stroke();
     }
-    if (this.showArrow[Players.playersNamesMap[Players.playersMap.white]]) {
-      x = this.position[Players.playersNamesMap[Players.playersMap.white]].x;
-      y = this.position[Players.playersNamesMap[Players.playersMap.white]].y;
+    if (this.showArrow[Players.playersNamesMap[Players.playersMap.White]]) {
+      x = this.position[Players.playersNamesMap[Players.playersMap.White]].x;
+      y = this.position[Players.playersNamesMap[Players.playersMap.White]].y;
       drawArrow([660, 255], [660, 225]);
       Canvas.context.rect(x, y, this.dimensions.width, this.dimensions.height);
       Canvas.context.stroke();

@@ -71,19 +71,19 @@ const drawArrow = (p1, p2) => {
 const getCheckerSvg = (playerType) => {
   return `<svg class="${playerType}" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="34px" height="34px" viewBox="0 0 124 124">
       <style>
-       .black .inner-circle{
+       .Black .inner-circle{
             fill: #000;
 		    }
 
-		   .white .inner-circle {
+		   .White .inner-circle {
     			    fill: #fff;
 	      }
 	      
-	     .black .outer-circle {
+	     .Black .outer-circle {
 	        fill: #00c228;
 	      }
 	      
-	      .white .outer-circle {
+	      .White .outer-circle {
 	        fill: #2c10ff;
 	      }
       </style>

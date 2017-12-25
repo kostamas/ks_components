@@ -43,10 +43,6 @@ export class Dices {
     }
   }
 
-  private drawOneDice(svgImgKey, x) {
-    Canvas.context.drawImage(this.svgImg[svgImgKey], x, 535);
-  }
-
   public drawRollButton() {
     Canvas.context.beginPath();
     Canvas.context.arc(598, 288, 30, 0, 2 * Math.PI, false);
@@ -63,6 +59,9 @@ export class Dices {
   private rollDicesHandler() {
     this.dices = [Math.floor(Math.random() * 6 + 1), Math.floor(Math.random() * 6 + 1)];
 
+    if (this.dices[0] === this.dices[1]) {
+      this.dices = [this.dices[0], this.dices[0], this.dices[0], this.dices[0]];
+    }
     this.showRollButton = false;
     StateManager.notifyRedraw();
   }
@@ -76,10 +75,21 @@ export class Dices {
 
   private drawDicesResult() {
     const dicesXPosition = [290, 360];
+    const numOfDicesToDraw = this.dices.length > 2 ? 2 : this.dices.length;
 
-    this.dices.forEach((diceResult, index) => {
-      this.drawOneDice(diceResult, dicesXPosition[index]);
-    });
+    for (let i = 0; i < numOfDicesToDraw; i++) {
+      this.drawOneDice(this.dices[i], dicesXPosition[i]);
+    }
+
+    if (this.dices.length > 2) {
+      Canvas.context.font = '25px serif';
+      Canvas.context.fillStyle = 'white';
+      Canvas.context.fillText(`${this.dices.length - 2}+`, 410, 560);
+    }
+  }
+
+  private drawOneDice(svgImgKey, x) {
+    Canvas.context.drawImage(this.svgImg[svgImgKey], x, 535);
   }
 
   public drawDices() {

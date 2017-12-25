@@ -4,21 +4,15 @@ import {isOverlap} from "./helpers/backgammonUtils";
 
 export class Players {
   public static playersMap = {
-    black: 1,
-    white: 3
+    Black: 1,
+    White: 3
   }
 
   public static playersNamesMap = {
-    [Players.playersMap.black]: 'black',
-    [Players.playersMap.white]: 'white'
+    [Players.playersMap.Black]: 'Black',
+    [Players.playersMap.White]: 'White'
   }
 
-  public static playerStates = {
-    0: 'none',
-    1: 'black',
-    2: 'none',
-    3: 'white'
-  }
 
   public static currentState = 0;
 
