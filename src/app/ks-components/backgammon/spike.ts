@@ -27,7 +27,7 @@ export class Spike {
 
   public getNextCheckerPosition(index?) {
     let yOffset;
-    if(index || index === 0){
+    if (index || index === 0) {
       yOffset = index * BACKGAMMON_CONSTANTS.CHECKERS_SIZE
     } else {
       yOffset = this.checkers.length < 5 ?
@@ -60,5 +60,10 @@ export class Spike {
 
   public setShowValidMove(showValidMove) {
     this.showValidMove = showValidMove;
+  }
+
+  public static destroy() {
+    Spike.spikesCount = 0;
+
   }
 }

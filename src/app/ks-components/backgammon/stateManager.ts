@@ -12,7 +12,8 @@ export class StateManager {
 
   private static subscriptions;
 
-  constructor() {
+  public init() {
+
     StateManager.mouseMove$ = new Subject();
     StateManager.mouseClick$ = new Subject();
     StateManager.redraw$ = new Subject();
@@ -21,27 +22,27 @@ export class StateManager {
     StateManager.selectChecker$ = new Subject();
     StateManager.skipPlayer$ = new Subject();
 
-    StateManager.subscriptions = {move: [], click: []};
+    StateManager.subscriptions = [];
 
-    StateManager.init();
+    Canvas.canvas.addEventListener('mousemove', StateManager.mouseMoveHandler);
+
+    Canvas.canvas.addEventListener('click', StateManager.mouseClickHandler);
   }
 
-  private static init() {
-    Canvas.canvas.addEventListener('mousemove', ($event) => {
-      StateManager.mouseMove$.next({x: $event.layerX, y: $event.layerY});
-    });
+  private static mouseMoveHandler = ($event) => {
+    StateManager.mouseMove$.next({x: $event.layerX, y: $event.layerY});
+  }
 
-    Canvas.canvas.addEventListener('click', ($event) => {
-      StateManager.mouseClick$.next({x: $event.layerX, y: $event.layerY});
-    });
+  private static mouseClickHandler = ($event) => {
+    StateManager.mouseClick$.next({x: $event.layerX, y: $event.layerY});
   }
 
   public static onMouseMove(cb, id) {
-    StateManager.subscriptions.move.push({id, subscription: StateManager.mouseMove$.subscribe(cb)});
+    StateManager.subscriptions.push({id, subscription: StateManager.mouseMove$.subscribe(cb)});
   }
 
   public static onMouseClick(cb, id) {
-    StateManager.subscriptions.move.push({id, subscription: StateManager.mouseClick$.subscribe(cb)});
+    StateManager.subscriptions.push({id, subscription: StateManager.mouseClick$.subscribe(cb)});
   }
 
   public static notifyRedraw() {
@@ -49,7 +50,7 @@ export class StateManager {
   }
 
   public static onRedraw(cb, id?) {
-    StateManager.subscriptions.move.push({id, subscription: StateManager.redraw$.subscribe(cb)});
+    StateManager.subscriptions.push({id, subscription: StateManager.redraw$.subscribe(cb)});
   }
 
   public static notifySelectedCheckerMove(data) {
@@ -62,7 +63,7 @@ export class StateManager {
   }
 
   public static onSelectedCheckerDrop(cb, id?) {
-    StateManager.subscriptions.move.push({id, subscription: StateManager.mouseDrop$.subscribe(cb)});
+    StateManager.subscriptions.push({id, subscription: StateManager.mouseDrop$.subscribe(cb)});
   }
 
   public static notifySelectChecker(data) {
@@ -70,7 +71,7 @@ export class StateManager {
   }
 
   public static onSelectChecker(cb, id?) {
-    StateManager.subscriptions.move.push({id, subscription: StateManager.selectChecker$.subscribe(cb)});
+    StateManager.subscriptions.push({id, subscription: StateManager.selectChecker$.subscribe(cb)});
   }
 
   public static notifySkipPlayer() {
@@ -78,9 +79,15 @@ export class StateManager {
   }
 
   public static onSkipPlayer(cb, id?) {
-    StateManager.subscriptions.move.push({id, subscription: StateManager.skipPlayer$.subscribe(cb)});
+    StateManager.subscriptions.push({id, subscription: StateManager.skipPlayer$.subscribe(cb)});
   }
 
   public static removeSubscriptions() {
+    StateManager.subscriptions.forEach(subscriptionData => {
+      subscriptionData.subscription.unsubscribe();
+    });
+
+    Canvas.canvas.removeEventListener('mousemove', StateManager.mouseMoveHandler);
+    Canvas.canvas.removeEventListener('click', StateManager.mouseClickHandler);
   }
 }

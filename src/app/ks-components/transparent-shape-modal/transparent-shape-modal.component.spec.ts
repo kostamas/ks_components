@@ -23,7 +23,7 @@ describe('TransparentShapeModalComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TransparentShapeModalComponent);
-    debugger;
+
     component = fixture.componentInstance;
     component.position = {left:30,top:30};
     component.circleRadius= 50;

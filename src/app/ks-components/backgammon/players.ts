@@ -25,7 +25,7 @@ export class Players {
   private winningPlayer = -1;
 
   constructor() {
-    this.init()
+    this.init();
   }
 
   private init() {
@@ -51,7 +51,7 @@ export class Players {
       Canvas.context.fillText('Skip', 160, 30);
     }
 
-    if(this.winningPlayer >= 0 ){
+    if (this.winningPlayer >= 0) {
       this.showWinningPlayer(this.winningPlayer)
     }
   }
@@ -69,13 +69,18 @@ export class Players {
     }
   }
 
-  public showWinningPlayer(playerType){
+  public showWinningPlayer(playerType) {
     this.winningPlayer = playerType;
-    Canvas.context.fillStyle='rgba(0,0,0,0.5)';
-    Canvas.context.fillRect(0,0,684,575);
+    Canvas.context.fillStyle = 'rgba(0,0,0,0.5)';
+    Canvas.context.fillRect(0, 0, 684, 575);
 
     Canvas.context.font = '40px serif';
     Canvas.context.fillStyle = 'white';
     Canvas.context.fillText(`${Players.playersNamesMap[playerType]} Won!`, 250, 270);
+  }
+
+  public static destroy() {
+    Players.currentState = 0;
+    Players.showsSkipButton = false;
   }
 }

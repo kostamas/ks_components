@@ -7,7 +7,6 @@ import {Players} from './players';
 import {drawBackground} from './helpers/uiHelper';
 import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
 import {OutsideBoard} from './outsideboard';
-import {Canvas} from "./canvas";
 
 export class GameController {
   private spikes: Spike[];
@@ -377,5 +376,11 @@ export class GameController {
 
   private winningHandler(playerType) {
     this.gamePlayers.showWinningPlayer(playerType);
+  }
+
+  public destroy() {
+    Checker.destroy();
+    Spike.destroy();
+    Players.destroy();
   }
 }

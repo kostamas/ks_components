@@ -19,8 +19,8 @@ export class Checker {
   private isHovered;
   private isClicked;
   private svgData;
-  private animFrame = null;
-  private timeout = null;
+  private static animFrame = null;
+  private static timeout = null;
 
   constructor(x, y, type, currentSpike) {
     Checker.checkersCount++;
@@ -86,9 +86,9 @@ export class Checker {
       StateManager.notifySelectedCheckerDrop({x, y, checker: this});
       this.isClicked = false;
       Checker.selectedCheckers[this.type] = false;
-      window.cancelAnimationFrame(this.animFrame);
-      clearTimeout(this.timeout);
-      this.animFrame = null;
+      window.cancelAnimationFrame(Checker.animFrame);
+      clearTimeout(Checker.timeout);
+      Checker.animFrame = null;
       this.drawChecker();
     } else {
       if (!Checker.selectedCheckers[this.type] &&
@@ -113,9 +113,9 @@ export class Checker {
       Canvas.context.translate((this.x + this.radius) * -1, (this.y + this.radius) * -1);
       Canvas.context.restore();
       degrees += 20;
-      this.timeout = setTimeout(() => this.animFrame = window.requestAnimationFrame(animatFn), 100);
+      Checker.timeout = setTimeout(() => Checker.animFrame = window.requestAnimationFrame(animatFn), 100);
     };
-    this.animFrame = window.requestAnimationFrame(animatFn);
+    Checker.animFrame = window.requestAnimationFrame(animatFn);
   };
 
   private initPosition() {
@@ -143,6 +143,14 @@ export class Checker {
 
   public getCheckerId() {
     return this.id;
+  }
+
+  public static destroy() {
+    Checker.checkersCount = 0;
+    Checker.selectedCheckers = {};
+    window.cancelAnimationFrame(Checker.animFrame);
+    clearTimeout(Checker.timeout);
+    Checker.animFrame = null;
   }
 
   // todo - create clear functions for mousemove, click, subscriptions...
