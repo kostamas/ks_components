@@ -10,6 +10,6 @@ export class BackgammonAdapterComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-  }
 
+  }
 }

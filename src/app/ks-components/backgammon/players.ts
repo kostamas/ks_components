@@ -1,5 +1,5 @@
 import {Canvas} from "./canvas";
-import {StateManager} from "./stateManager";
+import {BackgammonStateManager} from "./backgammonStateManager";
 import {isOverlap} from "./helpers/backgammonUtils";
 
 export class Players {
@@ -29,7 +29,7 @@ export class Players {
   }
 
   private init() {
-    StateManager.onMouseClick(this.skipTurn, 'player');
+    BackgammonStateManager.onMouseClick(this.skipTurn, 'player');
     this.drawPlayer();
   }
 
@@ -63,8 +63,8 @@ export class Players {
       } else {
         Players.currentState = 0
       }
-      StateManager.notifySkipPlayer();
-      StateManager.notifyRedraw();
+      BackgammonStateManager.notifySkipPlayer();
+      BackgammonStateManager.notifyRedraw();
       Players.showsSkipButton = false;
     }
   }

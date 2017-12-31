@@ -1,5 +1,5 @@
 import {Canvas} from './canvas';
-import {StateManager} from './stateManager';
+import {BackgammonStateManager} from './backgammonStateManager';
 import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
 import {isOverlap} from './helpers/backgammonUtils';
 import {calcPointsCircle, getCheckerSvg} from './helpers/uiHelper';
@@ -12,9 +12,9 @@ export class Checker {
   private checkerSvgImg;
   private x;
   private y;
-  public type; // todo use readonly
-  public currentSpike; // todo use readonly
-  public isOffBoard = false; // todo use readonly
+  public type;
+  public currentSpike;
+  public isOffBoard = false;
   private radius;
   private isHovered;
   private isClicked;
@@ -45,8 +45,8 @@ export class Checker {
   }
 
   private subscribeToMouseEvents = () => {
-    StateManager.onMouseClick(this.mouseClickHandler, this.id);
-    StateManager.onMouseMove(this.mouseMoveHandler, this.id);
+    BackgammonStateManager.onMouseClick(this.mouseClickHandler, this.id);
+    BackgammonStateManager.onMouseMove(this.mouseMoveHandler, this.id);
   };
 
   private mouseMoveHandler = ({x, y}) => {
@@ -55,8 +55,8 @@ export class Checker {
     }
 
     if (this.isClicked) {
-      StateManager.notifySelectedCheckerMove({x, y, checkerId: this.id});
-      StateManager.notifyRedraw();
+      BackgammonStateManager.notifySelectedCheckerMove({x, y, checkerId: this.id});
+      BackgammonStateManager.notifyRedraw();
       this.x = x - this.radius * 1.5;
       this.y = y - this.radius * 1.5;
     }
@@ -83,7 +83,7 @@ export class Checker {
     }
 
     if (this.isClicked) {
-      StateManager.notifySelectedCheckerDrop({x, y, checker: this});
+      BackgammonStateManager.notifySelectedCheckerDrop({x, y, checker: this});
       this.isClicked = false;
       Checker.selectedCheckers[this.type] = false;
       window.cancelAnimationFrame(Checker.animFrame);
@@ -96,7 +96,7 @@ export class Checker {
         this.isClicked = true;
         Checker.selectedCheckers[this.type] = true;
         this.animateSelectedChecker();
-        StateManager.notifySelectChecker({x, y, checker: this});
+        BackgammonStateManager.notifySelectChecker({x, y, checker: this});
       }
     }
   };

@@ -6,7 +6,7 @@ export class Spike {
   private static spikesCount = 0;
   public spikeIndex;
   public checkers: Checker [];
-  public x: number;  // todo - check readonly usage
+  public x: number;
   public y: number;
   public direction: string;
   private showValidMove;

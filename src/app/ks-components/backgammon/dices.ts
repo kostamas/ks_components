@@ -1,6 +1,6 @@
 import {getDiceSvg} from './helpers/uiHelper';
 import {Canvas} from './canvas';
-import {StateManager} from './stateManager';
+import {BackgammonStateManager} from './backgammonStateManager';
 import {isOverlap} from './helpers/backgammonUtils';
 import {Players} from './players';
 
@@ -21,7 +21,7 @@ export class Dices {
 
   private init() {
     this.drawRollButton();
-    StateManager.onMouseClick(this.clickHandler, 'Dices');
+    BackgammonStateManager.onMouseClick(this.clickHandler, 'Dices');
 
     for (let diceNum = 1; diceNum < 7; diceNum++) {
 
@@ -63,7 +63,7 @@ export class Dices {
       this.dices = [this.dices[0], this.dices[0], this.dices[0], this.dices[0]];
     }
     this.showRollButton = false;
-    StateManager.notifyRedraw();
+    BackgammonStateManager.notifyRedraw();
   }
 
   private clickHandler = ({x, y}) => {

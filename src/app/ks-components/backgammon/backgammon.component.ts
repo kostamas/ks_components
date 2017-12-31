@@ -1,6 +1,6 @@
-import {AfterViewInit, Component, OnDestroy, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, NgZone, OnDestroy, ViewChild} from '@angular/core';
 import {Canvas} from "./canvas";
-import {StateManager} from "./stateManager";
+import {BackgammonStateManager} from "./backgammonStateManager";
 import {GameController} from "./gameController";
 
 @Component({
@@ -9,10 +9,9 @@ import {GameController} from "./gameController";
   styleUrls: ['./backgammon.component.scss']
 })
 export class BackgammonComponent implements AfterViewInit, OnDestroy {
-  private gameCtrl;
   @ViewChild('canvas') canvas;
 
-  constructor() {
+  constructor(private zone: NgZone, private gameController: GameController) {
   }
 
   ngAfterViewInit() {
@@ -20,14 +19,16 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   }
 
   private init() {
-    Canvas.canvas = this.canvas.nativeElement;
-    Canvas.context = this.canvas.nativeElement.getContext("2d");
-    new StateManager().init();
-    this.gameCtrl = new GameController();
+    this.zone.runOutsideAngular(() => {
+      Canvas.canvas = this.canvas.nativeElement;
+      Canvas.context = this.canvas.nativeElement.getContext("2d");
+      new BackgammonStateManager().init();
+      this.gameController.init();
+    });
   }
 
   ngOnDestroy() {
-    StateManager.removeSubscriptions();
-    this.gameCtrl.destroy();
+    BackgammonStateManager.removeSubscriptions();
+    this.gameController.destroy();
   }
 }
