@@ -18,7 +18,6 @@ export class Spike {
     this.y = y;
     this.direction = direction;
     this.checkers = [];
-    this.init();
   }
 
   public addChecker(checker) {
@@ -39,10 +38,6 @@ export class Spike {
     return {x: this.x, y};
   }
 
-  private init() {
-
-  }
-
   public drawSpike() {
     if (this.showValidMove) {
       let p1, p2;
@@ -60,6 +55,10 @@ export class Spike {
 
   public setShowValidMove(showValidMove) {
     this.showValidMove = showValidMove;
+  }
+
+  public clearCheckers() {
+    this.checkers = []
   }
 
   public static destroy() {

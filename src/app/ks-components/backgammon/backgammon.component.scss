@@ -1,6 +1,37 @@
 @import '../../scss/main';
 
-.canvas-wrapper{
-  @include dimension(684px, 575px);
-  margin: 10px auto;
+.backgammon-container {
+
+  .online-option {
+    @include dimension(65px, 65px);
+    @include text-style(20px, $malachite);
+    position: absolute;
+    left: 52px;
+    top: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50px;
+    background-color: $hintOfRed;
+    box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
+    cursor: pointer;
+  }
+
+  .online-game-form {
+    @include dimension(400px, 400px);
+    @include text-style(20px, $malachite);
+    margin: 40px auto;
+    background-color: $white;
+    box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
+    padding: 10px;
+
+    .input{
+      margin-top: 10px;
+    }
+  }
+
+  .canvas-wrapper {
+    @include dimension(684px, 575px);
+    margin: 10px auto;
+  }
 }

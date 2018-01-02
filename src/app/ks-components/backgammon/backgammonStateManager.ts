@@ -11,6 +11,7 @@ export class BackgammonStateManager {
   private static mouseDrop$: Subject<any>;
   private static selectChecker$: Subject<any>;
   private static skipPlayer$: Subject<any>;
+  private static game$: Subject<any>;
 
   private static subscriptions;
 
@@ -26,6 +27,7 @@ export class BackgammonStateManager {
     BackgammonStateManager.mouseDrop$ = new Subject();
     BackgammonStateManager.selectChecker$ = new Subject();
     BackgammonStateManager.skipPlayer$ = new Subject();
+    BackgammonStateManager.game$ = new Subject();
 
     BackgammonStateManager.subscriptions = [];
 
@@ -86,6 +88,14 @@ export class BackgammonStateManager {
 
   public static onSkipPlayer(cb, id?) {
     BackgammonStateManager.subscriptions.push({id, subscription: BackgammonStateManager.skipPlayer$.subscribe(cb)});
+  }
+
+  public static notifyGame(newGameState) {
+    BackgammonStateManager.game$.next(newGameState);
+  }
+
+  public static onGame(cb, id?) {
+    BackgammonStateManager.subscriptions.push({id, subscription: BackgammonStateManager.game$.subscribe(cb)});
   }
 
   public static removeSubscriptions() {

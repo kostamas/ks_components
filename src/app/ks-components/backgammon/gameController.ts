@@ -1,23 +1,23 @@
-import {Spike} from './spike';
-import {Checker} from './checker';
-import {BackgammonStateManager} from './backgammonStateManager';
+import {BackgammonDBService} from "../../adapters/backgammon-adapter/backgammonDB.service";
 import {getSpikeDirection, isOverlap, isValidSpike} from './helpers/backgammonUtils';
-import {Dices} from './dices';
-import {Players} from './players';
-import {drawBackground} from './helpers/uiHelper';
+import {BackgammonStateManager} from './backgammonStateManager';
 import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
+import {drawBackground} from './helpers/uiHelper';
 import {OutsideBoard} from './outsideboard';
 import {Injectable} from "@angular/core";
-import {BackgammonDBService} from "../../adapters/backgammon-adapter/backgammonDB.service";
+import {Players} from './players';
+import {Checker} from './checker';
+import {Spike} from './spike';
+import {Dices} from './dices';
 
 @Injectable()
 export class GameController {
-  private spikes: Spike[];
+  private spikes: Spike[] = [];
   private checkers: Checker[] = [];
   private outsideBoard: OutsideBoard;
   private dices;
   private gamePlayers: Players;
-  private currentPlayerType;
+  private currentState;
   private backgroundImgUrl = 'assets/images/backgammon.jpg';
   private bar;
 
@@ -29,35 +29,26 @@ export class GameController {
     {x: 375, y: 495}, {x: 417, y: 495}, {x: 457, y: 495}, {x: 497, y: 495}, {x: 539, y: 495}, {x: 583, y: 495},
   ];
 
-  private checkersInitData = {
-    ['0']: {type: Players.playersMap.Black, num: 2},
-    ['5']: {type: Players.playersMap.White, num: 5},
-    ['7']: {type: Players.playersMap.White, num: 3},
-    ['11']: {type: Players.playersMap.Black, num: 5},
-    ['12']: {type: Players.playersMap.White, num: 5},
-    ['16']: {type: Players.playersMap.Black, num: 3},
-    ['18']: {type: Players.playersMap.Black, num: 5},
-    ['23']: {type: Players.playersMap.White, num: 2},
-  };
-
   constructor(private backgammonDBService: BackgammonDBService) {
   }
 
-  public init() {
+  public init(gameData) {
     BackgammonStateManager.onSelectedCheckerDrop(this.selectedCheckerDropHandler);
     BackgammonStateManager.onRedraw(this.redrawHandler);
     BackgammonStateManager.onSkipPlayer(this.skipPlayerHandler);
     BackgammonStateManager.onSelectChecker(this.selectCheckerHandler);
 
-    this.backgammonDBService.getGameById('id').subscribe(gameData => {
-      drawBackground(this.backgroundImgUrl).subscribe(() => {
-        this.initSpikes();
-        this.initCheckers(gameData.checkers);
+    drawBackground(this.backgroundImgUrl).subscribe(() => {
+      this.initSpikes();
+      this.initCheckers();
+      this.initBar();
 
-        this.dices = new Dices(gameData.dices);
-        this.gamePlayers = new Players();
-        this.outsideBoard = new OutsideBoard();
-      });
+      this.dices = new Dices();
+      this.gamePlayers = new Players();
+      this.outsideBoard = new OutsideBoard();
+      this.gameHandler(gameData);
+
+      BackgammonStateManager.onGame(this.gameHandler);
     });
   }
 
@@ -65,6 +56,14 @@ export class GameController {
     let spike, direction;
     this.spikes = [];
 
+    for (let i = 0; i < this.spikesPositions.length; i++) {
+      direction = i < this.spikesPositions.length / 2 ? 'down' : 'up';
+      spike = new Spike(this.spikesPositions[i].x, this.spikesPositions[i].y, direction);
+      this.spikes.push(spike);
+    }
+  }
+
+  private initBar() {
     this.bar = {
       checkers: {
         [Players.playersNamesMap[Players.playersMap.White]]: [],
@@ -74,28 +73,18 @@ export class GameController {
         {x: 325, y: 235 + this.bar.checkers[Players.playersNamesMap[Players.playersMap.Black]].length * 7} :
         {x: 325, y: 385 + this.bar.checkers[Players.playersNamesMap[Players.playersMap.White]].length * 7},
     };
-
-    for (let i = 0; i < this.spikesPositions.length; i++) {
-      direction = i < this.spikesPositions.length / 2 ? 'down' : 'up';
-      spike = new Spike(this.spikesPositions[i].x, this.spikesPositions[i].y, direction);
-      this.spikes.push(spike);
-    }
   }
 
-  private initCheckers(checkers) {
-    let playerType, numOfCheckers;
-    debugger;
-    Object.keys(this.checkersInitData).forEach(spikeIndex => {
-      numOfCheckers = this.checkersInitData[spikeIndex].num;
-      playerType = this.checkersInitData[spikeIndex].type;
+  private initCheckers() {
+    for (let i = 0; i < 15; i++) {
+      const checker = new Checker(0, 0, Players.playersMap.Black, null);
+      this.checkers.push(checker);
+    }
 
-      for (let i = 0; i < numOfCheckers; i++) {
-        const position = this.spikes[spikeIndex].getNextCheckerPosition();
-        const checker = new Checker(position.x, position.y, playerType, +spikeIndex);
-        this.checkers.push(checker);
-        this.spikes[spikeIndex].addChecker(checker);
-      }
-    });
+    for (let i = 15; i < 30; i++) {
+      const checker = new Checker(0, 0, Players.playersMap.White, null);
+      this.checkers.push(checker);
+    }
   }
 
   private selectedCheckerDropHandler = ({x, y, checker}) => {
@@ -133,7 +122,7 @@ export class GameController {
       if (this.canMoveChecker(x, y, relevantSpikes, i, checker)) {
         this.moveChecker(checker, relevantSpikes[i]);
         if (this.dices.dices.length > 0) {
-          const showNextPlayerBtn = this.showSkipBtn(this.currentPlayerType);
+          const showNextPlayerBtn = this.showSkipBtn(this.currentState);
           if (showNextPlayerBtn) {
             Players.showsSkipButton = true;
             this.gamePlayers.drawPlayer();
@@ -220,7 +209,6 @@ export class GameController {
   private selectCheckerHandler = ({x, y, checker}) => {
     let checkersArr, spikeIndex;
     const spikeDirection = getSpikeDirection(checker.type, Players);
-
     this.dices.dices.forEach(diceResult => {
       spikeIndex = checker.currentSpike + diceResult * spikeDirection;
       if (isValidSpike(spikeIndex)) {
@@ -313,9 +301,9 @@ export class GameController {
       this.gamePlayers.drawPlayer();
       this.outsideBoard.draw();
 
-      if (Players.currentState !== this.currentPlayerType && Players.currentState % 2 === 1) {
-        this.currentPlayerType = Players.currentState;
-        const showNextPlayerBtn = this.showSkipBtn(this.currentPlayerType);
+      if (Players.currentState !== this.currentState && Players.currentState % 2 === 1) {
+        this.currentState = Players.currentState;
+        const showNextPlayerBtn = this.showSkipBtn(this.currentState);
         if (showNextPlayerBtn) {
           Players.showsSkipButton = true;
           this.gamePlayers.drawPlayer();
@@ -336,6 +324,45 @@ export class GameController {
         }
       }
     }
+  }
+
+  private gameHandler = (gameData) => {
+    this.spikes.forEach(spike => spike.clearCheckers());
+    this.outsideBoard.checkers[Players.playersNamesMap[Players.playersMap.Black]].checkers = [];
+    this.outsideBoard.checkers[Players.playersNamesMap[Players.playersMap.White]].checkers = [];
+
+    this.checkers.forEach(checker => {
+      checker.isOffBoard = gameData.checkers[checker.getCheckerId()].isOffBoard;
+      if (checker.isOffBoard) {
+        this.outsideBoard.checkers[Players.playersNamesMap[checker.type]].push(checker);
+        checker.setPosition(this.outsideBoard.getNextCheckerPosition(checker.type));
+      } else {
+        checker.currentSpike = gameData.checkers[checker.getCheckerId()].currentSpike;
+        if (isValidSpike(checker.currentSpike)) {
+          checker.setPosition(this.spikes[checker.currentSpike].getNextCheckerPosition());
+          this.spikes[checker.currentSpike].checkers.push(checker);
+        } else {
+          checker.setPosition(this.bar.getNextCheckerPosition([Players.playersNamesMap[checker.type]]));
+          this.bar.checkers[Players.playersNamesMap[checker.type]].push(checker)
+        }
+      }
+    });
+
+    this.dices.dices = Object.values(gameData.dices);
+
+    Players.currentState = gameData.currentState;
+    this.currentState = gameData.currentState < 2 ? 1 : 3;
+
+    if (Players.currentState !== this.currentState && Players.currentState % 2 === 1) { // todo - duplication
+      if (this.showSkipBtn(this.currentState)) {
+        Players.showsSkipButton = true;
+        this.gamePlayers.drawPlayer();
+      }
+    }
+
+    this.dices.showRollButton = Players.currentState % 2 === 0;
+
+    this.redrawHandler();
   }
 
   private countWinningCheckers(checkerType) {

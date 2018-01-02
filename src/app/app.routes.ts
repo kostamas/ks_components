@@ -16,6 +16,7 @@ export const routes: Routes = [
   {path: 'image-expander', component: ImageExpanderAdapterComponent},
   {path: 'transparent-shape-modal', component: TransparentShapeModalAdapterComponent},
   {path: 'backgammon', component: BackgammonAdapterComponent},
+  {path: 'backgammon/:gameId', component: BackgammonAdapterComponent},
   {path: '**', component: PageNotFoundComponent}
 ];
 

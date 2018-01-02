@@ -5,9 +5,7 @@ export const isOverlap = (x, y, targetX, targetY, width, height) => {
 
 export const distance = (x1,x2,y1,y2)=>  Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2)* (y1 - y2));
 
-
 export const isValidSpike = (spikeNum) => spikeNum > -1 && spikeNum < 24;
-
 
 export const getSpikeDirection = (playerType, PlayersEnum) =>playerType === PlayersEnum.playersMap.Black ? 1 : -1;
 

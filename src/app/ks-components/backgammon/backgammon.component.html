@@ -1,3 +1,15 @@
-<div class="canvas-wrapper">
-  <canvas #canvas width="684" height="575"></canvas>
+<div class="backgammon-container">
+
+  <div class="online-option" *ngIf="showOnlineOption" (click)="openOnlineGame()">Online</div>
+
+  <form class="online-game-form" [formGroup]="onlineGameForm" *ngIf="showOnlineGame">
+    <div class="input">your name: <input type="text" formControlName="name"></div>
+    <div class="input">password:<input type="text" formControlName="password"></div>
+    <div class="input">second player name:<input type="text" formControlName="secondPlayerName"></div>
+    <div class="players-list">online players:</div>
+  </form>
+
+  <div class="canvas-wrapper" [hidden]="!showCanvas">
+    <canvas #canvas width="684" height="575"></canvas>
+  </div>
 </div>

@@ -84,7 +84,7 @@ export class Dices {
     if (this.dices.length > 2) {
       Canvas.context.font = '25px serif';
       Canvas.context.fillStyle = 'white';
-      Canvas.context.fillText(`${this.dices.length - 2}+`, 410, 560);
+      Canvas.context.fillText(`+${this.dices.length - 2}`, 410, 560);
     }
   }
 
