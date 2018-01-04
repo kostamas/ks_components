@@ -2,7 +2,7 @@
 
 .backgammon-container {
 
-  .online-option {
+  .play-online {
     @include dimension(65px, 65px);
     @include text-style(20px, $malachite);
     position: absolute;
@@ -17,17 +17,75 @@
     cursor: pointer;
   }
 
-  .online-game-form {
-    @include dimension(400px, 400px);
-    @include text-style(20px, $malachite);
-    margin: 40px auto;
+  .online-container.none-state{
+    display: none;
+  }
+
+  .online-container {
+    @include dimension(400px, 320px);
     background-color: $white;
     box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
-    padding: 10px;
+    margin: 40px auto;
+    position: relative;
 
-    .input{
-      margin-top: 10px;
+    .sign-in, .register, .second-player {
+      display: none;
     }
+
+    .sign-in, .register, .second-player {
+      @include text-style(20px, $malachite);
+      padding: 20px 10px;
+
+      .title {
+        @include text-style(22px, $malachite);
+        text-align: center;
+      }
+
+      .input-wrapper {
+        @include dimension(380px, 50px);
+        display: flex;
+        align-items: center;
+        margin-top: 20px;
+        padding-left: 15px;
+
+        .label {
+          @include dimension(100px, auto);
+          display: inline-block;
+        }
+
+        input {
+          @include text-style(18px, $blueLagoon, Lato);
+        }
+      }
+    }
+
+    .register .sign-in-toggle, .sign-in .register-toggle {
+      @include text-style(14px, $lochinvar, Lato);
+      text-align: center;
+      cursor: pointer;
+      &:hover{
+        opacity: 0.7;
+      }
+    }
+
+    &.sign-in-state .sign-in, &.register-state .register, &.second-player-state .second-player {
+      display: block;
+    }
+
+    .submit {
+      @include button-style($feijoa, 20px, 140px, 30px, 1px solid $gallery);
+      margin: 30px auto 0 auto;
+      color: $white;
+      bottom: 30px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+
   }
 
   .canvas-wrapper {

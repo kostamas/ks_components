@@ -4,7 +4,7 @@ import {BackgammonStateManager} from "./backgammonStateManager";
 import {GameController} from "./gameController";
 import {ActivatedRoute} from "@angular/router";
 import {BackgammonDBService} from "../../adapters/backgammon-adapter/backgammonDB.service";
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-backgammon',
@@ -13,15 +13,53 @@ import {FormControl, FormGroup} from "@angular/forms";
 })
 export class BackgammonComponent implements AfterViewInit, OnDestroy {
   public showOnlineOption = true;
-  public showCanvas = true;
-  public showOnlineGame = false;
-  public onlineGameForm;
+  public showCanvas = false;
+  public formGroup: FormGroup;
+  public onlineViewStates = {
+    none: 'none-state',
+    signIn: 'sign-in-state',
+    register: 'register-state',
+    secondPlayer: 'second-player-state'
+  };
+  public currentViewState = this.onlineViewStates.none;
+  public submitButtonsText = {
+    [this.onlineViewStates.signIn]: 'Sign In',
+    [this.onlineViewStates.register]: 'Register',
+    [this.onlineViewStates.secondPlayer]: 'Send Request'
+  };
+  public onlineOrLocalText = {
+    [this.onlineViewStates.none]: 'Online',
+    [this.onlineViewStates.signIn]: 'Local',
+    [this.onlineViewStates.register]: 'Local',
+    [this.onlineViewStates.secondPlayer]: 'Local'
+  }
+  public formMessagesBuilder = {
+    name: {
+      required: {
+        message: 'This is a required field',
+        constrains: {
+          dirty: true
+        }
+      }
+    },
+    password: {
+      required: 'This is a required field'
+    }
+  };
+  public errorMesages = {
+    name:'',
+    password:''
+  }
 
   @ViewChild('canvas') canvas;
 
   constructor(private zone: NgZone, private gameController: GameController,
               private route: ActivatedRoute, private changeDetector: ChangeDetectorRef,
-              private backgammonDBService: BackgammonDBService) {
+              private backgammonDBService: BackgammonDBService, fBuilder: FormBuilder) {
+    this.formGroup = fBuilder.group({
+      name: [null, Validators.required],
+      password: [null, Validators.required]
+    });
   }
 
   ngAfterViewInit() {
@@ -40,15 +78,15 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
         const gameData = this.backgammonDBService.getLocalGame();
         this.startGame(gameData);
         this.showCanvas = true;
-        this.showOnlineGame = false;
+        this.changeDetector.detectChanges();
       }
     });
 
-    this.onlineGameForm = new FormGroup({
-      name: new FormControl(),
-      password: new FormControl(),
-      secondPlayerName: new FormControl()
-    });
+    this.formGroup.statusChanges.subscribe(status => {
+      if (status === 'INVALID') {
+        this.formErrorHandler();
+      }
+    })
   }
 
   private startGame(gameId?) {
@@ -60,9 +98,47 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  public openOnlineGame() {
-    this.showOnlineGame = true;
-    this.showCanvas = false;
+  public playOnlineOrLocal() {
+    if (this.currentViewState === this.onlineViewStates.none) {
+      this.showCanvas = false;
+      this.currentViewState = this.onlineViewStates.signIn;
+    } else {
+      this.showCanvas = true;
+      this.currentViewState = this.onlineViewStates.none;
+    }
+  }
+
+  private formErrorHandler() {
+    let validation, control;
+    Object.keys(this.formGroup.controls).forEach(controlName => {
+      control = this.formGroup.controls[controlName];
+
+      Object.keys(this.formMessagesBuilder[controlName]).forEach(validationName => {
+        validation = this.formMessagesBuilder[controlName][validationName];
+        if(!control.valid){
+          if(validation.constrains){
+            Object.keys(validation.constrains).forEach(constrainName=>{
+              debugger;
+
+            });
+          }
+        }
+        this.errorMesages[controlName] = validation.message;
+        debugger;
+      });
+    })
+  }
+
+  public submit() {
+    debugger;
+    switch (this.currentViewState) {
+      case this.onlineViewStates.signIn:
+        break;
+      case this.onlineViewStates.register:
+        break;
+      default:
+        break;
+    }
   }
 
   ngOnDestroy() {

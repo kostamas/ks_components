@@ -1,13 +1,47 @@
 <div class="backgammon-container">
 
-  <div class="online-option" *ngIf="showOnlineOption" (click)="openOnlineGame()">Online</div>
+  <div class="play-online" *ngIf="showOnlineOption" (click)="playOnlineOrLocal()">
+    {{onlineOrLocalText[currentViewState]}}
+  </div>
 
-  <form class="online-game-form" [formGroup]="onlineGameForm" *ngIf="showOnlineGame">
-    <div class="input">your name: <input type="text" formControlName="name"></div>
-    <div class="input">password:<input type="text" formControlName="password"></div>
-    <div class="input">second player name:<input type="text" formControlName="secondPlayerName"></div>
-    <div class="players-list">online players:</div>
-  </form>
+  <div class="online-container" [ngClass]="currentViewState">
+    <form [formGroup]="formGroup" (ngSubmit)="submit()">
+
+      <div class="sign-in">
+        <div class="title">Sign In</div>
+        <div class="input-wrapper">
+          <div class="label">Name:</div>
+          <input type="text" formControlName="name">
+          <!--<div class="form-error">{{formGroup.controls.name?.errors | json}}</div>-->
+        </div>
+        <div class="input-wrapper">
+          <div class="label">Password:</div>
+          <input type="text" formControlName="password">
+        </div>
+        <div class="register-toggle" (click)="currentViewState=onlineViewStates.register">Register</div>
+      </div>
+
+      <div class="register">
+        <div class="title">Register</div>
+        <div class="input-wrapper">
+          <div class="label">Name:</div>
+          <input type="text" formControlName="name"></div>
+        <div class="input-wrapper">
+          <div class="label">Password:</div>
+          <input type="text" formControlName="password"></div>
+        <div class="sign-in-toggle" (click)="currentViewState=onlineViewStates.signIn">Sign In</div>
+      </div>
+
+      <div class="second-player">
+        <div class="title">Select Player</div>
+        <div></div>
+      </div>
+
+      <!--<button class="submit" type="submit" [disabled]="!formGroup.valid">{{submitButtonsText[currentViewState]}}-->
+      <!--</button>-->
+      <button class="submit" type="submit"></button>
+    </form>
+  </div>
 
   <div class="canvas-wrapper" [hidden]="!showCanvas">
     <canvas #canvas width="684" height="575"></canvas>
