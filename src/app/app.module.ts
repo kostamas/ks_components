@@ -2,6 +2,8 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { AngularFireModule } from 'angularfire2';
+import {AngularFireDatabaseModule} from 'angularfire2/database';
 
 import {AppComponent} from './app.component';
 import {HomeComponent} from './home/home.component';
@@ -9,9 +11,8 @@ import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {Routing} from './app.routes';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AdaptersModulesModule} from './adapters/adapters.module';
-import {KsChat} from './ks-components/ks-chat/ks-chat.module';
-import {HttpClient, HttpClientModule} from "@angular/common/http";
-
+import {HttpClientModule, HttpClient} from '@angular/common/http';
+import {firebaseConfig} from './core/firebase-config';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, '../assets/locale/', '.json');
@@ -21,7 +22,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   declarations: [
     AppComponent,
     HomeComponent,
-    PageNotFoundComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
@@ -36,7 +37,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     }),
     AdaptersModulesModule,
     Routing,
-    KsChat
+    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireDatabaseModule
   ],
   providers: [],
   bootstrap: [AppComponent]

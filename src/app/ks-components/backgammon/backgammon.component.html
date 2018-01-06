@@ -7,29 +7,24 @@
   <div class="online-container" [ngClass]="currentViewState">
     <form [formGroup]="formGroup" (ngSubmit)="submit()">
 
-      <div class="sign-in">
-        <div class="title">Sign In</div>
+      <div [ngClass]="{ 'sign-in':currentViewState===onlineViewStates.signIn,
+                        'register':currentViewState===onlineViewStates.register}">
+        <div class="title">{{currentViewState===onlineViewStates.register ? 'Register': 'Sign In'}}</div>
         <div class="input-wrapper">
           <div class="label">Name:</div>
           <input type="text" formControlName="name">
-          <!--<div class="form-error">{{formGroup.controls.name?.errors | json}}</div>-->
         </div>
+        <div class="form-error">{{formErrorMessages['name']}}</div>
+
         <div class="input-wrapper">
           <div class="label">Password:</div>
           <input type="text" formControlName="password">
         </div>
-        <div class="register-toggle" (click)="currentViewState=onlineViewStates.register">Register</div>
-      </div>
-
-      <div class="register">
-        <div class="title">Register</div>
-        <div class="input-wrapper">
-          <div class="label">Name:</div>
-          <input type="text" formControlName="name"></div>
-        <div class="input-wrapper">
-          <div class="label">Password:</div>
-          <input type="text" formControlName="password"></div>
-        <div class="sign-in-toggle" (click)="currentViewState=onlineViewStates.signIn">Sign In</div>
+        <div class="form-error">{{formErrorMessages['password']}}</div>
+        <div class="sign-in-register-toggle"
+             (click)="toggleSignInRegister()">
+          {{currentViewState===onlineViewStates.signIn ? 'Register': 'Sign In'}}
+        </div>
       </div>
 
       <div class="second-player">
@@ -37,9 +32,9 @@
         <div></div>
       </div>
 
-      <!--<button class="submit" type="submit" [disabled]="!formGroup.valid">{{submitButtonsText[currentViewState]}}-->
-      <!--</button>-->
-      <button class="submit" type="submit"></button>
+      <button class="submit" type="submit" [disabled]="!formGroup.valid">{{submitButtonsText[currentViewState]}}
+      </button>
+
     </form>
   </div>
 

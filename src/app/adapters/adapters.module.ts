@@ -25,7 +25,7 @@ import {TransparentShapeModalModule} from '../ks-components/transparent-shape-mo
 import {TransparentShapeModalAdapterComponent} from './transparent-shape-modal-adapter/transparent-shape-modal-adapter.component';
 import {BackgammonModule} from '../ks-components/backgammon/backgammon.module';
 import {BackgammonAdapterComponent} from './backgammon-adapter/backgammon-adapter.component';
-import {BackgammonDBService} from "./backgammon-adapter/backgammonDB.service";
+import {BackgammonDBService} from './backgammon-adapter/backgammonDB.service';
 
 @NgModule({
   imports: [
@@ -41,7 +41,7 @@ import {BackgammonDBService} from "./backgammon-adapter/backgammonDB.service";
     TransparentShapeModalModule,
     MatSliderModule,
     FormsModule,
-    BackgammonModule.config(new BackgammonDBService())
+    BackgammonModule.config(BackgammonDBService)
   ],
   declarations: [
     SchedulerAdapterComponent,

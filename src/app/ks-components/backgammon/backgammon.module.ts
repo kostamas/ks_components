@@ -3,8 +3,9 @@ import {CommonModule} from '@angular/common';
 import {BackgammonComponent} from './backgammon.component';
 import {GameController} from './gameController';
 import {BackgammonDBService} from '../../adapters/backgammon-adapter/backgammonDB.service';
-import {IBackgammonDb} from './backgammonDb.interface';
+import {IBackgammonSrvCtor} from './backgammonDb.interface';
 import {ReactiveFormsModule} from '@angular/forms';
+import {AngularFireDatabase} from 'angularfire2/database';
 
 @NgModule({
   imports: [
@@ -14,20 +15,21 @@ import {ReactiveFormsModule} from '@angular/forms';
   declarations: [
     BackgammonComponent
   ],
-  entryComponents: [
-  ],
+  entryComponents: [],
   exports: [
     BackgammonComponent
   ],
   providers: [GameController]
 })
 export class BackgammonModule {
-  static config(value: IBackgammonDb): ModuleWithProviders {
+  static config(backgammonSrv: IBackgammonSrvCtor): ModuleWithProviders {
     return {
       ngModule: BackgammonModule,
-      providers: [
-        {provide: BackgammonDBService, useValue: value }
-      ]
+      providers: [{
+        provide: BackgammonDBService,
+        useClass: backgammonSrv,
+        deps: [AngularFireDatabase]
+      }]
     };
   }
 }

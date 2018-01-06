@@ -17,7 +17,7 @@
     cursor: pointer;
   }
 
-  .online-container.none-state{
+  .online-container.none-state {
     display: none;
   }
 
@@ -39,10 +39,11 @@
       .title {
         @include text-style(22px, $malachite);
         text-align: center;
+        margin-bottom: 20px;
       }
 
       .input-wrapper {
-        @include dimension(380px, 50px);
+        @include dimension(380px, 30px);
         display: flex;
         align-items: center;
         margin-top: 20px;
@@ -59,11 +60,18 @@
       }
     }
 
-    .register .sign-in-toggle, .sign-in .register-toggle {
+    .form-error {
+      height: 20px;
+      @include text-style(15px, $roofTerracotta, Lato);
+      text-align: center;
+    }
+
+    .sign-in-register-toggle {
       @include text-style(14px, $lochinvar, Lato);
+      margin-top: 20px;
       text-align: center;
       cursor: pointer;
-      &:hover{
+      &:hover {
         opacity: 0.7;
       }
     }
