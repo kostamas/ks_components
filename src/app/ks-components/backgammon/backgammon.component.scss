@@ -17,22 +17,26 @@
     cursor: pointer;
   }
 
-  .online-container.none-state {
+  .online-game-container.none-state {
     display: none;
   }
 
-  .online-container {
+  .online-game-state form{
+    display: none;
+  }
+
+  .online-game-container {
     @include dimension(400px, 320px);
     background-color: $white;
     box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
     margin: 40px auto;
     position: relative;
 
-    .sign-in, .register, .second-player {
+    .sign-in, .register, .online-game {
       display: none;
     }
 
-    .sign-in, .register, .second-player {
+    .sign-in, .register, .online-game {
       @include text-style(20px, $malachite);
       padding: 20px 10px;
 
@@ -76,7 +80,7 @@
       }
     }
 
-    &.sign-in-state .sign-in, &.register-state .register, &.second-player-state .second-player {
+    &.sign-in-state .sign-in, &.register-state .register, &.online-game-state .online-game {
       display: block;
     }
 

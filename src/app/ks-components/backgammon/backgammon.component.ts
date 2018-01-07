@@ -5,7 +5,7 @@ import {GameController} from './gameController';
 import {ActivatedRoute} from '@angular/router';
 import {BackgammonDBService} from '../../adapters/backgammon-adapter/backgammonDB.service';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {DirtyRequired} from '../../shared/vaildators/dirty-required-validator.validator'
+import {DirtyRequired} from '../../shared/vaildators/dirty-required-validator.validator';
 
 @Component({
   selector: 'app-backgammon',
@@ -16,23 +16,25 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   public showOnlineOption = true;
   public showCanvas = false;
   public formGroup: FormGroup;
+  public onlinePlayers;
+  public selectedPlayer;
   public onlineViewStates = {
     none: 'none-state',
     signIn: 'sign-in-state',
     register: 'register-state',
-    secondPlayer: 'second-player-state'
+    onlineGame: 'online-game-state'
   };
   public currentViewState = this.onlineViewStates.none;
   public submitButtonsText = {
     [this.onlineViewStates.signIn]: 'Sign In',
     [this.onlineViewStates.register]: 'Register',
-    [this.onlineViewStates.secondPlayer]: 'Send Request'
+    [this.onlineViewStates.onlineGame]: 'Send Request'
   };
   public onlineOrLocalText = {
     [this.onlineViewStates.none]: 'Online',
     [this.onlineViewStates.signIn]: 'Local',
     [this.onlineViewStates.register]: 'Local',
-    [this.onlineViewStates.secondPlayer]: 'Local'
+    [this.onlineViewStates.onlineGame]: 'Local'
   };
 
   private formErrorMessagesBuilder = {
@@ -123,7 +125,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   public submit() {
     switch (this.currentViewState) {
       case this.onlineViewStates.signIn:
-        this.sginIn();
+        this.signIn();
       case this.onlineViewStates.register:
         break;
       default:
@@ -139,16 +141,22 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  private sginIn() {
+  private signIn() {
     const name = this.formGroup.value.name;
     const password = this.formGroup.value.password;
     this.backgammonDBService.getUser(name, password).subscribe(user => {
       if (user) {
-        alert('game board');
+        //save to local storage
+        this.onlineGameHandler()
       } else {
         alert('error - user does not exists');
       }
     });
+  }
+
+  private onlineGameHandler(){
+    this.currentViewState = this.onlineViewStates.onlineGame;
+    this.onlinePlayers = this.backgammonDBService.getAllUsers();
   }
 
   ngOnDestroy() {

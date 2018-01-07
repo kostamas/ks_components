@@ -4,11 +4,11 @@
     {{onlineOrLocalText[currentViewState]}}
   </div>
 
-  <div class="online-container" [ngClass]="currentViewState">
+  <div class="online-game-container" [ngClass]="currentViewState">
     <form [formGroup]="formGroup" (ngSubmit)="submit()">
-
       <div [ngClass]="{ 'sign-in':currentViewState===onlineViewStates.signIn,
-                        'register':currentViewState===onlineViewStates.register}">
+                        'register':currentViewState===onlineViewStates.register,
+                        'online-game':currentViewState===onlineViewStates.onlineGame}">
         <div class="title">{{currentViewState===onlineViewStates.register ? 'Register': 'Sign In'}}</div>
         <div class="input-wrapper">
           <div class="label">Name:</div>
@@ -27,15 +27,19 @@
         </div>
       </div>
 
-      <div class="second-player">
-        <div class="title">Select Player</div>
-        <div></div>
-      </div>
-
       <button class="submit" type="submit" [disabled]="!formGroup.valid">{{submitButtonsText[currentViewState]}}
       </button>
-
     </form>
+
+    <div class="online-game">
+      <div class="title">Select Player</div>
+      <select class="select-shape-container" [(ngModel)]="selectedPlayer">
+        <option *ngFor="let shape of shapes" [ngValue]="shape">
+          <div > {{shape}} </div>
+        </option>
+      </select>
+      <div></div>
+    </div>
   </div>
 
   <div class="canvas-wrapper" [hidden]="!showCanvas">
