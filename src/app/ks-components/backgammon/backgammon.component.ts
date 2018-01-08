@@ -70,6 +70,10 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   }
 
   private init() {
+    const localUser: any = JSON.parse(localStorage.getItem('backgammonUser'));
+    if (localUser) {
+      this.invitations = this.backgammonDBService.getInvitations(localUser.userName);
+    }
     this.route.params.subscribe(params => {
       if (params['gameId']) {
         this.backgammonDBService.getGameById(params['gameId']).subscribe(gameData => {
@@ -147,7 +151,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     const password = this.formGroup.value.password;
     this.backgammonDBService.getUser(name, password).subscribe(user => {
       if (user) {
-        //save to local storage
+        localStorage.setItem('backgammonUser', JSON.stringify(user));
         this.onlineGameHandler();
       } else {
         alert('error - user does not exists');

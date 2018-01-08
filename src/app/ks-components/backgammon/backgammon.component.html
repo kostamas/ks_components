@@ -46,8 +46,16 @@
     </div>
 
     <div class="invitations-container">
-      Invitations
-      <div *ngFor="let invitation of invitations | async"> </div>
+
+      <div *ngIf="invitations | async as invitations">
+        Invitations
+        <div *ngIf="invitations.recieved">
+          <div *ngFor="let receivedInvitation of invitations?.recieved | keys">
+            <div>user: {{receivedInvitation}}</div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 

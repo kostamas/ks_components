@@ -7,7 +7,8 @@ import {IBackgammonSrvCtor} from './backgammonDb.interface';
 import {ReactiveFormsModule} from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 
-// import {AngularFireDatabase} from 'angularfire2/database';
+import {AngularFireDatabase} from 'angularfire2/database';
+import {KeysPipe} from '../../../pipes/keys.pipe';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { FormsModule } from '@angular/forms';
     FormsModule
   ],
   declarations: [
-    BackgammonComponent
+    BackgammonComponent,
+    KeysPipe
   ],
   entryComponents: [],
   exports: [
@@ -31,7 +33,7 @@ export class BackgammonModule {
       providers: [{
         provide: BackgammonDBService,
         useClass: backgammonSrv,
-        // deps: [AngularFireDatabase]
+        deps: [AngularFireDatabase]
       }]
     };
   }

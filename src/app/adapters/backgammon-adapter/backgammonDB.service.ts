@@ -5,11 +5,10 @@ import {BackgammonMockData} from './backgammon-mock';
 import {IBackgammonDb} from '../../ks-components/backgammon/backgammonDb.interface';
 import {BackgammonStateManager} from '../../ks-components/backgammon/backgammonStateManager';
 
-// import {AngularFireDatabase} from 'angularfire2/database';
+import {AngularFireDatabase} from 'angularfire2/database';
 
 export class BackgammonDBService implements IBackgammonDb {
-  // constructor(private fireDatabase: AngularFireDatabase) {
-  constructor() {
+  constructor(private fireDatabase: AngularFireDatabase) {
   }
 
   public getGameById(gameId: string) {
@@ -37,5 +36,9 @@ export class BackgammonDBService implements IBackgammonDb {
 
   public getAllUsers() {
     return Observable.of([{name: 'user1'}, {name: 'user2'}, {name: 'user3'}]);
+  }
+
+  public getInvitations(userName) {
+    return this.fireDatabase.object(`users/${userName}/invitations`).valueChanges();
   }
 }
