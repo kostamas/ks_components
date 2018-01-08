@@ -21,7 +21,7 @@
     display: none;
   }
 
-  .online-game-state form{
+  .online-game-state form {
     display: none;
   }
 
@@ -98,6 +98,43 @@
       }
     }
 
+    .online-game {
+      .select-player {
+        @include dimension(230px, 30px);
+        @include text-style(19px, $lochinvar, Lato);
+        display: block;
+        margin: 35px auto 0 auto;
+        padding-bottom: 2px;
+      }
+
+      .online-game-operations {
+        display: flex;
+        justify-content: center;
+        margin-top: 130px;
+
+        .invite, .continue {
+          @include dimension(110px, 26px);
+          @include text-style(19px, $white, Lato);
+          border-radius: 12px;
+          border: 1px solid $nobel;
+          background-color: $conifer;
+          margin: 10px;
+          text-align: center;
+          cursor: pointer;
+          &:hover {
+            opacity: 0.7;
+          }
+        }
+      }
+    }
+
+    .invitations-container {
+      @include dimension(200px, auto);
+      @include text-style(23px, $malachite, Lato);
+      position: absolute;
+      left: 500px;
+      top: 0;
+    }
   }
 
   .canvas-wrapper {

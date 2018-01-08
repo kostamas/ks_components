@@ -18,6 +18,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   public formGroup: FormGroup;
   public onlinePlayers;
   public selectedPlayer;
+  public invitations;
   public onlineViewStates = {
     none: 'none-state',
     signIn: 'sign-in-state',
@@ -147,14 +148,14 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     this.backgammonDBService.getUser(name, password).subscribe(user => {
       if (user) {
         //save to local storage
-        this.onlineGameHandler()
+        this.onlineGameHandler();
       } else {
         alert('error - user does not exists');
       }
     });
   }
 
-  private onlineGameHandler(){
+  private onlineGameHandler() {
     this.currentViewState = this.onlineViewStates.onlineGame;
     this.onlinePlayers = this.backgammonDBService.getAllUsers();
   }

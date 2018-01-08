@@ -33,12 +33,21 @@
 
     <div class="online-game">
       <div class="title">Select Player</div>
-      <select class="select-shape-container" [(ngModel)]="selectedPlayer">
-        <option *ngFor="let shape of shapes" [ngValue]="shape">
-          <div > {{shape}} </div>
+      <select class="select-player" [(ngModel)]="selectedPlayer">
+        <option *ngFor="let player of onlinePlayers | async" [ngValue]="selectedPlayer">
+          <div> {{player.name}}</div>
         </option>
       </select>
-      <div></div>
+
+      <div class="online-game-operations">
+        <div class="invite">Invite</div>
+        <div class="continue">Continue</div>
+      </div>
+    </div>
+
+    <div class="invitations-container">
+      Invitations
+      <div *ngFor="let invitation of invitations | async"> </div>
     </div>
   </div>
 
