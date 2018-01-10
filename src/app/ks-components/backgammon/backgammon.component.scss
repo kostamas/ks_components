@@ -17,11 +17,7 @@
     cursor: pointer;
   }
 
-  .online-game-container.none-state {
-    display: none;
-  }
-
-  .online-game-state form {
+  .online-game-container.none-state, .online-game-state form, .online-game-state .canvas-wrapper {
     display: none;
   }
 
@@ -130,15 +126,36 @@
 
     .invitations-container {
       @include dimension(200px, auto);
-      @include text-style(23px, $malachite, Lato);
+      @include text-style(22px, $electricViolet, Lato);
       position: absolute;
-      left: 500px;
+      left: 460px;
       top: 0;
+
+      .invitation {
+        font-size: 19px;
+        margin-top: 10px;
+        span {
+          color: $malachite;
+          font-size: 21px;
+          cursor: pointer;
+          margin-left: 10px;
+          animation: animateText 0.7s infinite;
+        }
+      }
     }
   }
 
   .canvas-wrapper {
     @include dimension(684px, 575px);
     margin: 10px auto;
+  }
+}
+
+@keyframes animateText {
+  0% {
+    color: $malachite;
+  }
+  50% {
+    color: red;
   }
 }

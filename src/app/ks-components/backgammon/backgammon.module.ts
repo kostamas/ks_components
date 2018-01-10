@@ -8,17 +8,17 @@ import {ReactiveFormsModule} from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 
 import {AngularFireDatabase} from 'angularfire2/database';
-import {KeysPipe} from '../../../pipes/keys.pipe';
+import {SharedModule} from '../../core/sharedModule.module';
 
 @NgModule({
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    SharedModule
   ],
   declarations: [
     BackgammonComponent,
-    KeysPipe
   ],
   entryComponents: [],
   exports: [

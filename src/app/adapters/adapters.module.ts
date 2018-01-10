@@ -26,6 +26,7 @@ import {TransparentShapeModalAdapterComponent} from './transparent-shape-modal-a
 import {BackgammonModule} from '../ks-components/backgammon/backgammon.module';
 import {BackgammonAdapterComponent} from './backgammon-adapter/backgammon-adapter.component';
 import {BackgammonDBService} from './backgammon-adapter/backgammonDB.service';
+import {KeysPipe} from "../../pipes/keys.pipe";
 
 @NgModule({
   imports: [

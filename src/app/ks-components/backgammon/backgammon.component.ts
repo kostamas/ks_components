@@ -14,11 +14,12 @@ import {DirtyRequired} from '../../shared/vaildators/dirty-required-validator.va
 })
 export class BackgammonComponent implements AfterViewInit, OnDestroy {
   public showOnlineOption = true;
-  public showCanvas = false;
+  public showCanvas = true;
   public formGroup: FormGroup;
   public onlinePlayers;
   public selectedPlayer;
   public invitations;
+  public localUser;
   public onlineViewStates = {
     none: 'none-state',
     signIn: 'sign-in-state',
@@ -50,14 +51,13 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   public formErrorMessages = {
     name: '',
     password: ''
-  }
+  };
 
   @ViewChild('canvas') canvas;
 
   constructor(private zone: NgZone, private gameController: GameController,
               private route: ActivatedRoute, private changeDetector: ChangeDetectorRef,
               private backgammonDBService: BackgammonDBService, fBuilder: FormBuilder) {
-
 
     this.formGroup = fBuilder.group({
       name: [null, DirtyRequired],
@@ -72,10 +72,15 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   private init() {
     const localUser: any = JSON.parse(localStorage.getItem('backgammonUser'));
     if (localUser) {
+      this.localUser = localUser;
       this.invitations = this.backgammonDBService.getInvitations(localUser.userName);
+      this.currentViewState = this.onlineViewStates.onlineGame;
+      this.showCanvas = false; // todo - consider to use the online view states
+      this.onlinePlayers = this.backgammonDBService.getAllUsers();
     }
+
     this.route.params.subscribe(params => {
-      if (params['gameId']) {
+      if (params['gameId'] && localUser) {
         this.backgammonDBService.getGameById(params['gameId']).subscribe(gameData => {
           this.startGame(gameData);
           this.showCanvas = true;
@@ -84,7 +89,6 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
       } else {
         const gameData = this.backgammonDBService.getLocalGame();
         this.startGame(gameData);
-        this.showCanvas = true;
         this.changeDetector.detectChanges();
       }
     });
@@ -108,8 +112,13 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
 
   public playOnlineOrLocal() {
     if (this.currentViewState === this.onlineViewStates.none) {
-      this.showCanvas = false;
-      this.currentViewState = this.onlineViewStates.signIn;
+      if (this.localUser) {
+        this.showCanvas = false;
+        this.currentViewState = this.onlineViewStates.onlineGame;
+      } else {
+        this.showCanvas = false;
+        this.currentViewState = this.onlineViewStates.signIn;
+      }
     } else {
       this.showCanvas = true;
       this.currentViewState = this.onlineViewStates.none;
