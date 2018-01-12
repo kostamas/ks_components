@@ -73,10 +73,10 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     const localUser: any = JSON.parse(localStorage.getItem('backgammonUser'));
     if (localUser) {
       this.localUser = localUser;
-      this.invitations = this.backgammonDBService.getInvitations(localUser.userName);
+      this.invitations = this.backgammonDBService.getInvitations(localUser.name);
       this.currentViewState = this.onlineViewStates.onlineGame;
       this.showCanvas = false; // todo - consider to use the online view states
-      this.onlinePlayers = this.backgammonDBService.getAllUsers();
+      this.onlineGameHandler();
     }
 
     this.route.params.subscribe(params => {
@@ -170,7 +170,44 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
 
   private onlineGameHandler() {
     this.currentViewState = this.onlineViewStates.onlineGame;
-    this.onlinePlayers = this.backgammonDBService.getAllUsers();
+    this.onlinePlayers = this.backgammonDBService.getAllUsers(this.localUser)
+      .do((players: any) => {
+        if (this.selectedPlayer) {
+          const updatedSelectedPlayer = players.filter(player => player.name === this.selectedPlayer.name)[0];
+          if (updatedSelectedPlayer) {
+            this.selectedPlayer = updatedSelectedPlayer;
+          } else {
+            this.selectedPlayer = players[0];
+          }
+        } else {
+          this.selectedPlayer = players[0];
+        }
+      });
+  }
+
+  public checkIfOpenGameExists(selectedPlayer) {
+    if (!this.localUser || !this.localUser.gameIds || !selectedPlayer || !selectedPlayer.gameIds) {
+      return false;
+    }
+
+    return Object.keys(this.localUser.gameIds)
+        .filter(gameId => !!selectedPlayer.gameIds.gameId)
+        .length >= 0;
+  }
+
+  public checkIfCanInvite(selectedPlayer) {
+    return !this.checkIfOpenGameExists(selectedPlayer) &&
+      (!selectedPlayer || !selectedPlayer.invitations ||
+        (
+          (!selectedPlayer.invitations.sent || !selectedPlayer.invitations.sent[this.localUser.name])
+          &&
+          (!selectedPlayer.invitations.received || !selectedPlayer.invitations.received[this.localUser.name])
+        )
+      );
+  }
+
+  public sendInvitation() {
+    this.backgammonDBService.sendInvitation(this.localUser, this.selectedPlayer);
   }
 
   ngOnDestroy() {

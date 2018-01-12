@@ -34,24 +34,36 @@
     <div class="online-game">
       <div class="title">Select Player</div>
       <select class="select-player" [(ngModel)]="selectedPlayer">
-        <option *ngFor="let player of onlinePlayers | async" [ngValue]="selectedPlayer">
+        <option *ngFor="let player of (onlinePlayers | async)" [ngValue]="player">
           <div> {{player.name}}</div>
         </option>
       </select>
 
       <div class="online-game-operations">
-        <div class="invite">Invite</div>
-        <div class="continue">Continue</div>
+        <div class="invite"
+             (click)="sendInvitation()"
+             *ngIf="checkIfCanInvite(selectedPlayer)">
+          Invite
+        </div>
+        <div class="continue" *ngIf="checkIfOpenGameExists(selectedPlayer)">Continue</div>
       </div>
     </div>
 
     <div class="invitations-container">
 
       <div *ngIf="invitations | async as invitations">
-        Invitations:<br/>
-        <div *ngIf="invitations.recieved">
+        Invitations:
+        <div class="received-invitations" *ngIf="invitations.recieved">
+          <div>Received:</div>
           <div *ngFor="let receivedInvitation of invitations?.recieved | keys">
             <div class="invitation">user: {{receivedInvitation}} <span>accept</span></div>
+          </div>
+        </div>
+
+        <div class="sent-invitations" *ngIf="invitations.sent">
+          <div>Sent:</div>
+          <div *ngFor="let sentInvitation of invitations?.sent | keys">
+            <div class="invitation">user: {{sentInvitation}}</div>
           </div>
         </div>
       </div>

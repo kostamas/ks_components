@@ -34,11 +34,34 @@ export class BackgammonDBService implements IBackgammonDb {
 
   }
 
-  public getAllUsers() {
-    return Observable.of([{name: 'user1'}, {name: 'user2'}, {name: 'user3'}]);
+  public getAllUsers(localUser) {
+    const usersArr = [];
+    return this.fireDatabase.object(`users/`)
+      .valueChanges()
+      .map((users: any) => {
+        usersArr.length = 0;
+        Object.keys(users).forEach(userKey => {
+          if (users[userKey].name !== localUser.name) {
+            usersArr.push({
+              name: users[userKey].name,
+              gameIds: users[userKey].gameIds,
+              invitations: users[userKey].invitations
+            });
+          }
+        });
+        return usersArr;
+      });
+
   }
 
   public getInvitations(userName) {
     return this.fireDatabase.object(`users/${userName}/invitations`).valueChanges();
+  }
+
+  public sendInvitation(localPlayer, selectedPlayer) {
+    this.fireDatabase.object(`users/${selectedPlayer.name}/invitations/received/${localPlayer.name}`)
+      .set(localPlayer.name);
+    this.fireDatabase.object(`users/${localPlayer.name}/invitations/sent/${selectedPlayer.name}`)
+      .set(selectedPlayer.name);
   }
 }
