@@ -22,7 +22,7 @@ export class Players {
     Players.currentState = (Players.currentState + 1) % 4;
   }
 
-  private winningPlayer = -1;
+  public winningPlayer = -1;
 
   constructor() {
     this.init();

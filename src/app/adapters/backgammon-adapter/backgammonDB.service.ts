@@ -6,6 +6,7 @@ import {IBackgammonDb} from '../../ks-components/backgammon/backgammonDb.interfa
 import {BackgammonStateManager} from '../../ks-components/backgammon/backgammonStateManager';
 
 import {AngularFireDatabase} from 'angularfire2/database';
+import {initialState} from '../../ks-components/backgammon/helpers/initialGameState';
 
 export class BackgammonDBService implements IBackgammonDb {
   constructor(private fireDatabase: AngularFireDatabase) {
@@ -24,14 +25,25 @@ export class BackgammonDBService implements IBackgammonDb {
   }
 
   public getUser(userName, password) {
-    // return this.fireDatabase.object(`users/${userName}`)
-    //   .valueChanges()
-    //   .map((user: any) => user && user.password === password ? user : null);
-    return Observable.of({userName, password});
+    return this.fireDatabase.object(`users/${userName}`)
+      .valueChanges()
+      .map((user: any) => user && String(user.password) === String(password) ? user : null);
   }
 
   public createNewUser(userName, password) {
-
+    return this.fireDatabase.object(`users/${userName}`)
+      .valueChanges()
+      .take(1)
+      .switchMap((user: any) => {
+        let observable;
+        if (user) {
+          observable = Observable.of({error: 'user name already exists'});
+        } else {
+          observable = Observable.fromPromise(this.fireDatabase.object(`users/${userName}`)
+            .set({name: userName, password}));
+        }
+        return observable;
+      })
   }
 
   public getAllUsers(localUser) {
@@ -56,6 +68,36 @@ export class BackgammonDBService implements IBackgammonDb {
 
   public getInvitations(userName) {
     return this.fireDatabase.object(`users/${userName}/invitations`).valueChanges();
+  }
+
+  public createNewGame(localUserName, secondPlayerName) {
+    const _initialState: any = initialState;
+    _initialState.players = {
+      black: localUserName,
+      white: secondPlayerName
+    };
+    const pushData = this.fireDatabase.list('games/').push(_initialState);
+    const gameId = pushData.key;
+
+    return Observable.fromPromise(pushData.then(err => {
+      this.fireDatabase.object(`users/${localUserName}/gameIds/${gameId}`).set(gameId);
+      this.fireDatabase.object(`users/${secondPlayerName}/gameIds/${gameId}`).set(gameId);
+      this.fireDatabase.object(`users/${localUserName}/invitations/received/${secondPlayerName}`).remove();
+      this.fireDatabase.object(`users/${secondPlayerName}/invitations/sent/${localUserName}`).remove();
+      return gameId;
+    }))
+      .take(1);
+  }
+
+  public getGameStateObserveable(gameId) {
+    return this.fireDatabase.object(`games/${gameId}`).valueChanges()
+      .map((gameState: any) => {
+        return gameState;
+      });
+  }
+
+  public updateGameState(gameId, newState) {
+    this.fireDatabase.object(`games/${gameId}`).set(newState);
   }
 
   public sendInvitation(localPlayer, selectedPlayer) {

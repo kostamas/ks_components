@@ -8,7 +8,9 @@
     <form [formGroup]="formGroup" (ngSubmit)="submit()">
       <div [ngClass]="{ 'sign-in':currentViewState===onlineViewStates.signIn,
                         'register':currentViewState===onlineViewStates.register,
-                        'online-game':currentViewState===onlineViewStates.onlineGame}">
+                        'online-game':currentViewState===onlineViewStates.onlineGame,
+                        'none-state':currentViewState===onlineViewStates.none,
+                        'live-game':currentViewState===onlineViewStates.liveGame}">
         <div class="title">{{currentViewState===onlineViewStates.register ? 'Register': 'Sign In'}}</div>
         <div class="input-wrapper">
           <div class="label">Name:</div>
@@ -26,8 +28,8 @@
           {{currentViewState===onlineViewStates.signIn ? 'Register': 'Sign In'}}
         </div>
       </div>
-
-      <button class="submit" type="submit" [disabled]="!formGroup.valid">{{submitButtonsText[currentViewState]}}
+      <div class="sign-in-error">{{signInError}}</div>
+      <button class="submit" type="submit" [disabled]="isDisabled()">{{submitButtonsText[currentViewState]}}
       </button>
     </form>
 
@@ -45,29 +47,44 @@
              *ngIf="checkIfCanInvite(selectedPlayer)">
           Invite
         </div>
-        <div class="continue" *ngIf="checkIfOpenGameExists(selectedPlayer)">Continue</div>
+        <div class="continue"
+             (click)="continue(selectedPlayer.name)"
+             *ngIf="checkIfOpenGameExists(selectedPlayer)">Continue</div>
       </div>
     </div>
 
-    <div class="invitations-container">
+    <div class="online-game-details">
+      <div class="invitations-container">
 
-      <div *ngIf="invitations | async as invitations">
-        Invitations:
-        <div class="received-invitations" *ngIf="invitations.recieved">
-          <div>Received:</div>
-          <div *ngFor="let receivedInvitation of invitations?.recieved | keys">
-            <div class="invitation">user: {{receivedInvitation}} <span>accept</span></div>
+        <div *ngIf="localUser && localUser.invitations">
+          <div class="received-invitations" *ngIf="localUser.invitations.received">
+            <div class="list-title">Received Invitations:</div>
+            <div *ngFor="let receivedInvitation of localUser.invitations?.received | keys">
+              <div class="invitation">user: {{receivedInvitation}}
+                <span (click)="acceptInvitation(receivedInvitation)">accept</span>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div class="sent-invitations" *ngIf="invitations.sent">
-          <div>Sent:</div>
-          <div *ngFor="let sentInvitation of invitations?.sent | keys">
-            <div class="invitation">user: {{sentInvitation}}</div>
+          <div class="sent-invitations" *ngIf="localUser && localUser.invitations && localUser.invitations.sent">
+            <div class="list-title">Sent Invitations:</div>
+            <div *ngFor="let sentInvitation of localUser.invitations?.sent | keys">
+              <div class="invitation">user: {{sentInvitation}}</div>
+            </div>
           </div>
         </div>
       </div>
 
+      <div class="opened-games" *ngIf="openedGames && openedGames.length">
+        <span class="list-title">Opened Games:</span>
+        <div *ngFor="let game of openedGames">
+          <div class="opened-game-wrapper">
+            <div class="game-name">{{game?.user.name}}</div>
+            <div (click)="continue(game?.user.name)"
+                  class="continue" >Continue</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 

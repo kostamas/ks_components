@@ -18,13 +18,16 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   public formGroup: FormGroup;
   public onlinePlayers;
   public selectedPlayer;
-  public invitations;
   public localUser;
+  public openedGames;
+  public signInError = '';
+
   public onlineViewStates = {
     none: 'none-state',
     signIn: 'sign-in-state',
     register: 'register-state',
-    onlineGame: 'online-game-state'
+    onlineGame: 'online-game-state',
+    liveGame: 'live-game'
   };
   public currentViewState = this.onlineViewStates.none;
   public submitButtonsText = {
@@ -36,7 +39,8 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     [this.onlineViewStates.none]: 'Online',
     [this.onlineViewStates.signIn]: 'Local',
     [this.onlineViewStates.register]: 'Local',
-    [this.onlineViewStates.onlineGame]: 'Local'
+    [this.onlineViewStates.onlineGame]: 'Local',
+    [this.onlineViewStates.liveGame]: 'Local'
   };
 
   private formErrorMessagesBuilder = {
@@ -56,7 +60,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   @ViewChild('canvas') canvas;
 
   constructor(private zone: NgZone, private gameController: GameController,
-              private route: ActivatedRoute, private changeDetector: ChangeDetectorRef,
+              private changeDetector: ChangeDetectorRef,
               private backgammonDBService: BackgammonDBService, fBuilder: FormBuilder) {
 
     this.formGroup = fBuilder.group({
@@ -70,28 +74,9 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   }
 
   private init() {
-    const localUser: any = JSON.parse(localStorage.getItem('backgammonUser'));
-    if (localUser) {
-      this.localUser = localUser;
-      this.invitations = this.backgammonDBService.getInvitations(localUser.name);
-      this.currentViewState = this.onlineViewStates.onlineGame;
-      this.showCanvas = false; // todo - consider to use the online view states
-      this.onlineGameHandler();
-    }
-
-    this.route.params.subscribe(params => {
-      if (params['gameId'] && localUser) {
-        this.backgammonDBService.getGameById(params['gameId']).subscribe(gameData => {
-          this.startGame(gameData);
-          this.showCanvas = true;
-          this.changeDetector.detectChanges();
-        });
-      } else {
-        const gameData = this.backgammonDBService.getLocalGame();
-        this.startGame(gameData);
-        this.changeDetector.detectChanges();
-      }
-    });
+    const gameData = this.backgammonDBService.getLocalGame();
+    this.startGame(gameData);
+    this.changeDetector.detectChanges();
 
     this.formGroup.statusChanges.subscribe(status => {
       Object.keys(this.formErrorMessages).forEach(controlName => this.formErrorMessages[controlName] = '');
@@ -101,27 +86,46 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  private startGame(gameId?) {
+  private startGame(gameData, isOnline?, gameId?) {
+    this.showCanvas = true;
+    BackgammonStateManager.removeSubscriptions();
+    this.gameController.destroy();
     this.zone.runOutsideAngular(() => {
       Canvas.canvas = this.canvas.nativeElement;
       Canvas.context = this.canvas.nativeElement.getContext('2d');
       new BackgammonStateManager().init();
-      this.gameController.init(gameId);
+      if (isOnline) {
+        this.currentViewState = this.onlineViewStates.liveGame;
+        this.gameController.init(null, isOnline, gameId);
+      } else {
+        this.currentViewState = this.onlineViewStates.none;
+        this.gameController.init(gameData);
+      }
     });
   }
 
   public playOnlineOrLocal() {
     if (this.currentViewState === this.onlineViewStates.none) {
-      if (this.localUser) {
-        this.showCanvas = false;
+      const localUser: any = JSON.parse(localStorage.getItem('backgammonUser'));
+      if (localUser) {
+        this.localUser = localUser;
         this.currentViewState = this.onlineViewStates.onlineGame;
+        this.showCanvas = false;
+        this.signIn(localUser.name, localUser.password);
       } else {
         this.showCanvas = false;
         this.currentViewState = this.onlineViewStates.signIn;
       }
     } else {
-      this.showCanvas = true;
-      this.currentViewState = this.onlineViewStates.none;
+      if(this.currentViewState === this.onlineViewStates.liveGame){
+        BackgammonStateManager.removeSubscriptions();
+        this.gameController.destroy();
+        const gameData = this.backgammonDBService.getLocalGame();
+        this.startGame(gameData);
+      } else{
+        this.showCanvas = true;
+        this.currentViewState = this.onlineViewStates.none;
+      }
     }
   }
 
@@ -136,11 +140,17 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     });
   }
 
+  public isDisabled() {
+    return !this.formGroup.valid || !this.formGroup.value.name || !this.formGroup.value.password;
+  }
+
   public submit() {
     switch (this.currentViewState) {
       case this.onlineViewStates.signIn:
         this.signIn();
+        break;
       case this.onlineViewStates.register:
+        this.register();
         break;
       default:
         break;
@@ -155,21 +165,39 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  private signIn() {
-    const name = this.formGroup.value.name;
-    const password = this.formGroup.value.password;
+  private signIn(_name?, _password?) {
+    const name = !!_name ? _name : this.formGroup.value.name;
+    const password = !!_password ? _password : this.formGroup.value.password;
     this.backgammonDBService.getUser(name, password).subscribe(user => {
       if (user) {
-        localStorage.setItem('backgammonUser', JSON.stringify(user));
+        localStorage.setItem('backgammonUser', JSON.stringify({name: user.name, password: user.password}));
+        this.localUser = user;
         this.onlineGameHandler();
       } else {
-        alert('error - user does not exists');
+        this.signInError = 'error - user does not exists';
+        setTimeout(() => this.signInError = '', 2000);
       }
     });
   }
 
+  private register() {
+    const name = this.formGroup.value.name;
+    const password = this.formGroup.value.password;
+    this.backgammonDBService.createNewUser(name, password)
+      .subscribe(err => {
+        if (err) {
+          alert(err);
+        } else {
+          this.signIn();
+        }
+      });
+  }
+
   private onlineGameHandler() {
-    this.currentViewState = this.onlineViewStates.onlineGame;
+    if (this.currentViewState !== this.onlineViewStates.liveGame) {
+      this.currentViewState = this.onlineViewStates.onlineGame;
+    }
+
     this.onlinePlayers = this.backgammonDBService.getAllUsers(this.localUser)
       .do((players: any) => {
         if (this.selectedPlayer) {
@@ -181,6 +209,16 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
           }
         } else {
           this.selectedPlayer = players[0];
+        }
+        if (this.localUser.gameIds) {
+
+          this.openedGames = [];
+          Object.keys(this.localUser.gameIds).forEach(gameId => {
+            const openedGamePlayer = players.filter(player => player.gameIds && player.gameIds[gameId])[0];
+            if (openedGamePlayer) {
+              this.openedGames.push({gameId, user: openedGamePlayer});
+            }
+          });
         }
       });
   }
@@ -208,6 +246,20 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
 
   public sendInvitation() {
     this.backgammonDBService.sendInvitation(this.localUser, this.selectedPlayer);
+  }
+
+  public acceptInvitation(secondPlayerName) {
+    this.backgammonDBService.createNewGame(this.localUser.name, secondPlayerName)
+      .subscribe(gameId => {
+        const isOnline = true;
+        this.startGame(null, isOnline, gameId);
+      });
+  }
+
+  public continue(playerName) {
+    const openedGame = this.openedGames.filter((_openedGame: any) => _openedGame.user.name === playerName)[0];
+    const isOnline = true;
+    this.startGame(null, isOnline, openedGame.gameId);
   }
 
   ngOnDestroy() {

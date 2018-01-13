@@ -1,6 +1,7 @@
 import {Subject} from 'rxjs/Subject';
 import {Canvas} from './canvas';
-import {Injectable} from "@angular/core";
+import {Injectable} from '@angular/core';
+import {debug} from "util";
 
 @Injectable()
 export class BackgammonStateManager {
@@ -19,7 +20,6 @@ export class BackgammonStateManager {
   }
 
   public init() {
-
     BackgammonStateManager.mouseMove$ = new Subject();
     BackgammonStateManager.mouseClick$ = new Subject();
     BackgammonStateManager.redraw$ = new Subject();
@@ -99,11 +99,14 @@ export class BackgammonStateManager {
   }
 
   public static removeSubscriptions() {
-    BackgammonStateManager.subscriptions.forEach(subscriptionData => {
-      subscriptionData.subscription.unsubscribe();
-    });
-
-    Canvas.canvas.removeEventListener('mousemove', BackgammonStateManager.mouseMoveHandler);
-    Canvas.canvas.removeEventListener('click', BackgammonStateManager.mouseClickHandler);
+    if (BackgammonStateManager.subscriptions) {
+      BackgammonStateManager.subscriptions.forEach(subscriptionData => {
+        subscriptionData.subscription.unsubscribe();
+      });
+    }
+    if (Canvas.canvas) {
+      Canvas.canvas.removeEventListener('mousemove', BackgammonStateManager.mouseMoveHandler);
+      Canvas.canvas.removeEventListener('click', BackgammonStateManager.mouseClickHandler);
+    }
   }
 }
