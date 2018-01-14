@@ -52,7 +52,7 @@ $scheduler-width: 900px;
   }
 
   .scheduler-wrapper {
-    @include dimension($scheduler-width,578px);
+    @include dimension($scheduler-width, 578px);
     position: relative;
     overflow: hidden;
 
@@ -108,8 +108,8 @@ $scheduler-width: 900px;
           background-color: white;
 
           .hour {
-            @include dimension(45px, 47.95px);
-            padding-top: 2px;
+            @include dimension(45px, 50px);
+            font-size: 13px;
             display: flex;
             justify-content: center;
             align-items: center;

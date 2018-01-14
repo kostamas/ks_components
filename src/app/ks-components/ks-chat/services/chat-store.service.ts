@@ -3,8 +3,8 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/filter';
-import {Subject} from "rxjs/Subject";
-import {KsStore} from "../../../app-core/store/ks-store.service";
+import {Subject} from 'rxjs/Subject';
+import {KsStore} from '../../../core/ks-store.service';
 
 @Injectable()
 export class ChatStoreService  extends KsStore implements OnDestroy {

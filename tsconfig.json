@@ -1,7 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "outDir": "./public/out-tsc",
+    "outDir": "./bkcp-public/out-tsc",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",

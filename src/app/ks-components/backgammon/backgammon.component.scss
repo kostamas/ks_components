@@ -1,0 +1,204 @@
+@import '../../scss/main';
+
+.backgammon-container {
+
+  .play-online {
+    @include dimension(65px, 65px);
+    @include text-style(20px, $malachite);
+    position: absolute;
+    left: 52px;
+    top: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50px;
+    background-color: $hintOfRed;
+    box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
+    cursor: pointer;
+  }
+
+  .online-game-container.none-state, .online-game-state form, .online-game-state .canvas-wrapper {
+    display: none;
+  }
+
+  .online-game-container.live-game{
+    display: none;
+  }
+
+  .online-game-container {
+    @include dimension(400px, 320px);
+    background-color: $white;
+    box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
+    margin: 40px auto;
+    position: relative;
+
+    .sign-in, .register, .online-game {
+      display: none;
+    }
+
+    .sign-in, .register, .online-game {
+      @include text-style(20px, $malachite);
+      padding: 20px 10px;
+
+      .title {
+        @include text-style(22px, $malachite);
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .input-wrapper {
+        @include dimension(380px, 30px);
+        display: flex;
+        align-items: center;
+        margin-top: 20px;
+        padding-left: 15px;
+
+        .label {
+          @include dimension(100px, auto);
+          display: inline-block;
+        }
+
+        input {
+          @include text-style(18px, $blueLagoon, Lato);
+        }
+      }
+    }
+
+    .form-error, .sign-in-error {
+      height: 20px;
+      @include text-style(15px, $roofTerracotta, Lato);
+      text-align: center;
+    }
+
+    .sign-in-error {
+      position: relative;
+      bottom: 15px;
+    }
+
+    .sign-in-register-toggle {
+      @include text-style(14px, $lochinvar, Lato);
+      margin-top: 20px;
+      text-align: center;
+      cursor: pointer;
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+
+    &.sign-in-state .sign-in, &.register-state .register, &.online-game-state .online-game {
+      display: block;
+    }
+
+    .submit {
+      @include button-style($feijoa, 20px, 140px, 30px, 1px solid $gallery);
+      margin: 30px auto 0 auto;
+      color: $white;
+      bottom: 30px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+
+    .online-game {
+      .select-player {
+        @include dimension(230px, 30px);
+        @include text-style(19px, $lochinvar, Lato);
+        display: block;
+        margin: 35px auto 0 auto;
+        padding-bottom: 2px;
+      }
+
+      .online-game-operations {
+        display: flex;
+        justify-content: center;
+        margin-top: 130px;
+
+        .invite, .continue {
+          @include dimension(110px, 26px);
+          @include text-style(19px, $white, Lato);
+          border-radius: 12px;
+          border: 1px solid $nobel;
+          background-color: $conifer;
+          margin: 10px;
+          text-align: center;
+          cursor: pointer;
+          &:hover {
+            opacity: 0.7;
+          }
+        }
+      }
+    }
+
+    .online-game-details {
+      @include dimension(330px, auto);
+      @include text-style(22px, $electricViolet, Lato);
+      position: absolute;
+      left: 460px;
+      top: 0;
+
+      .list-title {
+        color: $kimberlyDark;
+      }
+
+      .received-invitations, .sent-invitations {
+        margin-bottom: 15px;
+
+        .invitation {
+          font-size: 19px;
+          padding-left: 10px;
+          margin-top: 3px;
+          span {
+            color: $malachite;
+            font-size: 21px;
+            cursor: pointer;
+            margin-left: 10px;
+            animation: animateText 0.7s infinite;
+          }
+        }
+      }
+
+      .opened-games {
+        .opened-game-wrapper {
+          display: flex;
+          align-items: center;
+          .game-name {
+            padding-left: 10px;
+            font-size: 19px;
+          }
+
+          .continue {
+            @include dimension(80px, 20px);
+            @include text-style(16px, $white, Lato);
+            border-radius: 10px;
+            border: 1px solid $nobel;
+            background-color: $conifer;
+            margin: 10px;
+            text-align: center;
+            cursor: pointer;
+            &:hover {
+              opacity: 0.7;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .canvas-wrapper {
+    @include dimension(684px, 575px);
+    margin: 10px auto;
+  }
+}
+
+@keyframes animateText {
+  0% {
+    color: $malachite;
+  }
+  50% {
+    color: red;
+  }
+}

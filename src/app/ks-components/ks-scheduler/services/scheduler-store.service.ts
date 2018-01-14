@@ -2,7 +2,7 @@ import {Injectable, OnDestroy} from '@angular/core';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
 import {Subject} from 'rxjs/Subject';
-import {KsStore} from "../../../app-core/store/ks-store.service";
+import {KsStore} from '../../../core/ks-store.service';
 
 @Injectable()
 export class SchedulerStoreService extends KsStore implements OnDestroy {
