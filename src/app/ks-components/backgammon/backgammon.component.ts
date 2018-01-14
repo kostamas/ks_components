@@ -93,12 +93,13 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     this.zone.runOutsideAngular(() => {
       Canvas.canvas = this.canvas.nativeElement;
       Canvas.context = this.canvas.nativeElement.getContext('2d');
-      new BackgammonStateManager().init();
       if (isOnline) {
         this.currentViewState = this.onlineViewStates.liveGame;
+        BackgammonStateManager.init(isOnline, this.localUser);
         this.gameController.init(null, isOnline, gameId);
       } else {
         this.currentViewState = this.onlineViewStates.none;
+        BackgammonStateManager.init();
         this.gameController.init(gameData);
       }
     });
@@ -117,12 +118,12 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
         this.currentViewState = this.onlineViewStates.signIn;
       }
     } else {
-      if(this.currentViewState === this.onlineViewStates.liveGame){
+      if (this.currentViewState === this.onlineViewStates.liveGame) {
         BackgammonStateManager.removeSubscriptions();
         this.gameController.destroy();
         const gameData = this.backgammonDBService.getLocalGame();
         this.startGame(gameData);
-      } else{
+      } else {
         this.showCanvas = true;
         this.currentViewState = this.onlineViewStates.none;
       }

@@ -1,7 +1,6 @@
 import {Subject} from 'rxjs/Subject';
 import {Canvas} from './canvas';
 import {Injectable} from '@angular/core';
-import {debug} from "util";
 
 @Injectable()
 export class BackgammonStateManager {
@@ -13,13 +12,19 @@ export class BackgammonStateManager {
   private static selectChecker$: Subject<any>;
   private static skipPlayer$: Subject<any>;
   private static game$: Subject<any>;
-
+  private static isOnline;
+  private static localUser;
+  public static gameState;
   private static subscriptions;
 
   constructor() {
   }
 
-  public init() {
+  public static init(isOnline?, localUser?) {
+    if (isOnline) {
+      BackgammonStateManager.isOnline = isOnline;
+      BackgammonStateManager.localUser = localUser;
+    }
     BackgammonStateManager.mouseMove$ = new Subject();
     BackgammonStateManager.mouseClick$ = new Subject();
     BackgammonStateManager.redraw$ = new Subject();
@@ -37,13 +42,44 @@ export class BackgammonStateManager {
 
   private static mouseMoveHandler = ($event) => {
     const clientRect = Canvas.canvas.getBoundingClientRect();
-    BackgammonStateManager.mouseMove$.next({x: $event.clientX - clientRect.left, y: $event.clientY - clientRect.top});
+    const cords = {x: $event.clientX - clientRect.left, y: $event.clientY - clientRect.top};
+
+    if (!BackgammonStateManager.isOnline || !BackgammonStateManager.gameState
+      || !BackgammonStateManager.gameState.players) {
+      BackgammonStateManager.mouseMove$.next(cords);
+      return;
+    }
+
+    if (BackgammonStateManager.gameState.players.black === BackgammonStateManager.localUser.name) {
+      if (BackgammonStateManager.gameState.currentState < 2) {
+        BackgammonStateManager.mouseMove$.next(cords);
+      }
+    } else {
+      if (BackgammonStateManager.gameState.currentState > 1) {
+        BackgammonStateManager.mouseMove$.next(cords);
+      }
+    }
   }
 
   private static mouseClickHandler = ($event) => {
     const clientRect = Canvas.canvas.getBoundingClientRect();
-    BackgammonStateManager.mouseClick$.next({x: $event.clientX - clientRect.left, y: $event.clientY - clientRect.top});
-  }
+    const cords = {x: $event.clientX - clientRect.left, y: $event.clientY - clientRect.top};
+    if (!BackgammonStateManager.isOnline || !BackgammonStateManager.gameState
+      || !BackgammonStateManager.gameState.players) {
+      BackgammonStateManager.mouseClick$.next(cords);
+      return;
+    }
+
+    if (BackgammonStateManager.gameState.players.black === BackgammonStateManager.localUser.name) {
+      if (BackgammonStateManager.gameState.currentState < 2) {
+        BackgammonStateManager.mouseClick$.next(cords);
+      }
+    } else {
+      if (BackgammonStateManager.gameState.currentState > 1) {
+        BackgammonStateManager.mouseClick$.next(cords);
+      }
+    }
+  };
 
   public static onMouseMove(cb, id) {
     BackgammonStateManager.subscriptions.push({id, subscription: BackgammonStateManager.mouseMove$.subscribe(cb)});
@@ -94,10 +130,6 @@ export class BackgammonStateManager {
     BackgammonStateManager.game$.next(newGameState);
   }
 
-  public static onGame(cb, id?) {
-    BackgammonStateManager.subscriptions.push({id, subscription: BackgammonStateManager.game$.subscribe(cb)});
-  }
-
   public static removeSubscriptions() {
     if (BackgammonStateManager.subscriptions) {
       BackgammonStateManager.subscriptions.forEach(subscriptionData => {
@@ -108,5 +140,9 @@ export class BackgammonStateManager {
       Canvas.canvas.removeEventListener('mousemove', BackgammonStateManager.mouseMoveHandler);
       Canvas.canvas.removeEventListener('click', BackgammonStateManager.mouseClickHandler);
     }
+
+    BackgammonStateManager.isOnline = false;
+    BackgammonStateManager.localUser = null;
+    BackgammonStateManager.gameState = {};
   }
 }

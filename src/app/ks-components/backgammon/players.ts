@@ -13,6 +13,11 @@ export class Players {
     [Players.playersMap.White]: 'White'
   }
 
+  public static playersRealNames = {
+    [Players.playersNamesMap[Players.playersMap.Black]]: '',
+    [Players.playersNamesMap[Players.playersMap.White]]: ''
+  }
+
 
   public static currentState = 0;
 
@@ -35,7 +40,7 @@ export class Players {
 
   public drawPlayer() {
     Canvas.context.font = '25px serif';
-    Canvas.context.fillStyle = "#f7f01b";
+    Canvas.context.fillStyle = '#f7f01b';
     Canvas.context.fillText('Player:', 12, 27);
 
     Canvas.context.beginPath();
@@ -45,14 +50,25 @@ export class Players {
     Canvas.context.lineTo(110, 22);
     Canvas.context.stroke();
 
+    if (Players.playersRealNames[Players.playersNamesMap[Players.playersMap.Black]] ||
+      Players.playersRealNames[Players.playersNamesMap[Players.playersMap.White]]) {
+      Canvas.context.fillStyle = Players.currentState < 2 ? '#000' : '#fff';
+
+      if (Players.currentState < 2) {
+        Canvas.context.fillText(Players.playersRealNames[Players.playersNamesMap[Players.playersMap.Black]], 120, 27);
+      } else {
+        Canvas.context.fillText(Players.playersRealNames[Players.playersNamesMap[Players.playersMap.White]], 120, 27);
+      }
+    }
+
     if (Players.showsSkipButton) {
       Canvas.context.font = '25px serif';
       Canvas.context.fillStyle = 'white';
-      Canvas.context.fillText('Skip', 160, 30);
+      Canvas.context.fillText('Skip', 210, 30);
     }
 
     if (this.winningPlayer >= 0) {
-      this.showWinningPlayer(this.winningPlayer)
+      this.showWinningPlayer(this.winningPlayer);
     }
   }
 
@@ -61,7 +77,7 @@ export class Players {
       if (Players.currentState < 2) {
         Players.currentState = 2;
       } else {
-        Players.currentState = 0
+        Players.currentState = 0;
       }
       BackgammonStateManager.notifySkipPlayer();
       BackgammonStateManager.notifyRedraw();
@@ -82,5 +98,7 @@ export class Players {
   public static destroy() {
     Players.currentState = 0;
     Players.showsSkipButton = false;
+    Players.playersRealNames[Players.playersNamesMap[Players.playersMap.Black]] = '';
+    Players.playersRealNames[Players.playersNamesMap[Players.playersMap.White]] = '';
   }
 }

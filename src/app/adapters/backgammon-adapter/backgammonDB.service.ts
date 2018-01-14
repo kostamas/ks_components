@@ -97,6 +97,7 @@ export class BackgammonDBService implements IBackgammonDb {
   }
 
   public updateGameState(gameId, newState) {
+    newState.timeStamp = Date.now();
     this.fireDatabase.object(`games/${gameId}`).set(newState);
   }
 

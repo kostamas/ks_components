@@ -1,10 +1,10 @@
-import {BackgammonDBService} from "../../adapters/backgammon-adapter/backgammonDB.service";
+import {BackgammonDBService} from '../../adapters/backgammon-adapter/backgammonDB.service';
 import {getSpikeDirection, isOverlap, isValidSpike} from './helpers/backgammonUtils';
 import {BackgammonStateManager} from './backgammonStateManager';
 import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
 import {drawBackground} from './helpers/uiHelper';
 import {OutsideBoard} from './outsideboard';
-import {Injectable} from "@angular/core";
+import {Injectable} from '@angular/core';
 import {Players} from './players';
 import {Checker} from './checker';
 import {Spike} from './spike';
@@ -247,6 +247,7 @@ export class GameController {
 
   private checkerHitHandler(checker) {
     checker.setPosition(this.bar.getNextCheckerPosition(checker.type));
+
     this.bar.checkers[Players.playersNamesMap[checker.type]].push(checker);
     if (checker.type === Players.playersMap.Black) {
       checker.currentSpike = -1;
@@ -350,9 +351,18 @@ export class GameController {
   }
 
   private gameHandler = (gameData) => {
+    BackgammonStateManager.gameState = gameData;
+    if (this.isOnline) {
+      Players.playersRealNames[Players.playersNamesMap[Players.playersMap.Black]] = gameData.players.black;
+      Players.playersRealNames[Players.playersNamesMap[Players.playersMap.White]] = gameData.players.white;
+    }
+
     this.spikes.forEach(spike => spike.clearCheckers());
-    this.outsideBoard.checkers[Players.playersNamesMap[Players.playersMap.Black]].checkers = [];
-    this.outsideBoard.checkers[Players.playersNamesMap[Players.playersMap.White]].checkers = [];
+    this.outsideBoard.checkers[Players.playersNamesMap[Players.playersMap.Black]] = [];
+    this.outsideBoard.checkers[Players.playersNamesMap[Players.playersMap.White]] = [];
+    this.bar.checkers[Players.playersNamesMap[Players.playersMap.White]] = [];
+    this.bar.checkers[Players.playersNamesMap[Players.playersMap.Black]] = [];
+
     this.checkers.forEach(checker => {
       checker.isOffBoard = gameData.checkers[checker.getCheckerId()].isOffBoard;
       if (checker.isOffBoard) {
@@ -365,7 +375,7 @@ export class GameController {
           this.spikes[checker.currentSpike].checkers.push(checker);
         } else {
           checker.setPosition(this.bar.getNextCheckerPosition([Players.playersNamesMap[checker.type]]));
-          this.bar.checkers[Players.playersNamesMap[checker.type]].push(checker)
+          this.bar.checkers[Players.playersNamesMap[checker.type]].push(checker);
         }
       }
     });
@@ -373,15 +383,22 @@ export class GameController {
     this.dices.dices = !!gameData.dices ? Object.values(gameData.dices) : [];
 
     Players.currentState = gameData.currentState;
-    this.currentState = gameData.currentState < 2 ? 1 : 3;
+    this.currentState = gameData.currentState;
 
-    if (Players.currentState !== this.currentState && Players.currentState % 2 === 1) { // todo - duplication
+    if (Players.currentState % 2 === 1) { // todo - duplication
       if (this.showSkipBtn(this.currentState)) {
         Players.showsSkipButton = true;
         this.gamePlayers.drawPlayer();
       }
     }
 
+    if (this.outsideBoard.checkers[Players.playersNamesMap[Players.playersMap.White]].length === 15) {
+      this.gamePlayers.winningPlayer = Players.playersMap.White;
+    }
+
+    if (this.outsideBoard.checkers[Players.playersNamesMap[Players.playersMap.Black]].length === 15) {
+      this.gamePlayers.winningPlayer = Players.playersMap.Black;
+    }
     this.dices.showRollButton = Players.currentState % 2 === 0;
 
     this.redrawHandler();
@@ -414,7 +431,9 @@ export class GameController {
   private skipPlayerHandler = () => {
     this.dices.dices = [];
     this.dices.setShowRollButton(true);
-    this.updateState();
+    if (this.isOnline) {
+      this.updateState();
+    }
   }
 
   private hasOtherOutChecker(checker) {
@@ -443,7 +462,8 @@ export class GameController {
 
     this.dices.dices.forEach((dice, index) => {
       newState.dices[index] = dice;
-    })
+    });
+
     this.backgammonDBService.updateGameState(this.gameId, newState);
   }
 
@@ -454,6 +474,7 @@ export class GameController {
     this.dices = [];
     this.checkers = [];
     this.spikes = [];
+    this.isOnline = false;
     if (this.gameStateObservable) {
       this.gameStateObservable.unsubscribe();
     }
