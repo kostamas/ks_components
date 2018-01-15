@@ -55,16 +55,16 @@ export class Players {
       Canvas.context.fillStyle = Players.currentState < 2 ? '#000' : '#fff';
 
       if (Players.currentState < 2) {
-        Canvas.context.fillText(Players.playersRealNames[Players.playersNamesMap[Players.playersMap.Black]], 120, 27);
+        Canvas.context.fillText(Players.playersRealNames[Players.playersNamesMap[Players.playersMap.Black]], 120, 29);
       } else {
-        Canvas.context.fillText(Players.playersRealNames[Players.playersNamesMap[Players.playersMap.White]], 120, 27);
+        Canvas.context.fillText(Players.playersRealNames[Players.playersNamesMap[Players.playersMap.White]], 120, 29);
       }
     }
 
     if (Players.showsSkipButton) {
       Canvas.context.font = '25px serif';
       Canvas.context.fillStyle = 'white';
-      Canvas.context.fillText('Skip', 210, 30);
+      Canvas.context.fillText('Skip', 300, 30);
     }
 
     if (this.winningPlayer >= 0) {
@@ -73,14 +73,13 @@ export class Players {
   }
 
   private skipTurn({x, y}) {
-    if (Players.showsSkipButton && isOverlap(x, y, 160, 10, 60, 40)) {
+    if (Players.showsSkipButton && isOverlap(x, y, 300, 10, 60, 40)) {
       if (Players.currentState < 2) {
         Players.currentState = 2;
       } else {
         Players.currentState = 0;
       }
       BackgammonStateManager.notifySkipPlayer();
-      BackgammonStateManager.notifyRedraw();
       Players.showsSkipButton = false;
     }
   }
