@@ -57,6 +57,7 @@ export class GameController {
         this.gameStateObservable = this.backgammonDBService.getGameStateObserveable(gameId)
           .do(gameState => this.gameState = gameState)
           .subscribe(this.gameHandler);
+        BackgammonStateManager.onRollClick(this.updateState);
       } else {
         this.gameHandler(gameData);
       }
@@ -352,6 +353,7 @@ export class GameController {
 
   private gameHandler = (gameData) => {
     BackgammonStateManager.gameState = gameData;
+
     if (this.isOnline) {
       Players.playersRealNames[Players.playersNamesMap[Players.playersMap.Black]] = gameData.players.black;
       Players.playersRealNames[Players.playersNamesMap[Players.playersMap.White]] = gameData.players.white;
@@ -385,6 +387,7 @@ export class GameController {
     Players.currentState = gameData.currentState;
     this.currentState = gameData.currentState;
 
+    Players.showsSkipButton = false;
     if (Players.currentState % 2 === 1) { // todo - duplication
       if (this.showSkipBtn(this.currentState)) {
         Players.showsSkipButton = true;
@@ -433,6 +436,8 @@ export class GameController {
     this.dices.setShowRollButton(true);
     if (this.isOnline) {
       this.updateState();
+    } else {
+      this.redrawHandler();
     }
   }
 
@@ -445,7 +450,7 @@ export class GameController {
     this.gamePlayers.showWinningPlayer(playerType);
   }
 
-  private updateState() {
+  private updateState = () => {
     const newState = {
       checkers: {},
       dices: {},

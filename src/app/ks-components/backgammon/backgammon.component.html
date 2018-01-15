@@ -4,6 +4,10 @@
     {{onlineOrLocalText[currentViewState]}}
   </div>
 
+  <div class="logout" *ngIf="localUser" (click)="logOut()">
+    Logout
+  </div>
+
   <div class="online-game-container" [ngClass]="currentViewState">
     <form [formGroup]="formGroup" (ngSubmit)="submit()">
       <div [ngClass]="{ 'sign-in':currentViewState===onlineViewStates.signIn,
@@ -36,7 +40,7 @@
     <div class="online-game">
       <div class="title">Select Player</div>
       <select class="select-player" [(ngModel)]="selectedPlayer">
-        <option *ngFor="let player of (onlinePlayers | async)" [ngValue]="player">
+        <option *ngFor="let player of (onlinePlayers$ | async)" [ngValue]="player">
           <div> {{player.name}}</div>
         </option>
       </select>
@@ -49,7 +53,8 @@
         </div>
         <div class="continue"
              (click)="continue(selectedPlayer.name)"
-             *ngIf="checkIfOpenGameExists(selectedPlayer)">Continue</div>
+             *ngIf="checkIfOpenGameExists(selectedPlayer)">Continue
+        </div>
       </div>
     </div>
 
@@ -81,7 +86,8 @@
           <div class="opened-game-wrapper">
             <div class="game-name">{{game?.user.name}}</div>
             <div (click)="continue(game?.user.name)"
-                  class="continue" >Continue</div>
+                 class="continue">Continue
+            </div>
           </div>
         </div>
       </div>

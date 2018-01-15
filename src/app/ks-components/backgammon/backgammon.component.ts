@@ -16,7 +16,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   public showOnlineOption = true;
   public showCanvas = true;
   public formGroup: FormGroup;
-  public onlinePlayers;
+  public onlinePlayers$;
   public selectedPlayer;
   public localUser;
   public openedGames;
@@ -105,6 +105,13 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     });
   }
 
+  public logOut() {
+    localStorage.removeItem('backgammonUser');
+    this.localUser = undefined;
+    this.formGroup.reset();
+    this.playOnlineOrLocal();
+  }
+
   public playOnlineOrLocal() {
     if (this.currentViewState === this.onlineViewStates.none) {
       const localUser: any = JSON.parse(localStorage.getItem('backgammonUser'));
@@ -127,6 +134,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
         this.showCanvas = true;
         this.currentViewState = this.onlineViewStates.none;
       }
+      this.openedGames = [];
     }
   }
 
@@ -185,9 +193,9 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     const name = this.formGroup.value.name;
     const password = this.formGroup.value.password;
     this.backgammonDBService.createNewUser(name, password)
-      .subscribe(err => {
-        if (err) {
-          alert(err);
+      .subscribe((err: any) => {
+        if (err.error) {
+          alert();
         } else {
           this.signIn();
         }
@@ -199,7 +207,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
       this.currentViewState = this.onlineViewStates.onlineGame;
     }
 
-    this.onlinePlayers = this.backgammonDBService.getAllUsers(this.localUser)
+    this.onlinePlayers$ = this.backgammonDBService.getAllUsers(this.localUser)
       .do((players: any) => {
         if (this.selectedPlayer) {
           const updatedSelectedPlayer = players.filter(player => player.name === this.selectedPlayer.name)[0];
@@ -238,6 +246,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     return !this.checkIfOpenGameExists(selectedPlayer) &&
       (!selectedPlayer || !selectedPlayer.invitations ||
         (
+          this.localUser &&
           (!selectedPlayer.invitations.sent || !selectedPlayer.invitations.sent[this.localUser.name])
           &&
           (!selectedPlayer.invitations.received || !selectedPlayer.invitations.received[this.localUser.name])

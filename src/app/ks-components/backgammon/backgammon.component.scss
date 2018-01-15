@@ -2,7 +2,7 @@
 
 .backgammon-container {
 
-  .play-online {
+  .play-online,.logout {
     @include dimension(65px, 65px);
     @include text-style(20px, $malachite);
     position: absolute;
@@ -15,6 +15,10 @@
     background-color: $hintOfRed;
     box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
     cursor: pointer;
+  }
+
+  .logout{
+    top: 190px;
   }
 
   .online-game-container.none-state, .online-game-state form, .online-game-state .canvas-wrapper {

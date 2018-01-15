@@ -12,6 +12,7 @@ export class BackgammonStateManager {
   private static selectChecker$: Subject<any>;
   private static skipPlayer$: Subject<any>;
   private static game$: Subject<any>;
+  private static rollClick$: Subject<any>;
   private static isOnline;
   private static localUser;
   public static gameState;
@@ -33,6 +34,7 @@ export class BackgammonStateManager {
     BackgammonStateManager.selectChecker$ = new Subject();
     BackgammonStateManager.skipPlayer$ = new Subject();
     BackgammonStateManager.game$ = new Subject();
+    BackgammonStateManager.rollClick$ = new Subject();
 
     BackgammonStateManager.subscriptions = [];
 
@@ -124,6 +126,14 @@ export class BackgammonStateManager {
 
   public static onSkipPlayer(cb, id?) {
     BackgammonStateManager.subscriptions.push({id, subscription: BackgammonStateManager.skipPlayer$.subscribe(cb)});
+  }
+
+  public static notifyRollClick() {
+    BackgammonStateManager.rollClick$.next();
+  }
+
+  public static onRollClick(cb, id?) {
+    BackgammonStateManager.subscriptions.push({id, subscription: BackgammonStateManager.rollClick$.subscribe(cb)});
   }
 
   public static notifyGame(newGameState) {
