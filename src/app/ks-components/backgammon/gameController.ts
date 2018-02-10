@@ -231,7 +231,7 @@ export class GameController {
   }
 
   private selectCheckerHandler = ({x, y, checker}) => {
-    let checkersArr, spikeIndex;
+    let checkersArr, spikeIndex, updateState;
     const spikeDirection = getSpikeDirection(checker.type, Players);
     this.dices.dices.forEach(diceResult => {
       spikeIndex = checker.currentSpike + diceResult * spikeDirection;
@@ -239,11 +239,17 @@ export class GameController {
         checkersArr = this.spikes[spikeIndex].checkers;
         if (!this.hasOtherOutChecker(checker) && (checkersArr.length <= 1 || checkersArr[0].type === checker.type)) {
           this.spikes[spikeIndex].setShowValidMove(true);
+          updateState = true;
         }
       }
       this.offBoardCheckerHandler(checker);
     });
-    this.redrawHandler();
+
+    if (this.isOnline && updateState) {
+      this.updateState();
+    } else {
+      this.redrawHandler();
+    }
   };
 
   private checkerHitHandler(checker) {
@@ -335,7 +341,7 @@ export class GameController {
         }
       }
     });
-  };
+  }
 
   private checkIfOffBoardState(currentChecker) {
     let spikeIndex;
@@ -381,6 +387,12 @@ export class GameController {
         }
       }
     });
+
+    this.spikes.forEach(spike => spike.setShowValidMove(false));
+
+    if (gameData.moveSuggestion) {
+      Object.keys(gameData.moveSuggestion).forEach(spikeIndex => this.spikes[spikeIndex].setShowValidMove(true));
+    }
 
     this.dices.dices = !!gameData.dices ? Object.values(gameData.dices) : [];
 
@@ -456,6 +468,7 @@ export class GameController {
       dices: {},
       currentState: Players.currentState,
       winningPlayer: this.gamePlayers.winningPlayer,
+      moveSuggestion: {},
       players: this.gameState.players,
     };
     this.checkers.forEach((checker: any, index) => {
@@ -463,6 +476,12 @@ export class GameController {
         currentSpike: checker.currentSpike,
         isOffBoard: checker.isOffBoard
       };
+    });
+
+    this.spikes.forEach((spike: any, index: number) => {
+      if (spike.getShowValidMove()) {
+        newState.moveSuggestion[index] = true;
+      }
     });
 
     this.dices.dices.forEach((dice, index) => {

@@ -34,5 +34,6 @@ export const initialState = {
     30: {currentSpike: 23, isOffBoard: false}
   },
   dices: {},
+  moveSuggestion: {},
   currentState: 0
 }
