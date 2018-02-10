@@ -53,12 +53,16 @@ export class Spike {
     }
   }
 
+  public getShowValidMove() {
+    return this.showValidMove;
+  }
+
   public setShowValidMove(showValidMove) {
     this.showValidMove = showValidMove;
   }
 
   public clearCheckers() {
-    this.checkers = []
+    this.checkers = [];
   }
 
   public static destroy() {
