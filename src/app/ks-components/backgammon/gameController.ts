@@ -324,25 +324,6 @@ export class GameController {
     return false;
   }
 
-  private redrawHandler = () => {
-    drawBackground(this.backgroundImgUrl).subscribe(() => {
-      this.checkers.forEach(checker => checker.drawChecker());
-      this.spikes.forEach(spikes => spikes.drawSpike());
-      this.dices.drawDices();
-      this.gamePlayers.drawPlayer();
-      this.outsideBoard.draw();
-
-      if (Players.currentState !== this.currentState && Players.currentState % 2 === 1) {
-        this.currentState = Players.currentState;
-        const showNextPlayerBtn = this.showSkipBtn(this.currentState);
-        if (showNextPlayerBtn) {
-          Players.showsSkipButton = true;
-          this.gamePlayers.drawPlayer();
-        }
-      }
-    });
-  }
-
   private checkIfOffBoardState(currentChecker) {
     let spikeIndex;
     const spikeDirection = getSpikeDirection(currentChecker.type, Players);
@@ -442,7 +423,6 @@ export class GameController {
     }
   }
 
-
   private skipPlayerHandler = () => {
     this.dices.dices = [];
     this.dices.setShowRollButton(true);
@@ -489,6 +469,25 @@ export class GameController {
     });
 
     this.backgammonDBService.updateGameState(this.gameId, newState);
+  }
+
+  private redrawHandler = () => {
+    drawBackground(this.backgroundImgUrl).subscribe(() => {
+      this.checkers.forEach(checker => checker.drawChecker());
+      this.spikes.forEach(spikes => spikes.drawSpike());
+      this.dices.drawDices();
+      this.gamePlayers.drawPlayer();
+      this.outsideBoard.draw();
+
+      if (Players.currentState !== this.currentState && Players.currentState % 2 === 1) {
+        this.currentState = Players.currentState;
+        const showNextPlayerBtn = this.showSkipBtn(this.currentState);
+        if (showNextPlayerBtn) {
+          Players.showsSkipButton = true;
+          this.gamePlayers.drawPlayer();
+        }
+      }
+    });
   }
 
   public destroy() {
