@@ -82,7 +82,6 @@ const getCheckerSvg = (playerType) => {
 	     .Black .outer-circle {
 	        fill: #00c228;
 	      }
-	      
 	      .White .outer-circle {
 	        fill: #2c10ff;
 	      }
