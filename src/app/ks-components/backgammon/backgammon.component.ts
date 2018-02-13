@@ -2,11 +2,12 @@ import {AfterViewInit, ChangeDetectorRef, Component, NgZone, OnDestroy, ViewChil
 import {Canvas} from './canvas';
 import {BackgammonStateManager} from './backgammonStateManager';
 import {GameController} from './gameController';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {BackgammonDBService} from '../../adapters/backgammon-adapter/backgammonDB.service';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {DirtyRequired} from '../../shared/vaildators/dirty-required-validator.validator';
-import {Subject} from "rxjs/Subject";
+import {Subject} from 'rxjs/Subject';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-backgammon',
@@ -14,7 +15,6 @@ import {Subject} from "rxjs/Subject";
   styleUrls: ['./backgammon.component.scss']
 })
 export class BackgammonComponent implements AfterViewInit, OnDestroy {
-  public showOnlineOption = true;
   public showCanvas = true;
   public formGroup: FormGroup;
   public onlinePlayers$;
@@ -25,46 +25,45 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   public logout$;
 
   public onlineViewStates = {
-    local: 'local-state',
-    signIn: 'sign-in-state',
-    register: 'register-state',
-    onlineGame: 'online-game-state',
-    liveGame: 'live-game'
+    'localGame': 'localGame',
+    'onlineGame': 'onlineGame',
+    'signIn': 'signIn',
+    'register': 'register',
+    'onlineMenu': 'onlineMenu'
   };
-  public currentViewState = this.onlineViewStates.local;
+  public currentViewState = this.onlineViewStates.localGame;
   public submitButtonsText = {
     [this.onlineViewStates.signIn]: 'Sign In',
     [this.onlineViewStates.register]: 'Register',
     [this.onlineViewStates.onlineGame]: 'Send Request'
   };
-  public onlineOrLocalText = {
-    [this.onlineViewStates.local]: 'Online',
-    [this.onlineViewStates.signIn]: 'Local',
-    [this.onlineViewStates.register]: 'Local',
-    [this.onlineViewStates.onlineGame]: 'Local',
-    [this.onlineViewStates.liveGame]: 'Local'
+  public buttonsNames = {
+    'playOnline': 'playOnline',
+    'playLocal': 'playLocal',
+    'logout': 'logout',
+    'menu': 'menu'
+  };
+
+  private displayedButtonsByCurrState = {
+    [this.onlineViewStates.localGame]: [this.buttonsNames.playOnline],
+    [this.onlineViewStates.onlineGame]: [this.buttonsNames.menu, this.buttonsNames.logout],
+    [this.onlineViewStates.signIn]: [this.buttonsNames.playLocal],
+    [this.onlineViewStates.register]: [this.buttonsNames.playLocal],
+    [this.onlineViewStates.onlineMenu]: [this.buttonsNames.playLocal, this.buttonsNames.logout],
   };
 
   private formErrorMessagesBuilder = {
-    name: {
-      dirtyRequired: 'This is a required field'
-    },
-    password: {
-      dirtyRequired: 'This is a required field'
-    }
+    name: {dirtyRequired: 'This is a required field'},
+    password: {dirtyRequired: 'This is a required field'}
   };
 
-  public formErrorMessages = {
-    name: '',
-    password: ''
-  };
+  public formErrorMessages = {name: '', password: ''};
 
   @ViewChild('canvas') canvas;
 
-  constructor(private zone: NgZone, private gameController: GameController,
-              private changeDetector: ChangeDetectorRef,
-              private backgammonDBService: BackgammonDBService, fBuilder: FormBuilder) {
-
+  constructor(private zone: NgZone, private gameController: GameController, private changeDetector: ChangeDetectorRef,
+              private backgammonDBService: BackgammonDBService, fBuilder: FormBuilder,
+              private activatedRoute: ActivatedRoute, private router: Router, private location: Location) {
     this.formGroup = fBuilder.group({
       name: [null, DirtyRequired],
       password: [null, DirtyRequired]
@@ -77,15 +76,22 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   }
 
   private init() {
-    const gameData = this.backgammonDBService.getLocalGame();
-    this.startGame(gameData);
-    this.changeDetector.detectChanges();
+    this.activatedRoute.params.subscribe((params: Params) => {
+      if (params['gameId']) {
+        const isOnline = true;
+        this.startGame(null, isOnline, params['userId']);
+      } else {
+        const gameData = this.backgammonDBService.getLocalGame();
+        this.startGame(gameData);
 
-    this.formGroup.statusChanges.subscribe(status => {
-      Object.keys(this.formErrorMessages).forEach(controlName => this.formErrorMessages[controlName] = '');
-      if (status === 'INVALID') {
-        this.formErrorHandler();
+        this.formGroup.statusChanges.subscribe(status => {
+          Object.keys(this.formErrorMessages).forEach(controlName => this.formErrorMessages[controlName] = '');
+          if (status === 'INVALID') {
+            this.formErrorHandler();
+          }
+        });
       }
+      this.changeDetector.detectChanges();
     });
   }
 
@@ -97,11 +103,11 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
       Canvas.canvas = this.canvas.nativeElement;
       Canvas.context = this.canvas.nativeElement.getContext('2d');
       if (isOnline) {
-        this.currentViewState = this.onlineViewStates.liveGame;
+        this.currentViewState = this.onlineViewStates.onlineGame;
         BackgammonStateManager.init(isOnline, this.localUser);
         this.gameController.init(null, isOnline, gameId);
       } else {
-        this.currentViewState = this.onlineViewStates.local;
+        this.currentViewState = this.onlineViewStates.localGame;
         BackgammonStateManager.init();
         this.gameController.init(gameData);
       }
@@ -109,43 +115,20 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   }
 
   public logOut() {
+    this.location.go('backgammon');
     localStorage.removeItem('backgammonUser');
     this.localUser = undefined;
     this.formGroup.reset();
     this.logout$.next();
-    this.playOnlineOrLocal();
+    this.playLocal();
   }
 
   public goToMenu() {
+    this.location.go('backgammon');
     BackgammonStateManager.removeSubscriptions();
     this.gameController.destroy();
-    this.currentViewState = this.onlineViewStates.onlineGame;
+    this.currentViewState = this.onlineViewStates.onlineMenu;
     this.showCanvas = false;
-  }
-
-  public playOnlineOrLocal() {
-    if (this.currentViewState === this.onlineViewStates.local) {
-      const localUser: any = JSON.parse(localStorage.getItem('backgammonUser'));
-      if (localUser) {
-        this.localUser = localUser;
-        this.currentViewState = this.onlineViewStates.onlineGame;
-        this.showCanvas = false;
-        this.signIn(localUser.name, localUser.password);
-      } else {
-        this.showCanvas = false;
-        this.currentViewState = this.onlineViewStates.signIn;
-      }
-    } else {
-      if (this.currentViewState === this.onlineViewStates.liveGame) {
-        BackgammonStateManager.removeSubscriptions();
-        this.gameController.destroy();
-      }
-      this.showCanvas = true;
-      this.currentViewState = this.onlineViewStates.local;
-      this.openedGames = [];
-      const gameData = this.backgammonDBService.getLocalGame();
-      this.startGame(gameData);
-    }
   }
 
   private formErrorHandler() {
@@ -164,15 +147,11 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   }
 
   public submit() {
-    switch (this.currentViewState) {
-      case this.onlineViewStates.signIn:
-        this.signIn();
-        break;
-      case this.onlineViewStates.register:
-        this.register();
-        break;
-      default:
-        break;
+    if (this.currentViewState === this.onlineViewStates.signIn) {
+      this.signIn();
+    }
+    if (this.currentViewState === this.onlineViewStates.register) {
+      this.register();
     }
   }
 
@@ -192,7 +171,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
         localStorage.removeItem('backgammonUser');
         localStorage.setItem('backgammonUser', JSON.stringify({name: user.name, password: user.password}));
         this.localUser = user;
-        this.onlineGameHandler();
+        this.onlineMenuHandler();
       } else {
         this.signInError = 'error - user does not exists';
         setTimeout(() => this.signInError = '', 2000);
@@ -201,8 +180,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   }
 
   private register() {
-    const name = this.formGroup.value.name;
-    const password = this.formGroup.value.password;
+    const {name, password} = this.formGroup.value.name;
     this.logout$.next();
     this.backgammonDBService.createNewUser(name, password)
       .subscribe((err: any) => {
@@ -214,9 +192,9 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
       });
   }
 
-  private onlineGameHandler() {
-    if (this.currentViewState !== this.onlineViewStates.liveGame) {
-      this.currentViewState = this.onlineViewStates.onlineGame;
+  private onlineMenuHandler() {
+    if (this.currentViewState !== this.onlineViewStates.onlineGame) {
+      this.currentViewState = this.onlineViewStates.onlineMenu;
     }
 
     this.onlinePlayers$ = this.backgammonDBService.getAllUsers(this.localUser)
@@ -251,20 +229,17 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     }
 
     return Object.keys(this.localUser.gameIds)
-        .filter(gameId => !!selectedPlayer.gameIds[gameId])
-        .length > 0;
+      .filter(gameId => !!selectedPlayer.gameIds[gameId])
+      .length > 0;
   }
 
   public checkIfCanInvite(selectedPlayer) {
     return !this.checkIfOpenGameExists(selectedPlayer) &&
-      (!selectedPlayer || !selectedPlayer.invitations ||
-        (
-          this.localUser &&
-          (!selectedPlayer.invitations.sent || !selectedPlayer.invitations.sent[this.localUser.name])
-          &&
-          (!selectedPlayer.invitations.received || !selectedPlayer.invitations.received[this.localUser.name])
-        )
-      );
+      (!selectedPlayer || !selectedPlayer.invitations || (
+        this.localUser &&
+        (!selectedPlayer.invitations.sent || !selectedPlayer.invitations.sent[this.localUser.name]) &&
+        (!selectedPlayer.invitations.received || !selectedPlayer.invitations.received[this.localUser.name])
+      ));
   }
 
   public sendInvitation() {
@@ -282,7 +257,35 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   public continue(playerName) {
     const openedGame = this.openedGames.filter((_openedGame: any) => _openedGame.user.name === playerName)[0];
     const isOnline = true;
-    this.startGame(null, isOnline, openedGame.gameId);
+    this.router.navigate(['/backgammon/', {gameId: openedGame.gameId}]);
+  }
+
+  public displayButtonHandler(btnName) {
+    return this.displayedButtonsByCurrState[this.currentViewState].indexOf(btnName) > -1;
+  }
+
+  public playOnline() {
+    const localUser: any = JSON.parse(localStorage.getItem('backgammonUser'));
+    if (localUser) {
+      this.localUser = localUser;
+      this.showCanvas = false;
+      this.signIn(localUser.name, localUser.password);
+    } else {
+      this.showCanvas = false;
+      this.currentViewState = this.onlineViewStates.signIn;
+    }
+  }
+
+  public playLocal() {
+    if (this.currentViewState === this.onlineViewStates.onlineGame) {
+      BackgammonStateManager.removeSubscriptions();
+      this.gameController.destroy();
+    }
+    this.showCanvas = true;
+    this.currentViewState = this.onlineViewStates.localGame;
+    this.openedGames = [];
+    const gameData = this.backgammonDBService.getLocalGame();
+    this.startGame(gameData);
   }
 
   ngOnDestroy() {
