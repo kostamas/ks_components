@@ -1,24 +1,17 @@
 <div class="backgammon-container">
 
-  <div class="play-online" *ngIf="showOnlineOption" (click)="playOnlineOrLocal()">
-    {{onlineOrLocalText[currentViewState]}}
-  </div>
+  <div class="buttons-wrapper">
+    <div class="play-online" *ngIf="displayButtonHandler(buttonsNames.playOnline)" (click)="playOnline()">Online</div>
 
-  <div class="logout" *ngIf="localUser && currentViewState !== onlineViewStates.local" (click)="logOut()">
-    Logout
-  </div>
+    <div class="play-local" *ngIf="displayButtonHandler(buttonsNames.playLocal)" (click)="playLocal()">Local</div>
 
-  <div class="menu" *ngIf="currentViewState===onlineViewStates.liveGame" (click)="goToMenu()">
-    Menu
-  </div>
+    <div class="logout" *ngIf="displayButtonHandler(buttonsNames.logout)" (click)="logOut()">Logout</div>
 
-  <div class="online-game-container" [ngClass]="currentViewState">
+    <div class="menu" *ngIf="displayButtonHandler(buttonsNames.menu)" (click)="goToMenu()">Menu</div>
+  </div>
+  <div class="online-game-menu-container" [ngClass]="currentViewState + '-view'">
     <form [formGroup]="formGroup" (ngSubmit)="submit()">
-      <div [ngClass]="{ 'sign-in':currentViewState===onlineViewStates.signIn,
-                        'register':currentViewState===onlineViewStates.register,
-                        'online-game':currentViewState===onlineViewStates.onlineGame,
-                        'local-state':currentViewState===onlineViewStates.local,
-                        'live-game':currentViewState===onlineViewStates.liveGame}">
+      <div [ngClass]="currentViewState">
         <div class="title">{{currentViewState===onlineViewStates.register ? 'Register': 'Sign In'}}</div>
         <div class="input-wrapper">
           <div class="label">Name:</div>
@@ -33,7 +26,7 @@
         <div class="form-error">{{formErrorMessages['password']}}</div>
         <div class="sign-in-register-toggle"
              (click)="toggleSignInRegister()">
-          {{currentViewState===onlineViewStates.signIn ? 'Register': 'Sign In'}}
+          {{currentViewState === onlineViewStates.signIn ? 'Register': 'Sign In'}}
         </div>
       </div>
       <div class="sign-in-error">{{signInError}}</div>
@@ -41,7 +34,7 @@
       </button>
     </form>
 
-    <div class="online-game">
+    <div class="onlineMenu">
       <div class="title">Select Player</div>
       <select class="select-player" [(ngModel)]="selectedPlayer">
         <option *ngFor="let player of (onlinePlayers$ | async)" [ngValue]="player">

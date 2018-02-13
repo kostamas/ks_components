@@ -2,51 +2,43 @@
 
 .backgammon-container {
 
-  .play-online, .logout, .menu {
-    @include dimension(65px, 65px);
-    @include text-style(20px, $malachite);
-    position: absolute;
-    left: 52px;
-    top: 100px;
+  .buttons-wrapper {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50px;
-    background-color: $hintOfRed;
-    box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
-    cursor: pointer;
+    flex-direction: column;
+    position: absolute;
+    left: 50px;
+    top: 80px;
+
+    .play-online, .logout, .menu, .play-local {
+      @include dimension(65px, 65px);
+      @include text-style(20px, $malachite);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50px;
+      background-color: $hintOfRed;
+      box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
+      cursor: pointer;
+      margin-top: 20px;
+    }
   }
 
-  .logout {
-    top: 190px;
-  }
-
-  .menu {
-    top: 280px;
-  }
-
-  .online-game-container.local-state, .online-game-state form, .online-game-state .canvas-wrapper {
+  .online-game-menu-container.localGame-view, .online-game-menu-container.onlineMenu-view form,
+  .online-game-menu-container.onlineGame-view {
     display: none;
   }
 
-  .online-game-container.live-game {
-    display: none;
-  }
-
-  .online-game-container {
+  .online-game-menu-container {
     @include dimension(400px, 320px);
     background-color: $white;
     box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
     margin: 40px auto;
     position: relative;
 
-    .sign-in, .register, .online-game {
-      display: none;
-    }
-
-    .sign-in, .register, .online-game {
+    .signIn, .register, .onlineMenu {
       @include text-style(20px, $malachite);
       padding: 20px 10px;
+      display: none;
 
       .title {
         @include text-style(22px, $malachite);
@@ -93,7 +85,7 @@
       }
     }
 
-    &.sign-in-state .sign-in, &.register-state .register, &.online-game-state .online-game {
+    &.signIn-view .signIn, &.register-view .register, &.onlineMenu-view .onlineMenu {
       display: block;
     }
 
@@ -111,7 +103,7 @@
       }
     }
 
-    .online-game {
+    .onlineMenu {
       .select-player {
         @include dimension(230px, 30px);
         @include text-style(19px, $lochinvar, Lato);

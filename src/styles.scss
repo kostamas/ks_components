@@ -1,5 +1,9 @@
 @import '@angular/material/prebuilt-themes/pink-bluegrey.css';
 
+html {
+  height: 100%;
+}
+
 body{
   background: #C9D6FF;  /* fallback for old browsers */
   background: -webkit-linear-gradient(to right, #E2E2E2, #C9D6FF);  /* Chrome 10-25, Safari 5.1-6 */

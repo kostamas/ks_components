@@ -20,7 +20,7 @@ const calcPointsCircle = (cx, cy, rad, dashLength) => {
     i += 2;
   }
 
-  Canvas.context.strokeStyle = "rgb(255,255,255)";
+  Canvas.context.strokeStyle = 'rgb(255,255,255)';
   Canvas.context.beginPath();
 
   for (let p = 0; p < pointArray.length; p++) {
