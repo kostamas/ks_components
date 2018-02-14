@@ -26,7 +26,7 @@ export class Checker {
     Checker.checkersCount++;
     this.id = Checker.checkersCount;
     this.checkerSvgImg = new Image();
-    this.type = type;
+    this.type = type;  // black or white
     this.x = x;
     this.y = y;
     this.currentSpike = currentSpike;
@@ -50,7 +50,7 @@ export class Checker {
   };
 
   private mouseMoveHandler = ({x, y}) => {
-    if (this.type !== Players.currentState) {
+    if (this.type !== Players.currentState || !Players.isCurrentOnlinePlayer()) {
       return;
     }
 
@@ -78,7 +78,7 @@ export class Checker {
   };
 
   private mouseClickHandler = ({x, y}) => {
-    if (this.type !== Players.currentState || this.isOffBoard) {
+    if (this.type !== Players.currentState || this.isOffBoard || !Players.isCurrentOnlinePlayer()) {
       return;
     }
 

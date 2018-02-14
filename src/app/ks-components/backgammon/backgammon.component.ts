@@ -215,9 +215,10 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
 
           this.openedGames = [];
           Object.keys(this.localUser.gameIds).forEach(gameId => {
-            const openedGamePlayer = players.filter(player => player.gameIds && player.gameIds[gameId])[0];
-            if (openedGamePlayer) {
-              this.openedGames.push({gameId, user: openedGamePlayer});
+            const secondPlayer = players.filter(player => player.gameIds && player.gameIds[gameId])[0];
+            if (secondPlayer) {
+              this.backgammonDBService.isGameCopmpleted(gameId)
+                .subscribe(isCompleted => this.openedGames.push({gameId, isCompleted, secondPlayer: secondPlayer}));
             }
           });
         }
@@ -230,8 +231,8 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     }
 
     return Object.keys(this.localUser.gameIds)
-        .filter(gameId => !!selectedPlayer.gameIds[gameId])
-        .length > 0;
+      .filter(gameId => !!selectedPlayer.gameIds[gameId])
+      .length > 0;
   }
 
   public checkIfCanInvite(selectedPlayer) {
@@ -255,8 +256,18 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   }
 
   public continue(playerName) {
-    const openedGame = this.openedGames.filter((_openedGame: any) => _openedGame.user.name === playerName)[0];
+    const openedGame = this.openedGames.filter((_openedGame: any) => _openedGame.secondPlayer.name === playerName)[0];
     this.router.navigate(['/backgammon/', {gameId: openedGame.gameId}]);
+  }
+
+  public resetGame(openedGame) {
+    this.backgammonDBService.resetGame(this.localUser.name, openedGame.secondPlayer.name, openedGame.gameId)
+      .then(() => {
+        const updatedGame = this.openedGames
+          .filter((_openedGame: any) => _openedGame.secondPlayer.name === openedGame.secondPlayer.name)[0];
+        updatedGame.isCompleted = false;
+
+      });
   }
 
   public displayButtonHandler(btnName) {

@@ -66,6 +66,11 @@ export class BackgammonDBService implements IBackgammonDb {
 
   }
 
+  public isGameCopmpleted(gameId) {
+    return this.fireDatabase.object(`games/${gameId}/state/winningPlayer`).valueChanges()
+      .map((winningPlayer: any) => winningPlayer === 1 || winningPlayer === 3);
+  }
+
   public getInvitations(userName) {
     return this.fireDatabase.object(`users/${userName}/invitations`).valueChanges();
   }
@@ -86,6 +91,16 @@ export class BackgammonDBService implements IBackgammonDb {
       this.fireDatabase.object(`users/${secondPlayerName}/invitations/sent/${localUserName}`).remove();
       return gameId;
     })).take(1);
+  }
+
+  public resetGame(localUserName, secondPlayerName, gameId){
+    const _initialState: any = initialState;
+    _initialState.state.players = {
+      black: localUserName,
+      white: secondPlayerName
+    };
+
+    return this.fireDatabase.object(`games/${gameId}`).set(_initialState);
   }
 
   public getGameStateObserveable(gameId) {

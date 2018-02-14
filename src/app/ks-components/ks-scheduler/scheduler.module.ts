@@ -12,7 +12,6 @@ import {TimeSlotConstant} from './constants/timeSlot.constant';
 import {SchedulerConstant} from './constants/scheduler.constant';
 
 import {SchedulerHoursPipe} from './pipes/schedulerHoursPipe.pipe';
-import {EllipsisPipe} from '../../../pipes/ellipsis.pipe';
 
 import {SchedulerStoreService} from './services/scheduler-store.service';
 
@@ -39,7 +38,6 @@ import {SharedModule} from '../../core/sharedModule.module';
     SchedulerComponent,
     TimeSlotComponent,
     SchedulerHoursPipe,
-    EllipsisPipe,
     SchedulerSpinnerComponent
   ],
   exports: [

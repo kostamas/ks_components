@@ -3,6 +3,8 @@ import {BackgammonStateManager} from "./backgammonStateManager";
 import {isOverlap} from "./helpers/backgammonUtils";
 
 export class Players {
+  public winningPlayer = -1;
+
   public static playersMap = {
     Black: 1,
     White: 3
@@ -13,11 +15,11 @@ export class Players {
     [Players.playersMap.White]: 'White'
   }
 
-  public static playersRealNames = {
+
+  public static onlinePlayersName = {
     [Players.playersNamesMap[Players.playersMap.Black]]: '',
     [Players.playersNamesMap[Players.playersMap.White]]: ''
   }
-
 
   public static currentState = 0;
 
@@ -26,8 +28,6 @@ export class Players {
   public static nextPlayer() {
     Players.currentState = (Players.currentState + 1) % 4;
   }
-
-  public winningPlayer = -1;
 
   constructor() {
     this.init();
@@ -50,14 +50,14 @@ export class Players {
     Canvas.context.lineTo(110, 22);
     Canvas.context.stroke();
 
-    if (Players.playersRealNames[Players.playersNamesMap[Players.playersMap.Black]] ||
-      Players.playersRealNames[Players.playersNamesMap[Players.playersMap.White]]) {
+    if (Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.Black]] ||
+      Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.White]]) {
       Canvas.context.fillStyle = Players.currentState < 2 ? '#000' : '#fff';
 
       if (Players.currentState < 2) {
-        Canvas.context.fillText(Players.playersRealNames[Players.playersNamesMap[Players.playersMap.Black]], 120, 29);
+        Canvas.context.fillText(Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.Black]], 120, 29);
       } else {
-        Canvas.context.fillText(Players.playersRealNames[Players.playersNamesMap[Players.playersMap.White]], 120, 29);
+        Canvas.context.fillText(Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.White]], 120, 29);
       }
     }
 
@@ -86,18 +86,28 @@ export class Players {
 
   public showWinningPlayer(playerType) {
     this.winningPlayer = playerType;
+    const onlinePlayerName = Players.onlinePlayersName[Players.playersNamesMap[playerType]];
+    const winningPlayerName = onlinePlayerName || Players.playersNamesMap[playerType];
+
     Canvas.context.fillStyle = 'rgba(0,0,0,0.5)';
     Canvas.context.fillRect(0, 0, 684, 575);
 
     Canvas.context.font = '40px serif';
     Canvas.context.fillStyle = 'white';
-    Canvas.context.fillText(`${Players.playersNamesMap[playerType]} Won!`, 250, 270);
+    Canvas.context.fillText(`${winningPlayerName} Won!`, 250, 270);
+  }
+
+  public static isCurrentOnlinePlayer() {
+    const localUserName = BackgammonStateManager.localUser && BackgammonStateManager.localUser.name; // isOnline.
+    const currentPlayerType = Players.currentState < 2 ? Players.playersMap.Black : Players.playersMap.White;
+    const currentPlayerName = Players.onlinePlayersName[Players.playersNamesMap[currentPlayerType]];
+    return localUserName && localUserName === currentPlayerName;
   }
 
   public static destroy() {
     Players.currentState = 0;
     Players.showsSkipButton = false;
-    Players.playersRealNames[Players.playersNamesMap[Players.playersMap.Black]] = '';
-    Players.playersRealNames[Players.playersNamesMap[Players.playersMap.White]] = '';
+    Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.Black]] = '';
+    Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.White]] = '';
   }
 }

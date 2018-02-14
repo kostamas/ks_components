@@ -346,8 +346,8 @@ export class GameController {
     BackgammonStateManager.gameState = gameData.state;
 
     if (this.isOnline) {
-      Players.playersRealNames[Players.playersNamesMap[Players.playersMap.Black]] = gameData.players.black;
-      Players.playersRealNames[Players.playersNamesMap[Players.playersMap.White]] = gameData.players.white;
+      Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.Black]] = gameData.players.black;
+      Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.White]] = gameData.players.white;
     }
 
     this.spikes.forEach(spike => spike.clearCheckers());
