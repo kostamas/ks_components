@@ -81,10 +81,9 @@
         <span class="list-title">Opened Games:</span>
         <div *ngFor="let game of openedGames">
           <div class="opened-game-wrapper">
-            <div class="game-name">{{game?.user.name}}</div>
-            <div (click)="continue(game?.user.name)"
-                 class="continue">Continue
-            </div>
+            <div class="second-player-name">{{game?.secondPlayer.name | elipsis: 9}}</div>
+            <div (click)="continue(game?.secondPlayer.name)" class="continue">Continue</div>
+            <div (click)="resetGame(game)" *ngIf="game.isCompleted" class="new-game">new game</div>
           </div>
         </div>
       </div>

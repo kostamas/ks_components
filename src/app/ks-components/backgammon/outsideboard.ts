@@ -12,7 +12,6 @@ export class OutsideBoard {
     this.checkers = {
         [Players.playersNamesMap[Players.playersMap.White]]: [],
         [Players.playersNamesMap[Players.playersMap.Black]]: []
-
     };
 
     this.showArrow = {

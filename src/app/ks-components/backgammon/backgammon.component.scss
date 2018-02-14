@@ -165,12 +165,13 @@
         .opened-game-wrapper {
           display: flex;
           align-items: center;
-          .game-name {
+          .second-player-name {
+            width: 100px;
             padding-left: 10px;
             font-size: 19px;
           }
 
-          .continue {
+          .continue, .new-game {
             @include dimension(80px, 20px);
             @include text-style(16px, $white, Lato);
             border-radius: 10px;
@@ -191,6 +192,13 @@
   .canvas-wrapper {
     @include dimension(684px, 575px);
     margin: 10px auto;
+    :hover {
+      cursor: grab;
+    }
+
+    :active{
+      cursor: grabbing;
+    }
   }
 }
 
@@ -199,6 +207,6 @@
     color: $malachite;
   }
   50% {
-    color: red;
+    color: $red;
   }
 }

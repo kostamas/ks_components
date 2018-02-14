@@ -18,7 +18,7 @@ import {SharedModule} from '../../core/sharedModule.module';
     SharedModule
   ],
   declarations: [
-    BackgammonComponent,
+    BackgammonComponent
   ],
   entryComponents: [],
   exports: [

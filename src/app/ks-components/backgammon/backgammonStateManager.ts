@@ -14,7 +14,7 @@ export class BackgammonStateManager {
   private static game$: Subject<any>;
   private static rollClick$: Subject<any>;
   private static isOnline;
-  private static localUser;
+  public static localUser;
   public static gameState;
   private static subscriptions;
 
@@ -103,6 +103,12 @@ export class BackgammonStateManager {
     BackgammonStateManager.selectedCheckerMove$.next(data);
   }
 
+  public static onSelectedCheckerMove(cb, id?) {
+    BackgammonStateManager.subscriptions.push({
+      id,
+      subscription: BackgammonStateManager.selectedCheckerMove$.subscribe(cb)
+    });
+  }
 
   public static notifySelectedCheckerDrop(data) {
     BackgammonStateManager.mouseDrop$.next(data);

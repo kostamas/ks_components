@@ -7,7 +7,7 @@ import {BackgammonDBService} from '../../adapters/backgammon-adapter/backgammonD
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {DirtyRequired} from '../../shared/vaildators/dirty-required-validator.validator';
 import {Subject} from 'rxjs/Subject';
-import { Location } from '@angular/common';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-backgammon',
@@ -77,9 +77,10 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
 
   private init() {
     this.activatedRoute.params.subscribe((params: Params) => {
-      if (params['gameId']) {
+      this.localUser = JSON.parse(localStorage.getItem('backgammonUser'));
+      if (params['gameId'] && this.localUser) {
         const isOnline = true;
-        this.startGame(null, isOnline, params['userId']);
+        this.startGame(null, isOnline, params['gameId']);
       } else {
         const gameData = this.backgammonDBService.getLocalGame();
         this.startGame(gameData);
@@ -180,7 +181,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   }
 
   private register() {
-    const {name, password} = this.formGroup.value.name;
+    const {name, password} = this.formGroup.value;
     this.logout$.next();
     this.backgammonDBService.createNewUser(name, password)
       .subscribe((err: any) => {
@@ -214,9 +215,10 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
 
           this.openedGames = [];
           Object.keys(this.localUser.gameIds).forEach(gameId => {
-            const openedGamePlayer = players.filter(player => player.gameIds && player.gameIds[gameId])[0];
-            if (openedGamePlayer) {
-              this.openedGames.push({gameId, user: openedGamePlayer});
+            const secondPlayer = players.filter(player => player.gameIds && player.gameIds[gameId])[0];
+            if (secondPlayer) {
+              this.backgammonDBService.isGameCopmpleted(gameId)
+                .subscribe(isCompleted => this.openedGames.push({gameId, isCompleted, secondPlayer: secondPlayer}));
             }
           });
         }
@@ -249,15 +251,23 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   public acceptInvitation(secondPlayerName) {
     this.backgammonDBService.createNewGame(this.localUser.name, secondPlayerName)
       .subscribe(gameId => {
-        const isOnline = true;
-        this.startGame(null, isOnline, gameId);
+        this.router.navigate(['/backgammon/', {gameId}]);
       });
   }
 
   public continue(playerName) {
-    const openedGame = this.openedGames.filter((_openedGame: any) => _openedGame.user.name === playerName)[0];
-    const isOnline = true;
+    const openedGame = this.openedGames.filter((_openedGame: any) => _openedGame.secondPlayer.name === playerName)[0];
     this.router.navigate(['/backgammon/', {gameId: openedGame.gameId}]);
+  }
+
+  public resetGame(openedGame) {
+    this.backgammonDBService.resetGame(this.localUser.name, openedGame.secondPlayer.name, openedGame.gameId)
+      .then(() => {
+        const updatedGame = this.openedGames
+          .filter((_openedGame: any) => _openedGame.secondPlayer.name === openedGame.secondPlayer.name)[0];
+        updatedGame.isCompleted = false;
+
+      });
   }
 
   public displayButtonHandler(btnName) {

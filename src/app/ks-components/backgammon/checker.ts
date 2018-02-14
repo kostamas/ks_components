@@ -3,7 +3,7 @@ import {BackgammonStateManager} from './backgammonStateManager';
 import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
 import {isOverlap} from './helpers/backgammonUtils';
 import {calcPointsCircle, getCheckerSvg} from './helpers/uiHelper';
-import {Players} from "./players";
+import {Players} from './players';
 
 export class Checker {
   private static checkersCount = 0;
@@ -26,7 +26,7 @@ export class Checker {
     Checker.checkersCount++;
     this.id = Checker.checkersCount;
     this.checkerSvgImg = new Image();
-    this.type = type;
+    this.type = type;  // black or white
     this.x = x;
     this.y = y;
     this.currentSpike = currentSpike;
@@ -50,12 +50,12 @@ export class Checker {
   };
 
   private mouseMoveHandler = ({x, y}) => {
-    if (this.type !== Players.currentState) {
+    if (this.type !== Players.currentState || !Players.isCurrentOnlinePlayer()) {
       return;
     }
 
     if (this.isClicked) {
-      BackgammonStateManager.notifySelectedCheckerMove({x, y, checkerId: this.id});
+      BackgammonStateManager.notifySelectedCheckerMove({x, y, checker: this});
       BackgammonStateManager.notifyRedraw();
       this.x = x - this.radius * 1.5;
       this.y = y - this.radius * 1.5;
@@ -78,7 +78,7 @@ export class Checker {
   };
 
   private mouseClickHandler = ({x, y}) => {
-    if (this.type !== Players.currentState || this.isOffBoard) {
+    if (this.type !== Players.currentState || this.isOffBoard || !Players.isCurrentOnlinePlayer()) {
       return;
     }
 
