@@ -251,7 +251,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   public acceptInvitation(secondPlayerName) {
     this.backgammonDBService.createNewGame(this.localUser.name, secondPlayerName)
       .subscribe(gameId => {
-        this.router.navigate(['/backgammon/', {gameId: gameId}]);
+        this.router.navigate(['/backgammon/', {gameId}]);
       });
   }
 
