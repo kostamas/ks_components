@@ -23,6 +23,7 @@ export class GameController {
   private isOnline = false;
   private gameState;
   private gameStateObservable;
+  private selectedCheckerObservable;
   private gameId;
 
   private spikesPositions = [
@@ -41,6 +42,7 @@ export class GameController {
     BackgammonStateManager.onRedraw(this.redrawHandler);
     BackgammonStateManager.onSkipPlayer(this.skipPlayerHandler);
     BackgammonStateManager.onSelectChecker(this.selectCheckerHandler);
+    BackgammonStateManager.onSelectedCheckerMove(this.onSelectedCheckerMove);
 
     drawBackground(this.backgroundImgUrl).subscribe(() => {
       this.initSpikes();
@@ -57,6 +59,8 @@ export class GameController {
         this.gameStateObservable = this.backgammonDBService.getGameStateObserveable(gameId)
           .do(gameState => this.gameState = gameState)
           .subscribe(this.gameHandler);
+        this.selectedCheckerObservable = this.backgammonDBService.getSelectedCheckerObservable(gameId)
+          .subscribe(this.secondPlayerSelectedCheckerMoveHandler);
         BackgammonStateManager.onRollClick(this.updateState);
       } else {
         this.gameHandler(gameData);
@@ -339,7 +343,7 @@ export class GameController {
   }
 
   private gameHandler = (gameData) => {
-    BackgammonStateManager.gameState = gameData;
+    BackgammonStateManager.gameState = gameData.state;
 
     if (this.isOnline) {
       Players.playersRealNames[Players.playersNamesMap[Players.playersMap.Black]] = gameData.players.black;
@@ -423,6 +427,12 @@ export class GameController {
     }
   }
 
+  private onSelectedCheckerMove = ({x, y, checker}) => {
+    if (this.isOnline) {
+      this.backgammonDBService.updateSelectedCheckerMove(x, y, checker, this.gameId, BackgammonStateManager.localUser);
+    }
+  }
+
   private skipPlayerHandler = () => {
     this.dices.dices = [];
     this.dices.setShowRollButton(true);
@@ -442,6 +452,13 @@ export class GameController {
     this.gamePlayers.showWinningPlayer(playerType);
   }
 
+  private secondPlayerSelectedCheckerMoveHandler = (data) => {
+    if (data.player && BackgammonStateManager.localUser.name !== data.player && data.id > -1) {
+      this.checkers[data.id - 1].setPosition({x: data.x, y: data.y});
+      this.redrawHandler();
+    }
+  }
+
   private updateState = () => {
     const newState = {
       checkers: {},
@@ -450,6 +467,7 @@ export class GameController {
       winningPlayer: this.gamePlayers.winningPlayer,
       moveSuggestion: {},
       players: this.gameState.players,
+      timeStamp: Date.now()  // patch - for trigger firebase observable change
     };
     this.checkers.forEach((checker: any, index) => {
       newState.checkers[index + 1] = {
@@ -468,7 +486,15 @@ export class GameController {
       newState.dices[index] = dice;
     });
 
-    this.backgammonDBService.updateGameState(this.gameId, newState);
+    const updatedGame = {
+      state: newState,
+      selectedChecker: {
+        index: -1,
+        x: -1,
+        y: -1
+      }
+    }
+    this.backgammonDBService.updateGameState(this.gameId, updatedGame);
   }
 
   private redrawHandler = () => {
@@ -500,6 +526,9 @@ export class GameController {
     this.isOnline = false;
     if (this.gameStateObservable) {
       this.gameStateObservable.unsubscribe();
+    }
+    if (this.selectedCheckerObservable) {
+      this.selectedCheckerObservable.unsubscribe();
     }
   }
 }

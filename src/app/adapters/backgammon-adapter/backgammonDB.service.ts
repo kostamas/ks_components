@@ -43,7 +43,7 @@ export class BackgammonDBService implements IBackgammonDb {
             .set({name: userName, password}));
         }
         return observable;
-      })
+      });
   }
 
   public getAllUsers(localUser) {
@@ -72,7 +72,7 @@ export class BackgammonDBService implements IBackgammonDb {
 
   public createNewGame(localUserName, secondPlayerName) {
     const _initialState: any = initialState;
-    _initialState.players = {
+    _initialState.state.players = {
       black: localUserName,
       white: secondPlayerName
     };
@@ -85,20 +85,31 @@ export class BackgammonDBService implements IBackgammonDb {
       this.fireDatabase.object(`users/${localUserName}/invitations/received/${secondPlayerName}`).remove();
       this.fireDatabase.object(`users/${secondPlayerName}/invitations/sent/${localUserName}`).remove();
       return gameId;
-    }))
-      .take(1);
+    })).take(1);
   }
 
   public getGameStateObserveable(gameId) {
-    return this.fireDatabase.object(`games/${gameId}`).valueChanges()
-      .map((gameState: any) => {
+    return this.fireDatabase.object(`games/${gameId}/state`).valueChanges()
+      .map((gameState: any) => {  // todo - check why it's working that way
         return gameState;
+      });
+  }
+
+  public getSelectedCheckerObservable(gameId) {
+    return this.fireDatabase.object(`games/${gameId}/selectedChecker`).valueChanges()
+      .map((selectedChecker: any) => { // todo - check why it's working that way
+        return selectedChecker;
       });
   }
 
   public updateGameState(gameId, newState) {
     newState.timeStamp = Date.now();
     this.fireDatabase.object(`games/${gameId}`).set(newState);
+  }
+
+  public updateSelectedCheckerMove(x, y, checker, gameId, localUser) {
+    const selectedChecker = {x, y, id: checker.id, player: localUser.name};
+    this.fireDatabase.object(`games/${gameId}/selectedChecker`).set(selectedChecker);
   }
 
   public sendInvitation(localPlayer, selectedPlayer) {
