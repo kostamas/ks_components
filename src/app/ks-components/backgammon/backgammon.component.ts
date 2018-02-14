@@ -116,7 +116,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   }
 
   public logOut() {
-    this.location.go('backgammon');
+    this.router.navigate(['/backgammon/']);
     localStorage.removeItem('backgammonUser');
     this.localUser = undefined;
     this.formGroup.reset();
@@ -125,7 +125,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   }
 
   public goToMenu() {
-    this.location.go('backgammon');
+    this.router.navigate(['/backgammon/']);
     BackgammonStateManager.removeSubscriptions();
     this.gameController.destroy();
     this.currentViewState = this.onlineViewStates.onlineMenu;
@@ -217,7 +217,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
           Object.keys(this.localUser.gameIds).forEach(gameId => {
             const secondPlayer = players.filter(player => player.gameIds && player.gameIds[gameId])[0];
             if (secondPlayer) {
-              this.backgammonDBService.isGameCopmpleted(gameId)
+              this.backgammonDBService.isGameCompleted(gameId)
                 .subscribe(isCompleted => this.openedGames.push({gameId, isCompleted, secondPlayer: secondPlayer}));
             }
           });

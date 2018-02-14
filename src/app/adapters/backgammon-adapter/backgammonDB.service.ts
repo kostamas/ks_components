@@ -20,10 +20,6 @@ export class BackgammonDBService implements IBackgammonDb {
     return BackgammonMockData.db.games.game1;
   }
 
-  private gameHandler(newGameState) {
-    BackgammonStateManager.notifyGame(newGameState);
-  }
-
   public getUser(userName, password) {
     return this.fireDatabase.object(`users/${userName}`)
       .valueChanges()
@@ -66,13 +62,9 @@ export class BackgammonDBService implements IBackgammonDb {
 
   }
 
-  public isGameCopmpleted(gameId) {
+  public isGameCompleted(gameId) {
     return this.fireDatabase.object(`games/${gameId}/state/winningPlayer`).valueChanges()
       .map((winningPlayer: any) => winningPlayer === 1 || winningPlayer === 3);
-  }
-
-  public getInvitations(userName) {
-    return this.fireDatabase.object(`users/${userName}/invitations`).valueChanges();
   }
 
   public createNewGame(localUserName, secondPlayerName) {
@@ -104,17 +96,11 @@ export class BackgammonDBService implements IBackgammonDb {
   }
 
   public getGameStateObserveable(gameId) {
-    return this.fireDatabase.object(`games/${gameId}/state`).valueChanges()
-      .map((gameState: any) => {  // todo - check why it's working that way
-        return gameState;
-      });
+    return this.fireDatabase.object(`games/${gameId}/state`).valueChanges();
   }
 
   public getSelectedCheckerObservable(gameId) {
-    return this.fireDatabase.object(`games/${gameId}/selectedChecker`).valueChanges()
-      .map((selectedChecker: any) => { // todo - check why it's working that way
-        return selectedChecker;
-      });
+    return this.fireDatabase.object(`games/${gameId}/selectedChecker`).valueChanges();
   }
 
   public updateGameState(gameId, newState) {

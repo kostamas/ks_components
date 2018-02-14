@@ -142,10 +142,6 @@ export class BackgammonStateManager {
     BackgammonStateManager.subscriptions.push({id, subscription: BackgammonStateManager.rollClick$.subscribe(cb)});
   }
 
-  public static notifyGame(newGameState) {
-    BackgammonStateManager.game$.next(newGameState);
-  }
-
   public static removeSubscriptions() {
     if (BackgammonStateManager.subscriptions) {
       BackgammonStateManager.subscriptions.forEach(subscriptionData => {
