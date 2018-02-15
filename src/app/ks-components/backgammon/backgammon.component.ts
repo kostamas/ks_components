@@ -78,20 +78,29 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   private init() {
     this.activatedRoute.params.subscribe((params: Params) => {
       this.localUser = JSON.parse(localStorage.getItem('backgammonUser'));
+
+      this.formGroup.statusChanges.subscribe(status => {
+        Object.keys(this.formErrorMessages).forEach(controlName => this.formErrorMessages[controlName] = '');
+        if (status === 'INVALID') {
+          this.formErrorHandler();
+        }
+      });
+
       if (params['gameId'] && this.localUser) {
         const isOnline = true;
         this.startGame(null, isOnline, params['gameId']);
-      } else {
-        const gameData = this.backgammonDBService.getLocalGame();
-        this.startGame(gameData);
-
-        this.formGroup.statusChanges.subscribe(status => {
-          Object.keys(this.formErrorMessages).forEach(controlName => this.formErrorMessages[controlName] = '');
-          if (status === 'INVALID') {
-            this.formErrorHandler();
-          }
-        });
+        return;
       }
+
+      if (params['menu']) {
+        this.location.go('backgammon');
+        const {name, password} = this.localUser;
+        this.signIn(name, password);
+        return;
+      }
+
+      const gameData = this.backgammonDBService.getLocalGame();
+      this.startGame(gameData);
       this.changeDetector.detectChanges();
     });
   }
@@ -125,7 +134,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   }
 
   public goToMenu() {
-    this.router.navigate(['/backgammon/']);
+    this.router.navigate(['/backgammon/', {menu: true}]);
     BackgammonStateManager.removeSubscriptions();
     this.gameController.destroy();
     this.currentViewState = this.onlineViewStates.onlineMenu;
@@ -193,7 +202,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
       });
   }
 
-  private onlineMenuHandler() {
+  private onlineMenuHandler = () => {
     if (this.currentViewState !== this.onlineViewStates.onlineGame) {
       this.currentViewState = this.onlineViewStates.onlineMenu;
     }
