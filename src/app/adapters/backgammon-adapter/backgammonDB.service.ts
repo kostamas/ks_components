@@ -64,7 +64,8 @@ export class BackgammonDBService implements IBackgammonDb {
 
   public isGameCompleted(gameId) {
     return this.fireDatabase.object(`games/${gameId}/state/winningPlayer`).valueChanges()
-      .map((winningPlayer: any) => winningPlayer === 1 || winningPlayer === 3);
+      .map((winningPlayer: any) => winningPlayer === 1 || winningPlayer === 3)
+      .take(1);
   }
 
   public createNewGame(localUserName, secondPlayerName) {
