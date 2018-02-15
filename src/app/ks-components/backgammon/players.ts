@@ -101,7 +101,7 @@ export class Players {
     const localUserName = BackgammonStateManager.localUser && BackgammonStateManager.localUser.name; // isOnline.
     const currentPlayerType = Players.currentState < 2 ? Players.playersMap.Black : Players.playersMap.White;
     const currentPlayerName = Players.onlinePlayersName[Players.playersNamesMap[currentPlayerType]];
-    return localUserName && localUserName === currentPlayerName;
+    return !localUserName || localUserName && localUserName === currentPlayerName;
   }
 
   public static destroy() {
