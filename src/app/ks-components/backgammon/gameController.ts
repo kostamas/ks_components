@@ -516,7 +516,7 @@ export class GameController {
     });
   }
 
-  public destroy() {
+  public destroy = () => {
     Checker.destroy();
     Spike.destroy();
     Players.destroy();

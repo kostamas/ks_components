@@ -89,6 +89,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
       if (params['gameId'] && this.localUser) {
         const isOnline = true;
         this.startGame(null, isOnline, params['gameId']);
+        this.changeDetector.detectChanges();
         return;
       }
 
@@ -96,6 +97,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
         this.location.go('backgammon');
         const {name, password} = this.localUser;
         this.signIn(name, password);
+        this.changeDetector.detectChanges();
         return;
       }
 
@@ -127,10 +129,8 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   public logOut() {
     this.router.navigate(['/backgammon/']);
     localStorage.removeItem('backgammonUser');
-    this.localUser = undefined;
-    this.formGroup.reset();
+    this.clearGame();
     this.logout$.next();
-    this.playLocal();
   }
 
   public goToMenu() {
@@ -297,14 +297,20 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
 
   public playLocal() {
     if (this.currentViewState === this.onlineViewStates.onlineGame) {
-      BackgammonStateManager.removeSubscriptions();
       this.gameController.destroy();
+      BackgammonStateManager.removeSubscriptions();
     }
     this.showCanvas = true;
     this.currentViewState = this.onlineViewStates.localGame;
     this.openedGames = [];
     const gameData = this.backgammonDBService.getLocalGame();
     this.startGame(gameData);
+  }
+
+  private clearGame() {
+    this.localUser = undefined;
+    this.openedGames = [];
+    this.formGroup.reset();
   }
 
   ngOnDestroy() {
