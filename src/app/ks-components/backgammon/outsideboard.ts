@@ -20,13 +20,13 @@ export class OutsideBoard {
     };
 
     this.position = {
-      [Players.playersNamesMap[Players.playersMap.Black]]: {x: 643, y: 360},
-      [Players.playersNamesMap[Players.playersMap.White]]: {x: 643, y: 95}
+      [Players.playersNamesMap[Players.playersMap.Black]]: {x: 643, y: 322},
+      [Players.playersNamesMap[Players.playersMap.White]]: {x: 643, y: 42}
     };
 
     this.dimensions = {
       width: 35,
-      height: 120
+      height: 210
     };
 
     this.init();
@@ -55,14 +55,14 @@ export class OutsideBoard {
     if (this.showArrow[Players.playersNamesMap[Players.playersMap.Black]]) {
       x = this.position[Players.playersNamesMap[Players.playersMap.Black]].x;
       y = this.position[Players.playersNamesMap[Players.playersMap.Black]].y;
-      drawArrow([660, 320], [660, 350]);
+      drawArrow([660, 280], [660, 310]);
       Canvas.context.rect(x, y, this.dimensions.width, this.dimensions.height);
       Canvas.context.stroke();
     }
     if (this.showArrow[Players.playersNamesMap[Players.playersMap.White]]) {
       x = this.position[Players.playersNamesMap[Players.playersMap.White]].x;
       y = this.position[Players.playersNamesMap[Players.playersMap.White]].y;
-      drawArrow([660, 255], [660, 225]);
+      drawArrow([660, 290], [660, 260]);
       Canvas.context.rect(x, y, this.dimensions.width, this.dimensions.height);
       Canvas.context.stroke();
       Canvas.context.stroke();
