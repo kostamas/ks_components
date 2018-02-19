@@ -454,7 +454,8 @@ export class GameController {
 
   private secondPlayerSelectedCheckerMoveHandler = (data) => {
     if (data.player && BackgammonStateManager.localUser.name !== data.player && data.id > -1) {
-      this.checkers[data.id - 1].setPosition({x: data.x, y: data.y});
+      const radius = BACKGAMMON_CONSTANTS.CHECKERS_SIZE / 2;
+      this.checkers[data.id - 1].setPosition({x: data.x - radius * 1.5, y: data.y - radius * 1.5});
       this.redrawHandler();
     }
   }
