@@ -85,7 +85,7 @@ export class GameController {
         [Players.playersNamesMap[Players.playersMap.White]]: [],
         [Players.playersNamesMap[Players.playersMap.Black]]: [],
       },
-      getNextCheckerPosition: playerType => playerType === Players.playersMap.Black ?
+      getNextCheckerPosition: (playerType) => playerType === Players.playersMap.Black ?
         {x: 325, y: 235 + this.bar.checkers[Players.playersNamesMap[Players.playersMap.Black]].length * 7} :
         {x: 325, y: 385 + this.bar.checkers[Players.playersNamesMap[Players.playersMap.White]].length * 7},
     };
@@ -367,7 +367,7 @@ export class GameController {
           checker.setPosition(this.spikes[checker.currentSpike].getNextCheckerPosition());
           this.spikes[checker.currentSpike].checkers.push(checker);
         } else {
-          checker.setPosition(this.bar.getNextCheckerPosition([Players.playersNamesMap[checker.type]]));
+          checker.setPosition(this.bar.getNextCheckerPosition(checker.type));
           this.bar.checkers[Players.playersNamesMap[checker.type]].push(checker);
         }
       }

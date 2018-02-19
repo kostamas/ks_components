@@ -15,7 +15,7 @@ export class Checker {
   public type;
   public currentSpike;
   public isOffBoard = false;
-  private radius;
+  private radius;  // todo - define as constant
   private isHovered;
   private isClicked;
   private svgData;
