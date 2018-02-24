@@ -241,17 +241,21 @@ export class GameController {
     let checkersArr, spikeIndex, updateState;
     const spikeDirection = getSpikeDirection(checker.type, Players);
 
-    this.dicesObj.dices.forEach(diceResult => {
-      spikeIndex = checker.currentSpike + diceResult * spikeDirection;
-      if (isValidSpike(spikeIndex)) {
-        checkersArr = this.spikes[spikeIndex].checkers;
-        if (!this.hasOtherOutChecker(checker) && (checkersArr.length <= 1 || checkersArr[0].type === checker.type)) {
-          this.spikes[spikeIndex].setShowValidMove(true);
-          updateState = true;
+    debugger;
+    if (this.checkIfOffBoardState(checker)) {
+      const finalSpike = checker.type === Players.playersMap.White ? checker.currentSpike : checker.currentSpike - 12;
+    } else {
+      this.dicesObj.dices.forEach(diceResult => {
+        spikeIndex = checker.currentSpike + diceResult * spikeDirection;
+        if (isValidSpike(spikeIndex)) {
+          checkersArr = this.spikes[spikeIndex].checkers;
+          if (!this.hasOtherOutChecker(checker) && (checkersArr.length <= 1 || checkersArr[0].type === checker.type)) {
+            this.spikes[spikeIndex].setShowValidMove(true);
+            updateState = true;
+          }
         }
-      }
-      this.offBoardCheckerHandler(checker);
-    });
+      });
+    }
 
     if (this.isOnline && updateState) {
       this.updateState();
@@ -333,17 +337,7 @@ export class GameController {
   }
 
   private checkIfOffBoardState(currentChecker) {
-    let spikeIndex;
-    const spikeDirection = getSpikeDirection(currentChecker.type, Players);
-
-    if (this.countWinningCheckers(currentChecker.type) === BACKGAMMON_CONSTANTS.NUM_OF_CHECKERS / 2) {
-      for (let i = 0; i < this.dicesObj.dices.length; i++) {
-        spikeIndex = currentChecker.currentSpike + spikeDirection * this.dicesObj.dices[i];
-        if (spikeIndex > 23 || spikeIndex < 0) {
-          return true;
-        }
-      }
-    }
+    return this.countWinningCheckers(currentChecker.type) === BACKGAMMON_CONSTANTS.NUM_OF_CHECKERS / 2;
   }
 
   private gameHandler = (gameData) => {
@@ -422,13 +416,6 @@ export class GameController {
         }
       });
     return winningCheckersCounter;
-  }
-
-  private offBoardCheckerHandler(currentChecker) {
-    if (this.checkIfOffBoardState(currentChecker)) {
-      this.outsideBoard.showArrow[Players.playersNamesMap[currentChecker.type]] = true;
-      this.outsideBoard.draw();
-    }
   }
 
   private onSelectedCheckerMove = ({x, y, checker}) => {
