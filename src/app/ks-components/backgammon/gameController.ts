@@ -15,7 +15,7 @@ export class GameController {
   private spikes: Spike[] = [];
   private checkers: Checker[] = [];
   private outsideBoard: OutsideBoard;
-  private dices;
+  private dicesObj;
   private gamePlayers: Players;
   private currentState;
   private backgroundImgUrl = 'assets/images/backgammon.jpg';
@@ -49,7 +49,7 @@ export class GameController {
       this.initCheckers();
       this.initBar();
 
-      this.dices = new Dices();
+      this.dicesObj = new Dices();
       this.gamePlayers = new Players();
       this.outsideBoard = new OutsideBoard();
 
@@ -63,7 +63,8 @@ export class GameController {
           .subscribe(this.secondPlayerSelectedCheckerMoveHandler);
         BackgammonStateManager.onRollClick(this.updateState);
       } else {
-        this.gameHandler(gameData);
+        setTimeout(this.gameHandler.bind(this, gameData));
+
       }
     });
   }
@@ -127,7 +128,7 @@ export class GameController {
       }
     }
 
-    diceResult = this.dices && this.dices.dices;
+    diceResult = this.dicesObj && this.dicesObj.dices;
     diceResult.forEach(_diceResult => {                                       // get the possible spikes to move
       spikeIndex = checker.currentSpike + _diceResult * spikeDirection;
       if (isValidSpike(spikeIndex)) {
@@ -136,11 +137,13 @@ export class GameController {
     });
 
     relevantSpikes.forEach(spike => spike.setShowValidMove(false));
+    this.outsideBoard.showArrow[Players.playersNamesMap[Players.playersMap.Black]] = false;
+    this.outsideBoard.showArrow[Players.playersNamesMap[Players.playersMap.White]] = false;
 
     for (let i = 0; i < relevantSpikes.length; i++) {
       if (this.canMoveChecker(x, y, relevantSpikes, i, checker)) {
         this.moveChecker(checker, relevantSpikes[i]);
-        if (this.dices.dices.length > 0) {
+        if (this.dicesObj.dices.length > 0) {
           const showNextPlayerBtn = this.showSkipBtn(this.currentState);
           if (showNextPlayerBtn) {
             Players.showsSkipButton = true;
@@ -189,10 +192,10 @@ export class GameController {
     checker.setPosition(newPosition);
     checker.currentSpike = newSpikeIndex;
 
-    const diceIndex = this.dices.dices.indexOf(diceResult);
-    this.dices.dices.splice(diceIndex, 1);
-    if (this.dices.dices.length === 0) {
-      this.dices.setShowRollButton(true);
+    const diceIndex = this.dicesObj.dices.indexOf(diceResult);
+    this.dicesObj.dices.splice(diceIndex, 1);
+    if (this.dicesObj.dices.length === 0) {
+      this.dicesObj.setShowRollButton(true);
       Players.nextPlayer();
     }
     this.outsideBoard.showArrow[Players.playersNamesMap[checker.type]] = false;
@@ -212,9 +215,9 @@ export class GameController {
     this.outsideBoard.showArrow[Players.playersNamesMap[checker.type]] = false;
     this.outsideBoard.checkers[Players.playersNamesMap[checker.type]].push(checker);
 
-    const maxDice = Math.max(...this.dices.dices);
-    const diceIndex = this.dices.dices.indexOf(maxDice);
-    this.dices.dices.splice(diceIndex, 1);
+    const maxDice = Math.max(...this.dicesObj.dices);
+    const diceIndex = this.dicesObj.dices.indexOf(maxDice);
+    this.dicesObj.dices.splice(diceIndex, 1);
     this.spikes.forEach(spike => spike.setShowValidMove(false));
 
     const numOfOffBoardCheckers = this.checkers
@@ -225,8 +228,8 @@ export class GameController {
       this.winningHandler(checker.type);
     }
 
-    if (this.dices.dices.length === 0) {
-      this.dices.setShowRollButton(true);
+    if (this.dicesObj.dices.length === 0) {
+      this.dicesObj.setShowRollButton(true);
       Players.nextPlayer();
     }
     if (!this.isOnline) {
@@ -237,7 +240,8 @@ export class GameController {
   private selectCheckerHandler = ({x, y, checker}) => {
     let checkersArr, spikeIndex, updateState;
     const spikeDirection = getSpikeDirection(checker.type, Players);
-    this.dices.dices.forEach(diceResult => {
+
+    this.dicesObj.dices.forEach(diceResult => {
       spikeIndex = checker.currentSpike + diceResult * spikeDirection;
       if (isValidSpike(spikeIndex)) {
         checkersArr = this.spikes[spikeIndex].checkers;
@@ -316,8 +320,8 @@ export class GameController {
 
   private checkPossibleMovesForSpike(playerType, startSpikeIndex, spikeDirection) {
     let currSpike, spikeIndex;
-    for (let i = 0; i < this.dices.dices.length; i++) {
-      spikeIndex = startSpikeIndex + spikeDirection * this.dices.dices[i];
+    for (let i = 0; i < this.dicesObj.dices.length; i++) {
+      spikeIndex = startSpikeIndex + spikeDirection * this.dicesObj.dices[i];
       if (isValidSpike(spikeIndex)) {
         currSpike = this.spikes[spikeIndex];
         if (currSpike && (currSpike.checkers.length <= 1 || currSpike.checkers[0].type === playerType)) {
@@ -333,8 +337,8 @@ export class GameController {
     const spikeDirection = getSpikeDirection(currentChecker.type, Players);
 
     if (this.countWinningCheckers(currentChecker.type) === BACKGAMMON_CONSTANTS.NUM_OF_CHECKERS / 2) {
-      for (let i = 0; i < this.dices.dices.length; i++) {
-        spikeIndex = currentChecker.currentSpike + spikeDirection * this.dices.dices[i];
+      for (let i = 0; i < this.dicesObj.dices.length; i++) {
+        spikeIndex = currentChecker.currentSpike + spikeDirection * this.dicesObj.dices[i];
         if (spikeIndex > 23 || spikeIndex < 0) {
           return true;
         }
@@ -379,7 +383,7 @@ export class GameController {
       Object.keys(gameData.moveSuggestion).forEach(spikeIndex => this.spikes[spikeIndex].setShowValidMove(true));
     }
 
-    this.dices.dices = !!gameData.dices ? Object.values(gameData.dices) : [];
+    this.dicesObj.dices = !!gameData.dices ? Object.values(gameData.dices) : [];
 
     Players.currentState = gameData.currentState;
     this.currentState = gameData.currentState;
@@ -399,7 +403,7 @@ export class GameController {
     if (this.outsideBoard.checkers[Players.playersNamesMap[Players.playersMap.Black]].length === 15) {
       this.gamePlayers.winningPlayer = Players.playersMap.Black;
     }
-    this.dices.showRollButton = Players.currentState % 2 === 0;
+    this.dicesObj.showRollButton = Players.currentState % 2 === 0;
 
     this.redrawHandler();
   }
@@ -434,8 +438,8 @@ export class GameController {
   }
 
   private skipPlayerHandler = () => {
-    this.dices.dices = [];
-    this.dices.setShowRollButton(true);
+    this.dicesObj.dices = [];
+    this.dicesObj.setShowRollButton(true);
     if (this.isOnline) {
       this.updateState();
     } else {
@@ -483,17 +487,13 @@ export class GameController {
       }
     });
 
-    this.dices.dices.forEach((dice, index) => {
+    this.dicesObj.dices.forEach((dice, index) => {
       newState.dices[index] = dice;
     });
 
     const updatedGame = {
       state: newState,
-      selectedChecker: {
-        index: -1,
-        x: -1,
-        y: -1
-      }
+      selectedChecker: {index: -1, x: -1, y: -1}
     }
     this.backgammonDBService.updateGameState(this.gameId, updatedGame);
   }
@@ -502,7 +502,7 @@ export class GameController {
     drawBackground(this.backgroundImgUrl).subscribe(() => {
       this.checkers.forEach(checker => checker.drawChecker());
       this.spikes.forEach(spikes => spikes.drawSpike());
-      this.dices.drawDices();
+      this.dicesObj.drawDices();
       this.gamePlayers.drawPlayer();
       this.outsideBoard.draw();
 
@@ -521,7 +521,7 @@ export class GameController {
     Checker.destroy();
     Spike.destroy();
     Players.destroy();
-    this.dices = [];
+    this.dicesObj = null;
     this.checkers = [];
     this.spikes = [];
     this.isOnline = false;
