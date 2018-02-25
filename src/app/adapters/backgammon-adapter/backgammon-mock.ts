@@ -39,19 +39,19 @@ export class BackgammonMockData {
           17: {currentSpike: 2, isOffBoard: false},
           18: {currentSpike: 2, isOffBoard: false},
           19: {currentSpike: 2, isOffBoard: false},
-          20: {currentSpike: 3, isOffBoard: false},
-          21: {currentSpike: 4, isOffBoard: false},
-          22: {currentSpike: 4, isOffBoard: false},
-          23: {currentSpike: 4, isOffBoard: false},
-          24: {currentSpike: 5, isOffBoard: false},
-          25: {currentSpike: 5, isOffBoard: false},
-          26: {currentSpike: 5, isOffBoard: false},
-          27: {currentSpike: 5, isOffBoard: false},
-          28: {currentSpike: 5, isOffBoard: false},
-          29: {currentSpike: 5, isOffBoard: false},
-          30: {currentSpike: 5, isOffBoard: false}
+          20: {currentSpike: 2, isOffBoard: false},
+          21: {currentSpike: 2, isOffBoard: false},
+          22: {currentSpike: 2, isOffBoard: false},
+          23: {currentSpike: 3, isOffBoard: false},
+          24: {currentSpike: 3, isOffBoard: false},
+          25: {currentSpike: 3, isOffBoard: false},
+          26: {currentSpike: 3, isOffBoard: false},
+          27: {currentSpike: 3, isOffBoard: false},
+          28: {currentSpike: 3, isOffBoard: false},
+          29: {currentSpike: 3, isOffBoard: false},
+          30: {currentSpike: 3, isOffBoard: false}
         },
-        dices: {5: 5, 4: 4},
+        dices: {3: 3, 1: 1},
         currentState: 3
       }
     }

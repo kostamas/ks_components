@@ -244,11 +244,21 @@ export class GameController {
 
     if (this.checkIfOffBoardState(checker)) {
       const currentSpike = checker.currentSpike;
-      const homeSpike = checker.type === Players.playersMap.White ? currentSpike + 1 : 24 - currentSpike;
-      if (this.dicesObj.dices.indexOf(homeSpike) > -1) { // check if the checker spike and dice result is match.
+      const checkerHomeSpike = checker.type === Players.playersMap.White ? currentSpike + 1 : 24 - currentSpike;
+      if (this.dicesObj.dices.indexOf(checkerHomeSpike) > -1) { // check if the checker spike and dice result is match.
         this.outsideBoard.showArrow[Players.playersNamesMap[checker.type]] = true;
       } else {
-          this.findClosestChecker();
+        if (!this.isCheckerAndDicesMatching(checker.type) && this.isHighestChecker(checker)) {
+          this.dicesObj.dices.forEach(diceResult => {
+            spikeIndex = checker.currentSpike + diceResult * spikeDirection;
+            if (spikeIndex > 23 || spikeIndex < 0) {
+              this.outsideBoard.showArrow[Players.playersNamesMap[checker.type]] = true;
+            } else {
+              this.spikes[spikeIndex].setShowValidMove(true);
+            }
+            updateState = true;
+          });
+        }
       }
 
     } else {
@@ -271,8 +281,30 @@ export class GameController {
     }
   };
 
-  private findClosestChecker(){
+  private isHighestChecker(checker) {
+    const homeSpikesDirection = checker.type === Players.playersMap.White ?
+      {runningSpike: 5, direction: -1} : {runningSpike: 18, direction: 1};
 
+    for (let i = 0; i < 6; i++) {
+      if (this.spikes[homeSpikesDirection.runningSpike + i * homeSpikesDirection.direction].checkers.length > 0) {
+        return checker.currentSpike === homeSpikesDirection.runningSpike + i * homeSpikesDirection.direction;
+      }
+    }
+  }
+
+  private isCheckerAndDicesMatching(playerType) {
+    const homeSpikesDirection = playerType === Players.playersMap.White ?
+      {highestSpike: 5, direction: -1} : {highestSpike: 18, direction: 1};
+
+    for (let i = 0; i < this.dicesObj.dices.length; i++) {
+      const dice = this.dicesObj.dices[i];
+      const spikeIndex = homeSpikesDirection.highestSpike + dice * homeSpikesDirection.direction;
+      if (this.spikes[spikeIndex].checkers.length > 0) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   private checkerHitHandler(checker) {
