@@ -64,7 +64,6 @@ export class GameController {
         BackgammonStateManager.onRollClick(this.updateState);
       } else {
         setTimeout(this.gameHandler.bind(this, gameData));
-
       }
     });
   }
@@ -206,17 +205,19 @@ export class GameController {
     }
   }
 
-  private bearingOff(checker: Checker) {
+  private bearingOff = (checker: Checker) => {
     const position = this.outsideBoard.getNextCheckerPosition(checker.type);
     checker.setPosition(position);
     this.spikes[checker.currentSpike].checkers.pop();
-    checker.currentSpike = null;
     checker.isOffBoard = true;
     this.outsideBoard.showArrow[Players.playersNamesMap[checker.type]] = false;
     this.outsideBoard.checkers[Players.playersNamesMap[checker.type]].push(checker);
 
-    const maxDice = Math.max(...this.dicesObj.dices);
-    const diceIndex = this.dicesObj.dices.indexOf(maxDice);
+    const currentSpike = checker.currentSpike;
+    const homeSpike = checker.type === Players.playersMap.White ? currentSpike + 1 : 24 - currentSpike;
+    checker.currentSpike = null;
+
+    const diceIndex = this.dicesObj.dices.indexOf(homeSpike);
     this.dicesObj.dices.splice(diceIndex, 1);
     this.spikes.forEach(spike => spike.setShowValidMove(false));
 
@@ -242,7 +243,14 @@ export class GameController {
     const spikeDirection = getSpikeDirection(checker.type, Players);
 
     if (this.checkIfOffBoardState(checker)) {
-      const finalSpike = checker.type === Players.playersMap.White ? checker.currentSpike : checker.currentSpike - 12;
+      const currentSpike = checker.currentSpike;
+      const homeSpike = checker.type === Players.playersMap.White ? currentSpike + 1 : 24 - currentSpike;
+      if (this.dicesObj.dices.indexOf(homeSpike) > -1) { // check if the checker spike and dice result is match.
+        this.outsideBoard.showArrow[Players.playersNamesMap[checker.type]] = true;
+      } else {
+          this.findClosestChecker();
+      }
+
     } else {
       this.dicesObj.dices.forEach(diceResult => {
         spikeIndex = checker.currentSpike + diceResult * spikeDirection;
@@ -262,6 +270,10 @@ export class GameController {
       this.redrawHandler();
     }
   };
+
+  private findClosestChecker(){
+
+  }
 
   private checkerHitHandler(checker) {
     checker.setPosition(this.bar.getNextCheckerPosition(checker.type));

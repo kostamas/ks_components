@@ -51,8 +51,8 @@ export class BackgammonMockData {
           29: {currentSpike: 5, isOffBoard: false},
           30: {currentSpike: 5, isOffBoard: false}
         },
-        dices: {},
-        currentState: 0
+        dices: {5: 5, 4: 4},
+        currentState: 3
       }
     }
   }
