@@ -63,7 +63,8 @@ export class GameController {
           .subscribe(this.secondPlayerSelectedCheckerMoveHandler);
         BackgammonStateManager.onRollClick(this.updateState);
       } else {
-        this.gameHandler(gameData);
+        setTimeout(this.gameHandler.bind(this, gameData));
+
       }
     });
   }
@@ -136,6 +137,8 @@ export class GameController {
     });
 
     relevantSpikes.forEach(spike => spike.setShowValidMove(false));
+    this.outsideBoard.showArrow[Players.playersNamesMap[Players.playersMap.Black]] = false;
+    this.outsideBoard.showArrow[Players.playersNamesMap[Players.playersMap.White]] = false;
 
     for (let i = 0; i < relevantSpikes.length; i++) {
       if (this.canMoveChecker(x, y, relevantSpikes, i, checker)) {
@@ -237,17 +240,21 @@ export class GameController {
   private selectCheckerHandler = ({x, y, checker}) => {
     let checkersArr, spikeIndex, updateState;
     const spikeDirection = getSpikeDirection(checker.type, Players);
-    this.dicesObj.dices.forEach(diceResult => {
-      spikeIndex = checker.currentSpike + diceResult * spikeDirection;
-      if (isValidSpike(spikeIndex)) { // show spike arrows hint
-        checkersArr = this.spikes[spikeIndex].checkers;
-        if (!this.hasOtherOutChecker(checker) && (checkersArr.length <= 1 || checkersArr[0].type === checker.type)) {
-          this.spikes[spikeIndex].setShowValidMove(true);
-          updateState = true;
+
+    if (this.checkIfOffBoardState(checker)) {
+      const finalSpike = checker.type === Players.playersMap.White ? checker.currentSpike : checker.currentSpike - 12;
+    } else {
+      this.dicesObj.dices.forEach(diceResult => {
+        spikeIndex = checker.currentSpike + diceResult * spikeDirection;
+        if (isValidSpike(spikeIndex)) {
+          checkersArr = this.spikes[spikeIndex].checkers;
+          if (!this.hasOtherOutChecker(checker) && (checkersArr.length <= 1 || checkersArr[0].type === checker.type)) {
+            this.spikes[spikeIndex].setShowValidMove(true);
+            updateState = true;
+          }
         }
-      }
-      this.offBoardCheckerHandler(checker);
-    });
+      });
+    }
 
     if (this.isOnline && updateState) {
       this.updateState();
@@ -329,17 +336,7 @@ export class GameController {
   }
 
   private checkIfOffBoardState(currentChecker) {
-    const spikeDirection = getSpikeDirection(currentChecker.type, Players);
-    let spikeIndex;
-
-    if (this.countWinningCheckers(currentChecker.type) === BACKGAMMON_CONSTANTS.NUM_OF_CHECKERS / 2) {
-      for (let i = 0; i < this.dicesObj.dices.length; i++) {
-        spikeIndex = currentChecker.currentSpike + spikeDirection * this.dicesObj.dices[i];
-        if (spikeIndex > 23 || spikeIndex < 0) {
-          return true;
-        }
-      }
-    }
+    return this.countWinningCheckers(currentChecker.type) === BACKGAMMON_CONSTANTS.NUM_OF_CHECKERS / 2;
   }
 
   private gameHandler = (gameData) => {
@@ -420,13 +417,6 @@ export class GameController {
     return winningCheckersCounter;
   }
 
-  private offBoardCheckerHandler(currentChecker) {
-    if (this.checkIfOffBoardState(currentChecker)) {
-      this.outsideBoard.showArrow[Players.playersNamesMap[currentChecker.type]] = true;
-      this.outsideBoard.draw();
-    }
-  }
-
   private onSelectedCheckerMove = ({x, y, checker}) => {
     if (this.isOnline) {
       this.backgammonDBService.updateSelectedCheckerMove(x, y, checker, this.gameId, BackgammonStateManager.localUser);
@@ -489,11 +479,7 @@ export class GameController {
 
     const updatedGame = {
       state: newState,
-      selectedChecker: {
-        index: -1,
-        x: -1,
-        y: -1
-      }
+      selectedChecker: {index: -1, x: -1, y: -1}
     }
     this.backgammonDBService.updateGameState(this.gameId, updatedGame);
   }
@@ -521,7 +507,7 @@ export class GameController {
     Checker.destroy();
     Spike.destroy();
     Players.destroy();
-    this.dicesObj = [];
+    this.dicesObj = null;
     this.checkers = [];
     this.spikes = [];
     this.isOnline = false;
