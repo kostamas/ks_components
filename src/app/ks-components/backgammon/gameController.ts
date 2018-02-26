@@ -64,7 +64,6 @@ export class GameController {
         BackgammonStateManager.onRollClick(this.updateState);
       } else {
         setTimeout(this.gameHandler.bind(this, gameData));
-
       }
     });
   }
@@ -206,17 +205,19 @@ export class GameController {
     }
   }
 
-  private bearingOff(checker: Checker) {
+  private bearingOff = (checker: Checker) => {
     const position = this.outsideBoard.getNextCheckerPosition(checker.type);
     checker.setPosition(position);
     this.spikes[checker.currentSpike].checkers.pop();
-    checker.currentSpike = null;
     checker.isOffBoard = true;
     this.outsideBoard.showArrow[Players.playersNamesMap[checker.type]] = false;
     this.outsideBoard.checkers[Players.playersNamesMap[checker.type]].push(checker);
 
-    const maxDice = Math.max(...this.dicesObj.dices);
-    const diceIndex = this.dicesObj.dices.indexOf(maxDice);
+    const currentSpike = checker.currentSpike;
+    const homeSpike = checker.type === Players.playersMap.White ? currentSpike + 1 : 24 - currentSpike;
+    checker.currentSpike = null;
+
+    const diceIndex = this.dicesObj.dices.indexOf(homeSpike);
     this.dicesObj.dices.splice(diceIndex, 1);
     this.spikes.forEach(spike => spike.setShowValidMove(false));
 
@@ -240,9 +241,26 @@ export class GameController {
   private selectCheckerHandler = ({x, y, checker}) => {
     let checkersArr, spikeIndex, updateState;
     const spikeDirection = getSpikeDirection(checker.type, Players);
-    
+
     if (this.checkIfOffBoardState(checker)) {
-      const finalSpike = checker.type === Players.playersMap.White ? checker.currentSpike : checker.currentSpike - 12;
+      const currentSpike = checker.currentSpike;
+      const checkerHomeSpike = checker.type === Players.playersMap.White ? currentSpike + 1 : 24 - currentSpike;
+      const highestCheckerSpikeNumber = this.getHighestCheckerSpikeNumber(checker);
+      this.dicesObj.dices.forEach(diceResult => {
+        if (checkerHomeSpike === diceResult) {
+          this.outsideBoard.showArrow[Players.playersNamesMap[checker.type]] = true;
+        }
+
+        if (checkerHomeSpike > diceResult) {
+          spikeIndex = checker.currentSpike + diceResult * spikeDirection;
+          this.spikes[spikeIndex].setShowValidMove(true);
+        }
+
+        if (checkerHomeSpike < diceResult && highestCheckerSpikeNumber === checkerHomeSpike) {
+          this.outsideBoard.showArrow[Players.playersNamesMap[checker.type]] = true;
+        }
+      });
+
     } else {
       this.dicesObj.dices.forEach(diceResult => {
         spikeIndex = checker.currentSpike + diceResult * spikeDirection;
@@ -262,6 +280,17 @@ export class GameController {
       this.redrawHandler();
     }
   };
+
+  private getHighestCheckerSpikeNumber(checker) {
+    const homeSpikesDirection = checker.type === Players.playersMap.White ?
+      {runningSpike: 5, direction: -1} : {runningSpike: 18, direction: 1};
+
+    for (let i = 0; i < 6; i++) {
+      if (this.spikes[homeSpikesDirection.runningSpike + i * homeSpikesDirection.direction].checkers.length > 0) {
+        return 6 - i;
+      }
+    }
+  }
 
   private checkerHitHandler(checker) {
     checker.setPosition(this.bar.getNextCheckerPosition(checker.type));
