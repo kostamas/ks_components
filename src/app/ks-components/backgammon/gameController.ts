@@ -292,21 +292,6 @@ export class GameController {
     }
   }
 
-  private isCheckerAndDicesMatching(playerType) {
-    const homeSpikesDirection = playerType === Players.playersMap.White ?
-      {highestSpike: 5, direction: -1} : {highestSpike: 18, direction: 1};
-
-    for (let i = 0; i < this.dicesObj.dices.length; i++) {
-      const dice = this.dicesObj.dices[i];
-      const spikeIndex = homeSpikesDirection.highestSpike + dice * homeSpikesDirection.direction;
-      if (this.spikes[spikeIndex].checkers.length > 0) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
   private checkerHitHandler(checker) {
     checker.setPosition(this.bar.getNextCheckerPosition(checker.type));
 
