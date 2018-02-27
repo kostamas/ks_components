@@ -217,7 +217,14 @@ export class GameController {
     const homeSpike = checker.type === Players.playersMap.White ? currentSpike + 1 : 24 - currentSpike;
     checker.currentSpike = null;
 
-    const diceIndex = this.dicesObj.dices.indexOf(homeSpike);
+    let diceToRemove = 7, diceIndex;
+    this.dicesObj.dices.forEach(diceResult => {
+      if (diceResult >= homeSpike && diceResult < diceToRemove) {
+        diceToRemove = diceResult;
+      }
+    });
+
+    diceIndex = this.dicesObj.dices.indexOf(diceToRemove);
     this.dicesObj.dices.splice(diceIndex, 1);
     this.spikes.forEach(spike => spike.setShowValidMove(false));
 
