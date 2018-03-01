@@ -226,8 +226,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
           Object.keys(this.localUser.gameIds).forEach(gameId => {
             const secondPlayer = players.filter(player => player.gameIds && player.gameIds[gameId])[0];
             if (secondPlayer) {
-              this.backgammonDBService.isGameCompleted(gameId)
-                .subscribe(isCompleted => this.openedGames.push({gameId, isCompleted, secondPlayer: secondPlayer}));
+                 this.openedGames.push({gameId, secondPlayer: secondPlayer});
             }
           });
         }
@@ -267,16 +266,6 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   public continue(playerName) {
     const openedGame = this.openedGames.filter((_openedGame: any) => _openedGame.secondPlayer.name === playerName)[0];
     this.router.navigate(['/backgammon/', {gameId: openedGame.gameId}]);
-  }
-
-  public resetGame(openedGame) {
-    this.backgammonDBService.resetGame(this.localUser.name, openedGame.secondPlayer.name, openedGame.gameId)
-      .then(() => {
-        const updatedGame = this.openedGames
-          .filter((_openedGame: any) => _openedGame.secondPlayer.name === openedGame.secondPlayer.name)[0];
-        updatedGame.isCompleted = false;
-
-      });
   }
 
   public displayButtonHandler(btnName) {
