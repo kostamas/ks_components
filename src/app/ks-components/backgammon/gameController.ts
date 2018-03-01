@@ -575,18 +575,6 @@ export class GameController {
     });
   }
 
-  private newGame = ({x, y}) => {
-    const target = BACKGAMMON_CONSTANTS.PLAY_AGAIN_POSITION;
-    const random = Math.floor(Math.random() * 2);
-    const blackPlayerName = Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.Black]];
-    const whitePlayerName  = Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.White]];
-    if (this.showPlayAgain && isOverlap(x, y, target.x, target.y, 100, 20)) {
-      const firstPlayerName = !!random ? blackPlayerName : whitePlayerName;
-      const secondPlayerName = !!random ? whitePlayerName : blackPlayerName;
-      this.backgammonDBService.newGame(firstPlayerName, secondPlayerName, this.gameId);
-    }
-  }
-
   public destroy = () => {
     Checker.destroy();
     Spike.destroy();
