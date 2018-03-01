@@ -46,6 +46,7 @@ export class GameController {
     BackgammonStateManager.onSelectChecker(this.selectCheckerHandler);
     BackgammonStateManager.onSelectedCheckerMove(this.onSelectedCheckerMove);
     BackgammonStateManager.onMouseClick(this.newGame, 'gameController');
+    BackgammonStateManager.onMouseClick(this.hoverNewGame, 'gameController');
 
     drawBackground(this.backgroundImgUrl).subscribe(() => {
       this.initSpikes();
@@ -497,7 +498,7 @@ export class GameController {
       winningPlayer: this.gamePlayers.winningPlayer,
       moveSuggestion: {},
       players: this.gameState.players,
-      timeStamp: Date.now()  // patch - for trigger firebase observable change
+      timeStamp: Date.now()  // patch - trigger firebase observable change
     };
     this.checkers.forEach((checker: any, index) => {
       newState.checkers[index + 1] = {
@@ -530,6 +531,27 @@ export class GameController {
     Canvas.context.stroke();
   }
 
+  private newGame = ({x, y}) => {
+    const target = BACKGAMMON_CONSTANTS.PLAY_AGAIN_POSITION;
+    const random = Math.floor(Math.random() * 2);
+    const blackPlayerName = Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.Black]];
+    const whitePlayerName  = Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.White]];
+    if (this.showPlayAgain && isOverlap(x, y, target.x, target.y, 100, 20)) {
+      const firstPlayerName = !!random ? blackPlayerName : whitePlayerName;
+      const secondPlayerName = !!random ? whitePlayerName : blackPlayerName;
+      this.backgammonDBService.newGame(firstPlayerName, secondPlayerName, this.gameId);
+    }
+  }
+
+  private hoverNewGame =({x,y})=>{
+    const target = BACKGAMMON_CONSTANTS.PLAY_AGAIN_POSITION;
+    if (this.showPlayAgain && isOverlap(x, y, target.x, target.y, 100, 20)) {
+      Canvas.context.font = '25px serif';
+      Canvas.context.fillStyle = '#b3f744';
+      Canvas.context.fillText('New Game', 292, 350);
+      Canvas.context.stroke();    }
+  }
+
   private redrawHandler = () => {
     drawBackground(this.backgroundImgUrl).subscribe(() => {
       this.checkers.forEach(checker => checker.draw());
@@ -551,18 +573,6 @@ export class GameController {
         this.drawPlayAgainOption();
       }
     });
-  }
-
-  private newGame = ({x, y}) => {
-    const target = BACKGAMMON_CONSTANTS.PLAY_AGAIN_POSITION;
-    const random = Math.floor(Math.random() * 2);
-    const blackPlayerName = Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.Black]];
-    const whitePlayerName  = Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.White]];
-    if (this.showPlayAgain && isOverlap(x, y, target.x, target.y, 100, 20)) {
-      const firstPlayerName = !!random ? blackPlayerName : whitePlayerName;
-      const secondPlayerName = !!random ? whitePlayerName : blackPlayerName;
-      this.backgammonDBService.newGame(firstPlayerName, secondPlayerName, this.gameId);
-    }
   }
 
   public destroy = () => {

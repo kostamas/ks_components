@@ -83,7 +83,6 @@
           <div class="opened-game-wrapper">
             <div class="second-player-name">{{game?.secondPlayer.name | elipsis: 9}}</div>
             <div (click)="continue(game?.secondPlayer.name)" class="continue">Continue</div>
-            <div (click)="resetGame(game)" *ngIf="game.isCompleted" class="new-game">new game</div>
           </div>
         </div>
       </div>
