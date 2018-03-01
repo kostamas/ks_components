@@ -9,6 +9,7 @@ import {Players} from './players';
 import {Checker} from './checker';
 import {Spike} from './spike';
 import {Dices} from './dices';
+import {Canvas} from "./canvas";
 
 @Injectable()
 export class GameController {
@@ -25,6 +26,7 @@ export class GameController {
   private gameStateObservable;
   private selectedCheckerObservable;
   private gameId;
+  private showPlayAgain;
 
   private spikesPositions = [
     {x: 583, y: 42}, {x: 541, y: 42}, {x: 497, y: 42}, {x: 455, y: 42}, {x: 413, y: 42}, {x: 374, y: 42},
@@ -43,6 +45,7 @@ export class GameController {
     BackgammonStateManager.onSkipPlayer(this.skipPlayerHandler);
     BackgammonStateManager.onSelectChecker(this.selectCheckerHandler);
     BackgammonStateManager.onSelectedCheckerMove(this.onSelectedCheckerMove);
+    BackgammonStateManager.onMouseClick(this.newGame, 'gameController');
 
     drawBackground(this.backgroundImgUrl).subscribe(() => {
       this.initSpikes();
@@ -92,13 +95,9 @@ export class GameController {
   }
 
   private initCheckers() {
-    for (let i = 0; i < 15; i++) {
-      const checker = new Checker(0, 0, Players.playersMap.Black, null);
-      this.checkers.push(checker);
-    }
-
-    for (let i = 15; i < 30; i++) {
-      const checker = new Checker(0, 0, Players.playersMap.White, null);
+    for (let i = 0; i < 30; i++) {
+      const type = i < 15 ? Players.playersMap.Black : Players.playersMap.White;
+      const checker = new Checker(0, 0, type, null);
       this.checkers.push(checker);
     }
   }
@@ -146,7 +145,7 @@ export class GameController {
           const showNextPlayerBtn = this.showSkipBtn(this.currentState);
           if (showNextPlayerBtn) {
             Players.showsSkipButton = true;
-            this.gamePlayers.drawPlayer();
+            this.gamePlayers.draw();
           }
         }
       }
@@ -421,16 +420,20 @@ export class GameController {
     if (Players.currentState % 2 === 1) { // todo - duplication
       if (this.showSkipBtn(this.currentState)) {
         Players.showsSkipButton = true;
-        this.gamePlayers.drawPlayer();
+        this.gamePlayers.draw();
       }
     }
 
+    this.showPlayAgain = false;
+    this.gamePlayers.winningPlayer = -1;
     if (this.outsideBoard.checkers[Players.playersNamesMap[Players.playersMap.White]].length === 15) {
       this.gamePlayers.winningPlayer = Players.playersMap.White;
+      this.showPlayAgain = this.isOnline;
     }
 
     if (this.outsideBoard.checkers[Players.playersNamesMap[Players.playersMap.Black]].length === 15) {
       this.gamePlayers.winningPlayer = Players.playersMap.Black;
+      this.showPlayAgain = this.isOnline;
     }
     this.dicesObj.showRollButton = Players.currentState % 2 === 0;
 
@@ -520,12 +523,19 @@ export class GameController {
     this.backgammonDBService.updateGameState(this.gameId, updatedGame);
   }
 
+  private drawPlayAgainOption() {
+    Canvas.context.font = '25px serif';
+    Canvas.context.fillStyle = '#f7f723';
+    Canvas.context.fillText('New Game', 292, 350);
+    Canvas.context.stroke();
+  }
+
   private redrawHandler = () => {
     drawBackground(this.backgroundImgUrl).subscribe(() => {
-      this.checkers.forEach(checker => checker.drawChecker());
-      this.spikes.forEach(spikes => spikes.drawSpike());
-      this.dicesObj.drawDices();
-      this.gamePlayers.drawPlayer();
+      this.checkers.forEach(checker => checker.draw());
+      this.spikes.forEach(spikes => spikes.draw());
+      this.dicesObj.draw();
+      this.gamePlayers.draw();
       this.outsideBoard.draw();
 
       if (Players.currentState !== this.currentState && Players.currentState % 2 === 1) {
@@ -533,10 +543,26 @@ export class GameController {
         const showNextPlayerBtn = this.showSkipBtn(this.currentState);
         if (showNextPlayerBtn) {
           Players.showsSkipButton = true;
-          this.gamePlayers.drawPlayer();
+          this.gamePlayers.draw();
         }
       }
+
+      if (this.showPlayAgain) {
+        this.drawPlayAgainOption();
+      }
     });
+  }
+
+  private newGame = ({x, y}) => {
+    const target = BACKGAMMON_CONSTANTS.PLAY_AGAIN_POSITION;
+    const random = Math.floor(Math.random() * 2);
+    const blackPlayerName = Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.Black]];
+    const whitePlayerName  = Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.White]];
+    if (this.showPlayAgain && isOverlap(x, y, target.x, target.y, 100, 20)) {
+      const firstPlayerName = !!random ? blackPlayerName : whitePlayerName;
+      const secondPlayerName = !!random ? whitePlayerName : blackPlayerName;
+      this.backgammonDBService.newGame(firstPlayerName, secondPlayerName, this.gameId);
+    }
   }
 
   public destroy = () => {
