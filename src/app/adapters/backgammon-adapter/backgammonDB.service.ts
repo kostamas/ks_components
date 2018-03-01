@@ -3,7 +3,6 @@ import 'rxjs/add/operator/delay';
 import {Observable} from 'rxjs/Observable';
 import {BackgammonMockData} from './backgammon-mock';
 import {IBackgammonDb} from '../../ks-components/backgammon/backgammonDb.interface';
-import {BackgammonStateManager} from '../../ks-components/backgammon/backgammonStateManager';
 
 import {AngularFireDatabase} from 'angularfire2/database';
 import {initialState} from '../../ks-components/backgammon/helpers/initialGameState';
@@ -86,7 +85,7 @@ export class BackgammonDBService implements IBackgammonDb {
     })).take(1);
   }
 
-  public resetGame(localUserName, secondPlayerName, gameId){
+  public newGame(localUserName, secondPlayerName, gameId){
     const _initialState: any = initialState;
     _initialState.state.players = {
       black: localUserName,
@@ -120,4 +119,5 @@ export class BackgammonDBService implements IBackgammonDb {
     this.fireDatabase.object(`users/${localPlayer.name}/invitations/sent/${selectedPlayer.name}`)
       .set(selectedPlayer.name);
   }
+
 }

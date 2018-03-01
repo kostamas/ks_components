@@ -38,7 +38,7 @@ export class Spike {
     return {x: this.x, y};
   }
 
-  public drawSpike() {
+  public draw() {
     if (this.showValidMove) {
       let p1, p2;
 
