@@ -329,6 +329,7 @@ export class GameController {
   private showSkipBtn(playerType) {
     let showNextPlayerBtn = true;
     const spikeDirection = getSpikeDirection(playerType, Players);
+
     if (this.checkIfOffBoardState(playerType)) {
       let highestCheckerIndex, nextSpikeIndex, currSpikeIndex, checkersArr;
       const homeSpikeIndex = playerType === Players.playersMap.White ? 5 : 18;
@@ -376,6 +377,7 @@ export class GameController {
         }
       }
     }
+    return showNextPlayerBtn;
   }
 
   private checkPossibleMovesForSpike(playerType, startSpikeIndex, spikeDirection) {
