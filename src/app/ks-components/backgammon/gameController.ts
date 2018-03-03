@@ -362,6 +362,39 @@ export class GameController {
       return showNextPlayerBtn;
     }
 
+    if (this.checkIfOffBoardState(playerType)) {
+      let highestCheckerIndex, nextSpikeIndex, currSpikeIndex, checkersArr;
+      const homeSpikeIndex = playerType === Players.playersMap.White ? 5 : 18;
+      for (let i = 0; i < 6 && showNextPlayerBtn; i++) {
+        currSpikeIndex = i * spikeDirection + homeSpikeIndex;
+        const checkerHomeSpike = playerType === Players.playersMap.White ? currSpikeIndex + 1 : 24 - currSpikeIndex;
+
+        const spike = this.spikes[currSpikeIndex];
+        if (spike.checkers.length > 0 && spike.checkers[0].type === playerType) {
+          if (!highestCheckerIndex) {
+            highestCheckerIndex = currSpikeIndex;
+          }
+          this.dicesObj.dices.forEach(diceResult => {
+            if (checkerHomeSpike === diceResult) {
+              showNextPlayerBtn = false;
+            }
+
+            nextSpikeIndex = currSpikeIndex + diceResult * spikeDirection;
+            checkersArr = this.spikes[nextSpikeIndex] && this.spikes[nextSpikeIndex].checkers;
+            if (checkerHomeSpike > diceResult && checkersArr &&
+              (checkersArr.length <= 1 || checkersArr[0].type === playerType)) {
+              showNextPlayerBtn = false;
+            }
+
+            if (checkerHomeSpike < diceResult && currSpikeIndex === highestCheckerIndex) {
+              showNextPlayerBtn = false;
+            }
+          });
+        }
+      }
+      return showNextPlayerBtn;
+    }
+
     if (this.bar.checkers[Players.playersNamesMap[playerType]].length > 0) {
       const startSpikeIndex = playerType === Players.playersMap.Black ? -1 : 24;
       showNextPlayerBtn = !this.checkPossibleMovesForSpike(playerType, startSpikeIndex, spikeDirection);
@@ -376,6 +409,7 @@ export class GameController {
         }
       }
     }
+    return showNextPlayerBtn;
   }
 
   private checkPossibleMovesForSpike(playerType, startSpikeIndex, spikeDirection) {
