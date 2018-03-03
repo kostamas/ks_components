@@ -92,7 +92,7 @@ export class Players {
     Canvas.context.fillStyle = 'rgba(0,0,0,0.7)';
     Canvas.context.fillRect(0, 0, 684, 575);
 
-    Canvas.context.font = '47px serif';
+    Canvas.context.font = '35px serif';
     Canvas.context.fillStyle = 'white';
     Canvas.context.fillText(`${winningPlayerName} Won!`, 270, 270);
   }
