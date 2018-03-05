@@ -23,8 +23,9 @@ export class GalleryComponent implements OnInit {
   public leftShiftAmount = 0;
   public selectedIndex = 0;
   public sliderStyle = {left: '0px'};
-  public expandedImages: [{ left: 0 }, { left: 0 }, { left: 0 }];
+  public expandedImages: any = [{left: 0}, {left: 0}, {left: 0}];
   public galleryContainerRef;
+
   @Input() imagesPaths = [];
 
   ngOnInit() {
@@ -32,7 +33,7 @@ export class GalleryComponent implements OnInit {
     this.initLeftShiftAmount();
     this.setExpandedImgData('0', -1 * (this.expandedImageSize + 20), this.imagesPaths[imgArrLength - 1]);
     this.setExpandedImgData('1', 0, this.imagesPaths[0]);
-    this.setExpandedImgData('2', 1 * this.expandedImageSize + 20, this.imagesPaths[1]);
+    this.setExpandedImgData('2', this.expandedImageSize + 20, this.imagesPaths[1]);
   }
 
   initLeftShiftAmount() {
@@ -51,12 +52,12 @@ export class GalleryComponent implements OnInit {
     this.selectedIndex = index;
     let nextIndex, previousIndex;
     this.currentExpandedImage = 1;
-    nextIndex = (index + 1) >= imagesPaths.length ? 0 : (index + 1);
-    previousIndex = (index - 1) < 0 ? imagesPaths.length - 1 : (index - 1);
+    nextIndex = (index + 1) >= this.imagesPaths.length ? 0 : (index + 1);
+    previousIndex = (index - 1) < 0 ? this.imagesPaths.length - 1 : (index - 1);
 
-    this.setExpandedImgData('0', -1 * (this.expandedImageSize + 20), imagesPaths[previousIndex]);
-    this.setExpandedImgData('1', 0, imagesPaths[index]);
-    this.setExpandedImgData('2', 1 * this.expandedImageSize + 20, imagesPaths[nextIndex]);
+    this.setExpandedImgData('0', -1 * (this.expandedImageSize + 20), this.imagesPaths[previousIndex]);
+    this.setExpandedImgData('1', 0, this.imagesPaths[index]);
+    this.setExpandedImgData('2', 1 * this.expandedImageSize + 20, this.imagesPaths[nextIndex]);
 
     this.sliderStyle = {left: `${-1 * index * this.leftShiftAmount}px`};
   }
@@ -65,7 +66,7 @@ export class GalleryComponent implements OnInit {
     if (this.isFramesLocked) {
       return;
     }
-    setTimeout(() => this.isFramesLocked = false, 150);
+    setTimeout(() => this.isFramesLocked = false, 100);
 
     this.isFramesLocked = true;
     if (event.keyCode === 37) { // left
@@ -109,24 +110,23 @@ export class GalleryComponent implements OnInit {
     nextImg = nextImg > 2 ? 0 : nextImg;
     previousImg = (this.currentExpandedImage - 1) < 0 ? 2 : this.currentExpandedImage - 1;
     if (direction === this.directions.LEFT) {
-      imgIndexSrc = (this.selectedIndex - 1) < 0 ? imagesPaths.length - 1 : this.state.selectedIndex - 1;
+      imgIndexSrc = (this.selectedIndex - 1) < 0 ? this.imagesPaths.length - 1 : this.selectedIndex - 1;
       this.setExpandedImgData(nextImg, this.expandedImageSize + 20);
-      this.setExpandedImgData(previousImg, -1 * (this.expandedImageSize + 20), imagesPaths[imgIndexSrc], 'none');
+      this.setExpandedImgData(previousImg, -1 * (this.expandedImageSize + 20), this.imagesPaths[imgIndexSrc], 'none');
     } else {
-      imgIndexSrc = (this.state.selectedIndex + 1) >= imagesPaths.length ? 0 : this.state.selectedIndex + 1;
-      this.setExpandedImgData(nextImg, this.expandedImageSize + 20, imagesPaths[imgIndexSrc], 'none');
+      imgIndexSrc = (this.selectedIndex + 1) >= this.imagesPaths.length ? 0 : this.selectedIndex + 1;
+      this.setExpandedImgData(nextImg, this.expandedImageSize + 20, this.imagesPaths[imgIndexSrc], 'none');
       this.setExpandedImgData(previousImg, -1 * (this.expandedImageSize + 20));
     }
   }
 
   setExpandedImgData(index, leftStyle, src?, transition?) {
-    this.expandedImages[index].style = {width: `${this.expandedImageSize}px`, left: `${leftStyle}px`};
+    this.expandedImages[index] = {width: `${this.expandedImageSize}px`, left: `${leftStyle}px`};
     if (src) {
       this.expandedImages[index].src = src;
     }
     if (transition) {
-      this.expandedImages[index].style.transition = transition;
+      this.expandedImages[index].transition = transition;
     }
   }
-
 }

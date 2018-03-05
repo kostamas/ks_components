@@ -1,11 +1,10 @@
 <div [ngClass]="imagesPaths.length < 2 ? 'one-image-state' : '' + ' image-gallery-container'">
   <div class="expanded-image">
-    <div *ngFor="let expImg in expandedImages">
+    <div *ngFor="let expImg of expandedImages">
       <div class="expanded-img-wrapper"
-           [ngStyle]={expImg}>
-        <img src={expandedImages[expandedImgIndex].src}/>
+           [ngStyle]="expImg">
+        <img src="expandedImages[expandedImgIndex].src"/>
       </div>
-
     </div>
     <div class="left-sign" (click)=expandedImageClickHandler(-1)>
       <div> <</div>
@@ -16,13 +15,12 @@
   </div>
 
   <div class="slider-wrapper">
-    <div class="slider" [ngStyle]={sliderStyle}>
-      <div *ngFor="let imgPath in imagesPaths">
+    <div class="slider" [ngStyle]="sliderStyle">
+      <div *ngFor="let imgPath of imagesPaths">
         <div>
           <img (click)="imgClickHandler(index)" [src]="imgPath"/>
         </div>
       </div>
-
     </div>
   </div>
 </div>
