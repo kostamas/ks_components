@@ -35,10 +35,10 @@ export class Players {
 
   private init() {
     BackgammonStateManager.onMouseClick(this.skipTurn, 'player');
-    this.drawPlayer();
+    this.draw();
   }
 
-  public drawPlayer() {
+  public draw() {
     Canvas.context.font = '25px serif';
     Canvas.context.fillStyle = '#f7f01b';
     Canvas.context.fillText('Player:', 12, 27);
@@ -64,7 +64,7 @@ export class Players {
     if (Players.showsSkipButton) {
       Canvas.context.font = '25px serif';
       Canvas.context.fillStyle = 'white';
-      Canvas.context.fillText('Skip', 300, 30);
+      Canvas.context.fillText('Skip', 320, 30);
     }
 
     if (this.winningPlayer >= 0) {
@@ -89,12 +89,12 @@ export class Players {
     const onlinePlayerName = Players.onlinePlayersName[Players.playersNamesMap[playerType]];
     const winningPlayerName = onlinePlayerName || Players.playersNamesMap[playerType];
 
-    Canvas.context.fillStyle = 'rgba(0,0,0,0.5)';
+    Canvas.context.fillStyle = 'rgba(0,0,0,0.7)';
     Canvas.context.fillRect(0, 0, 684, 575);
 
-    Canvas.context.font = '40px serif';
+    Canvas.context.font = '35px serif';
     Canvas.context.fillStyle = 'white';
-    Canvas.context.fillText(`${winningPlayerName} Won!`, 250, 270);
+    Canvas.context.fillText(`${winningPlayerName} Won!`, 270, 270);
   }
 
   public static isCurrentOnlinePlayer() {

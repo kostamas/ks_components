@@ -95,7 +95,7 @@ export class Dices {
     Canvas.context.drawImage(this.svgImg[svgImgKey], x, 535);
   }
 
-  public drawDices() {
+  public draw() {
     if (this.showRollButton) {
       this.drawRollButton();
     }
