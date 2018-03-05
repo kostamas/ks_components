@@ -15,7 +15,7 @@ export class Checker {
   public type;
   public currentSpike;
   public isOffBoard = false;
-  private radius;
+  private radius;  // todo - define as constant
   private isHovered;
   private isClicked;
   private svgData;
@@ -71,7 +71,7 @@ export class Checker {
       }
     } else {
       if (this.isHovered) {
-        this.drawChecker();
+        this.draw();
       }
       this.isHovered = false;
     }
@@ -89,7 +89,7 @@ export class Checker {
       window.cancelAnimationFrame(Checker.animFrame);
       clearTimeout(Checker.timeout);
       Checker.animFrame = null;
-      this.drawChecker();
+      this.draw();
     } else {
       if (!Checker.selectedCheckers[this.type] &&
         isOverlap(x, y, this.x, this.y, BACKGAMMON_CONSTANTS.CHECKERS_SIZE, BACKGAMMON_CONSTANTS.CHECKERS_SIZE)) {
@@ -104,7 +104,7 @@ export class Checker {
   private animateSelectedChecker = () => {
     let degrees = 0;
     const animatFn = () => {
-      this.drawChecker();
+      this.draw();
       Canvas.context.save();
       Canvas.context.translate(this.x + this.radius, this.y + this.radius);
       Canvas.context.rotate(degrees * (Math.PI / 180));
@@ -129,12 +129,12 @@ export class Checker {
     this.svgData = {svgBlob: url};
 
     this.checkerSvgImg.onload = () => {
-      this.drawChecker();
+      this.draw();
     };
     this.checkerSvgImg.src = url;
   }
 
-  public drawChecker(x?, y?) {
+  public draw(x?, y?) {
     const _window: any = window;
     const DOMURL = _window.URL || _window.webkitURL || _window;
     Canvas.context.drawImage(this.checkerSvgImg, x || this.x, y || this.y);

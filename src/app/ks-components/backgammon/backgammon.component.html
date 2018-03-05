@@ -21,7 +21,7 @@
 
         <div class="input-wrapper">
           <div class="label">Password:</div>
-          <input type="text" formControlName="password">
+          <input type="password" formControlName="password">
         </div>
         <div class="form-error">{{formErrorMessages['password']}}</div>
         <div class="sign-in-register-toggle"
@@ -83,7 +83,6 @@
           <div class="opened-game-wrapper">
             <div class="second-player-name">{{game?.secondPlayer.name | elipsis: 9}}</div>
             <div (click)="continue(game?.secondPlayer.name)" class="continue">Continue</div>
-            <div (click)="resetGame(game)" *ngIf="game.isCompleted" class="new-game">new game</div>
           </div>
         </div>
       </div>
