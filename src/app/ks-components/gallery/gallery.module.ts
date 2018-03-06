@@ -9,13 +9,13 @@ import {GalleryComponent} from './gallery.component';
   ],
   declarations: [
     GalleryComponent
-  ]
+  ],
   exports: [
-
+    GalleryComponent
   ],
   providers: [
     WindowRef
   ]
 })
-export class TransparentShapeModalModule {
+export class GalleryModule {
 }
