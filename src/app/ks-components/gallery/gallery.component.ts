@@ -1,17 +1,11 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'app-gallery',
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.scss']
 })
-export class GalleryComponent implements OnInit {
-
-  constructor() {
-  }
-
-  private sliderRef = null;
-
+export class GalleryComponent implements  AfterViewInit {
   public directions = {
     LEFT: -1,
     RIGHT: 1
@@ -24,25 +18,32 @@ export class GalleryComponent implements OnInit {
   public selectedIndex = 0;
   public sliderStyle = {left: '0px'};
   public expandedImages: any = [{left: 0}, {left: 0}, {left: 0}];
-  public galleryContainerRef;
 
   @Input() imagesPaths = [];
 
-  ngOnInit() {
+  @ViewChild('slider') slider;
+  @ViewChild('galleryContainer') galleryContainer;
+
+  constructor(private changeDetector: ChangeDetectorRef) {
+
+  }
+
+  ngAfterViewInit() {
     const imgArrLength = this.imagesPaths.length;
     this.initLeftShiftAmount();
     this.setExpandedImgData('0', -1 * (this.expandedImageSize + 20), this.imagesPaths[imgArrLength - 1]);
     this.setExpandedImgData('1', 0, this.imagesPaths[0]);
     this.setExpandedImgData('2', this.expandedImageSize + 20, this.imagesPaths[1]);
+    this.changeDetector.detectChanges();
   }
 
   initLeftShiftAmount() {
     const imgArrLength = this.imagesPaths.length;
-    const sliderWidth = this.sliderRef.clientWidth;
-    this.expandedImageSize = this.galleryContainerRef.clientWidth;
+    const sliderWidth = this.slider.nativeElement.clientWidth;
+    this.expandedImageSize = this.galleryContainer.nativeElement.clientWidth;
 
-    if (sliderWidth > this.galleryContainerRef.clientWidth) {
-      this.leftShiftAmount = ((sliderWidth - this.galleryContainerRef.clientWidth) / (imgArrLength - 1 ) );
+    if (sliderWidth > this.galleryContainer.nativeElement.clientWidth) {
+      this.leftShiftAmount = ((sliderWidth - this.galleryContainer.nativeElement.clientWidth) / (imgArrLength - 1 ));
     } else {
       this.leftShiftAmount = 0; //there is no images overflow.
     }
@@ -121,7 +122,12 @@ export class GalleryComponent implements OnInit {
   }
 
   setExpandedImgData(index, leftStyle, src?, transition?) {
-    this.expandedImages[index] = {width: `${this.expandedImageSize}px`, left: `${leftStyle}px`};
+    this.expandedImages[index] = {
+      width: `${this.expandedImageSize}px`,
+      left: `${leftStyle}px`,
+      src: this.expandedImages[index].src
+    };
+
     if (src) {
       this.expandedImages[index].src = src;
     }

@@ -10,7 +10,7 @@ export class GalleryAdapterComponent {
   public imagesPaths = [];
 
   constructor() {
-    for (let i = 0; i < 19; i++) {
+    for (let i = 0; i < 17; i++) {
       this.imagesPaths.push(`../../assets/images/gallery-image${i + 1}.jpg`);
     }
   }
