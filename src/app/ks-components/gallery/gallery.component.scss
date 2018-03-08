@@ -1,3 +1,5 @@
+@import '../../scss/main';
+
 .image-gallery-container {
   $thumbnailWidth: 80px;
   $thumbnailHeight: 50px;
@@ -11,13 +13,13 @@
 
   .expanded-image {
     width: 100%;
-    background-color: gray;
+    background-color: $codeGray;
     display: block;
     position: relative;
     overflow: hidden;
-    max-height: 450px;
-    min-height: 300px;
-    height: 24vw;
+    max-height: 550px;
+    min-height: 350px;
+    height: 35vw;
 
     .expanded-img-wrapper {
       display: flex;
@@ -169,7 +171,7 @@
   }
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 640px) {
   .image-gallery-container {
     margin: 15px auto;
 
@@ -189,10 +191,6 @@
       .left-sign div, .right-sign div {
         opacity: 1;
       }
-    }
-
-    .slider-wrapper {
-      display: none;
     }
   }
 }

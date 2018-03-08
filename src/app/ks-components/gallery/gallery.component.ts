@@ -1,11 +1,11 @@
-import {AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, HostListener, Input, OnInit, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'app-gallery',
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.scss']
 })
-export class GalleryComponent implements  AfterViewInit {
+export class GalleryComponent implements AfterViewInit {
   public directions = {
     LEFT: -1,
     RIGHT: 1
@@ -17,8 +17,9 @@ export class GalleryComponent implements  AfterViewInit {
   public leftShiftAmount = 0;
   public selectedIndex = 0;
   public sliderStyle = {left: '0px'};
-  public expandedImages: any = [{left: 0}, {left: 0}, {left: 0}];
-
+  public expandedImages: any = [{style: {left: 0}}, {style: {left: 0}}, {style: {left: 0}}];
+  public LEFT_KEY_CODE = 39;
+  public RIGHT_KEY_CODE = 39;
   @Input() imagesPaths = [];
 
   @ViewChild('slider') slider;
@@ -63,7 +64,9 @@ export class GalleryComponent implements  AfterViewInit {
     this.sliderStyle = {left: `${-1 * index * this.leftShiftAmount}px`};
   }
 
-  keyPressHandler(event) {
+  @HostListener('document:keydown', ['$event'])
+  keyPressHandler = (event) => {
+
     if (this.isFramesLocked) {
       return;
     }
@@ -78,7 +81,7 @@ export class GalleryComponent implements  AfterViewInit {
     }
   }
 
-  expandedImageClickHandler(direction) {
+  expandedImageClickHandler = (direction) => {
     const nextIndex = this.selectedIndex + direction;
     if (this.imagesPaths.length < 2) {
       return;
@@ -100,39 +103,32 @@ export class GalleryComponent implements  AfterViewInit {
     this.updateExpandedImages(direction);
   }
 
-  updateExpandedImages(direction) {
+  updateExpandedImages = (direction) => {
     let nextImg, previousImg, imgIndexSrc;
 
     this.currentExpandedImage = (this.currentExpandedImage + direction) % 3;
     this.currentExpandedImage = this.currentExpandedImage < 0 ? 2 : this.currentExpandedImage;
-    this.setExpandedImgData(this.currentExpandedImage, 0);
+    this.setExpandedImgData(this.currentExpandedImage, 0, null, '0.4s ease-out');
 
     nextImg = (this.currentExpandedImage + 1) % 3;
     nextImg = nextImg > 2 ? 0 : nextImg;
     previousImg = (this.currentExpandedImage - 1) < 0 ? 2 : this.currentExpandedImage - 1;
     if (direction === this.directions.LEFT) {
       imgIndexSrc = (this.selectedIndex - 1) < 0 ? this.imagesPaths.length - 1 : this.selectedIndex - 1;
-      this.setExpandedImgData(nextImg, this.expandedImageSize + 20);
+      this.setExpandedImgData(nextImg, this.expandedImageSize + 20, null, '0.4s ease-out');
       this.setExpandedImgData(previousImg, -1 * (this.expandedImageSize + 20), this.imagesPaths[imgIndexSrc], 'none');
     } else {
       imgIndexSrc = (this.selectedIndex + 1) >= this.imagesPaths.length ? 0 : this.selectedIndex + 1;
       this.setExpandedImgData(nextImg, this.expandedImageSize + 20, this.imagesPaths[imgIndexSrc], 'none');
-      this.setExpandedImgData(previousImg, -1 * (this.expandedImageSize + 20));
+      this.setExpandedImgData(previousImg, -1 * (this.expandedImageSize + 20), null, '0.4s ease-out');
     }
   }
 
   setExpandedImgData(index, leftStyle, src?, transition?) {
-    this.expandedImages[index] = {
-      width: `${this.expandedImageSize}px`,
-      left: `${leftStyle}px`,
-      src: this.expandedImages[index].src
-    };
-
+    this.expandedImages[index].width = `${this.expandedImageSize}px`;
+    this.expandedImages[index].style = {left: `${leftStyle}px`, transition: transition};
     if (src) {
       this.expandedImages[index].src = src;
-    }
-    if (transition) {
-      this.expandedImages[index].transition = transition;
     }
   }
 }
