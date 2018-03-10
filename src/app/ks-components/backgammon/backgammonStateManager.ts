@@ -13,7 +13,8 @@ export class BackgammonStateManager {
   private static skipPlayer$: Subject<any>;
   private static game$: Subject<any>;
   private static rollClick$: Subject<any>;
-  private static isOnline;
+  private static surrender$: Subject<any>;
+  public static isOnline;
   public static localUser;
   public static gameState;
   private static subscriptions;
@@ -35,6 +36,7 @@ export class BackgammonStateManager {
     BackgammonStateManager.skipPlayer$ = new Subject();
     BackgammonStateManager.game$ = new Subject();
     BackgammonStateManager.rollClick$ = new Subject();
+    BackgammonStateManager.surrender$  = new Subject();
 
     BackgammonStateManager.subscriptions = [];
 
@@ -132,6 +134,14 @@ export class BackgammonStateManager {
 
   public static onSkipPlayer(cb, id?) {
     BackgammonStateManager.subscriptions.push({id, subscription: BackgammonStateManager.skipPlayer$.subscribe(cb)});
+  }
+
+  public static notifySurrender(player) {
+    BackgammonStateManager.surrender$.next(player);
+  }
+
+  public static onSurrender(cb, id?) {
+    BackgammonStateManager.subscriptions.push({id, subscription: BackgammonStateManager.surrender$.subscribe(cb)});
   }
 
   public static notifyRollClick() {

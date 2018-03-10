@@ -85,7 +85,7 @@ export class BackgammonDBService implements IBackgammonDb {
     })).take(1);
   }
 
-  public newGame(localUserName, secondPlayerName, gameId){
+  public newGame(localUserName, secondPlayerName, gameId) {
     const _initialState: any = initialState;
     _initialState.state.players = {
       black: localUserName,
