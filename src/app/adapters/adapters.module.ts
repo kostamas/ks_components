@@ -26,7 +26,8 @@ import {TransparentShapeModalAdapterComponent} from './transparent-shape-modal-a
 import {BackgammonModule} from '../ks-components/backgammon/backgammon.module';
 import {BackgammonAdapterComponent} from './backgammon-adapter/backgammon-adapter.component';
 import {BackgammonDBService} from './backgammon-adapter/backgammonDB.service';
-import {KeysPipe} from "../../pipes/keys.pipe";
+import { GalleryAdapterComponent } from './gallery-adapter/gallery-adapter.component';
+import {GalleryModule} from '../ks-components/gallery/gallery.module';
 
 @NgModule({
   imports: [
@@ -42,7 +43,8 @@ import {KeysPipe} from "../../pipes/keys.pipe";
     TransparentShapeModalModule,
     MatSliderModule,
     FormsModule,
-    BackgammonModule.config(BackgammonDBService)
+    BackgammonModule.config(BackgammonDBService),
+    GalleryModule
   ],
   declarations: [
     SchedulerAdapterComponent,
@@ -53,7 +55,8 @@ import {KeysPipe} from "../../pipes/keys.pipe";
     ChatAdapterWrapperComponent,
     ImageExpanderAdapterComponent,
     TransparentShapeModalAdapterComponent,
-    BackgammonAdapterComponent
+    BackgammonAdapterComponent,
+    GalleryAdapterComponent
   ],
   exports: [],
   entryComponents: [

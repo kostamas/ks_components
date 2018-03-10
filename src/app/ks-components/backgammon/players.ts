@@ -3,7 +3,7 @@ import {BackgammonStateManager} from "./backgammonStateManager";
 import {isOverlap} from "./helpers/backgammonUtils";
 
 export class Players {
-  public winningPlayer = -1;
+  public static canSurrenderPlayer = -1;
 
   public static playersMap = {
     Black: 1,
@@ -15,7 +15,6 @@ export class Players {
     [Players.playersMap.White]: 'White'
   }
 
-
   public static onlinePlayersName = {
     [Players.playersNamesMap[Players.playersMap.Black]]: '',
     [Players.playersNamesMap[Players.playersMap.White]]: ''
@@ -25,16 +24,21 @@ export class Players {
 
   public static showsSkipButton = false;
 
-  public static nextPlayer() {
-    Players.currentState = (Players.currentState + 1) % 4;
-  }
+  public winningPlayer = -1;
+
+  private skipBtnCoordinates: any = {x: 320, y: 30};
+  private surrenderCoordinates: any = {x: 420, y: 30};
 
   constructor() {
     this.init();
   }
 
+  public static nextPlayer() {
+    Players.currentState = (Players.currentState + 1) % 4;
+  }
+
   private init() {
-    BackgammonStateManager.onMouseClick(this.skipTurn, 'player');
+    BackgammonStateManager.onMouseClick(this.mouseClickHandler, 'player');
     this.draw();
   }
 
@@ -67,13 +71,26 @@ export class Players {
       Canvas.context.fillText('Skip', 320, 30);
     }
 
+    if (Players.canSurrenderPlayer > -1) {
+      Canvas.context.font = '25px serif';
+      Canvas.context.fillStyle = '#f4f700';
+      const {onlinePlayersName, playersNamesMap, canSurrenderPlayer} = Players;
+      let canSurrenderPlayerName = onlinePlayersName[playersNamesMap[canSurrenderPlayer]];
+      if (canSurrenderPlayerName.length > 8) {
+        canSurrenderPlayerName = canSurrenderPlayerName.slice(0, 10) + '...';
+      }
+      const canSurrenderText = `${canSurrenderPlayerName} can surrender`;
+      Canvas.context.fillText(canSurrenderText, this.surrenderCoordinates.x, this.surrenderCoordinates.y);
+    }
+
     if (this.winningPlayer >= 0) {
       this.showWinningPlayer(this.winningPlayer);
     }
   }
 
-  private skipTurn({x, y}) {
-    if (Players.showsSkipButton && isOverlap(x, y, 300, 10, 60, 40)) {
+  private skipTurnHandler(x, y) {
+    const {skipBtnCoordinates} = this;
+    if (Players.showsSkipButton && isOverlap(x, y, skipBtnCoordinates.x, skipBtnCoordinates.y - 10, 60, 40)) {
       if (Players.currentState < 2) {
         Players.currentState = 2;
       } else {
@@ -82,6 +99,24 @@ export class Players {
       BackgammonStateManager.notifySkipPlayer();
       Players.showsSkipButton = false;
     }
+  }
+
+  private surrenderHandler = (x, y) => {
+    const {surrenderCoordinates} = this;
+    const localUserName = BackgammonStateManager.localUser.name;
+    const {canSurrenderPlayer, onlinePlayersName, playersNamesMap} = Players;
+    const canSurrenderPlayerName = onlinePlayersName[playersNamesMap[canSurrenderPlayer]];
+    const width = canSurrenderPlayerName.length * 5;
+    const _isOverlap = isOverlap(x, y, surrenderCoordinates.x, surrenderCoordinates.y - 10, width + 170, 17);
+
+    if (canSurrenderPlayer > -1 && localUserName === canSurrenderPlayerName && _isOverlap) {
+      BackgammonStateManager.notifySurrender(canSurrenderPlayer);
+    }
+  }
+
+  private mouseClickHandler = ({x, y}) => {
+    this.skipTurnHandler(x, y);
+    this.surrenderHandler(x, y);
   }
 
   public showWinningPlayer(playerType) {

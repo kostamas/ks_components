@@ -45,6 +45,7 @@ export class GameController {
     BackgammonStateManager.onSkipPlayer(this.skipPlayerHandler);
     BackgammonStateManager.onSelectChecker(this.selectCheckerHandler);
     BackgammonStateManager.onSelectedCheckerMove(this.onSelectedCheckerMove);
+    BackgammonStateManager.onSurrender(this.onSurrender);
     BackgammonStateManager.onMouseClick(this.newGame, 'gameController');
     BackgammonStateManager.onMouseMove(this.hoverNewGame, 'gameController');
 
@@ -482,14 +483,28 @@ export class GameController {
 
     this.showPlayAgain = false;
     this.gamePlayers.winningPlayer = -1;
-    if (this.outsideBoard.checkers[Players.playersNamesMap[Players.playersMap.White]].length === 15) {
+    Players.canSurrenderPlayer = -1;
+    const {outsideBoard} = this;
+    const numOfWhiteWinningCheckers = outsideBoard.checkers[Players.playersNamesMap[Players.playersMap.White]].length;
+    const numOfBlackWinningCheckers = outsideBoard.checkers[Players.playersNamesMap[Players.playersMap.Black]].length;
+
+    if (numOfWhiteWinningCheckers === 15 || gameData.surrenderedPlayer === Players.playersMap.Black) {
       this.gamePlayers.winningPlayer = Players.playersMap.White;
       this.showPlayAgain = this.isOnline;
     }
 
-    if (this.outsideBoard.checkers[Players.playersNamesMap[Players.playersMap.Black]].length === 15) {
+    if (numOfBlackWinningCheckers.length === 15 || gameData.surrenderedPlayer === Players.playersMap.White) {
       this.gamePlayers.winningPlayer = Players.playersMap.Black;
       this.showPlayAgain = this.isOnline;
+    }
+
+
+    if (this.isOnline && numOfWhiteWinningCheckers > 4 && numOfWhiteWinningCheckers > 2 * numOfBlackWinningCheckers) {
+      Players.canSurrenderPlayer = Players.playersMap.Black;
+    }
+
+    if (this.isOnline && numOfBlackWinningCheckers > 4 && numOfBlackWinningCheckers > 2 * numOfWhiteWinningCheckers) {
+      Players.canSurrenderPlayer = Players.playersMap.White;
     }
     this.dicesObj.showRollButton = Players.currentState % 2 === 0;
 
@@ -524,6 +539,13 @@ export class GameController {
     this.updateState();
   }
 
+  private onSurrender = (surrenderedPlayer) => {
+    const {playersMap} = Players;
+    const winningPlayer = surrenderedPlayer === playersMap.Black ? playersMap.White : playersMap.Black;
+    this.gameState.surrenderedPlayer = surrenderedPlayer;
+    this.updateState();
+  }
+
   private hasOtherOutChecker(checker) {
     return this.bar.checkers[Players.playersNamesMap[checker.type]].length > 0 &&
       this.bar.checkers[Players.playersNamesMap[checker.type]].indexOf(checker) === -1;
@@ -549,6 +571,7 @@ export class GameController {
       winningPlayer: this.gamePlayers.winningPlayer,
       moveSuggestion: {},
       players: this.gameState.players,
+      surrenderedPlayer: this.gameState.surrenderedPlayer || -1,
       timeStamp: Date.now()  // patch - trigger firebase observable change
     };
     this.checkers.forEach((checker: any, index) => {
