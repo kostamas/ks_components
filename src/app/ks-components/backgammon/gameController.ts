@@ -489,11 +489,13 @@ export class GameController {
     const numOfBlackWinningCheckers = outsideBoard.checkers[Players.playersNamesMap[Players.playersMap.Black]].length;
 
     if (numOfWhiteWinningCheckers === 15 || gameData.surrenderedPlayer === Players.playersMap.Black) {
+      Players.canSurrenderPlayer = gameData.surrenderedPlayer;
       this.gamePlayers.winningPlayer = Players.playersMap.White;
       this.showPlayAgain = this.isOnline;
     }
 
     if (numOfBlackWinningCheckers.length === 15 || gameData.surrenderedPlayer === Players.playersMap.White) {
+      Players.canSurrenderPlayer = gameData.surrenderedPlayer;
       this.gamePlayers.winningPlayer = Players.playersMap.Black;
       this.showPlayAgain = this.isOnline;
     }
