@@ -13,4 +13,4 @@ export interface ChatDataCtor {
   new(args: any): ChatDataService;
 }
 
-export const ChatDataService = new InjectionToken<ChatDataService>('ChatDataService');
+export const ChatData = new InjectionToken<ChatDataService>('ChatData');
