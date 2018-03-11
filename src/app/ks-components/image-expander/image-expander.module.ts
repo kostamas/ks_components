@@ -21,5 +21,5 @@ import {CommonModule} from '@angular/common';
   ],
   providers: []
 })
-export class ImageExpander {
+export class ImageExpanderModule {
 }

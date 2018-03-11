@@ -1,14 +1,14 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {MAX_UN_SEEN_MESSAGES} from './ks-chat.constant';
+import {MAX_UN_SEEN_MESSAGES} from './chat.constant';
 import {ChatService} from './services/chat.service';
 import {ChatStoreService} from './services/chat-store.service';
-import {MatIconRegistry} from "@angular/material";
-import {DomSanitizer} from "@angular/platform-browser";
+import {MatIconRegistry} from '@angular/material';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-ks-chat',
-  templateUrl: './ks-chat.component.html',
-  styleUrls: ['./ks-chat.component.scss']
+  selector: 'app-chat',
+  templateUrl: './chat.component.html',
+  styleUrls: ['./chat.component.scss']
 })
 export class KsChatComponent implements OnInit, OnDestroy {
   public MAX_UN_SEEN_MESSAGES = MAX_UN_SEEN_MESSAGES;
@@ -59,7 +59,7 @@ export class KsChatComponent implements OnInit, OnDestroy {
     this.chatParticipants = chatParticipants;
   }
 
-  private generalMessageHandler = (message) => {
+  private generalMessageHandler = () => {
     this.numOfUnseenMessages++;
   };
 
