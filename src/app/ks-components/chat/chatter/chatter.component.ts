@@ -1,7 +1,7 @@
-import {Component, Input, NgZone, OnInit} from '@angular/core';
-import {MAX_UN_SEEN_MESSAGES} from "../ks-chat.constant";
-import {ChatService} from "../services/chat.service";
-import {ChatStoreService} from "../services/chat-store.service";
+import {Component, Input, OnInit} from '@angular/core';
+import {MAX_UN_SEEN_MESSAGES} from '../chat.constant';
+import {ChatService} from '../services/chat.service';
+import {ChatStoreService} from '../services/chat-store.service';
 
 @Component({
   selector: 'app-chatter',
@@ -33,7 +33,7 @@ export class ChatterComponent implements OnInit {
       this.chatService.getChatById(chatId).subscribe(chat => {
         this.chatter.chat = chat;
         if (!this.chatter.isActive) {
-          let lastSeenMessage = this.chatter.chat.lastSeenMessages[this.localUser.id];
+          const lastSeenMessage = this.chatter.chat.lastSeenMessages[this.localUser.id];
           let numOfUnseenMessages = 0;
           this.chatter.chat.messages.forEach(message => {
             numOfUnseenMessages = lastSeenMessage.timestamp < message.timestamp ? numOfUnseenMessages + 1 : numOfUnseenMessages;

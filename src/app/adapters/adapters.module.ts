@@ -1,32 +1,33 @@
 import {NgModule} from '@angular/core';
-import {SchedulerModule} from '../ks-components/ks-scheduler/scheduler.module';
 import {CommonModule} from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatDialogModule, MatProgressBarModule} from '@angular/material';
-import {MatIconModule} from '@angular/material';
-import {MatButtonModule} from '@angular/material';
-import {MatSliderModule} from '@angular/material';
-import { FormsModule } from '@angular/forms';
-
-import {SchedulingMockData} from './scheduler-adapter/schedulingMockData';
+import {MatDialogModule} from '@angular/material';
+import {MatProgressBarModule, MatIconModule, MatButtonModule, MatSliderModule} from '@angular/material';
+import {FormsModule} from '@angular/forms';
 
 import {SchedulerAdapterComponent} from './scheduler-adapter/scheduler-adapter.component';
 import {SimpleTimeSlotComponent} from './scheduler-adapter/customTimeSlots/simple-time-slot/simple-time-slot.component';
 import {AdvancedComponentComponent} from './scheduler-adapter/customTimeSlots/advanced-component/advanced-component.component';
 import {TimeSlotDetailsModalComponent} from './scheduler-adapter/customTimeSlots/advanced-component/time-slot-details-modal/time-slot-details-modal.component';
 import {ChatAdapterComponent} from './chat-adapter/chat-adapter.component';
-import {KsChat} from '../ks-components/ks-chat/ks-chat.module';
-import {ChatMock} from './chat-adapter/chat-mock';
-import {ChatService} from '../ks-components/ks-chat/services/chat.service';
+
 import {ChatAdapterWrapperComponent} from './chat-adapter/chat-wrapper.component';
 import {ImageExpanderAdapterComponent} from './image-expander-adapter/image-expander-adapter.component';
-import {ImageExpander} from '../ks-components/image-expander/image-expander.module';
-import {TransparentShapeModalModule} from '../ks-components/transparent-shape-modal/transparent-shape-modal.module';
-import {TransparentShapeModalAdapterComponent} from './transparent-shape-modal-adapter/transparent-shape-modal-adapter.component';
-import {BackgammonModule} from '../ks-components/backgammon/backgammon.module';
 import {BackgammonAdapterComponent} from './backgammon-adapter/backgammon-adapter.component';
+import {GalleryAdapterComponent} from './gallery-adapter/gallery-adapter.component';
+import {TransparentShapeModalAdapterComponent} from './transparent-shape-modal-adapter/transparent-shape-modal-adapter.component';
+
 import {BackgammonDBService} from './backgammon-adapter/backgammonDB.service';
-import {KeysPipe} from "../../pipes/keys.pipe";
+
+import {SchedulerModule} from '../ks-components/ks-scheduler/scheduler.module';
+import {BackgammonModule} from '../ks-components/backgammon/backgammon.module';
+import {ChatModule} from '../ks-components/chat/chat.module';
+import {GalleryModule} from '../ks-components/gallery/gallery.module';
+import {ImageExpanderModule} from '../ks-components/image-expander/image-expander.module';
+import {TransparentShapeModalModule} from '../ks-components/transparent-shape-modal/transparent-shape-modal.module';
+import {SchedulingMockData} from './scheduler-adapter/schedulingMockData';
+import {ChatService} from '../ks-components/chat/services/chat.service';
+import {ChatMock} from './chat-adapter/chat-mock';
 
 @NgModule({
   imports: [
@@ -36,13 +37,17 @@ import {KeysPipe} from "../../pipes/keys.pipe";
     MatDialogModule,
     MatIconModule,
     MatProgressBarModule,
-    KsChat,
-    ImageExpander,
+    ChatModule,
+    ImageExpanderModule,
     MatButtonModule,
     TransparentShapeModalModule,
     MatSliderModule,
     FormsModule,
-    BackgammonModule.config(BackgammonDBService)
+    BackgammonModule.config(BackgammonDBService),
+    ChatModule,
+    GalleryModule,
+    ImageExpanderModule,
+    TransparentShapeModalModule
   ],
   declarations: [
     SchedulerAdapterComponent,
@@ -53,7 +58,8 @@ import {KeysPipe} from "../../pipes/keys.pipe";
     ChatAdapterWrapperComponent,
     ImageExpanderAdapterComponent,
     TransparentShapeModalAdapterComponent,
-    BackgammonAdapterComponent
+    BackgammonAdapterComponent,
+    GalleryAdapterComponent
   ],
   exports: [],
   entryComponents: [

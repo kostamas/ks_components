@@ -1,0 +1,26 @@
+<div #galleryContainer [ngClass]="(imagesPaths.length < 2 ? 'one-image-state' : '') + ' image-gallery-container'">
+  <div class="expanded-image">
+    <div *ngFor="let expImg of expandedImages">
+      <div class="expanded-img-wrapper"
+           [ngStyle]="expImg.style">
+        <img [src]="expImg.src"/>
+      </div>
+    </div>
+    <div class="left-sign" (click)=expandedImageClickHandler(-1)>
+      <div> &#x276C;</div>
+    </div>
+    <div class="right-sign" (click)=expandedImageClickHandler(1)>
+      <div> &#x276D;</div>
+    </div>
+  </div>
+
+  <div class="slider-wrapper">
+    <div #slider class="slider" [ngStyle]="sliderStyle">
+      <div *ngFor="let imgPath of imagesPaths; let i = index">
+        <div [ngClass]="i === selectedIndex ? 'img-wrapper selected-img' : 'img-wrapper'">
+          <img (click)="imgClickHandler(i)" [src]="imgPath"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
