@@ -25,9 +25,9 @@ import {ChatModule} from '../ks-components/chat/chat.module';
 import {GalleryModule} from '../ks-components/gallery/gallery.module';
 import {ImageExpanderModule} from '../ks-components/image-expander/image-expander.module';
 import {TransparentShapeModalModule} from '../ks-components/transparent-shape-modal/transparent-shape-modal.module';
-import {SchedulingMockData} from './scheduler-adapter/schedulingMockData';
-import {ChatService} from '../ks-components/chat/services/chat.service';
-import {ChatMock} from './chat-adapter/chat-mock';
+
+import {ChatDataService} from './chat-adapter/chatDataService';
+import {ChatService} from "../ks-components/chat/services/chat.service";
 
 @NgModule({
   imports: [
@@ -44,7 +44,7 @@ import {ChatMock} from './chat-adapter/chat-mock';
     MatSliderModule,
     FormsModule,
     BackgammonModule.config(BackgammonDBService),
-    ChatModule,
+    ChatModule.config(ChatDataService),
     GalleryModule,
     ImageExpanderModule,
     TransparentShapeModalModule
@@ -67,18 +67,7 @@ import {ChatMock} from './chat-adapter/chat-mock';
     AdvancedComponentComponent,
     TimeSlotDetailsModalComponent
   ],
-  providers: [
-    SchedulingMockData,
-    {
-      provide: ChatService,
-      useFactory: chatServiceConfigFn
-    }
-  ],
+  providers: [],
 })
 export class AdaptersModulesModule {
 }
-
-export function chatServiceConfigFn() {
-  return new ChatService(ChatMock.chatDataHandler());
-}
-

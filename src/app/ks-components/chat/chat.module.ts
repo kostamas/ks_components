@@ -7,7 +7,8 @@ import {KsChatComponent} from './chat.component';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {MatIconModule} from '@angular/material';
-import {ChatDataCtor, ChatDataService} from './services/chatData.types';
+import {ChatDataCtor, ChatData} from './services/chatData.types';
+import {ChatService} from "./services/chat.service";
 
 @NgModule({
   imports: [
@@ -30,6 +31,7 @@ import {ChatDataCtor, ChatDataService} from './services/chatData.types';
     KsChatComponent
   ],
   providers: [
+    ChatService
   ]
 })
 export class ChatModule {
@@ -37,7 +39,7 @@ export class ChatModule {
     return {
       ngModule: ChatModule,
       providers: [{
-        provide: ChatDataService,
+        provide: ChatData,
         useClass: chatDataService,
         deps: []
       }]
