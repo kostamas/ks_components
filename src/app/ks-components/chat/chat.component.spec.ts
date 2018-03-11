@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {KsChatComponent} from './ks-chat.component';
+import {KsChatComponent} from './chat.component';
 import {MatIconModule} from '@angular/material';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';

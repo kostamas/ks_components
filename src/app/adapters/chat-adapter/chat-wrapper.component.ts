@@ -1,11 +1,11 @@
 import {Component, Input} from '@angular/core';
-import {ChatStoreService} from '../../ks-components/ks-chat/services/chat-store.service';
+import {ChatStoreService} from '../../ks-components/chat/services/chat-store.service';
 import {ChatMock} from './chat-mock';
 
 @Component({
   selector: 'app-chat-adapter-wrapper',
   template: `
-    <app-ks-chat [localUser]="localUser"></app-ks-chat>`,
+    <app-chat [localUser]="localUser"></app-chat>`,
   styleUrls: ['./chat-adapter.component.scss'],
   providers: [ChatStoreService]
 })
