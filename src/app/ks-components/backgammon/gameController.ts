@@ -494,7 +494,7 @@ export class GameController {
       this.showPlayAgain = this.isOnline;
     }
 
-    if (numOfBlackWinningCheckers.length === 15 || gameData.surrenderedPlayer === Players.playersMap.White) {
+    if (numOfBlackWinningCheckers === 15 || gameData.surrenderedPlayer === Players.playersMap.White) {
       Players.canSurrenderPlayer = gameData.surrenderedPlayer;
       this.gamePlayers.winningPlayer = Players.playersMap.Black;
       this.showPlayAgain = this.isOnline;
