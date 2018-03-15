@@ -543,7 +543,6 @@ export class GameController {
 
   private onSurrender = (surrenderedPlayer) => {
     const {playersMap} = Players;
-    const winningPlayer = surrenderedPlayer === playersMap.Black ? playersMap.White : playersMap.Black;
     this.gameState.surrenderedPlayer = surrenderedPlayer;
     this.updateState();
   }
