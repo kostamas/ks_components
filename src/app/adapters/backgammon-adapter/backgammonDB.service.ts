@@ -2,12 +2,12 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
 import {Observable} from 'rxjs/Observable';
 import {BackgammonMockData} from './backgammon-mock';
-import {IBackgammonDb} from '../../ks-components/backgammon/backgammonDb.interface';
+import {BackgammonDBService} from '../../ks-components/backgammon/backgammonDb.types';
 
 import {AngularFireDatabase} from 'angularfire2/database';
 import {initialState} from '../../ks-components/backgammon/helpers/initialGameState';
 
-export class BackgammonDBService implements IBackgammonDb {
+export class BackgammonDBSAdapter implements BackgammonDBService {
   constructor(private fireDatabase: AngularFireDatabase) {
   }
 
@@ -59,12 +59,6 @@ export class BackgammonDBService implements IBackgammonDb {
         return usersArr;
       });
 
-  }
-
-  public isGameCompleted(gameId) {
-    return this.fireDatabase.object(`games/${gameId}/state/winningPlayer`).valueChanges()
-      .map((winningPlayer: any) => winningPlayer === 1 || winningPlayer === 3)
-      .take(1);
   }
 
   public createNewGame(localUserName, secondPlayerName) {
@@ -119,5 +113,4 @@ export class BackgammonDBService implements IBackgammonDb {
     this.fireDatabase.object(`users/${localPlayer.name}/invitations/sent/${selectedPlayer.name}`)
       .set(selectedPlayer.name);
   }
-
 }

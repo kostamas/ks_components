@@ -69,7 +69,9 @@ export class Players {
 
   private mouseClickHandler = ({x, y}) => {
     this.skipTurnHandler(x, y);
-    this.surrenderHandler(x, y);
+    if(BackgammonStateManager.localUser){
+      this.surrenderHandler(x, y);
+    }
   }
 
   public showWinningPlayer(playerType) {
