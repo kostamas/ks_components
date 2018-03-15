@@ -17,7 +17,7 @@ import {BackgammonAdapterComponent} from './backgammon-adapter/backgammon-adapte
 import {GalleryAdapterComponent} from './gallery-adapter/gallery-adapter.component';
 import {TransparentShapeModalAdapterComponent} from './transparent-shape-modal-adapter/transparent-shape-modal-adapter.component';
 
-import {BackgammonDBService} from './backgammon-adapter/backgammonDB.service';
+import {BackgammonDBSAdapter} from './backgammon-adapter/backgammonDB.service';
 
 import {SchedulerModule} from '../ks-components/ks-scheduler/scheduler.module';
 import {BackgammonModule} from '../ks-components/backgammon/backgammon.module';
@@ -27,7 +27,6 @@ import {ImageExpanderModule} from '../ks-components/image-expander/image-expande
 import {TransparentShapeModalModule} from '../ks-components/transparent-shape-modal/transparent-shape-modal.module';
 
 import {ChatDataService} from './chat-adapter/chatDataService';
-import {ChatService} from "../ks-components/chat/services/chat.service";
 
 @NgModule({
   imports: [
@@ -43,7 +42,7 @@ import {ChatService} from "../ks-components/chat/services/chat.service";
     TransparentShapeModalModule,
     MatSliderModule,
     FormsModule,
-    BackgammonModule.config(BackgammonDBService),
+    BackgammonModule.config(BackgammonDBSAdapter),
     ChatModule.config(ChatDataService),
     GalleryModule,
     ImageExpanderModule,

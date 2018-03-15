@@ -3,7 +3,7 @@ import {Canvas} from './canvas';
 import {BackgammonStateManager} from './backgammonStateManager';
 import {GameController} from './gameController';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {BackgammonDBService} from '../../adapters/backgammon-adapter/backgammonDB.service';
+import {BackgammonDBService} from './backgammonDb.types';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {DirtyRequired} from '../../shared/vaildators/dirty-required-validator.validator';
 import {Subject} from 'rxjs/Subject';

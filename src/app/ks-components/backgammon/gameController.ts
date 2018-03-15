@@ -1,4 +1,4 @@
-import {BackgammonDBService} from '../../adapters/backgammon-adapter/backgammonDB.service';
+import {BackgammonDBService} from './backgammonDb.types';
 import {getSpikeDirection, isOverlap, isValidSpike} from './helpers/backgammonUtils';
 import {BackgammonStateManager} from './backgammonStateManager';
 import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
@@ -9,7 +9,7 @@ import {Players} from './players';
 import {Checker} from './checker';
 import {Spike} from './spike';
 import {Dices} from './dices';
-import {Canvas} from "./canvas";
+import {Canvas} from './canvas';
 
 @Injectable()
 export class GameController {
@@ -47,7 +47,7 @@ export class GameController {
     BackgammonStateManager.onSelectedCheckerMove(this.onSelectedCheckerMove);
     BackgammonStateManager.onSurrender(this.onSurrender);
     BackgammonStateManager.onMouseClick(this.newGame, 'gameController');
-    BackgammonStateManager.onMouseMove(this.hoverNewGame, 'gameController');
+    BackgammonStateManager.onMouseMove(this.hoverOnNewGame, 'gameController');
 
     drawBackground(this.backgroundImgUrl).subscribe(() => {
       this.initSpikes();
@@ -624,7 +624,7 @@ export class GameController {
     }
   }
 
-  private hoverNewGame = ({x, y}) => {
+  private hoverOnNewGame = ({x, y}) => {
     const target = BACKGAMMON_CONSTANTS.PLAY_AGAIN_POSITION;
     if (this.showPlayAgain && isOverlap(x, y, target.x, target.y, 100, 20)) {
       this.drawPlayAgainOption('#b3f744');
