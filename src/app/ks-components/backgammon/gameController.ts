@@ -542,7 +542,6 @@ export class GameController {
   }
 
   private onSurrender = (surrenderedPlayer) => {
-    const {playersMap} = Players;
     this.gameState.surrenderedPlayer = surrenderedPlayer;
     this.updateState();
   }
