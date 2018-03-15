@@ -4,7 +4,7 @@ import {BackgammonStateManager} from './backgammonStateManager';
 import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
 import {drawBackground} from './helpers/uiHelper';
 import {OutsideBoard} from './outsideboard';
-import {Injectable} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import {Players} from './players';
 import {Checker} from './checker';
 import {Spike} from './spike';
@@ -36,7 +36,7 @@ export class GameController {
     {x: 375, y: 495}, {x: 417, y: 495}, {x: 457, y: 495}, {x: 497, y: 495}, {x: 539, y: 495}, {x: 583, y: 495},
   ];
 
-  constructor(private backgammonDBService: BackgammonDBService) {
+  constructor(@Inject(BackgammonDBService) private backgammonDBService: BackgammonDBService) {
   }
 
   public init(gameData, isOnline?, gameId?) {
