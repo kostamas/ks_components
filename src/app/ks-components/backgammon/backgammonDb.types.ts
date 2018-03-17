@@ -1,6 +1,6 @@
 import {InjectionToken} from '@angular/core';
 
-export interface BackgammonDBService {
+export interface IBackgammonDBService {
   getGameById: (id: string) => any;
   getLocalGame: () => any;
   getUser: (userName: string, password: string) => any;
@@ -16,7 +16,7 @@ export interface BackgammonDBService {
 }
 
 export interface IBackgammonSrvCtor {
-  new(args: any): BackgammonDBService;
+  new(args: any): IBackgammonDBService;
 }
 
-export const BackgammonDBService = new InjectionToken<BackgammonDBService>('BackgammonDBService');
+export const BackgammonDBToken = new InjectionToken<IBackgammonDBService>('BackgammonDBService');

@@ -1,6 +1,6 @@
 import {InjectionToken} from '@angular/core';
 
-export interface ChatDataService {
+export interface IChatDataService {
   getChatById: (chatId: string) => any;
   getChatParticipants: (userId: string) => any;
   updateMessages: (newMessage: any, chat: any, localUser: any) => any;
@@ -10,7 +10,7 @@ export interface ChatDataService {
 }
 
 export interface ChatDataCtor {
-  new(args: any): ChatDataService;
+  new(args: any): IChatDataService;
 }
 
-export const ChatData = new InjectionToken<ChatDataService>('ChatData');
+export const ChatData = new InjectionToken<IChatDataService>('ChatData');

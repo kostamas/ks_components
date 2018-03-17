@@ -1,6 +1,6 @@
-import {Canvas} from "./canvas";
-import {BackgammonStateManager} from "./backgammonStateManager";
-import {isOverlap} from "./helpers/backgammonUtils";
+import {Canvas} from './canvas';
+import {BackgammonStateManager} from './backgammonStateManager';
+import {isOverlap} from './helpers/backgammonUtils';
 
 export class Players {
   public static canSurrenderPlayer = -1;
@@ -44,7 +44,13 @@ export class Players {
 
   private skipTurnHandler(x, y) {
     const {skipBtnCoordinates} = this;
-    if (Players.showsSkipButton && isOverlap(x, y, skipBtnCoordinates.x, skipBtnCoordinates.y - 10, 60, 40)) {
+    const {canSurrenderPlayer, onlinePlayersName, playersNamesMap} = Players;
+    const currentType = Players.currentState > 1 ? 3 : 1;
+    const currentPlayer = Players.onlinePlayersName[Players.playersNamesMap[currentType]];
+    const localUserName = BackgammonStateManager.localUser.name;
+
+    if (Players.showsSkipButton &&  currentPlayer === localUserName &&
+      isOverlap(x, y, skipBtnCoordinates.x, skipBtnCoordinates.y - 10, 60, 40)) {
       if (Players.currentState < 2) {
         Players.currentState = 2;
       } else {
@@ -69,7 +75,7 @@ export class Players {
 
   private mouseClickHandler = ({x, y}) => {
     this.skipTurnHandler(x, y);
-    if(BackgammonStateManager.localUser){
+    if (BackgammonStateManager.localUser) {
       this.surrenderHandler(x, y);
     }
   }
@@ -87,12 +93,6 @@ export class Players {
     Canvas.context.font = '35px Lato';
     Canvas.context.fillStyle = 'white';
     Canvas.context.fillText(`${winningPlayerName} Won!`, 270, 240);
-
-    if (Players.canSurrenderPlayer > -1) {
-      Canvas.context.font = '20px Lato';
-      const surrenderedPlayerName = onlinePlayersName[playersNamesMap[canSurrenderPlayer]];
-      Canvas.context.fillText(`(${surrenderedPlayerName} Surrendered)`, 245, 290);
-    }
   }
 
   public static isCurrentOnlinePlayer() {
