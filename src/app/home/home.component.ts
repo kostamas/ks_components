@@ -24,4 +24,10 @@ export class HomeComponent implements OnInit {
       {text: 'Transparent Shape Modal', link: '/transparent-shape-modal'}
     ];
   }
+
+  clickHandler(page) {
+    if (page === 'image-expander') {
+      window.scrollTo(0, 0);
+    }
+  }
 }

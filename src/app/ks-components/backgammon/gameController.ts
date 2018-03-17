@@ -1,4 +1,4 @@
-import {BackgammonDBService} from './backgammonDb.types';
+import {BackgammonDBToken} from './backgammonDb.types';
 import {getSpikeDirection, isOverlap, isValidSpike} from './helpers/backgammonUtils';
 import {BackgammonStateManager} from './backgammonStateManager';
 import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
@@ -36,7 +36,7 @@ export class GameController {
     {x: 375, y: 495}, {x: 417, y: 495}, {x: 457, y: 495}, {x: 497, y: 495}, {x: 539, y: 495}, {x: 583, y: 495},
   ];
 
-  constructor(@Inject(BackgammonDBService) private backgammonDBService: BackgammonDBService) {
+  constructor(@Inject(BackgammonDBToken) private backgammonDBService) {
   }
 
   public init(gameData, isOnline?, gameId?) {
@@ -500,12 +500,11 @@ export class GameController {
       this.showPlayAgain = this.isOnline;
     }
 
-
-    if (this.isOnline && numOfWhiteWinningCheckers > 4 && numOfWhiteWinningCheckers > 2 * numOfBlackWinningCheckers) {
+    if (this.isOnline && numOfWhiteWinningCheckers > 4 && numOfWhiteWinningCheckers > numOfBlackWinningCheckers + 3) {
       Players.canSurrenderPlayer = Players.playersMap.Black;
     }
 
-    if (this.isOnline && numOfBlackWinningCheckers > 4 && numOfBlackWinningCheckers > 2 * numOfWhiteWinningCheckers) {
+    if (this.isOnline && numOfBlackWinningCheckers > 4 && numOfBlackWinningCheckers > numOfWhiteWinningCheckers + 3) {
       Players.canSurrenderPlayer = Players.playersMap.White;
     }
     this.dicesObj.showRollButton = Players.currentState % 2 === 0;

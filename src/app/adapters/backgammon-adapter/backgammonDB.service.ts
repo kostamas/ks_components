@@ -2,12 +2,12 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
 import {Observable} from 'rxjs/Observable';
 import {BackgammonMockData} from './backgammon-mock';
-import {BackgammonDBService} from '../../ks-components/backgammon/backgammonDb.types';
 
 import {AngularFireDatabase} from 'angularfire2/database';
 import {initialState} from '../../ks-components/backgammon/helpers/initialGameState';
+import {IBackgammonDBService} from '../../ks-components/backgammon/backgammonDb.types';
 
-export class BackgammonDBSAdapter implements BackgammonDBService {
+export class BackgammonDBSAdapter implements IBackgammonDBService {
   constructor(private fireDatabase: AngularFireDatabase) {
   }
 

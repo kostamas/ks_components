@@ -3,7 +3,7 @@ import {Canvas} from './canvas';
 import {BackgammonStateManager} from './backgammonStateManager';
 import {GameController} from './gameController';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {BackgammonDBService} from './backgammonDb.types';
+import {BackgammonDBToken} from './backgammonDb.types';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {DirtyRequired} from '../../shared/vaildators/dirty-required-validator.validator';
 import {Subject} from 'rxjs/Subject';
@@ -61,7 +61,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('canvas') canvas;
 
-  constructor(@Inject(BackgammonDBService) private backgammonDBService: BackgammonDBService, private zone: NgZone, private gameController: GameController, private changeDetector: ChangeDetectorRef,
+  constructor(@Inject(BackgammonDBToken) private backgammonDBService, private zone: NgZone, private gameController: GameController, private changeDetector: ChangeDetectorRef,
               fBuilder: FormBuilder,
               private activatedRoute: ActivatedRoute, private router: Router, private location: Location) {
     this.formGroup = fBuilder.group({

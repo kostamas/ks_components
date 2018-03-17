@@ -2,12 +2,12 @@ import {Inject, Injectable} from '@angular/core';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
 import {Observable} from 'rxjs/Observable';
-import {ChatDataService, ChatData} from './chatData.types';
+import {IChatDataService, ChatData} from './chatData.types';
 
 @Injectable()
-export class ChatService {
+export class ChatService implements IChatDataService {
 
-  constructor(@Inject(ChatData) private chatDataService: ChatDataService) {
+  constructor(@Inject(ChatData) private chatDataService) {
   }
 
   public getChatById(chatId): Observable<any> {

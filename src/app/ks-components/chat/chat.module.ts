@@ -40,8 +40,7 @@ export class ChatModule {
       ngModule: ChatModule,
       providers: [{
         provide: ChatData,
-        useClass: chatDataService,
-        deps: []
+        useClass: chatDataService
       }]
     };
   }
