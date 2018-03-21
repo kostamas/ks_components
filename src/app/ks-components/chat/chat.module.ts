@@ -8,7 +8,7 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {MatIconModule} from '@angular/material';
 import {ChatDataCtor, ChatData} from './services/chatData.types';
-import {ChatService} from "./services/chat.service";
+import {ChatService} from './services/chat.service';
 
 @NgModule({
   imports: [

@@ -47,7 +47,7 @@ export class Players {
     const {canSurrenderPlayer, onlinePlayersName, playersNamesMap} = Players;
     const currentType = Players.currentState > 1 ? 3 : 1;
     const currentPlayer = Players.onlinePlayersName[Players.playersNamesMap[currentType]];
-    const localUserName = BackgammonStateManager.localUser.name;
+    const localUserName = BackgammonStateManager.localUser && BackgammonStateManager.localUser.name;
 
     if (Players.showsSkipButton &&  currentPlayer === localUserName &&
       isOverlap(x, y, skipBtnCoordinates.x, skipBtnCoordinates.y - 10, 60, 40)) {

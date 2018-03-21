@@ -127,10 +127,11 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   }
 
   public logOut() {
-    this.router.navigate(['/backgammon/']);
+    this.location.go('/backgammon')
     localStorage.removeItem('backgammonUser');
     this.clearGame();
     this.logout$.next();
+    this.playLocal();
   }
 
   public goToMenu() {
@@ -226,7 +227,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
           Object.keys(this.localUser.gameIds).forEach(gameId => {
             const secondPlayer = players.filter(player => player.gameIds && player.gameIds[gameId])[0];
             if (secondPlayer) {
-                 this.openedGames.push({gameId, secondPlayer: secondPlayer});
+              this.openedGames.push({gameId, secondPlayer: secondPlayer});
             }
           });
         }
