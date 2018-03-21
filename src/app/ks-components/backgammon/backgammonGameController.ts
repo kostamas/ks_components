@@ -142,13 +142,6 @@ export class GameController {
     for (let i = 0; i < relevantSpikes.length; i++) {
       if (this.canMoveChecker(x, y, relevantSpikes, i, checker)) {
         this.moveChecker(checker, relevantSpikes[i]);
-        if (this.dicesObj.dices.length > 0) {
-          const showNextPlayerBtn = this.showSkipBtn(this.currentState);
-          if (showNextPlayerBtn) {
-            Players.showsSkipButton = true;
-            this.gamePlayers.draw();
-          }
-        }
       }
     }
 
@@ -441,12 +434,16 @@ export class GameController {
     this.currentState = gameData.currentState;
 
     Players.showsSkipButton = false;
+    // debugger
     if (Players.currentState % 2 === 1) {
       if (this.showSkipBtn(this.currentState)) {
         Players.showsSkipButton = true;
         this.gamePlayers.draw();
       }
     }
+    // else {
+    //   this.chaeckIfSkipTurn(); // one scenario - there is a chaecker oustide and the whole home is occupied
+    // }
 
     this.showPlayAgain = false;
     this.gamePlayers.winningPlayer = -1;
@@ -593,6 +590,10 @@ export class GameController {
     if (this.showPlayAgain && isOverlap(x, y, target.x, target.y, 100, 20)) {
       this.drawPlayAgainOption('#b3f744');
     }
+  }
+
+  private chaeckIfSkipTurn(playerType){
+
   }
 
   private redrawHandler = () => {
