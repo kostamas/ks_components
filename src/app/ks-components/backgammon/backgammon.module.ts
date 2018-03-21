@@ -1,7 +1,7 @@
 import {ModuleWithProviders, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {BackgammonComponent} from './backgammon.component';
-import {GameController} from './gameController';
+import {GameController} from './backgammonGameController';
 import {BackgammonDBToken, IBackgammonSrvCtor} from './backgammonDb.types';
 import {ReactiveFormsModule} from '@angular/forms';
 import { FormsModule } from '@angular/forms';
