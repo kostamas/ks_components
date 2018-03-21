@@ -1,30 +1,29 @@
-import {Injectable} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
 import {Observable} from 'rxjs/Observable';
+import {IChatDataService, ChatData} from './chatData.types';
 
 @Injectable()
-export class ChatService {
-  public chatDataHandler: any = {};
+export class ChatService implements IChatDataService {
 
-  constructor(chatDataHandler: any) {
-    this.chatDataHandler = chatDataHandler;
+  constructor(@Inject(ChatData) private chatDataService) {
   }
 
   public getChatById(chatId): Observable<any> {
-    return this.chatDataHandler.getChatById(chatId);
+    return this.chatDataService.getChatById(chatId);
   }
 
   public getChatParticipants(userId) {
-    return this.chatDataHandler.getChatParticipants(userId);
+    return this.chatDataService.getChatParticipants(userId);
   }
 
   public updateMessages(newMessage, chat, localUser) {
-    this.chatDataHandler.updateMessages(newMessage, chat, localUser);
+    this.chatDataService.updateMessages(newMessage, chat, localUser);
   }
 
-  public updateLastSeenMessages(lastSeenMessage,chatId) {
-    this.chatDataHandler.updateLastSeenMessages(lastSeenMessage, chatId);
+  public updateLastSeenMessages(lastSeenMessage, chatId) {
+    this.chatDataService.updateLastSeenMessages(lastSeenMessage, chatId);
   }
 
   public getChatIdByTwoIdsArray(chatIdsArr1, chatIdsArr2) {
@@ -38,10 +37,10 @@ export class ChatService {
   };
 
   public listenToMessages(chatId, userID): Observable<any> {
-    return this.chatDataHandler.listenToMessages(chatId, userID);
+    return this.chatDataService.listenToMessages(chatId, userID);
   }
 
   public onDestroy() {
-    return this.chatDataHandler.onDestroy();
+    return this.chatDataService.onDestroy();
   }
 }

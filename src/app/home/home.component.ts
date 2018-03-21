@@ -1,4 +1,5 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {WindowRef} from "../core/window-ref.service";
 
 @Component({
   selector: 'app-home',
@@ -11,7 +12,7 @@ export class HomeComponent implements OnInit {
 
   public components;
 
-  constructor() {
+  constructor(private windowRef: WindowRef) {
   }
 
   ngOnInit() {
@@ -23,5 +24,11 @@ export class HomeComponent implements OnInit {
       {text: 'Image Expander', link: '/image-expander'},
       {text: 'Transparent Shape Modal', link: '/transparent-shape-modal'}
     ];
+  }
+
+  clickHandler(page) {
+    if (page === 'image-expander') {
+      this.windowRef.nativeWindow.scrollTo(0, 0);
+    }
   }
 }

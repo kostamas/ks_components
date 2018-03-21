@@ -17,7 +17,7 @@ import {BackgammonAdapterComponent} from './backgammon-adapter/backgammon-adapte
 import {GalleryAdapterComponent} from './gallery-adapter/gallery-adapter.component';
 import {TransparentShapeModalAdapterComponent} from './transparent-shape-modal-adapter/transparent-shape-modal-adapter.component';
 
-import {BackgammonDBService} from './backgammon-adapter/backgammonDB.service';
+import {BackgammonDBSAdapter} from './backgammon-adapter/backgammonDB.service';
 
 import {SchedulerModule} from '../ks-components/ks-scheduler/scheduler.module';
 import {BackgammonModule} from '../ks-components/backgammon/backgammon.module';
@@ -25,9 +25,8 @@ import {ChatModule} from '../ks-components/chat/chat.module';
 import {GalleryModule} from '../ks-components/gallery/gallery.module';
 import {ImageExpanderModule} from '../ks-components/image-expander/image-expander.module';
 import {TransparentShapeModalModule} from '../ks-components/transparent-shape-modal/transparent-shape-modal.module';
-import {SchedulingMockData} from './scheduler-adapter/schedulingMockData';
-import {ChatService} from '../ks-components/chat/services/chat.service';
-import {ChatMock} from './chat-adapter/chat-mock';
+
+import {ChatDataService} from './chat-adapter/chatDataService';
 
 @NgModule({
   imports: [
@@ -43,8 +42,8 @@ import {ChatMock} from './chat-adapter/chat-mock';
     TransparentShapeModalModule,
     MatSliderModule,
     FormsModule,
-    BackgammonModule.config(BackgammonDBService),
-    ChatModule,
+    BackgammonModule.config(BackgammonDBSAdapter),
+    ChatModule.config(ChatDataService),
     GalleryModule,
     ImageExpanderModule,
     TransparentShapeModalModule
@@ -67,18 +66,7 @@ import {ChatMock} from './chat-adapter/chat-mock';
     AdvancedComponentComponent,
     TimeSlotDetailsModalComponent
   ],
-  providers: [
-    SchedulingMockData,
-    {
-      provide: ChatService,
-      useFactory: chatServiceConfigFn
-    }
-  ],
+  providers: [],
 })
 export class AdaptersModulesModule {
 }
-
-export function chatServiceConfigFn() {
-  return new ChatService(ChatMock.chatDataHandler());
-}
-

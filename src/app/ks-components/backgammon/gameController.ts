@@ -1,15 +1,15 @@
-import {BackgammonDBService} from '../../adapters/backgammon-adapter/backgammonDB.service';
+import {BackgammonDBToken} from './backgammonDb.types';
 import {getSpikeDirection, isOverlap, isValidSpike} from './helpers/backgammonUtils';
 import {BackgammonStateManager} from './backgammonStateManager';
 import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
 import {drawBackground} from './helpers/uiHelper';
 import {OutsideBoard} from './outsideboard';
-import {Injectable} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import {Players} from './players';
 import {Checker} from './checker';
 import {Spike} from './spike';
 import {Dices} from './dices';
-import {Canvas} from "./canvas";
+import {Canvas} from './canvas';
 
 @Injectable()
 export class GameController {
@@ -36,7 +36,7 @@ export class GameController {
     {x: 375, y: 495}, {x: 417, y: 495}, {x: 457, y: 495}, {x: 497, y: 495}, {x: 539, y: 495}, {x: 583, y: 495},
   ];
 
-  constructor(private backgammonDBService: BackgammonDBService) {
+  constructor(@Inject(BackgammonDBToken) private backgammonDBService) {
   }
 
   public init(gameData, isOnline?, gameId?) {
@@ -47,7 +47,7 @@ export class GameController {
     BackgammonStateManager.onSelectedCheckerMove(this.onSelectedCheckerMove);
     BackgammonStateManager.onSurrender(this.onSurrender);
     BackgammonStateManager.onMouseClick(this.newGame, 'gameController');
-    BackgammonStateManager.onMouseMove(this.hoverNewGame, 'gameController');
+    BackgammonStateManager.onMouseMove(this.hoverOnNewGame, 'gameController');
 
     drawBackground(this.backgroundImgUrl).subscribe(() => {
       this.initSpikes();
@@ -494,18 +494,17 @@ export class GameController {
       this.showPlayAgain = this.isOnline;
     }
 
-    if (numOfBlackWinningCheckers.length === 15 || gameData.surrenderedPlayer === Players.playersMap.White) {
+    if (numOfBlackWinningCheckers === 15 || gameData.surrenderedPlayer === Players.playersMap.White) {
       Players.canSurrenderPlayer = gameData.surrenderedPlayer;
       this.gamePlayers.winningPlayer = Players.playersMap.Black;
       this.showPlayAgain = this.isOnline;
     }
 
-
-    if (this.isOnline && numOfWhiteWinningCheckers > 4 && numOfWhiteWinningCheckers > 2 * numOfBlackWinningCheckers) {
+    if (this.isOnline && numOfWhiteWinningCheckers > 4 && numOfWhiteWinningCheckers > numOfBlackWinningCheckers + 3) {
       Players.canSurrenderPlayer = Players.playersMap.Black;
     }
 
-    if (this.isOnline && numOfBlackWinningCheckers > 4 && numOfBlackWinningCheckers > 2 * numOfWhiteWinningCheckers) {
+    if (this.isOnline && numOfBlackWinningCheckers > 4 && numOfBlackWinningCheckers > numOfWhiteWinningCheckers + 3) {
       Players.canSurrenderPlayer = Players.playersMap.White;
     }
     this.dicesObj.showRollButton = Players.currentState % 2 === 0;
@@ -542,8 +541,6 @@ export class GameController {
   }
 
   private onSurrender = (surrenderedPlayer) => {
-    const {playersMap} = Players;
-    const winningPlayer = surrenderedPlayer === playersMap.Black ? playersMap.White : playersMap.Black;
     this.gameState.surrenderedPlayer = surrenderedPlayer;
     this.updateState();
   }
@@ -624,7 +621,7 @@ export class GameController {
     }
   }
 
-  private hoverNewGame = ({x, y}) => {
+  private hoverOnNewGame = ({x, y}) => {
     const target = BACKGAMMON_CONSTANTS.PLAY_AGAIN_POSITION;
     if (this.showPlayAgain && isOverlap(x, y, target.x, target.y, 100, 20)) {
       this.drawPlayAgainOption('#b3f744');

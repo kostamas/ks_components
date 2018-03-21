@@ -1,9 +1,9 @@
-import {AfterViewInit, ChangeDetectorRef, Component, NgZone, OnDestroy, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, Inject, NgZone, OnDestroy, ViewChild} from '@angular/core';
 import {Canvas} from './canvas';
 import {BackgammonStateManager} from './backgammonStateManager';
 import {GameController} from './gameController';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {BackgammonDBService} from '../../adapters/backgammon-adapter/backgammonDB.service';
+import {BackgammonDBToken} from './backgammonDb.types';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {DirtyRequired} from '../../shared/vaildators/dirty-required-validator.validator';
 import {Subject} from 'rxjs/Subject';
@@ -61,8 +61,8 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('canvas') canvas;
 
-  constructor(private zone: NgZone, private gameController: GameController, private changeDetector: ChangeDetectorRef,
-              private backgammonDBService: BackgammonDBService, fBuilder: FormBuilder,
+  constructor(@Inject(BackgammonDBToken) private backgammonDBService, private zone: NgZone, private gameController: GameController, private changeDetector: ChangeDetectorRef,
+              fBuilder: FormBuilder,
               private activatedRoute: ActivatedRoute, private router: Router, private location: Location) {
     this.formGroup = fBuilder.group({
       name: [null, DirtyRequired],
@@ -127,10 +127,11 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   }
 
   public logOut() {
-    this.router.navigate(['/backgammon/']);
+    this.location.go('/backgammon')
     localStorage.removeItem('backgammonUser');
     this.clearGame();
     this.logout$.next();
+    this.playLocal();
   }
 
   public goToMenu() {
@@ -226,7 +227,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
           Object.keys(this.localUser.gameIds).forEach(gameId => {
             const secondPlayer = players.filter(player => player.gameIds && player.gameIds[gameId])[0];
             if (secondPlayer) {
-                 this.openedGames.push({gameId, secondPlayer: secondPlayer});
+              this.openedGames.push({gameId, secondPlayer: secondPlayer});
             }
           });
         }

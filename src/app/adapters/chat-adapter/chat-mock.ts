@@ -5,7 +5,7 @@ import {Subject} from 'rxjs/Subject';
 @Injectable()
 export class ChatMock {
   public static currentDate = new Date();
-  private static messagesSubjectsMap = {};
+  public static messagesSubjectsMap = {};
   public static mockMessages: any = [
     'Lorem ipsum dolor sit amet',
     'consectetur adipiscing elit',
@@ -116,7 +116,7 @@ export class ChatMock {
     return mockChat;
   }
 
-  private static buildLastSeenMessages(mockChat) {
+  public static buildLastSeenMessages(mockChat) {
     const lastSeenMessages = {};
     let randomMessage, lastMessage;
     mockChat.users.forEach(userId => {
@@ -146,15 +146,15 @@ export class ChatMock {
   }
 
   // *************************** chatDataHandler **********************************/
-  private static getChatById = (chatId) => {
+  public static getChatById = (chatId) => {
     return Observable.of(ChatMock.chats.filter(chat => chat.id === chatId)[0]);
   };
 
-  private static getChatParticipants = (userId) => {
+  public static getChatParticipants = (userId) => {
     return Observable.of(ChatMock.chatParticipants[userId]);
   };
 
-  private static updateMessages = (newMessage, chat, localUser) => {
+  public static updateMessages = (newMessage, chat, localUser) => {
     let chatToUpdate = ChatMock.chats.filter(_chat => _chat.id === chat.id)[0];
     const chatToUpdateIndex = ChatMock.chats.indexOf(chatToUpdate);
     chatToUpdate = Object.assign({}, chatToUpdate);
@@ -175,7 +175,7 @@ export class ChatMock {
     });
   }
 
-  private static listenToMessages = (chatId, userId) => {
+  public static listenToMessages = (chatId, userId) => {
     const chatterChatKey = `${userId}_${chatId}`;
     if (!ChatMock.messagesSubjectsMap[chatterChatKey]) {
       ChatMock.messagesSubjectsMap[chatterChatKey] = new Subject<any[]>();
@@ -185,12 +185,12 @@ export class ChatMock {
     }
   };
 
-  private static updateLastSeenMessages(lastSeenMessage, chatId) {
+  public static updateLastSeenMessages(lastSeenMessage, chatId) {
     const chat = ChatMock.chats.filter(_chat => _chat.id === chatId)[0];
     chat.updateLastSeenMessages = lastSeenMessage;
   }
 
-  private static onDestroy = () => {
+  public static onDestroy = () => {
     ChatMock.messagesSubjectsMap = {};
   };
 
