@@ -1,7 +1,7 @@
 import {AfterViewInit, ChangeDetectorRef, Component, Inject, NgZone, OnDestroy, ViewChild} from '@angular/core';
 import {Canvas} from './canvas';
 import {BackgammonStateManager} from './backgammonStateManager';
-import {GameController} from './gameController';
+import {GameController} from './backgammonGameController';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {BackgammonDBToken} from './backgammonDb.types';
 import {FormBuilder, FormGroup} from '@angular/forms';
