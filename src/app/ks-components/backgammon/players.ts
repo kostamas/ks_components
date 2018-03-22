@@ -44,14 +44,14 @@ export class Players {
 
   private skipTurnHandler(x, y) {
     const {skipBtnCoordinates} = this;
-    const {canSurrenderPlayer, onlinePlayersName, playersNamesMap} = Players;
-    const currentType = Players.currentState > 1 ? 3 : 1;
-    const currentPlayer = Players.onlinePlayersName[Players.playersNamesMap[currentType]];
+    const {onlinePlayersName, playersNamesMap, currentState, showsSkipButton} = Players;
+    const currentType = currentState > 1 ? 3 : 1;
+    const currentPlayer = onlinePlayersName[playersNamesMap[currentType]];
     const localUserName = BackgammonStateManager.localUser && BackgammonStateManager.localUser.name;
+    const _isOverlap = isOverlap(x, y, skipBtnCoordinates.x, skipBtnCoordinates.y - 10, 60, 40);
 
-    if (Players.showsSkipButton && currentPlayer === localUserName &&
-      isOverlap(x, y, skipBtnCoordinates.x, skipBtnCoordinates.y - 10, 60, 40)) {
-      if (Players.currentState < 2) {
+    if (_isOverlap && showsSkipButton && (!BackgammonStateManager.isOnline || currentPlayer === localUserName)) {
+      if (currentState < 2) {
         Players.currentState = 2;
       } else {
         Players.currentState = 0;
@@ -97,12 +97,12 @@ export class Players {
 
   public static isCurrentOnlinePlayer() {
     const localUserName = BackgammonStateManager.localUser && BackgammonStateManager.localUser.name; // isOnline.
-    const currentPlayerType = Players.getCurrentType();
+    const currentPlayerType = Players.getCurrentPlayerType();
     const currentPlayerName = Players.onlinePlayersName[Players.playersNamesMap[currentPlayerType]];
     return !localUserName || localUserName && localUserName === currentPlayerName;
   }
 
-  public static getCurrentType() {
+  public static getCurrentPlayerType() {
     return Players.currentState < 2 ? Players.playersMap.Black : Players.playersMap.White;
   }
 

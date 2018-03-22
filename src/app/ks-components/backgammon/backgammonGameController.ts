@@ -292,9 +292,9 @@ export class GameController {
 
     this.bar.checkers[Players.playersNamesMap[checker.type]].push(checker);
     if (checker.type === Players.playersMap.Black) {
-      checker.currentSpike = -1;
+      checker.currentSpike = BACKGAMMON_CONSTANTS.BLACK_BAR_INDEX;
     } else {
-      checker.currentSpike = 24;
+      checker.currentSpike = BACKGAMMON_CONSTANTS.WHITE_BAR_INDEX;
     }
   }
 
@@ -357,7 +357,8 @@ export class GameController {
     }
 
     if (this.bar.checkers[Players.playersNamesMap[playerType]].length > 0) {
-      const startSpikeIndex = playerType === Players.playersMap.Black ? -1 : 24;
+      const {BLACK_BAR_INDEX, WHITE_BAR_INDEX} = BACKGAMMON_CONSTANTS;
+      const startSpikeIndex = playerType === Players.playersMap.Black ? BLACK_BAR_INDEX : WHITE_BAR_INDEX;
       showNextPlayerBtn = !this.checkPossibleMovesForSpike(playerType, startSpikeIndex, spikeDirection);
       return showNextPlayerBtn;
     }
@@ -434,16 +435,17 @@ export class GameController {
     this.currentState = gameData.currentState;
 
     Players.showsSkipButton = false;
-    // debugger
+
     if (Players.currentState % 2 === 1) {
       if (this.showSkipBtn(this.currentState)) {
         Players.showsSkipButton = true;
         this.gamePlayers.draw();
       }
+    } else {
+      if (this.checkIfToSkipTurn()) { // one scenario - there is a checker outside and the whole home is occupied
+        Players.currentState = (Players.currentState + 2) % 4;
+      }
     }
-    // else {
-    //   this.chaeckIfSkipTurn(); // one scenario - there is a chaecker oustide and the whole home is occupied
-    // }
 
     this.showPlayAgain = false;
     this.gamePlayers.winningPlayer = -1;
@@ -592,8 +594,19 @@ export class GameController {
     }
   }
 
-  private chaeckIfSkipTurn(playerType){
+  private checkIfToSkipTurn() {
+    const currentPlayerType = Players.getCurrentPlayerType();
+    const homeSpikeIndex = currentPlayerType === Players.playersMap.White ? 18 : 5;
+    const spikeDirection = -1 * getSpikeDirection(currentPlayerType, Players);
 
+    for (let i = 0; i < 6; i++) {
+      const currSpikeIndex = i * spikeDirection + homeSpikeIndex;
+      const checkersArr = this.spikes[currSpikeIndex].checkers;
+      if (checkersArr.length < 2 || checkersArr[0].type === currentPlayerType) {
+        return false;
+      }
+    }
+    return true;
   }
 
   private redrawHandler = () => {
