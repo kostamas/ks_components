@@ -39,7 +39,7 @@ export class GameController {
   constructor(@Inject(BackgammonDBToken) private backgammonDBService) {
   }
 
-  public init(gameData, isOnline?, gameId?) {
+  public init(gameData, gameMode, gameId?) {
     BackgammonStateManager.onSelectedCheckerDrop(this.selectedCheckerDropHandler);
     BackgammonStateManager.onRedraw(this.redrawHandler);
     BackgammonStateManager.onSkipPlayer(this.skipPlayerHandler);
