@@ -466,11 +466,11 @@ export class GameController {
       this.showPlayAgain = this.isOnline;
     }
 
-    if (this.isOnline && numOfWhiteWinningCheckers > 4 && numOfWhiteWinningCheckers > numOfBlackWinningCheckers + 3) {
+    if (this.isOnline && numOfWhiteWinningCheckers > 2 && numOfWhiteWinningCheckers > numOfBlackWinningCheckers + 3) {
       Players.canSurrenderPlayer = Players.playersMap.Black;
     }
 
-    if (this.isOnline && numOfBlackWinningCheckers > 4 && numOfBlackWinningCheckers > numOfWhiteWinningCheckers + 3) {
+    if (this.isOnline && numOfBlackWinningCheckers > 2 && numOfBlackWinningCheckers > numOfWhiteWinningCheckers + 3) {
       Players.canSurrenderPlayer = Players.playersMap.White;
     }
     this.dicesObj.showRollButton = Players.currentState % 2 === 0;
