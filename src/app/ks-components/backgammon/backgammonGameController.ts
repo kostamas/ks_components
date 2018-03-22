@@ -442,7 +442,7 @@ export class GameController {
         this.gamePlayers.draw();
       }
     } else {
-      if (this.checkIfToSkipTurn()) { // one scenario - there is a checker outside and the whole home is occupied
+      if (this.checkIfToSkipTurn()) { // one scenario - there is a checker on the bar and the whole home is occupied
         Players.currentState = (Players.currentState + 2) % 4;
       }
     }
