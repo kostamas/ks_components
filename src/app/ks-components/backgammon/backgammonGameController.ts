@@ -1,5 +1,5 @@
 import {BackgammonDBToken} from './backgammonDb.types';
-import {getSpikeDirection, isOverlap, isValidSpike} from './helpers/backgammonUtils';
+import {getSpikeDirection, isOverlap, isValidSpike, isOnline} from './helpers/backgammonUtils';
 import {BackgammonStateManager} from './backgammonStateManager';
 import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
 import {drawBackground} from './helpers/uiHelper';
@@ -21,7 +21,6 @@ export class GameController {
   private currentState;
   private backgroundImgUrl = 'assets/images/backgammon.jpg';
   private bar;
-  private isOnline = false;
   private gameState;
   private gameStateObservable;
   private selectedCheckerObservable;
@@ -39,7 +38,7 @@ export class GameController {
   constructor(@Inject(BackgammonDBToken) private backgammonDBService) {
   }
 
-  public init(gameData, isOnline?, gameId?) {
+  public init(gameData, gameMode, gameId?) {
     BackgammonStateManager.onSelectedCheckerDrop(this.selectedCheckerDropHandler);
     BackgammonStateManager.onRedraw(this.redrawHandler);
     BackgammonStateManager.onSkipPlayer(this.skipPlayerHandler);
@@ -58,8 +57,12 @@ export class GameController {
       this.gamePlayers = new Players();
       this.outsideBoard = new OutsideBoard();
 
-      if (isOnline) {
-        this.isOnline = true;
+      if (gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL) {
+        this.gameState = gameData;
+        setTimeout(this.gameHandler.bind(this, gameData));
+      }
+
+      if (gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.ONLINE) {
         this.gameId = gameId;
         this.gameStateObservable = this.backgammonDBService.getGameStateObserveable(gameId)
           .do(gameState => this.gameState = gameState)
@@ -67,7 +70,9 @@ export class GameController {
         this.selectedCheckerObservable = this.backgammonDBService.getSelectedCheckerObservable(gameId)
           .subscribe(this.secondPlayerSelectedCheckerMoveHandler);
         BackgammonStateManager.onRollClick(this.updateState);
-      } else {
+      }
+
+      if (gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.COMPUTER) {
         this.gameState = gameData;
         setTimeout(this.gameHandler.bind(this, gameData));
       }
@@ -225,12 +230,13 @@ export class GameController {
       this.dicesObj.setShowRollButton(true);
       Players.nextPlayer();
     }
-    if (!this.isOnline) {
+
+    if (!isOnline()) {
       this.redrawHandler();
     }
   }
 
-  private selectCheckerHandler = ({x, y, checker}) => {
+  private selectCheckerHandler = ({checker}) => {
     let checkersArr, spikeIndex, updateState;
     const spikeDirection = getSpikeDirection(checker.type, Players);
 
@@ -395,7 +401,7 @@ export class GameController {
   private gameHandler = (gameData) => {
     BackgammonStateManager.gameState = gameData.state;
 
-    if (this.isOnline) {
+    if (isOnline()) {
       Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.Black]] = gameData.players.black;
       Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.White]] = gameData.players.white;
     }
@@ -457,20 +463,20 @@ export class GameController {
     if (numOfWhiteWinningCheckers === 15 || gameData.surrenderedPlayer === Players.playersMap.Black) {
       Players.canSurrenderPlayer = gameData.surrenderedPlayer;
       this.gamePlayers.winningPlayer = Players.playersMap.White;
-      this.showPlayAgain = this.isOnline;
+      this.showPlayAgain = isOnline();
     }
 
     if (numOfBlackWinningCheckers === 15 || gameData.surrenderedPlayer === Players.playersMap.White) {
       Players.canSurrenderPlayer = gameData.surrenderedPlayer;
       this.gamePlayers.winningPlayer = Players.playersMap.Black;
-      this.showPlayAgain = this.isOnline;
+      this.showPlayAgain = isOnline();
     }
 
-    if (this.isOnline && numOfWhiteWinningCheckers > 2 && numOfWhiteWinningCheckers > numOfBlackWinningCheckers + 3) {
+    if (isOnline() && numOfWhiteWinningCheckers > 2 && numOfWhiteWinningCheckers > numOfBlackWinningCheckers + 2) {
       Players.canSurrenderPlayer = Players.playersMap.Black;
     }
 
-    if (this.isOnline && numOfBlackWinningCheckers > 2 && numOfBlackWinningCheckers > numOfWhiteWinningCheckers + 3) {
+    if (isOnline() && numOfBlackWinningCheckers > 2 && numOfBlackWinningCheckers > numOfWhiteWinningCheckers + 2) {
       Players.canSurrenderPlayer = Players.playersMap.White;
     }
     this.dicesObj.showRollButton = Players.currentState % 2 === 0;
@@ -495,7 +501,7 @@ export class GameController {
   }
 
   private onSelectedCheckerMove = ({x, y, checker}) => {
-    if (this.isOnline) {
+    if (isOnline()) {
       this.backgammonDBService.updateSelectedCheckerMove(x, y, checker, this.gameId, BackgammonStateManager.localUser);
     }
   }
@@ -561,7 +567,7 @@ export class GameController {
       selectedChecker: {index: -1, x: -1, y: -1}
     }
 
-    if (this.isOnline) {
+    if (isOnline()) {
       this.backgammonDBService.updateGameState(this.gameId, updatedGame);
     } else {
       this.gameHandler(updatedGame.state);
@@ -639,7 +645,6 @@ export class GameController {
     this.dicesObj = null;
     this.checkers = [];
     this.spikes = [];
-    this.isOnline = false;
     if (this.gameStateObservable) {
       this.gameStateObservable.unsubscribe();
     }

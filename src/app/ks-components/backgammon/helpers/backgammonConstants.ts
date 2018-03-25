@@ -7,5 +7,10 @@ export const BACKGAMMON_CONSTANTS = {
   PLAY_AGAIN_POSITION: {
     x: 292,
     y: 350
+  },
+  GAME_MODES: {
+    LOCAL: 0,
+    ONLINE: 1,
+    COMPUTER: 2
   }
 }
