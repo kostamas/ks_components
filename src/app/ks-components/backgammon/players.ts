@@ -1,6 +1,6 @@
 import {Canvas} from './canvas';
 import {BackgammonStateManager} from './backgammonStateManager';
-import {isOverlap} from './helpers/backgammonUtils';
+import {isOverlap, isOnline} from './helpers/backgammonUtils';
 
 export class Players {
   public static canSurrenderPlayer = -1;
@@ -50,7 +50,7 @@ export class Players {
     const localUserName = BackgammonStateManager.localUser && BackgammonStateManager.localUser.name;
     const _isOverlap = isOverlap(x, y, skipBtnCoordinates.x, skipBtnCoordinates.y - 10, 60, 40);
 
-    if (_isOverlap && showsSkipButton && (!BackgammonStateManager.isOnline || currentPlayer === localUserName)) {
+    if (_isOverlap && showsSkipButton && (!isOnline() || currentPlayer === localUserName)) {
       if (currentState < 2) {
         Players.currentState = 2;
       } else {

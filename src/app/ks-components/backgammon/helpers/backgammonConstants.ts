@@ -9,6 +9,8 @@ export const BACKGAMMON_CONSTANTS = {
     y: 350
   },
   GAME_MODES: {
-
+    LOCAL: 0,
+    ONLINE: 1,
+    COMPUTER: 2
   }
 }

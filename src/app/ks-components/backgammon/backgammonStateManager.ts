@@ -1,6 +1,7 @@
 import {Subject} from 'rxjs/Subject';
 import {Canvas} from './canvas';
 import {Injectable} from '@angular/core';
+import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
 
 @Injectable()
 export class BackgammonStateManager {
@@ -14,7 +15,7 @@ export class BackgammonStateManager {
   private static game$: Subject<any>;
   private static rollClick$: Subject<any>;
   private static surrender$: Subject<any>;
-  public static isOnline;
+  public static gameMode;
   public static localUser;
   public static gameState;
   private static subscriptions;
@@ -22,11 +23,12 @@ export class BackgammonStateManager {
   constructor() {
   }
 
-  public static init(isOnline?, localUser?) {
-    if (isOnline) {
-      BackgammonStateManager.isOnline = isOnline;
+  public static init(gameMode, localUser?) {
+    if (gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.ONLINE) {
       BackgammonStateManager.localUser = localUser;
     }
+    BackgammonStateManager.gameMode = gameMode;
+
     BackgammonStateManager.mouseMove$ = new Subject();
     BackgammonStateManager.mouseClick$ = new Subject();
     BackgammonStateManager.redraw$ = new Subject();
@@ -48,7 +50,7 @@ export class BackgammonStateManager {
     const clientRect = Canvas.canvas.getBoundingClientRect();
     const cords = {x: $event.clientX - clientRect.left, y: $event.clientY - clientRect.top};
 
-    if (!BackgammonStateManager.isOnline || !BackgammonStateManager.gameState
+    if (BackgammonStateManager.gameMode !== BACKGAMMON_CONSTANTS.GAME_MODES.ONLINE || !BackgammonStateManager.gameState
       || !BackgammonStateManager.gameState.players) {
       BackgammonStateManager.mouseMove$.next(cords);
       return;
@@ -68,7 +70,7 @@ export class BackgammonStateManager {
   private static mouseClickHandler = ($event) => {
     const clientRect = Canvas.canvas.getBoundingClientRect();
     const cords = {x: $event.clientX - clientRect.left, y: $event.clientY - clientRect.top};
-    if (!BackgammonStateManager.isOnline || !BackgammonStateManager.gameState
+    if (BackgammonStateManager.gameMode  !== BACKGAMMON_CONSTANTS.GAME_MODES.ONLINE || !BackgammonStateManager.gameState
       || !BackgammonStateManager.gameState.players) {
       BackgammonStateManager.mouseClick$.next(cords);
       return;
@@ -163,7 +165,7 @@ export class BackgammonStateManager {
       Canvas.canvas.removeEventListener('click', BackgammonStateManager.mouseClickHandler);
     }
 
-    BackgammonStateManager.isOnline = false;
+    BackgammonStateManager.gameMode = null;
     BackgammonStateManager.localUser = null;
     BackgammonStateManager.gameState = {};
   }
