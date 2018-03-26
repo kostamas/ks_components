@@ -6,12 +6,14 @@
     display: flex;
     flex-direction: column;
     position: absolute;
-    left: 50px;
+    left: 43px;
     top: 80px;
+    width: 100px;
+    align-items: center;
 
-    .play-online, .logout, .menu, .play-local {
+    .play-online, .logout, .menu, .play-local, .vs-computer {
       @include dimension(65px, 65px);
-      @include text-style(20px, $malachite);
+      @include text-style(19px, $malachite);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -20,11 +22,20 @@
       box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
       cursor: pointer;
       margin-top: 20px;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+
+    .vs-computer {
+      @include dimension(90px, 55px);
+      border-radius: 30px;
     }
   }
 
   .online-game-menu-container.localGame-view, .online-game-menu-container.onlineMenu-view form,
-  .online-game-menu-container.onlineGame-view {
+  .online-game-menu-container.onlineGame-view, .online-game-menu-container.vsComputer-view {
     display: none;
   }
 
@@ -196,7 +207,7 @@
       cursor: grab;
     }
 
-    :active{
+    :active {
       cursor: grabbing;
     }
   }

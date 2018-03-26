@@ -1,5 +1,5 @@
 import {BackgammonDBToken} from './backgammonDb.types';
-import {getSpikeDirection, isOverlap, isValidSpike, isOnline} from './helpers/backgammonUtils';
+import {getSpikeDirection, isOverlap, isValidSpike, isOnline, isVSComputer} from './helpers/backgammonUtils';
 import {BackgammonStateManager} from './backgammonStateManager';
 import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
 import {drawBackground} from './helpers/uiHelper';
@@ -10,6 +10,7 @@ import {Checker} from './checker';
 import {Spike} from './spike';
 import {Dices} from './dices';
 import {Canvas} from './canvas';
+import {BackgammonComputer} from './backgammonComputer';
 
 @Injectable()
 export class GameController {
@@ -18,6 +19,7 @@ export class GameController {
   private outsideBoard: OutsideBoard;
   private dicesObj;
   private gamePlayers: Players;
+  private backgammonComputer: BackgammonComputer;
   private currentState;
   private backgroundImgUrl = 'assets/images/backgammon.jpg';
   private bar;
@@ -545,6 +547,7 @@ export class GameController {
       surrenderedPlayer: this.gameState.surrenderedPlayer || -1,
       timeStamp: Date.now()  // patch - trigger firebase observable change
     };
+
     this.checkers.forEach((checker: any, index) => {
       newState.checkers[index + 1] = {
         currentSpike: checker.currentSpike,
@@ -565,7 +568,7 @@ export class GameController {
     const updatedGame = {
       state: newState,
       selectedChecker: {index: -1, x: -1, y: -1}
-    }
+    };
 
     if (isOnline()) {
       this.backgammonDBService.updateGameState(this.gameId, updatedGame);

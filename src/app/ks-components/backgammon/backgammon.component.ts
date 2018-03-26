@@ -28,6 +28,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   public onlineViewStates = {
     'localGame': 'localGame',
     'onlineGame': 'onlineGame',
+    'vsComputer': 'vsComputer',
     'signIn': 'signIn',
     'register': 'register',
     'onlineMenu': 'onlineMenu'
@@ -42,15 +43,17 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     'playOnline': 'playOnline',
     'playLocal': 'playLocal',
     'logout': 'logout',
-    'menu': 'menu'
+    'menu': 'menu',
+    'computer': 'computer'
   };
 
   private displayedButtonsByCurrState = {
-    [this.onlineViewStates.localGame]: [this.buttonsNames.playOnline],
+    [this.onlineViewStates.localGame]: [this.buttonsNames.playOnline, this.buttonsNames.computer],
     [this.onlineViewStates.onlineGame]: [this.buttonsNames.menu, this.buttonsNames.logout],
-    [this.onlineViewStates.signIn]: [this.buttonsNames.playLocal],
+    [this.onlineViewStates.signIn]: [this.buttonsNames.playLocal, this.buttonsNames.computer],
     [this.onlineViewStates.register]: [this.buttonsNames.playLocal],
-    [this.onlineViewStates.onlineMenu]: [this.buttonsNames.playLocal, this.buttonsNames.logout],
+    [this.onlineViewStates.onlineMenu]: [this.buttonsNames.playLocal, this.buttonsNames.logout, this.buttonsNames.computer],
+    [this.onlineViewStates.vsComputer]: [this.buttonsNames.playOnline, this.buttonsNames.playLocal],
   };
 
   private formErrorMessagesBuilder = {
@@ -289,16 +292,25 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  public playAgainstComputer() {
+    this.playLocalOrAgainstComputer(BACKGAMMON_CONSTANTS.GAME_MODES.COMPUTER, this.onlineViewStates.vsComputer);
+
+  }
+
   public playLocal() {
+    this.playLocalOrAgainstComputer(BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL, this.onlineViewStates.localGame);
+  }
+
+  private playLocalOrAgainstComputer(gameMode, newViewState){
     if (this.currentViewState === this.onlineViewStates.onlineGame) {
       this.gameController.destroy();
       BackgammonStateManager.removeSubscriptions();
     }
+    this.currentViewState = newViewState;
     this.showCanvas = true;
-    this.currentViewState = this.onlineViewStates.localGame;
     this.openedGames = [];
     const gameData = this.backgammonDBService.getLocalGame();
-    this.startGame(gameData, BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL);
+    this.startGame(gameData, gameMode);
   }
 
   private clearGame() {

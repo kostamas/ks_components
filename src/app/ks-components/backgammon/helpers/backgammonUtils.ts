@@ -13,3 +13,5 @@ export const getSpikeDirection = (playerType, PlayersEnum) => playerType === Pla
 
 export const isOnline = () => BackgammonStateManager.gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.ONLINE;
 
+export const isVSComputer = () => BackgammonStateManager.gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.COMPUTER;
+
