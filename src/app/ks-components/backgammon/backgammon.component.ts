@@ -130,6 +130,12 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
         BackgammonStateManager.init(BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL);
         this.gameController.init(gameData, BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL);
       }
+
+      if (gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.COMPUTER) {
+        this.currentViewState = this.onlineViewStates.vsComputer;
+        BackgammonStateManager.init(BACKGAMMON_CONSTANTS.GAME_MODES.COMPUTER);
+        this.gameController.init(gameData, BACKGAMMON_CONSTANTS.GAME_MODES.COMPUTER);
+      }
     });
   }
 

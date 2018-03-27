@@ -71,7 +71,7 @@ export class Dices {
       && Players.isCurrentOnlinePlayer()
       && isOverlap(x, y, this.rollButtonPosition.x - 30, this.rollButtonPosition.y - 30, 60, 60)) {
       this.rollDicesHandler();
-      Players.nextPlayer();
+      Players.nextPlayerState();
       BackgammonStateManager.notifyRollClick();
     }
   };

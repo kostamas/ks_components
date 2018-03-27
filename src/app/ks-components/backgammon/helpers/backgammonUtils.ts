@@ -15,3 +15,5 @@ export const isOnline = () => BackgammonStateManager.gameMode === BACKGAMMON_CON
 
 export const isVSComputer = () => BackgammonStateManager.gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.COMPUTER;
 
+export const isLocal = () => BackgammonStateManager.gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL;
+

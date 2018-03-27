@@ -50,6 +50,8 @@ export class GameController {
     BackgammonStateManager.onMouseClick(this.newGame, 'gameController');
     BackgammonStateManager.onMouseMove(this.hoverOnNewGame, 'gameController');
 
+    Players.currentState = 0;
+
     drawBackground(this.backgroundImgUrl).subscribe(() => {
       this.initSpikes();
       this.initCheckers();
@@ -58,11 +60,6 @@ export class GameController {
       this.dicesObj = new Dices();
       this.gamePlayers = new Players();
       this.outsideBoard = new OutsideBoard();
-
-      if (gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL) {
-        this.gameState = gameData;
-        setTimeout(this.gameHandler.bind(this, gameData));
-      }
 
       if (gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.ONLINE) {
         this.gameId = gameId;
@@ -74,9 +71,16 @@ export class GameController {
         BackgammonStateManager.onRollClick(this.updateState);
       }
 
-      if (gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.COMPUTER) {
+      if (gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL) {
         this.gameState = gameData;
         setTimeout(this.gameHandler.bind(this, gameData));
+      }
+
+      if (gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.COMPUTER) {
+        BackgammonStateManager.onComputerMove(this.gameHandler);
+        this.gameState = gameData;
+        setTimeout(this.gameHandler.bind(this, gameData));
+        this.backgammonComputer = new BackgammonComputer(Players.playersMap.White);
       }
     });
   }
@@ -191,7 +195,7 @@ export class GameController {
     this.dicesObj.dices.splice(diceIndex, 1);
     if (this.dicesObj.dices.length === 0) {
       this.dicesObj.setShowRollButton(true);
-      Players.nextPlayer();
+      Players.nextPlayerState();
     }
     this.outsideBoard.showArrow[Players.playersNamesMap[checker.type]] = false;
     this.updateState();
@@ -230,7 +234,7 @@ export class GameController {
 
     if (this.dicesObj.dices.length === 0) {
       this.dicesObj.setShowRollButton(true);
-      Players.nextPlayer();
+      Players.nextPlayerState();
     }
 
     if (!isOnline()) {

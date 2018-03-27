@@ -20,7 +20,7 @@ export class Players {
     [Players.playersNamesMap[Players.playersMap.White]]: ''
   }
 
-  public static currentState = 0;
+  public static currentState;
 
   public static showsSkipButton = false;
 
@@ -33,8 +33,9 @@ export class Players {
     this.init();
   }
 
-  public static nextPlayer() {
+  public static nextPlayerState() {
     Players.currentState = (Players.currentState + 1) % 4;
+    BackgammonStateManager.notifyNextPlayerState();
   }
 
   private init() {
