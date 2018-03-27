@@ -74,7 +74,7 @@ export class BackgammonStateManager {
     const clientRect = Canvas.canvas.getBoundingClientRect();
     const cords = {x: $event.clientX - clientRect.left, y: $event.clientY - clientRect.top};
     const {gameState, mouseClick$, localUser} = BackgammonStateManager;
-
+    var x = BackgammonStateManager;
     debugger
     if (isLocal()) {
       mouseClick$.next(cords);
