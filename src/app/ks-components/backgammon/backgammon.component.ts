@@ -253,8 +253,8 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     }
 
     return Object.keys(this.localUser.gameIds)
-      .filter(gameId => !!selectedPlayer.gameIds[gameId])
-      .length > 0;
+        .filter(gameId => !!selectedPlayer.gameIds[gameId])
+        .length > 0;
   }
 
   public checkIfCanInvite(selectedPlayer) {
@@ -307,7 +307,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     this.playLocalOrAgainstComputer(BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL, this.onlineViewStates.localGame);
   }
 
-  private playLocalOrAgainstComputer(gameMode, newViewState){
+  private playLocalOrAgainstComputer(gameMode, newViewState) {
     if (this.currentViewState === this.onlineViewStates.onlineGame) {
       this.gameController.destroy();
       BackgammonStateManager.removeSubscriptions();

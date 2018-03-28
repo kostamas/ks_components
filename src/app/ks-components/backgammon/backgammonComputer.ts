@@ -11,7 +11,7 @@ export class BackgammonComputer {
 
   private onNextPlayerState = () => {
     const {gameState} = BackgammonStateManager;
-    if (this.playerType === Players.getCurrentPlayerType()){
+    if (this.playerType === Players.getCurrentPlayerType()) {
       debugger;
     }
   }

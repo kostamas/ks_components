@@ -79,6 +79,8 @@ export class GameController {
       if (gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.COMPUTER) {
         BackgammonStateManager.onComputerMove(this.gameHandler);
         this.gameState = gameData;
+        this.gameState.players.black = 'You';
+        this.gameState.players.white = 'Computer';
         setTimeout(this.gameHandler.bind(this, gameData));
         this.backgammonComputer = new BackgammonComputer(Players.playersMap.White);
       }
@@ -405,7 +407,7 @@ export class GameController {
   }
 
   private gameHandler = (gameData) => {
-    BackgammonStateManager.gameState = gameData.state;
+    BackgammonStateManager.gameState = gameData;
 
     if (isOnline()) {
       Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.Black]] = gameData.players.black;

@@ -78,7 +78,7 @@ export class Checker {
   };
 
   private mouseClickHandler = ({x, y}) => {
-    debugger
+
     if (this.type !== Players.currentState || this.isOffBoard || !Players.isCurrentOnlinePlayer()) {
       return;
     }

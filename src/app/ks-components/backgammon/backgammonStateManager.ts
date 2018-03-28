@@ -2,7 +2,6 @@ import {Subject} from 'rxjs/Subject';
 import {Canvas} from './canvas';
 import {Injectable} from '@angular/core';
 import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
-import {isLocal, isVSComputer, isOnline} from './helpers/backgammonUtils';
 
 @Injectable()
 export class BackgammonStateManager {
@@ -52,43 +51,72 @@ export class BackgammonStateManager {
   private static mouseMoveHandler = ($event) => {
     const clientRect = Canvas.canvas.getBoundingClientRect();
     const cords = {x: $event.clientX - clientRect.left, y: $event.clientY - clientRect.top};
-    const {gameState, mouseMove$, localUser} = BackgammonStateManager;
+    const {gameState, mouseMove$, localUser, gameMode} = BackgammonStateManager;
 
-    if (isLocal()) {
-      mouseMove$.next(cords);
-      return;
-    }
+    switch (gameMode) {
+      case BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL:
+        mouseMove$.next(cords);
+        break;
 
-    if ((gameState.players.black === localUser.name)) {
-      if (gameState.currentState < 2) {
-        mouseMove$.next(cords);
-      }
-    } else {
-      if (gameState.currentState > 1) {
-        mouseMove$.next(cords);
-      }
+      case BACKGAMMON_CONSTANTS.GAME_MODES.ONLINE:
+        if (gameState.players.black === localUser.name) {
+          if (gameState.currentState < 2) {
+            mouseMove$.next(cords);
+          }
+        } else {
+          if (gameState.currentState > 1) {
+            mouseMove$.next(cords);
+          }
+        }
+        break;
+
+      case BACKGAMMON_CONSTANTS.GAME_MODES.COMPUTER:
+        if (gameState.players.black === 'You') {
+          if (gameState.currentState < 2) {
+            mouseMove$.next(cords);
+          }
+        } else {
+          if (gameState.currentState > 1) {
+            mouseMove$.next(cords);
+          }
+        }
+        break;
     }
   }
 
   private static mouseClickHandler = ($event) => {
     const clientRect = Canvas.canvas.getBoundingClientRect();
     const cords = {x: $event.clientX - clientRect.left, y: $event.clientY - clientRect.top};
-    const {gameState, mouseClick$, localUser} = BackgammonStateManager;
-    var x = BackgammonStateManager;
-    debugger
-    if (isLocal()) {
-      mouseClick$.next(cords);
-      return;
-    }
+    const {mouseMove$, mouseClick$, gameState, localUser, gameMode} = BackgammonStateManager;
 
-    if (gameState.players.black === localUser.name) {
-      if (gameState.currentState < 2) {
+    switch (gameMode) {
+      case BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL:
         mouseClick$.next(cords);
-      }
-    } else {
-      if (gameState.currentState > 1) {
-        mouseClick$.next(cords);
-      }
+        break;
+
+      case BACKGAMMON_CONSTANTS.GAME_MODES.ONLINE:
+        if (gameState.players.black === localUser.name) {
+          if (gameState.currentState < 2) {
+            mouseClick$.next(cords);
+          }
+        } else {
+          if (gameState.currentState > 1) {
+            mouseClick$.next(cords);
+          }
+        }
+        break;
+
+      case BACKGAMMON_CONSTANTS.GAME_MODES.COMPUTER:
+        if (gameState.players.black === 'You') {
+          if (gameState.currentState < 2) {
+            mouseClick$.next(cords);
+          }
+        } else {
+          if (gameState.currentState > 1) {
+            mouseClick$.next(cords);
+          }
+        }
+        break;
     }
   }
 
@@ -177,6 +205,12 @@ export class BackgammonStateManager {
       subscription: BackgammonStateManager.nextPlayerState$.subscribe(cb)
     });
   }
+
+  public static isOnline = () => BackgammonStateManager.gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.ONLINE;
+
+  public static isVSComputer = () => BackgammonStateManager.gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.COMPUTER;
+
+  public static isLocal = () => BackgammonStateManager.gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL;
 
   public static removeSubscriptions() {
     if (BackgammonStateManager.subscriptions) {
