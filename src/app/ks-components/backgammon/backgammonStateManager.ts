@@ -187,8 +187,8 @@ export class BackgammonStateManager {
     BackgammonStateManager.subscriptions.push({id, subscription: BackgammonStateManager.rollClick$.subscribe(cb)});
   }
 
-  public static notifyComputerMove() {
-    BackgammonStateManager.computerMove$.next();
+  public static notifyComputerMove(newGameState) {
+    BackgammonStateManager.computerMove$.next(newGameState);
   }
 
   public static onComputerMove(cb, id?) {

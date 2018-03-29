@@ -56,14 +56,14 @@ export class Dices {
     Canvas.context.fillText('Roll', 576, 296);
   }
 
-  private rollDicesHandler() {
+  public rollDicesHandler = () => {
     this.dices = [Math.floor(Math.random() * 6 + 1), Math.floor(Math.random() * 6 + 1)];
-
     if (this.dices[0] === this.dices[1]) {
       this.dices = [this.dices[0], this.dices[0], this.dices[0], this.dices[0]];
     }
     this.showRollButton = false;
     BackgammonStateManager.notifyRedraw();
+    debugger
   }
 
   private clickHandler = ({x, y}) => {

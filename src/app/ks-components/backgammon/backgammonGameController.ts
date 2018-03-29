@@ -82,7 +82,8 @@ export class GameController {
         this.gameState.players.black = 'You';
         this.gameState.players.white = 'Computer';
         setTimeout(this.gameHandler.bind(this, gameData));
-        this.backgammonComputer = new BackgammonComputer(Players.playersMap.White);
+
+        this.backgammonComputer = new BackgammonComputer(Players.playersMap.White, this.dicesObj);
       }
     });
   }
@@ -334,7 +335,8 @@ export class GameController {
       !this.hasOtherOutChecker(checker);
   }
 
-  private showSkipBtn(playerType) {
+  private showSkipBtn = (playerType) => {
+    debugger
     let showNextPlayerBtn = true;
     const spikeDirection = getSpikeDirection(playerType, Players);
     if (this.checkIfOffBoardState(playerType)) {
@@ -388,7 +390,7 @@ export class GameController {
     return showNextPlayerBtn;
   }
 
-  private checkPossibleMovesForSpike(playerType, startSpikeIndex, spikeDirection) {
+  private checkPossibleMovesForSpike = (playerType, startSpikeIndex, spikeDirection) => {
     let currSpike, spikeIndex;
     for (let i = 0; i < this.dicesObj.dices.length; i++) {
       spikeIndex = startSpikeIndex + spikeDirection * this.dicesObj.dices[i];
