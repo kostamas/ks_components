@@ -6,36 +6,39 @@ export class BackgammonComputer {
   private playerType;
   private checkerIndex = 29;
 
-  constructor(playerType, private dicesObject: Dices) {
+  constructor(playerType) {
     BackgammonStateManager.onNextPlayerState(this.onNextPlayerState);
     this.playerType = playerType;
   }
 
   private onNextPlayerState = () => {
-    const {gameState} = BackgammonStateManager;
+    setTimeout(() => {
+      const {gameState} = BackgammonStateManager;
 
-    if (this.playerType === Players.getCurrentPlayerType()) {
-      setTimeout(() => {
-        this.dicesObject.rollDicesHandler();
+      if (this.playerType === Players.getCurrentPlayerType()) {
+        let dices = [Math.floor(Math.random() * 6 + 1), Math.floor(Math.random() * 6 + 1)];
+        if (dices[0] === dices[1]) {
+          dices = [dices[0], dices[0], dices[0], dices[0]];
+        }
+        BackgammonStateManager.gameState.dices = dices;
         BackgammonStateManager.gameState.currentState = this.playerType; // player type = 3, current state = 2, for showing the dices - currentState++;
         this.computerYouCanPlay();
-      }, 1000);
-    }
+      }
+    })
   };
 
   private computerYouCanPlay = () => {
     setTimeout(() => {
-      const dices = this.dicesObject.dices;
-
-      const move = this.getBestMove(dices);
+      const move = this.getBestMove(BackgammonStateManager.gameState.dices);
       this.makeMove(move);
-      if (dices.length > 0) {
+      if (BackgammonStateManager.gameState.dices.length > 0) {
         this.computerYouCanPlay();
       }
+      BackgammonStateManager.gameState.dices.shift();
     }, 1000);
   }
 
-  private getBestMove = (dices) => {
+  private getBestMove = (dice) => {
     const move = {checkerIndex: this.checkerIndex, nextSpikeIndex: 21};
     this.checkerIndex--;
     return move;

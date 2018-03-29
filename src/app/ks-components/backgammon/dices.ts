@@ -63,7 +63,6 @@ export class Dices {
     }
     this.showRollButton = false;
     BackgammonStateManager.notifyRedraw();
-    debugger
   }
 
   private clickHandler = ({x, y}) => {
