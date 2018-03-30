@@ -47,6 +47,9 @@ export class BackgammonComputer {
   private makeMove = ({checkerIndex, nextSpikeIndex}) => {
     const selectedChecker = BackgammonStateManager.gameState.checkers[checkerIndex];
     selectedChecker.currentSpike = nextSpikeIndex;
+    if(BackgammonStateManager.gameState.dices.length === 0){
+      BackgammonStateManager.gameState.currentState = (BackgammonStateManager.gameState.currentState + 1 ) % 4;
+    }
     BackgammonStateManager.notifyComputerMove(BackgammonStateManager.gameState);
   }
 }
