@@ -1,7 +1,7 @@
 import {getDiceSvg} from './helpers/uiHelper';
 import {Canvas} from './canvas';
 import {BackgammonStateManager} from './backgammonStateManager';
-import {isOverlap} from './helpers/backgammonUtils';
+import {isOverlap, rollDices} from './helpers/backgammonUtils';
 import {Players} from './players';
 
 export class Dices {
@@ -57,10 +57,7 @@ export class Dices {
   }
 
   public rollDicesHandler = () => {
-    this.dices = [Math.floor(Math.random() * 6 + 1), Math.floor(Math.random() * 6 + 1)];
-    if (this.dices[0] === this.dices[1]) {
-      this.dices = [this.dices[0], this.dices[0], this.dices[0], this.dices[0]];
-    }
+    this.dices = rollDices();
     this.showRollButton = false;
     BackgammonStateManager.notifyRedraw();
   }
