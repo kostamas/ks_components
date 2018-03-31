@@ -614,6 +614,10 @@ export class GameController {
     const homeSpikeIndex = currentPlayerType === Players.playersMap.White ? 18 : 5;
     const spikeDirection = -1 * getSpikeDirection(currentPlayerType, Players);
 
+    if (!this.bar.checkers[Players.playersNamesMap[currentPlayerType]].length) { // the second player has checker on the bar
+      return false;
+    }
+
     for (let i = 0; i < 6; i++) {
       const currSpikeIndex = i * spikeDirection + homeSpikeIndex;
       const checkersArr = this.spikes[currSpikeIndex].checkers;
