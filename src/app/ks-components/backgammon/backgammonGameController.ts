@@ -82,7 +82,7 @@ export class GameController {
         this.gameState.players.black = 'You';
         this.gameState.players.white = 'Computer';
         setTimeout(this.gameHandler.bind(this, gameData));
-        this.backgammonComputer = new BackgammonComputer(Players.playersMap.White);
+        this.backgammonComputer = new BackgammonComputer(Players.playersMap.White, this.spikes);
       }
     });
   }
@@ -92,7 +92,7 @@ export class GameController {
     this.spikes = [];
 
     for (let i = 0; i < this.spikesPositions.length; i++) {
-      direction = i < this.spikesPositions.length / 2 ? 'down' : 'up';
+      direction = i < this.spikesPositions.length / 2 ? 'down' : 'up'; // todo - use constant
       spike = new Spike(this.spikesPositions[i].x, this.spikesPositions[i].y, direction);
       this.spikes.push(spike);
     }
