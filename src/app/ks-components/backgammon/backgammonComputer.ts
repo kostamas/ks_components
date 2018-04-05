@@ -87,19 +87,24 @@ export class BackgammonComputer {
    *  2. (new state ,same spike)
    *  1. (new state, next spike)**/
   public getAllPossibleMoves(gameState, nextStatesArr, currentSpike, allStatesTable, spikes) { // todo - make private
-    const stateKey = `${this.encodeGameState(gameState)}, currentSpike: ${ currentSpike}`;
-    if (allStatesTable[stateKey]) {
+    const encodedGameState = this.encodeGameState(gameState);
+
+    const stateKey = `${encodedGameState}, currentSpike: ${ currentSpike}`;
+    if (allStatesTable.recursiveStates[stateKey]) {
       return;
     } else {
-      allStatesTable[stateKey] = true;
+      allStatesTable.recursiveStates[stateKey] = true;
     }
 
     if (gameState.dices.length <= 0) {
-      nextStatesArr.push(gameState);
+      if (!allStatesTable.gameStates[encodedGameState]) {
+        nextStatesArr.push(gameState);
+        allStatesTable.gameStates[encodedGameState] = true;
+      }
       return;
     }
 
-    if (currentSpike > 4 || !isValidSpike(currentSpike)) {
+    if (currentSpike > 7 || !isValidSpike(currentSpike)) {
       return;
     }
 
@@ -108,7 +113,7 @@ export class BackgammonComputer {
     for (let i = 0; i < gameState.dices.length; i++) {
       const newState1 = deepCopy(gameState); // todo - copy only if there is a move.
       const newState2 = deepCopy(gameState);
-      const  newSpikes = deepCopy(spikes);
+      const newSpikes = deepCopy(spikes);
       dice = gameState.dices[i];
       this.getAllPossibleMoves(gameState, nextStatesArr, nextSpikeToCheck, allStatesTable, spikes); // 1
 
