@@ -1,5 +1,5 @@
 import {BackgammonDBToken} from './backgammonDb.types';
-import {getSpikeDirection, isOverlap, isValidSpike, isOnline, isVSComputer} from './helpers/backgammonUtils';
+import {getSpikeDirection, isOverlap, isValidSpike, isOnline} from './helpers/backgammonUtils';
 import {BackgammonStateManager} from './backgammonStateManager';
 import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
 import {drawBackground} from './helpers/uiHelper';
@@ -10,7 +10,6 @@ import {Checker} from './checker';
 import {Spike} from './spike';
 import {Dices} from './dices';
 import {Canvas} from './canvas';
-import {BackgammonComputer} from './backgammonComputer';
 
 @Injectable()
 export class GameController {
@@ -19,7 +18,6 @@ export class GameController {
   private outsideBoard: OutsideBoard;
   private dicesObj;
   private gamePlayers: Players;
-  private backgammonComputer: BackgammonComputer;
   private currentState;
   private backgroundImgUrl = 'assets/images/backgammon.jpg';
   private bar;
@@ -50,8 +48,6 @@ export class GameController {
     BackgammonStateManager.onMouseClick(this.newGame, 'gameController');
     BackgammonStateManager.onMouseMove(this.hoverOnNewGame, 'gameController');
 
-    Players.currentState = 0;
-
     drawBackground(this.backgroundImgUrl).subscribe(() => {
       this.initSpikes();
       this.initCheckers();
@@ -60,6 +56,11 @@ export class GameController {
       this.dicesObj = new Dices();
       this.gamePlayers = new Players();
       this.outsideBoard = new OutsideBoard();
+
+      if (gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL) {
+        this.gameState = gameData;
+        setTimeout(this.gameHandler.bind(this, gameData));
+      }
 
       if (gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.ONLINE) {
         this.gameId = gameId;
@@ -71,139 +72,9 @@ export class GameController {
         BackgammonStateManager.onRollClick(this.updateState);
       }
 
-      if (gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL) {
-        this.gameState = gameData;
-        setTimeout(this.gameHandler.bind(this, gameData));
-      }
-
       if (gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.COMPUTER) {
-        BackgammonStateManager.onComputerMove(this.gameHandler);
         this.gameState = gameData;
-        this.gameState.players.black = 'You';
-        this.gameState.players.white = 'Computer';
         setTimeout(this.gameHandler.bind(this, gameData));
-        this.backgammonComputer = new BackgammonComputer(Players.playersMap.Black, this.spikes);
-
-        const nextStatesArr = [];
-
-        this.gameState.dices = [1, 1, 1, 1];
-        this.gameState.checkers['1'].currentSpike = 0;
-        this.gameState.checkers['2'].currentSpike = 0;
-        this.gameState.checkers['3'].currentSpike = 0;
-        this.gameState.checkers['4'].currentSpike = 0;
-        this.gameState.checkers['5'].currentSpike = 2;
-        this.gameState.checkers['6'].currentSpike = 3;
-        this.gameState.checkers['7'].currentSpike = 3;
-        this.gameState.checkers['8'].currentSpike = 6;
-        this.gameState.checkers['9'].currentSpike = 6;
-        this.gameState.checkers['10'].currentSpike = 7;
-        this.gameState.checkers['11'].currentSpike = 8;
-        this.gameState.checkers['12'].currentSpike = 9;
-        this.gameState.checkers['13'].currentSpike = 9;
-        this.gameState.checkers['14'].currentSpike = 10;
-        this.gameState.checkers['15'].currentSpike = 11;
-
-
-        this.gameState.checkers['16'].currentSpike = 21;
-        this.gameState.checkers['17'].currentSpike = 21;
-        this.gameState.checkers['18'].currentSpike = 21;
-        this.gameState.checkers['19'].currentSpike = 21;
-        this.gameState.checkers['20'].currentSpike = 21;
-        this.gameState.checkers['21'].currentSpike = 21;
-        this.gameState.checkers['22'].currentSpike = 21;
-        this.gameState.checkers['23'].currentSpike = 21;
-        this.gameState.checkers['24'].currentSpike = 21;
-        this.gameState.checkers['25'].currentSpike = 21;
-        this.gameState.checkers['26'].currentSpike = 21;
-        this.gameState.checkers['27'].currentSpike = 21;
-        this.gameState.checkers['28'].currentSpike = 21;
-        this.gameState.checkers['29'].currentSpike = 21;
-        this.gameState.checkers['30'].currentSpike = 21;
-
-
-        this.checkers[0].currentSpike = 0;
-        this.checkers[1].currentSpike = 0;
-        this.checkers[2].currentSpike = 0;
-        this.checkers[3].currentSpike = 0;
-        this.checkers[4].currentSpike = 2;
-        this.checkers[5].currentSpike = 3;
-        this.checkers[6].currentSpike = 3;
-        this.checkers[7].currentSpike = 6;
-        this.checkers[8].currentSpike = 6;
-        this.checkers[9].currentSpike = 7;
-        this.checkers[10].currentSpike = 8;
-        this.checkers[11].currentSpike = 9;
-        this.checkers[12].currentSpike = 9;
-        this.checkers[13].currentSpike = 10;
-        this.checkers[14].currentSpike = 11;
-
-        this.checkers[15].currentSpike = 21;
-        this.checkers[16].currentSpike = 21;
-        this.checkers[17].currentSpike = 21;
-        this.checkers[18].currentSpike = 21;
-        this.checkers[19].currentSpike = 21;
-        this.checkers[20].currentSpike = 21;
-        this.checkers[21].currentSpike = 21;
-        this.checkers[22].currentSpike = 21;
-        this.checkers[23].currentSpike = 21;
-        this.checkers[24].currentSpike = 21;
-        this.checkers[25].currentSpike = 21;
-        this.checkers[26].currentSpike = 21;
-        this.checkers[27].currentSpike = 21;
-        this.checkers[28].currentSpike = 21;
-        this.checkers[29].currentSpike = 21;
-
-
-        this.spikes[0].checkers.push(this.checkers[0]);
-        this.spikes[0].checkers.push(this.checkers[1]);
-        this.spikes[0].checkers.push(this.checkers[2]);
-        this.spikes[0].checkers.push(this.checkers[3]);
-        this.spikes[0].checkers.push(this.checkers[3]);
-        this.spikes[2].checkers.push(this.checkers[4]);
-        this.spikes[3].checkers.push(this.checkers[5]);
-        this.spikes[3].checkers.push(this.checkers[6]);
-        this.spikes[6].checkers.push(this.checkers[7]);
-        this.spikes[6].checkers.push(this.checkers[8]);
-        this.spikes[7].checkers.push(this.checkers[9]);
-        this.spikes[8].checkers.push(this.checkers[10]);
-        this.spikes[9].checkers.push(this.checkers[11]);
-        this.spikes[9].checkers.push(this.checkers[12]);
-        this.spikes[10].checkers.push(this.checkers[13]);
-        this.spikes[11].checkers.push(this.checkers[14]);
-
-
-
-        this.spikes[21].checkers.push(this.checkers[15]);
-        this.spikes[21].checkers.push(this.checkers[16]);
-        this.spikes[21].checkers.push(this.checkers[17]);
-        this.spikes[21].checkers.push(this.checkers[18]);
-        this.spikes[21].checkers.push(this.checkers[19]);
-        this.spikes[21].checkers.push(this.checkers[20]);
-        this.spikes[21].checkers.push(this.checkers[21]);
-        this.spikes[21].checkers.push(this.checkers[22]);
-        this.spikes[21].checkers.push(this.checkers[23]);
-        this.spikes[21].checkers.push(this.checkers[24]);
-        this.spikes[21].checkers.push(this.checkers[25]);
-        this.spikes[21].checkers.push(this.checkers[26]);
-        this.spikes[21].checkers.push(this.checkers[27]);
-        this.spikes[21].checkers.push(this.checkers[28]);
-        this.spikes[21].checkers.push(this.checkers[29]);
-
-
-        const spikes = [];
-        this.spikes.forEach(spike => {
-          const newSpike = {
-            checkers: spike.checkers.map(checker => ({
-              currentSpike: checker.currentSpike,
-              isOffBoard: checker.isOffBoard,
-              type: checker.type
-            }))
-          };
-          spikes.push(newSpike);
-        });
-        const allStatesTable = {gameStates: {}, recursiveStates: {}};
-        this.backgammonComputer.getAllPossibleMoves(this.gameState, nextStatesArr, 0, allStatesTable, spikes);
-        debugger
       }
     });
   }
@@ -213,7 +84,7 @@ export class GameController {
     this.spikes = [];
 
     for (let i = 0; i < this.spikesPositions.length; i++) {
-      direction = i < this.spikesPositions.length / 2 ? 'down' : 'up'; // todo - use constant
+      direction = i < this.spikesPositions.length / 2 ? 'down' : 'up';
       spike = new Spike(this.spikesPositions[i].x, this.spikesPositions[i].y, direction);
       this.spikes.push(spike);
     }
@@ -318,7 +189,7 @@ export class GameController {
     this.dicesObj.dices.splice(diceIndex, 1);
     if (this.dicesObj.dices.length === 0) {
       this.dicesObj.setShowRollButton(true);
-      Players.nextPlayerState();
+      Players.nextPlayer();
     }
     this.outsideBoard.showArrow[Players.playersNamesMap[checker.type]] = false;
     this.updateState();
@@ -357,7 +228,7 @@ export class GameController {
 
     if (this.dicesObj.dices.length === 0) {
       this.dicesObj.setShowRollButton(true);
-      Players.nextPlayerState();
+      Players.nextPlayer();
     }
 
     if (!isOnline()) {
@@ -528,7 +399,7 @@ export class GameController {
   }
 
   private gameHandler = (gameData) => {
-    BackgammonStateManager.gameState = gameData;
+    BackgammonStateManager.gameState = gameData.state;
 
     if (isOnline()) {
       Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.Black]] = gameData.players.black;
@@ -674,7 +545,6 @@ export class GameController {
       surrenderedPlayer: this.gameState.surrenderedPlayer || -1,
       timeStamp: Date.now()  // patch - trigger firebase observable change
     };
-
     this.checkers.forEach((checker: any, index) => {
       newState.checkers[index + 1] = {
         currentSpike: checker.currentSpike,
@@ -695,7 +565,7 @@ export class GameController {
     const updatedGame = {
       state: newState,
       selectedChecker: {index: -1, x: -1, y: -1}
-    };
+    }
 
     if (isOnline()) {
       this.backgammonDBService.updateGameState(this.gameId, updatedGame);
