@@ -82,7 +82,43 @@ export class GameController {
         this.gameState.players.black = 'You';
         this.gameState.players.white = 'Computer';
         setTimeout(this.gameHandler.bind(this, gameData));
-        this.backgammonComputer = new BackgammonComputer(Players.playersMap.White, this.spikes);
+        this.backgammonComputer = new BackgammonComputer(Players.playersMap.Black, this.spikes);
+
+        const nextStatesArr = [];
+
+        this.gameState.dices = [1, 1, 1, 1];
+        this.gameState.checkers['1'].currentSpike = 0;
+        this.gameState.checkers['2'].currentSpike = 0;
+        this.gameState.checkers['3'].currentSpike = 0;
+        this.gameState.checkers['4'].currentSpike = 0;
+        this.checkers[0].currentSpike = 0;
+        this.checkers[1].currentSpike = 0;
+        this.checkers[2].currentSpike = 0;
+        this.checkers[3].currentSpike = 0;
+        this.spikes[0].checkers.push(this.checkers[0]);
+        this.spikes[0].checkers.push(this.checkers[1]);
+        this.spikes[0].checkers.push(this.checkers[2]);
+        this.spikes[0].checkers.push(this.checkers[3]);
+        this.spikes[1].checkers = [];
+        this.spikes[2].checkers = [];
+        this.spikes[3].checkers = [];
+        this.spikes[3].checkers = [];
+        this.spikes[4].checkers = [];
+        this.spikes[5].checkers = [];
+
+        const spikes = [];
+        this.spikes.forEach(spike => {
+          const newSpike = {
+            checkers: spike.checkers.map(checker => ({
+              currentSpike: checker.currentSpike,
+              isOffBoard: checker.isOffBoard,
+              type: checker.type
+            }))
+          };
+          spikes.push(newSpike);
+        });
+        this.backgammonComputer.getAllPossibleMoves(this.gameState, nextStatesArr, 0, {}, spikes);
+        debugger
       }
     });
   }
