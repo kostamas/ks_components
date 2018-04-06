@@ -30,8 +30,9 @@ export class BackgammonComputer {
   }
 
   private computerYouCanPlay = () => {
-    const move = this.getBestMove(BackgammonStateManager.gameState.dices);
-    setTimeout(() => this.makeMove(move), 1000);
+    // const move = this.getMove(BackgammonStateManager.gameState.dices);
+    // setTimeout(() => this.makeMove(move), 1000);
+    setTimeout(() => this.getMove(BackgammonStateManager.gameState.dices), 1000);
   }
 
 
@@ -50,15 +51,14 @@ export class BackgammonComputer {
     }
   }
 
-  private getBestMove = (dices) => {
-    const spikeDirection = getSpikeDirection(this.playerType, Players);
-    let nextStatesArr: any = [];
+  private getMove = (dices) => {
+    // todo - check if has checkers on the bar
+    const allStatesTable = {gameStates: {}, recursiveStates: {}};
+    const nextStatesArr: any = [];
     const {gameState} = BackgammonStateManager;
     const currentSpike = this.playerType === Players.playersMap.Black ? 0 : 23;
-    const allStatsTable = {};
-
-    // todo - check if has checkers on the bar
     const spikes = [];
+
     this.gameSpikes.forEach(spike => {
       const newSpike = {
         checkers: spike.checkers.map(checker => ({
@@ -68,16 +68,13 @@ export class BackgammonComputer {
         }))
       };
       spikes.push(newSpike);
-    });
-    nextStatesArr = this.getAllPossibleMoves(gameState, nextStatesArr, currentSpike, allStatsTable, spikes);
+    })
 
-    gameState.spikes.forEach(spike => {
-      const nextState = deepCopy(gameState);
-      dices.forEach(dice => {
+    this.getAllPossibleMoves(gameState, nextStatesArr, currentSpike, allStatesTable, spikes);
 
-      });
-    });
-    const move = {checkerIndex: 1, nextSpikeIndex: 21, dice: 2};
+    const move = this.getBestMove(nextStatesArr);
+    BackgammonStateManager.notifyComputerMove(move); // render dice.
+
     // todo - find the selected checkers and update the spikes accordingly
     return move;
   }
@@ -104,7 +101,7 @@ export class BackgammonComputer {
       return;
     }
 
-    if (currentSpike > 7 || !isValidSpike(currentSpike)) {
+    if (currentSpike > 23 || currentSpike < 0 || !isValidSpike(currentSpike)) {
       return;
     }
 
@@ -152,5 +149,11 @@ export class BackgammonComputer {
     encodedState += ' dices:';
     gameSate.dices.forEach((dice, index) => encodedState += `${index}_${dice}, `);
     return encodedState;
+  }
+
+  private getBestMove(statesArr) {
+    const nextState = statesArr[Math.floor(Math.random()* statesArr.length)];
+    nextState.currentState = (nextState .currentState + 1 ) % 4;
+    return nextState;
   }
 }
