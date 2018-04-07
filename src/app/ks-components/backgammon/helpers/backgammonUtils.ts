@@ -44,12 +44,12 @@ export const checkIfOffBoardState = (checkers, checkerType, playersMap) => {
   return countWinningCheckers(checkers, checkerType, playersMap) === BACKGAMMON_CONSTANTS.NUM_OF_CHECKERS / 2;
 }
 
-export const getHighestCheckerSpikeNumber = (checker, playersMap) => {
+export const getHighestCheckerSpikeNumber = (checker, playersMap, spikes) => {
   const homeSpikesDirection = checker.type === playersMap.White ?
     {runningSpike: 5, direction: -1} : {runningSpike: 18, direction: 1};  // todo - use getSpikeDirection
 
   for (let i = 0; i < 6; i++) {
-    const checkersArr = this.spikes[homeSpikesDirection.runningSpike + i * homeSpikesDirection.direction].checkers;
+    const checkersArr = spikes[homeSpikesDirection.runningSpike + i * homeSpikesDirection.direction].checkers;
     if (checkersArr.length > 0 && checker.type === checkersArr[0].type) {
       return 6 - i;
     }

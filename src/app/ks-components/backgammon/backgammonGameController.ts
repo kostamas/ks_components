@@ -82,7 +82,8 @@ export class GameController {
         this.gameState.players.black = 'You';
         this.gameState.players.white = 'Computer';
         setTimeout(this.gameHandler.bind(this, gameData));
-        this.backgammonComputer = new BackgammonComputer(Players.playersMap.White, this.spikes, this.checkers, this.bar); // todo - don't send this.bar
+        const {spikes, checkers, bar, outsideBoard} = this;
+        this.backgammonComputer = new BackgammonComputer(Players.playersMap.White, spikes, checkers, bar, outsideBoard); // todo - don't send this.bar
       }
     });
   }
