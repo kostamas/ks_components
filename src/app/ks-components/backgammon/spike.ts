@@ -24,14 +24,18 @@ export class Spike {
     this.checkers.push(checker);
   }
 
+  public getLastChecker() {
+    return this.checkers.length ? this.checkers[this.checkers.length - 1] : null;
+  }
+
   public getNextCheckerPosition(index?) {
     let yOffset;
+    const {CHECKERS_SIZE} = BACKGAMMON_CONSTANTS;
+    const checkersArrLen = this.checkers.length;
     if (index || index === 0) {
-      yOffset = index * BACKGAMMON_CONSTANTS.CHECKERS_SIZE
+      yOffset = index * CHECKERS_SIZE;
     } else {
-      yOffset = this.checkers.length < 5 ?
-        this.checkers.length * BACKGAMMON_CONSTANTS.CHECKERS_SIZE :
-        (this.checkers.length % 5) * BACKGAMMON_CONSTANTS.CHECKERS_SIZE + 10;
+      yOffset = checkersArrLen < 5 ? checkersArrLen * CHECKERS_SIZE : (checkersArrLen % 5) * CHECKERS_SIZE + 10;
     }
     let y = this.y;
     y += this.direction === 'down' ? yOffset : -yOffset;
@@ -44,7 +48,7 @@ export class Spike {
 
       if (this.direction === 'down') {
         p1 = [this.x + BACKGAMMON_CONSTANTS.CHECKERS_SIZE / 2 + 3, this.y + 248];
-        p2 = [this.x + BACKGAMMON_CONSTANTS.CHECKERS_SIZE / 2 + 3, this.y + 218]
+        p2 = [this.x + BACKGAMMON_CONSTANTS.CHECKERS_SIZE / 2 + 3, this.y + 218];
       } else {
         p1 = [this.x + BACKGAMMON_CONSTANTS.CHECKERS_SIZE / 2, this.y - 210];
         p2 = [this.x + BACKGAMMON_CONSTANTS.CHECKERS_SIZE / 2, this.y - 180];
@@ -67,6 +71,5 @@ export class Spike {
 
   public static destroy() {
     Spike.spikesCount = 0;
-
   }
 }

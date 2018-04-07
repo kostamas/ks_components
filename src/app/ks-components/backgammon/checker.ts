@@ -10,8 +10,8 @@ export class Checker {
   public static selectedCheckers: any = {};
   private id;
   private checkerSvgImg;
-  private x;
-  private y;
+  public x;
+  public y;
   public type;
   public currentSpike;
   public isOffBoard = false;
