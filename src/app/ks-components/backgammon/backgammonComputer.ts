@@ -1,6 +1,9 @@
 import {BackgammonStateManager} from './backgammonStateManager';
 import {Players} from './players';
-import {getSpikeDirection, isValidSpike, rollDices} from './helpers/backgammonUtils';
+import {
+  checkIfOffBoardState, getHighestCheckerSpikeNumber, getSpikeDirection, isValidSpike,
+  rollDices
+} from './helpers/backgammonUtils';
 import {deepCopy} from '../../utils/jsUtils';
 import {Observable} from 'rxjs/Observable';
 import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
@@ -10,13 +13,15 @@ export class BackgammonComputer {
   private spikeDirection;
   private gameSpikes;
   private bar;
+  private checkers;
 
-  constructor(playerType, gameSpikes, bar) {
+  constructor(playerType, gameSpikes, checkers, bar) {
     BackgammonStateManager.onNextPlayerState(this.onNextPlayerState);
     this.playerType = playerType;
     this.spikeDirection = getSpikeDirection(playerType, Players);
     this.gameSpikes = gameSpikes;
     this.bar = bar;
+    this.checkers = checkers;
   }
 
   private onNextPlayerState = () => {
@@ -99,13 +104,40 @@ export class BackgammonComputer {
       const newState1 = deepCopy(gameState); // todo - copy only if there is a move.
       const newState2 = deepCopy(gameState);
       const newSpikes = deepCopy(spikes);
+      let possibleSpikeToMoveIndex;
       newState1.movesInfo = newState1.movesInfo || [];
       newState2.movesInfo = newState2.movesInfo || [];
       dice = gameState.dices[i];
 
       this.getAllPossibleMoves(gameState, nextStatesArr, nextSpikeToCheck, allStatesTable, spikes); // 1.
 
-      const possibleSpikeToMoveIndex = currentSpike + dice * this.spikeDirection;
+      if (checkIfOffBoardState(this.checkers, this.playerType, Players.playersMap)) {
+        if (currentSpike.checkers.length && currentSpike.checkers[0].type === this.playerType) {
+          const selectedChecker = currentSpike.checkers[0];
+          const checkerHomeSpike = this.playerType === Players.playersMap.White ? currentSpike + 1 : 24 - currentSpike;
+          const highestCheckerSpikeNumber = getHighestCheckerSpikeNumber(selectedChecker, Players.playersMap);
+          const spikeDirection = getSpikeDirection(this.playerType, Players);
+
+          possibleSpikeToMoveIndex = currentSpike + dice * spikeDirection;
+          const checkersArr = this.gameSpikes[possibleSpikeToMoveIndex] && this.gameSpikes[possibleSpikeToMoveIndex].checkers;
+          if (checkerHomeSpike === dice) {
+            // offBoard checker
+          }
+
+          if (checkerHomeSpike < dice && highestCheckerSpikeNumber === checkerHomeSpike) {
+            // offBoard checker
+          }
+
+          if (checkerHomeSpike > dice && (checkersArr.length <= 1 || checkersArr[0].type === this.playerType)) {
+            // regular move
+          }
+        } else {
+          return
+        }
+      }
+
+
+      possibleSpikeToMoveIndex = currentSpike + dice * this.spikeDirection;
 
       const currSpikeCheckers = spikes[currentSpike].checkers || [];
       if (isValidSpike(possibleSpikeToMoveIndex) && currSpikeCheckers.length && currSpikeCheckers[0].type === this.playerType) {
