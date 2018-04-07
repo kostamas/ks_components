@@ -53,7 +53,7 @@ export class BackgammonComputer {
 
     this.getAllPossibleMoves(gameState, nextStatesArr, currentSpike, allStatesTable, spikes);
 
-    const newState = this.getBestMove(nextStatesArr, gameState, spikes);
+    const newState = this.getBestMove(nextStatesArr, gameState);
     this.animateMoves(newState.movesInfo).subscribe(() => {
       newState.movesInfo = [];
       delete newState.movesInfo;
@@ -145,9 +145,11 @@ export class BackgammonComputer {
     return encodedState;
   }
 
-  private getBestMove(statesArr, gameState, spikes) {
+  private getBestMove(statesArr, gameState) {
     const newState = statesArr[Math.floor(Math.random() * statesArr.length)];
     // statesArr.forEach(state => this.getStateDiffInfo(newState, gameState, spikes)};
+    this.updateSelectedState(newState);
+
     newState.currentState = (newState.currentState + 1 ) % 4;
     return newState;
   }
@@ -160,6 +162,24 @@ export class BackgammonComputer {
       selectedCheckers: [],
       winningsCheckers: []
     };
+  }
+
+  private updateSelectedState(newState) {
+    const spikes = this.gameSpikes;
+
+    newState.movesInfo.forEach(move => {
+      const {toSpike} = move;
+
+      if (spikes[toSpike].checkers.length && spikes[toSpike].checkers[0].type !== this.playerType) { // todo - duplication
+        const eatenChecker = spikes[toSpike].checkers[0];
+        const eatenCheckerId = eatenChecker.getCheckerId();
+        if (eatenChecker.type === Players.playersMap.Black) {
+          newState.checkers[eatenCheckerId].currentSpike = BACKGAMMON_CONSTANTS.BLACK_BAR_INDEX;
+        } else {
+          newState.checkers[eatenCheckerId].currentSpike = BACKGAMMON_CONSTANTS.WHITE_BAR_INDEX;
+        }
+      }
+    });
   }
 
   private animateMoves(movesArr) {
@@ -179,8 +199,8 @@ export class BackgammonComputer {
     const {fromSpike, toSpike} = movesArr[moveIndex];
     const selectedChecker = this.gameSpikes[fromSpike].checkers.pop();
     let eatenChecker;
-    if (this.gameSpikes[toSpike].checkers.length && this.gameSpikes[toSpike].checkers[0].type !== this.playerType) {
-      eatenChecker = this.gameSpikes[toSpike].checkers.pop();
+    if (this.gameSpikes[toSpike].checkers.length && this.gameSpikes[toSpike].checkers[0].type !== this.playerType) { // todo - duplication
+      eatenChecker = this.gameSpikes[toSpike].checkers.pop(); // todo - deep copy ?
       if (eatenChecker.type === Players.playersMap.Black) {
         eatenChecker.currentSpike = BACKGAMMON_CONSTANTS.BLACK_BAR_INDEX;
       } else {
@@ -188,6 +208,7 @@ export class BackgammonComputer {
       }
     }
     this.gameSpikes[toSpike].checkers.push(selectedChecker);
+    this.gameSpikes[toSpike].setShowValidMove(true);
 
     const {x, y} = this.gameSpikes[toSpike].getNextCheckerPosition();
     const xDirection = (x - selectedChecker.x) > 0 ? 1 : -1;
@@ -220,8 +241,9 @@ export class BackgammonComputer {
         if (eatenChecker) {
           eatenChecker.setPosition(this.bar.getNextCheckerPosition(eatenChecker));
         }
+        this.gameSpikes[toSpike].setShowValidMove(false);
         setTimeout(() => this.animateMovesRec(movesArr, moveIndex + 1, observer));
       }
-    }, 5);
+    }, 45);
   }
 }
