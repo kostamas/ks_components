@@ -31,6 +31,7 @@ export class BackgammonComputer {
       const {gameState} = BackgammonStateManager;
       if (this.playerType === Players.getCurrentPlayerType()) {
         gameState.dices = rollDices();
+        gameState.dices = [5, 5, 5, 5];
         gameState.currentState = this.playerType; // player type = 3, current state = 2, for showing the dices - currentState++;
         setTimeout(() => {
           BackgammonStateManager.notifyComputerMove(gameState); // render dice.
@@ -145,6 +146,10 @@ export class BackgammonComputer {
     }
   }
 
+  /** 3 recursive calls:
+   *  1. (same state,next spike)
+   *  2. (new state ,same spike)
+   *  1. (new state, next spike)**/
   private getAllPossibleOffBoardMoves(gameState, nextStatesArr, currentSpike, allStatesTable, spikes) {
     const encodedGameState = this.encodeGameState(gameState);
 
@@ -155,7 +160,7 @@ export class BackgammonComputer {
       allStatesTable.recursiveStates[stateKey] = true;
     }
 
-    if (gameState.dices.length <= 0) {
+    if (gameState.dices.length <= 0 || this.isWon(gameState)) {
       if (!allStatesTable.gameStates[encodedGameState]) {
         nextStatesArr.push(gameState);
         allStatesTable.gameStates[encodedGameState] = true;
@@ -178,16 +183,17 @@ export class BackgammonComputer {
       newState2.movesInfo = newState2.movesInfo || [];
       dice = gameState.dices[i];
 
-      this.getAllPossibleMoves(gameState, nextStatesArr, nextSpikeToCheck, allStatesTable, spikes); // 1.
+      this.getAllPossibleOffBoardMoves(gameState, nextStatesArr, nextSpikeToCheck, allStatesTable, spikes); // 1.
 
       possibleSpikeToMoveIndex = currentSpike + dice * this.spikeDirection;
 
       const currSpikeCheckers = spikes[currentSpike].checkers || [];
+
       if (currSpikeCheckers.length && currSpikeCheckers[0].type === this.playerType) {
         const checkerToCheck = currSpikeCheckers[0];
         let newMoveFound = false;
         const checkerHomeSpike = this.playerType === Players.playersMap.White ? currentSpike + 1 : 24 - currentSpike;
-        const highestCheckerSpikeNumber = getHighestCheckerSpikeNumber(checkerToCheck, Players.playersMap, this.gameSpikes);
+        const highestCheckerSpikeNumber = getHighestCheckerSpikeNumber(checkerToCheck, Players.playersMap, spikes);
 
         const checkersArr = this.gameSpikes[possibleSpikeToMoveIndex] && this.gameSpikes[possibleSpikeToMoveIndex].checkers;
 
@@ -202,7 +208,7 @@ export class BackgammonComputer {
           newMoveFound = true;
         }
 
-        if (newMoveFound = true) {
+        if (newMoveFound === true) {
           let selectedCheckerIndex;
           const offsetType = this.playerType === Players.playersMap.Black ? 1 : 16;
           for (let j = offsetType; j < offsetType + 15; j++) {
@@ -213,10 +219,14 @@ export class BackgammonComputer {
           }
 
           const selectedChecker = newSpikes[currentSpike].checkers.pop();
-
           selectedChecker.currentSpike = possibleSpikeToMoveIndex;
-          if (possibleSpikeToMoveIndex) {
+
+          if (possibleSpikeToMoveIndex !== null) {
             newSpikes[possibleSpikeToMoveIndex].checkers.push(selectedChecker);
+          } else {
+            newState1.checkers[selectedCheckerIndex].isOffBoard = true;
+            newState2.checkers[selectedCheckerIndex].isOffBoard = true;
+            selectedChecker.isOffBoard = true;
           }
           newState1.dices.splice(gameState.dices.indexOf(dice), 1);
           newState2.dices.splice(gameState.dices.indexOf(dice), 1);
@@ -225,8 +235,8 @@ export class BackgammonComputer {
           const moveInfo = {fromSpike: currentSpike, toSpike: possibleSpikeToMoveIndex};
           newState1.movesInfo.push(moveInfo);
           newState2.movesInfo.push(moveInfo);
-          this.getAllPossibleMoves(newState1, nextStatesArr, currentSpike, allStatesTable, newSpikes); // 2
-          this.getAllPossibleMoves(newState2, nextStatesArr, nextSpikeToCheck, allStatesTable, newSpikes); // 3
+          this.getAllPossibleOffBoardMoves(newState1, nextStatesArr, currentSpike, allStatesTable, newSpikes); // 2
+          this.getAllPossibleOffBoardMoves(newState2, nextStatesArr, nextSpikeToCheck, allStatesTable, newSpikes); // 3
         }
       }
     }
@@ -271,6 +281,7 @@ export class BackgammonComputer {
       if (spikes[toSpike].checkers.length && spikes[toSpike].checkers[0].type !== this.playerType) { // todo - duplication
         const eatenChecker = spikes[toSpike].checkers[0];
         const eatenCheckerId = eatenChecker.getCheckerId();
+
         if (eatenChecker.type === Players.playersMap.Black) {
           newState.checkers[eatenCheckerId].currentSpike = BACKGAMMON_CONSTANTS.BLACK_BAR_INDEX;
         } else {
@@ -296,8 +307,10 @@ export class BackgammonComputer {
 
     const {fromSpike, toSpike} = movesArr[moveIndex];
     const selectedChecker = this.gameSpikes[fromSpike].checkers.pop();
-    let eatenChecker;
-    if (this.gameSpikes[toSpike].checkers.length && this.gameSpikes[toSpike].checkers[0].type !== this.playerType) { // todo - duplication
+    let eatenChecker, xTarget, yTarget, targetPosition;
+
+
+    if (toSpike && this.gameSpikes[toSpike].checkers.length && this.gameSpikes[toSpike].checkers[0].type !== this.playerType) { // todo - duplication
       eatenChecker = this.gameSpikes[toSpike].checkers.pop(); // todo - deep copy ?
       if (eatenChecker.type === Players.playersMap.Black) {
         eatenChecker.currentSpike = BACKGAMMON_CONSTANTS.BLACK_BAR_INDEX;
@@ -306,29 +319,39 @@ export class BackgammonComputer {
       }
     }
 
-    const {x, y} = this.gameSpikes[toSpike].getNextCheckerPosition();
+    if (toSpike) {
+      targetPosition = this.gameSpikes[toSpike].getNextCheckerPosition();
+      this.gameSpikes[toSpike].checkers.push(selectedChecker);
+      this.gameSpikes[toSpike].setShowValidMove(true);
+    } else {
+      targetPosition = this.outsideBoard.getNextCheckerPosition(this.playerType);
+      this.outsideBoard.showArrow[Players.playersNamesMap[this.playerType]] = true;
+      this.outsideBoard.checkers[Players.playersNamesMap[this.playerType]].push(selectedChecker);
+    }
 
-    this.gameSpikes[toSpike].checkers.push(selectedChecker);
-    this.gameSpikes[toSpike].setShowValidMove(true);
-    const xDirection = (x - selectedChecker.x) > 0 ? 1 : -1;
-    const yDirection = (y - selectedChecker.y) > 0 ? 1 : -1;
+    const {x, y} = targetPosition;
+    xTarget = x;
+    yTarget = y;
+
+    const xDirection = (xTarget - selectedChecker.x) > 0 ? 1 : -1;
+    const yDirection = (yTarget - selectedChecker.y) > 0 ? 1 : -1;
     let xRunner = selectedChecker.x;
     let yRunner = selectedChecker.y;
 
     const interval = setInterval(() => {
-      const isXCloseEnough = Math.abs(xRunner - x) < 13;
-      const isYCloseEnough = Math.abs(yRunner - y) < 13;
+      const isXCloseEnough = Math.abs(xRunner - xTarget) < 13;
+      const isYCloseEnough = Math.abs(yRunner - yTarget) < 13;
 
       if (!isXCloseEnough) {
         xRunner += (Math.floor(Math.random() * 3 + 9)) * xDirection;
       } else {
-        xRunner = x;
+        xRunner = xTarget;
       }
 
       if (!isYCloseEnough) {
         yRunner += (Math.floor(Math.random() * 3 + 9)) * yDirection;
       } else {
-        yRunner = y;
+        yRunner = yTarget;
       }
 
       selectedChecker.setPosition({x: xRunner, y: yRunner});
@@ -336,13 +359,29 @@ export class BackgammonComputer {
 
       if (isXCloseEnough && isYCloseEnough) {
         clearInterval(interval);
-        selectedChecker.setPosition({x, y});
+        selectedChecker.setPosition({x: xTarget, y: yTarget});
         if (eatenChecker) {
           eatenChecker.setPosition(this.bar.getNextCheckerPosition(eatenChecker));
         }
-        this.gameSpikes[toSpike].setShowValidMove(false);
+
+        if (toSpike) {
+          this.gameSpikes[toSpike].setShowValidMove(false);
+        } else {
+          this.outsideBoard.showArrow[Players.playersNamesMap[this.playerType]] = false;
+        }
         setTimeout(() => this.animateMovesRec(movesArr, moveIndex + 1, observer));
       }
     }, 45);
+  }
+
+  private isWon(gameState) {
+    const indexOffset = this.playerType === Players.playersMap.Black ? 1 : 16;
+    let isWon = true;
+    for (let i = indexOffset; i < indexOffset + 15; i++) {
+      if (!gameState.checkers[i].isOffBoard) {
+        isWon = false;
+      }
+    }
+    return isWon;
   }
 }

@@ -306,6 +306,7 @@ export class GameController {
     checker.setPosition(this.bar.getNextCheckerPosition(checker.type));
 
     this.bar.checkers[Players.playersNamesMap[checker.type]].push(checker);
+
     if (checker.type === Players.playersMap.Black) {
       checker.currentSpike = BACKGAMMON_CONSTANTS.BLACK_BAR_INDEX;
     } else {
@@ -423,6 +424,7 @@ export class GameController {
 
     this.checkers.forEach(checker => {
       checker.isOffBoard = gameData.checkers[checker.getCheckerId()].isOffBoard;
+      checker.currentSpike = gameData.checkers[checker.getCheckerId()].currentSpike;
       if (checker.isOffBoard) {
         this.outsideBoard.checkers[Players.playersNamesMap[checker.type]].push(checker);
         checker.setPosition(this.outsideBoard.getNextCheckerPosition(checker.type));
@@ -556,6 +558,7 @@ export class GameController {
     };
 
     this.checkers.forEach((checker: any, index) => {
+
       newState.checkers[index + 1] = {
         currentSpike: checker.currentSpike,
         isOffBoard: checker.isOffBoard

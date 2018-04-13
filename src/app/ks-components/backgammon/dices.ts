@@ -57,7 +57,8 @@ export class Dices {
   }
 
   public rollDicesHandler = () => {
-    this.dices = rollDices();
+    // this.dices = rollDices();
+    this.dices = [1];
     this.showRollButton = false;
     BackgammonStateManager.notifyRedraw();
   }
