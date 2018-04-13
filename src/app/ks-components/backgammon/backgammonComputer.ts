@@ -363,10 +363,7 @@ export class BackgammonComputer {
         if (eatenChecker) {
           eatenChecker.setPosition(this.bar.getNextCheckerPosition(eatenChecker));
         }
-
-        if (toSpike) {
-          this.gameSpikes[toSpike].setShowValidMove(false);
-        } else {
+if (toSpike) {        this.gameSpikes[toSpike].setShowValidMove(false);} else {
           this.outsideBoard.showArrow[Players.playersNamesMap[this.playerType]] = false;
         }
         setTimeout(() => this.animateMovesRec(movesArr, moveIndex + 1, observer));
