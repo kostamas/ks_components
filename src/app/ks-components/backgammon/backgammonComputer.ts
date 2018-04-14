@@ -31,7 +31,6 @@ export class BackgammonComputer {
       const {gameState} = BackgammonStateManager;
       if (this.playerType === Players.getCurrentPlayerType()) {
         gameState.dices = rollDices();
-        gameState.dices = [5, 5, 5, 5];
         gameState.currentState = this.playerType; // player type = 3, current state = 2, for showing the dices - currentState++;
         setTimeout(() => {
           BackgammonStateManager.notifyComputerMove(gameState); // render dice.
@@ -43,7 +42,7 @@ export class BackgammonComputer {
 
   private computerYouCanPlay = () => {
     const allStatesTable = {gameStates: {}, recursiveStates: {}};
-    const nextStatesArr: any = [];
+    const nextStatesArrays: any = {0: [], 1: [], 2: [], 3: [], 4: []};
     const {gameState} = BackgammonStateManager;
     let currentSpike = this.playerType === Players.playersMap.Black ? 0 : 23;
     const spikes = [];
@@ -59,14 +58,18 @@ export class BackgammonComputer {
       spikes.push(newSpike);
     });
 
-    if (checkIfOffBoardState(this.checkers, this.playerType, Players.playersMap)) {
-      currentSpike = this.playerType === Players.playersMap.Black ? 18 : 5;
-      this.getAllPossibleOffBoardMoves(gameState, nextStatesArr, currentSpike, allStatesTable, spikes);
+    if (this.checkIfHasOutSideCheckers(gameState)) {
+      this.getAllPossibleOutSideCheckerMoves(gameState, nextStatesArrays, currentSpike, allStatesTable, spikes);
     } else {
-      this.getAllPossibleMoves(gameState, nextStatesArr, currentSpike, allStatesTable, spikes);
+      if (checkIfOffBoardState(this.checkers, this.playerType, Players.playersMap)) {
+        currentSpike = this.playerType === Players.playersMap.Black ? 18 : 5;
+        this.getAllPossibleOffBoardMoves(gameState, nextStatesArrays, currentSpike, allStatesTable, spikes);
+      } else {
+        this.getAllPossibleMoves(gameState, nextStatesArrays, currentSpike, allStatesTable, spikes);
+      }
     }
 
-    const newState = this.getBestMove(nextStatesArr, gameState);
+    const newState = this.getBestMove(nextStatesArrays, gameState);
     this.animateMoves(newState.movesInfo).subscribe(() => {
 
       newState.movesInfo = [];
@@ -79,7 +82,98 @@ export class BackgammonComputer {
    *  1. (same state,next spike)
    *  2. (new state ,same spike)
    *  1. (new state, next spike)**/
-  private getAllPossibleMoves(gameState, nextStatesArr, currentSpike, allStatesTable, spikes) {
+  private getAllPossibleOutSideCheckerMoves(gameState, nextStatesArrays, currentSpike, allStatesTable, spikes) {
+    const encodedGameState = this.encodeGameState(gameState);
+    const stateKey = `${encodedGameState}, currentSpike: ${ currentSpike}`;
+
+    if (allStatesTable.recursiveStates[stateKey]) {
+      return;
+    } else {
+      allStatesTable.recursiveStates[stateKey] = true;
+    }
+
+    if (gameState.dices.length <= 0) {
+      if (!allStatesTable.gameStates[encodedGameState]) {
+        nextStatesArrays[0].push(gameState);
+        allStatesTable.gameStates[encodedGameState] = true;
+      }
+      return;
+    }
+
+    const isBlackType = this.playerType === Players.playersMap.Black;
+    if ((isBlackType && currentSpike > 5) || (!isBlackType && currentSpike < 18)) {
+      return;
+    }
+
+    const nextSpikeToCheck = this.spikeDirection + currentSpike;
+
+    let dice;
+    for (let i = 0; i < gameState.dices.length; i++) {
+      const newState1 = deepCopy(gameState); // todo - copy only if there is a move.
+      const newState2 = deepCopy(gameState);
+      const newSpikes = deepCopy(spikes);
+      newState1.movesInfo = newState1.movesInfo || [];
+      newState2.movesInfo = newState2.movesInfo || [];
+      dice = gameState.dices[i];
+
+      this.getAllPossibleOutSideCheckerMoves(gameState, nextStatesArrays, nextSpikeToCheck, allStatesTable, spikes); // 1.
+
+      // here currentSpike plays the roll of nextPossibleSpike
+      const possibleSpikeToMoveIndex = currentSpike;
+      const currSpikeCheckers = spikes[currentSpike].checkers || [];
+      if (currSpikeCheckers.length <= 1 || (currSpikeCheckers[0].type === this.playerType)) {
+        let selectedCheckerIndex;
+        const offsetType = this.playerType === Players.playersMap.Black ? 1 : 16;
+        const {WHITE_BAR_INDEX, BLACK_BAR_INDEX} = BACKGAMMON_CONSTANTS;
+        const outsideCheckerIndex = this.playerType === Players.playersMap.Black ? BLACK_BAR_INDEX : WHITE_BAR_INDEX;
+
+        for (let j = offsetType; j < offsetType + 15; j++) {
+          if (gameState.checkers[j].currentSpike === outsideCheckerIndex) {
+            selectedCheckerIndex = j;
+            break;
+          }
+        }
+
+        const selectedChecker = {currentSpike: possibleSpikeToMoveIndex, isOffBoard: false, type: this.playerType};
+        newSpikes[possibleSpikeToMoveIndex].checkers.push(selectedChecker);
+        newState1.dices.splice(gameState.dices.indexOf(dice), 1);
+        newState2.dices.splice(gameState.dices.indexOf(dice), 1);
+        newState1.checkers[selectedCheckerIndex].currentSpike = possibleSpikeToMoveIndex;
+        newState2.checkers[selectedCheckerIndex].currentSpike = possibleSpikeToMoveIndex;
+        const moveInfo = {fromSpike: outsideCheckerIndex, toSpike: possibleSpikeToMoveIndex};
+        newState1.movesInfo.push(moveInfo);
+        newState2.movesInfo.push(moveInfo);
+
+
+        if (this.checkIfHasOutSideCheckers(newState1)) {
+          this.getAllPossibleOutSideCheckerMoves(newState1, nextStatesArrays, currentSpike, allStatesTable, newSpikes); // 2
+          this.getAllPossibleOutSideCheckerMoves(newState2, nextStatesArrays, nextSpikeToCheck, allStatesTable, newSpikes); // 3
+        } else {
+          currentSpike = 0;
+          allStatesTable = {gameStates: {}, recursiveStates: {}}; // todo - check if need to reset;
+          if (checkIfOffBoardState(this.checkers, this.playerType, Players.playersMap)) {
+            currentSpike = this.playerType === Players.playersMap.Black ? 18 : 5;
+            this.getAllPossibleOffBoardMoves(newState1, nextStatesArrays, currentSpike, allStatesTable, newSpikes);
+          } else {
+            currentSpike = this.playerType === Players.playersMap.Black ? 0 : 23;
+            this.getAllPossibleMoves(newState1, nextStatesArrays, currentSpike, allStatesTable, newSpikes);
+          }
+        }
+      } else { //no move for current dice
+        const dicesLength = gameState.dices.length;
+        if (!allStatesTable.gameStates[encodedGameState]) {
+          nextStatesArrays[dicesLength].push(gameState);
+          allStatesTable.gameStates[encodedGameState] = true;
+        }
+      }
+    }
+  }
+
+  /** 3 recursive calls:
+   *  1. (same state,next spike)
+   *  2. (new state ,same spike)
+   *  1. (new state, next spike)**/
+  private getAllPossibleMoves(gameState, nextStatesArrays, currentSpike, allStatesTable, spikes) {
     const encodedGameState = this.encodeGameState(gameState);
 
     const stateKey = `${encodedGameState}, currentSpike: ${ currentSpike}`;
@@ -91,7 +185,7 @@ export class BackgammonComputer {
 
     if (gameState.dices.length <= 0) {
       if (!allStatesTable.gameStates[encodedGameState]) {
-        nextStatesArr.push(gameState);
+        nextStatesArrays[0].push(gameState);
         allStatesTable.gameStates[encodedGameState] = true;
       }
       return;
@@ -112,7 +206,7 @@ export class BackgammonComputer {
       newState2.movesInfo = newState2.movesInfo || [];
       dice = gameState.dices[i];
 
-      this.getAllPossibleMoves(gameState, nextStatesArr, nextSpikeToCheck, allStatesTable, spikes); // 1.
+      this.getAllPossibleMoves(gameState, nextStatesArrays, nextSpikeToCheck, allStatesTable, spikes); // 1.
 
       possibleSpikeToMoveIndex = currentSpike + dice * this.spikeDirection;
 
@@ -139,8 +233,14 @@ export class BackgammonComputer {
           const moveInfo = {fromSpike: currentSpike, toSpike: possibleSpikeToMoveIndex};
           newState1.movesInfo.push(moveInfo);
           newState2.movesInfo.push(moveInfo);
-          this.getAllPossibleMoves(newState1, nextStatesArr, currentSpike, allStatesTable, newSpikes); // 2
-          this.getAllPossibleMoves(newState2, nextStatesArr, nextSpikeToCheck, allStatesTable, newSpikes); // 3
+          this.getAllPossibleMoves(newState1, nextStatesArrays, currentSpike, allStatesTable, newSpikes); // 2
+          this.getAllPossibleMoves(newState2, nextStatesArrays, nextSpikeToCheck, allStatesTable, newSpikes); // 3
+        }
+      } else { //no move for current dice
+        const dicesLength = gameState.dices.length;
+        if (!allStatesTable.gameStates[encodedGameState]) {
+          nextStatesArrays[dicesLength].push(gameState);
+          allStatesTable.gameStates[encodedGameState] = true;
         }
       }
     }
@@ -150,7 +250,7 @@ export class BackgammonComputer {
    *  1. (same state,next spike)
    *  2. (new state ,same spike)
    *  1. (new state, next spike)**/
-  private getAllPossibleOffBoardMoves(gameState, nextStatesArr, currentSpike, allStatesTable, spikes) {
+  private getAllPossibleOffBoardMoves(gameState, nextStatesArrays, currentSpike, allStatesTable, spikes) {
     const encodedGameState = this.encodeGameState(gameState);
 
     const stateKey = `${encodedGameState}, currentSpike: ${ currentSpike}`;
@@ -162,7 +262,7 @@ export class BackgammonComputer {
 
     if (gameState.dices.length <= 0 || this.isWon(gameState)) {
       if (!allStatesTable.gameStates[encodedGameState]) {
-        nextStatesArr.push(gameState);
+        nextStatesArrays[0].push(gameState);
         allStatesTable.gameStates[encodedGameState] = true;
       }
       return;
@@ -183,7 +283,7 @@ export class BackgammonComputer {
       newState2.movesInfo = newState2.movesInfo || [];
       dice = gameState.dices[i];
 
-      this.getAllPossibleOffBoardMoves(gameState, nextStatesArr, nextSpikeToCheck, allStatesTable, spikes); // 1.
+      this.getAllPossibleOffBoardMoves(gameState, nextStatesArrays, nextSpikeToCheck, allStatesTable, spikes); // 1.
 
       possibleSpikeToMoveIndex = currentSpike + dice * this.spikeDirection;
 
@@ -235,8 +335,14 @@ export class BackgammonComputer {
           const moveInfo = {fromSpike: currentSpike, toSpike: possibleSpikeToMoveIndex};
           newState1.movesInfo.push(moveInfo);
           newState2.movesInfo.push(moveInfo);
-          this.getAllPossibleOffBoardMoves(newState1, nextStatesArr, currentSpike, allStatesTable, newSpikes); // 2
-          this.getAllPossibleOffBoardMoves(newState2, nextStatesArr, nextSpikeToCheck, allStatesTable, newSpikes); // 3
+          this.getAllPossibleOffBoardMoves(newState1, nextStatesArrays, currentSpike, allStatesTable, newSpikes); // 2
+          this.getAllPossibleOffBoardMoves(newState2, nextStatesArrays, nextSpikeToCheck, allStatesTable, newSpikes); // 3
+        }
+      } else { //no move for current dice
+        const dicesLength = gameState.dices.length;
+        if (!allStatesTable.gameStates[encodedGameState]) {
+          nextStatesArrays[dicesLength].push(gameState);
+          allStatesTable.gameStates[encodedGameState] = true;
         }
       }
     }
@@ -250,7 +356,8 @@ export class BackgammonComputer {
     return encodedState;
   }
 
-  private getBestMove(statesArr, gameState) {
+  private getBestMove(gameStates, gameState) {
+    const statesArr = gameStates[0] || gameStates[1] || gameStates[2] || gameStates[3];
     const newState = statesArr[Math.floor(Math.random() * statesArr.length)];
     // statesArr.forEach(state => this.getStateDiffInfo(newState, gameState, spikes)};
     this.updateSelectedState(newState);
@@ -305,8 +412,14 @@ export class BackgammonComputer {
       return;
     }
 
+    const {WHITE_BAR_INDEX, BLACK_BAR_INDEX} = BACKGAMMON_CONSTANTS;
     const {fromSpike, toSpike} = movesArr[moveIndex];
-    const selectedChecker = this.gameSpikes[fromSpike].checkers.pop();
+    let selectedChecker;
+    if (fromSpike === WHITE_BAR_INDEX || fromSpike === BLACK_BAR_INDEX) {
+      selectedChecker = this.bar.checkers[Players.playersNamesMap[this.playerType]].pop();
+    } else {
+      selectedChecker = this.gameSpikes[fromSpike].checkers.pop();
+    }
     let eatenChecker, xTarget, yTarget, targetPosition;
 
 
@@ -363,12 +476,27 @@ export class BackgammonComputer {
         if (eatenChecker) {
           eatenChecker.setPosition(this.bar.getNextCheckerPosition(eatenChecker));
         }
-if (toSpike) {        this.gameSpikes[toSpike].setShowValidMove(false);} else {
+        if (toSpike) {
+          this.gameSpikes[toSpike].setShowValidMove(false);
+        } else {
           this.outsideBoard.showArrow[Players.playersNamesMap[this.playerType]] = false;
         }
         setTimeout(() => this.animateMovesRec(movesArr, moveIndex + 1, observer));
       }
     }, 45);
+  }
+
+  private checkIfHasOutSideCheckers(gameState) {
+    const {BLACK_BAR_INDEX, WHITE_BAR_INDEX} = BACKGAMMON_CONSTANTS;
+    const outsideCheckerIndex = this.playerType === Players.playersMap.Black ? BLACK_BAR_INDEX : WHITE_BAR_INDEX;
+    const indexOffset = this.playerType === Players.playersMap.Black ? 1 : 16;
+    let hasOutSideChecker = false;
+    for (let i = indexOffset; i < indexOffset + 15; i++) {
+      if (gameState.checkers[i].currentSpike === outsideCheckerIndex) {
+        hasOutSideChecker = true;
+      }
+    }
+    return hasOutSideChecker;
   }
 
   private isWon(gameState) {
