@@ -30,7 +30,8 @@ export class BackgammonComputer {
     setTimeout(() => {
       const {gameState} = BackgammonStateManager;
       if (this.playerType === Players.getCurrentPlayerType()) {
-        gameState.dices = rollDices();
+        // gameState.dices = rollDices();
+        gameState.dices = [1, 5];
         gameState.currentState = this.playerType; // player type = 3, current state = 2, for showing the dices - currentState++;
         setTimeout(() => {
           BackgammonStateManager.notifyComputerMove(gameState); // render dice.
@@ -59,7 +60,12 @@ export class BackgammonComputer {
     });
 
     if (this.checkIfHasOutSideCheckers(gameState)) {
-      this.getAllPossibleOutSideCheckerMoves(gameState, nextStatesArrays, currentSpike, allStatesTable, spikes);
+      this.getAllPossibleOutSideCheckerMoves(gameState, nextStatesArrays, allStatesTable, spikes);
+      // check if there is a different dices and only one checker so there are 2 possible flows.
+      if (this.bar.checkers[Players.playersNamesMap[this.playerType]].length < 2 && gameState.dices.length === 2) {
+        gameState.dices = [gameState.dices[1], gameState.dices[0]];
+        this.getAllPossibleOutSideCheckerMoves(gameState, nextStatesArrays, allStatesTable, spikes);
+      }
     } else {
       if (checkIfOffBoardState(this.checkers, this.playerType, Players.playersMap)) {
         currentSpike = this.playerType === Players.playersMap.Black ? 18 : 5;
@@ -82,53 +88,26 @@ export class BackgammonComputer {
    *  1. (same state,next spike)
    *  2. (new state ,same spike)
    *  1. (new state, next spike)**/
-  private getAllPossibleOutSideCheckerMoves(gameState, nextStatesArrays, currentSpike, allStatesTable, spikes) {
-    const encodedGameState = this.encodeGameState(gameState);
-    const stateKey = `${encodedGameState}, currentSpike: ${ currentSpike}`;
+  private getAllPossibleOutSideCheckerMoves(gameState, nextStatesArrays, allStatesTable, spikes) {
+    const homeSpikeIndex = this.playerType === Players.playersMap.White ? 24 : -1;
+    let dice, possibleSpikeToMoveIndex, currCheckers, currentSpike;
+    const newState = deepCopy(gameState); // todo - copy only if there is a move.
+    const newSpikes = deepCopy(spikes);
+    newState.movesInfo = [];
+    const deicesLength = newState.dices.length;
 
-    if (allStatesTable.recursiveStates[stateKey]) {
-      return;
-    } else {
-      allStatesTable.recursiveStates[stateKey] = true;
-    }
-
-    if (gameState.dices.length <= 0) {
-      if (!allStatesTable.gameStates[encodedGameState]) {
-        nextStatesArrays[0].push(gameState);
-        allStatesTable.gameStates[encodedGameState] = true;
-      }
-      return;
-    }
-
-    const isBlackType = this.playerType === Players.playersMap.Black;
-    if ((isBlackType && currentSpike > 5) || (!isBlackType && currentSpike < 18)) {
-      return;
-    }
-
-    const nextSpikeToCheck = this.spikeDirection + currentSpike;
-
-    let dice;
-    for (let i = 0; i < gameState.dices.length; i++) {
-      const newState1 = deepCopy(gameState); // todo - copy only if there is a move.
-      const newState2 = deepCopy(gameState);
-      const newSpikes = deepCopy(spikes);
-      newState1.movesInfo = newState1.movesInfo || [];
-      newState2.movesInfo = newState2.movesInfo || [];
-      dice = gameState.dices[i];
-
-      this.getAllPossibleOutSideCheckerMoves(gameState, nextStatesArrays, nextSpikeToCheck, allStatesTable, spikes); // 1.
-
-      // here currentSpike plays the roll of nextPossibleSpike
-      const possibleSpikeToMoveIndex = currentSpike;
-      const currSpikeCheckers = spikes[currentSpike].checkers || [];
-      if (currSpikeCheckers.length <= 1 || (currSpikeCheckers[0].type === this.playerType)) {
+    for (let i = 0; i < deicesLength; i++) {
+      dice = newState.dices.shift();
+      possibleSpikeToMoveIndex =  this.spikeDirection * dice + homeSpikeIndex ;
+      currCheckers = spikes[possibleSpikeToMoveIndex].checkers || [];
+      if (currCheckers.length <= 1 || (currCheckers[0].type === this.playerType)) {
         let selectedCheckerIndex;
         const offsetType = this.playerType === Players.playersMap.Black ? 1 : 16;
         const {WHITE_BAR_INDEX, BLACK_BAR_INDEX} = BACKGAMMON_CONSTANTS;
         const outsideCheckerIndex = this.playerType === Players.playersMap.Black ? BLACK_BAR_INDEX : WHITE_BAR_INDEX;
 
         for (let j = offsetType; j < offsetType + 15; j++) {
-          if (gameState.checkers[j].currentSpike === outsideCheckerIndex) {
+          if (newState.checkers[j].currentSpike === outsideCheckerIndex) {
             selectedCheckerIndex = j;
             break;
           }
@@ -136,36 +115,27 @@ export class BackgammonComputer {
 
         const selectedChecker = {currentSpike: possibleSpikeToMoveIndex, isOffBoard: false, type: this.playerType};
         newSpikes[possibleSpikeToMoveIndex].checkers.push(selectedChecker);
-        newState1.dices.splice(gameState.dices.indexOf(dice), 1);
-        newState2.dices.splice(gameState.dices.indexOf(dice), 1);
-        newState1.checkers[selectedCheckerIndex].currentSpike = possibleSpikeToMoveIndex;
-        newState2.checkers[selectedCheckerIndex].currentSpike = possibleSpikeToMoveIndex;
+        newState.checkers[selectedCheckerIndex].currentSpike = possibleSpikeToMoveIndex;
+
         const moveInfo = {fromSpike: outsideCheckerIndex, toSpike: possibleSpikeToMoveIndex};
-        newState1.movesInfo.push(moveInfo);
-        newState2.movesInfo.push(moveInfo);
+        newState.movesInfo.push(moveInfo);
 
-
-        if (this.checkIfHasOutSideCheckers(newState1)) {
-          this.getAllPossibleOutSideCheckerMoves(newState1, nextStatesArrays, currentSpike, allStatesTable, newSpikes); // 2
-          this.getAllPossibleOutSideCheckerMoves(newState2, nextStatesArrays, nextSpikeToCheck, allStatesTable, newSpikes); // 3
-        } else {
-          currentSpike = 0;
-          allStatesTable = {gameStates: {}, recursiveStates: {}}; // todo - check if need to reset;
+        if (!this.checkIfHasOutSideCheckers(newState)) {
           if (checkIfOffBoardState(this.checkers, this.playerType, Players.playersMap)) {
             currentSpike = this.playerType === Players.playersMap.Black ? 18 : 5;
-            this.getAllPossibleOffBoardMoves(newState1, nextStatesArrays, currentSpike, allStatesTable, newSpikes);
+            this.getAllPossibleOffBoardMoves(newState, nextStatesArrays, currentSpike, allStatesTable, newSpikes);
           } else {
             currentSpike = this.playerType === Players.playersMap.Black ? 0 : 23;
-            this.getAllPossibleMoves(newState1, nextStatesArrays, currentSpike, allStatesTable, newSpikes);
+            this.getAllPossibleMoves(newState, nextStatesArrays, currentSpike, allStatesTable, newSpikes);
           }
-        }
-      } else { //no move for current dice
-        const dicesLength = gameState.dices.length;
-        if (!allStatesTable.gameStates[encodedGameState]) {
-          nextStatesArrays[dicesLength].push(gameState);
-          allStatesTable.gameStates[encodedGameState] = true;
+          break; // important - once there is no outside checkers must return to a regular game.
         }
       }
+    }
+    const encodedGameState = this.encodeGameState(newState);
+    if (!allStatesTable.gameStates[encodedGameState]) { // still there are outside checkers.
+      nextStatesArrays[newState.dices.length].push(newState);
+      allStatesTable.gameStates[encodedGameState] = true;
     }
   }
 

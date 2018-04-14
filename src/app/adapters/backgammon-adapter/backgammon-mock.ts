@@ -37,7 +37,7 @@ export class BackgammonMockData {
 
           16: {currentSpike: 24, isOffBoard: false},
           17: {currentSpike: 24, isOffBoard: false},
-          18: {currentSpike: 24, isOffBoard: false},
+          18: {currentSpike: 20, isOffBoard: false},
           19: {currentSpike: 20, isOffBoard: false},
           20: {currentSpike: 5, isOffBoard: false},
           21: {currentSpike: 7, isOffBoard: false},
