@@ -30,8 +30,7 @@ export class BackgammonComputer {
     setTimeout(() => {
       const {gameState} = BackgammonStateManager;
       if (this.playerType === Players.getCurrentPlayerType()) {
-        // gameState.dices = rollDices();
-        gameState.dices = [1, 5];
+        gameState.dices = rollDices();
         gameState.currentState = this.playerType; // player type = 3, current state = 2, for showing the dices - currentState++;
         setTimeout(() => {
           BackgammonStateManager.notifyComputerMove(gameState); // render dice.
