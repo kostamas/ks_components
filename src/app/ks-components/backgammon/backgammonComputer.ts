@@ -30,7 +30,8 @@ export class BackgammonComputer {
     setTimeout(() => {
       const {gameState} = BackgammonStateManager;
       if (this.playerType === Players.getCurrentPlayerType()) {
-        gameState.dices = rollDices();
+        // gameState.dices = rollDices();
+        gameState.dices = [4, 5];
         gameState.currentState = this.playerType; // player type = 3, current state = 2, for showing the dices - currentState++;
         setTimeout(() => {
           BackgammonStateManager.notifyComputerMove(gameState); // render dice.
@@ -75,12 +76,29 @@ export class BackgammonComputer {
     }
 
     const newState = this.getBestMove(nextStatesArrays, gameState);
-    this.animateMoves(newState.movesInfo).subscribe(() => {
+    if (!newState) {
+      gameState.currentState = (gameState.currentState + 1 ) % 4;
+      gameState.dices = [];
+      BackgammonStateManager.notifyComputerMove(gameState);
+    } else {
+      this.animateMoves(newState.movesInfo).subscribe(() => {
+        newState.movesInfo = [];  // todo - can delete this 2 lines?
+        delete newState.movesInfo;
 
-      newState.movesInfo = [];
-      delete newState.movesInfo;
-      BackgammonStateManager.notifyComputerMove(newState); // render dices.
-    });
+        if (newState.dices.length > 0) {
+          BackgammonStateManager.notifyComputerMove(newState);
+          setTimeout(() => {
+            newState.currentState = (newState.currentState + 1 ) % 4;
+            delete newState.movesInfo;
+            BackgammonStateManager.notifyComputerMove(newState);
+          }, 1000);
+        } else {
+          newState.currentState = (newState.currentState + 1 ) % 4;
+          BackgammonStateManager.notifyComputerMove(newState);
+        }
+
+      });
+    }
   };
 
   /** 3 recursive calls:
@@ -97,7 +115,7 @@ export class BackgammonComputer {
 
     for (let i = 0; i < deicesLength; i++) {
       dice = newState.dices.shift();
-      possibleSpikeToMoveIndex =  this.spikeDirection * dice + homeSpikeIndex ;
+      possibleSpikeToMoveIndex = this.spikeDirection * dice + homeSpikeIndex;
       currCheckers = spikes[possibleSpikeToMoveIndex].checkers || [];
       if (currCheckers.length <= 1 || (currCheckers[0].type === this.playerType)) {
         let selectedCheckerIndex;
@@ -192,6 +210,10 @@ export class BackgammonComputer {
             }
           }
 
+          const selectedSpikeCheckers = newSpikes[possibleSpikeToMoveIndex].checkers;
+          if (selectedSpikeCheckers[0] && selectedSpikeCheckers[0].type !== this.playerType) { // remove eaten checker
+            selectedSpikeCheckers.shift();
+          }
           const selectedChecker = newSpikes[currentSpike].checkers.pop();
           selectedChecker.currentSpike = possibleSpikeToMoveIndex;
           newSpikes[possibleSpikeToMoveIndex].checkers.push(selectedChecker);
@@ -291,6 +313,10 @@ export class BackgammonComputer {
           selectedChecker.currentSpike = possibleSpikeToMoveIndex;
 
           if (possibleSpikeToMoveIndex !== null) {
+            const selectedSpikeCheckers = newSpikes[possibleSpikeToMoveIndex].checkers;
+            if (selectedSpikeCheckers[0] && selectedSpikeCheckers[0].type !== this.playerType) { // remove eaten checker
+              selectedSpikeCheckers.shift();
+            }
             newSpikes[possibleSpikeToMoveIndex].checkers.push(selectedChecker);
           } else {
             newState1.checkers[selectedCheckerIndex].isOffBoard = true;
@@ -325,13 +351,15 @@ export class BackgammonComputer {
     return encodedState;
   }
 
-  private getBestMove(gameStates, gameState) {
-    const statesArr = gameStates[0] || gameStates[1] || gameStates[2] || gameStates[3];
+  private getBestMove(nextStatesArrays, originalGameState) {
+    const statesArr = Object.values(nextStatesArrays).find(_gameState => _gameState.length > 0);
+    if (statesArr[0].dices.length === originalGameState.dices.length) { // todo - find a better way to check if there is no move.
+      return;
+    }
     const newState = statesArr[Math.floor(Math.random() * statesArr.length)];
     // statesArr.forEach(state => this.getStateDiffInfo(newState, gameState, spikes)};
     this.updateSelectedState(newState);
 
-    newState.currentState = (newState.currentState + 1 ) % 4;
     return newState;
   }
 
