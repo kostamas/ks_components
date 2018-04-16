@@ -29,12 +29,16 @@ export class BackgammonComputer {
   private onNextPlayerState = () => {
     setTimeout(() => {
       const {gameState} = BackgammonStateManager;
+      const _gameState = deepCopy(gameState);
+      const {playersMap} = Players;
+      const checkers = _gameState.checkers;
+      Object.keys(checkers).forEach(key => checkers[key].type = +key < 16 ? playersMap.Black : playersMap.White);
+
       if (this.playerType === Players.getCurrentPlayerType()) {
-        // gameState.dices = rollDices();
-        gameState.dices = [4, 5];
-        gameState.currentState = this.playerType; // player type = 3, current state = 2, for showing the dices - currentState++;
+        _gameState.dices = rollDices();
+        _gameState.currentState = this.playerType; // player type = 3, current state = 2, for showing the dices - currentState++;
         setTimeout(() => {
-          BackgammonStateManager.notifyComputerMove(gameState); // render dice.
+          BackgammonStateManager.notifyComputerMove(_gameState); // render dice.
           setTimeout(this.computerYouCanPlay, 1500);
         }, 1000);
       }
@@ -224,8 +228,13 @@ export class BackgammonComputer {
           const moveInfo = {fromSpike: currentSpike, toSpike: possibleSpikeToMoveIndex};
           newState1.movesInfo.push(moveInfo);
           newState2.movesInfo.push(moveInfo);
-          this.getAllPossibleMoves(newState1, nextStatesArrays, currentSpike, allStatesTable, newSpikes); // 2
-          this.getAllPossibleMoves(newState2, nextStatesArrays, nextSpikeToCheck, allStatesTable, newSpikes); // 3
+          if (checkIfOffBoardState(Object.values(newState1.checkers), this.playerType, Players.playersMap)) {
+            currentSpike = this.playerType === Players.playersMap.Black ? 0 : 23;
+            this.getAllPossibleOffBoardMoves(newState1, nextStatesArrays, currentSpike, allStatesTable, newSpikes);
+          } else {
+            this.getAllPossibleMoves(newState1, nextStatesArrays, currentSpike, allStatesTable, newSpikes); // 2
+            this.getAllPossibleMoves(newState2, nextStatesArrays, nextSpikeToCheck, allStatesTable, newSpikes); // 3
+          }
         }
       } else { //no move for current dice
         const dicesLength = gameState.dices.length;
