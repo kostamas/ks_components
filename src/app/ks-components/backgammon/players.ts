@@ -58,6 +58,7 @@ export class Players {
         Players.currentState = 0;
       }
       BackgammonStateManager.notifySkipPlayer();
+      Players.nextPlayerState();
       Players.showsSkipButton = false;
     }
   }

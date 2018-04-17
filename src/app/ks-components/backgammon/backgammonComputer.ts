@@ -365,21 +365,39 @@ export class BackgammonComputer {
     if (statesArr[0].dices.length === originalGameState.dices.length) { // todo - find a better way to check if there is no move.
       return;
     }
-    const newState = statesArr[Math.floor(Math.random() * statesArr.length)];
-    // statesArr.forEach(state => this.getStateDiffInfo(newState, gameState, spikes)};
-    this.updateSelectedState(newState);
 
+    const statesDiffInfArr = [];
+    statesArr.forEach((state, index) => statesDiffInfArr.push(this.getStateDiffInfo(state, originalGameState, index)));
+
+    const bestDiff = statesDiffInfArr.sort((diff1, diff2) => diff1.exposedCheckers - diff2.exposedCheckers)[0];
+    const newState = statesArr[bestDiff.index];
+    this.updateSelectedState(newState);
     return newState;
   }
 
-  private getStateDiffInfo(newState, gameState, spikes) {
-    return {
+  private getStateDiffInfo(newState, gameState, index) {
+
+    const diff: any = {
       exposedCheckers: [],
       eatenOpponentsCheckers: [],
       closedSpikes: [],
       selectedCheckers: [],
-      winningsCheckers: []
+      winningsCheckers: [],
+      index
     };
+    const spikes = {};
+
+    const indexOffset = this.playerType === Players.playersMap.Black ? 1 : 16;
+    for (let i = indexOffset; i < indexOffset + 15; i++) {
+      if (spikes[newState.checkers[i].currentSpike]) {
+        spikes[newState.checkers[i].currentSpike]++;
+      } else {
+        spikes[newState.checkers[i].currentSpike] = 1;
+      }
+    }
+
+    diff.exposedCheckers = Object.values(spikes).filter(spike => spike === 1).length;
+    return diff;
   }
 
   private updateSelectedState(newState) {
@@ -438,7 +456,7 @@ export class BackgammonComputer {
       }
     }
 
-    if (toSpike) {
+    if (toSpike || toSpike === 0) {
       targetPosition = this.gameSpikes[toSpike].getNextCheckerPosition();
       this.gameSpikes[toSpike].checkers.push(selectedChecker);
       this.gameSpikes[toSpike].setShowValidMove(true);
