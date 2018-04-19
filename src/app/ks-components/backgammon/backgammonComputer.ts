@@ -7,6 +7,7 @@ import {
 import {deepCopy} from '../../utils/jsUtils';
 import {Observable} from 'rxjs/Observable';
 import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
+import {getStateDiffInfo} from './helpers/gameStateDiffHelper';
 
 export class BackgammonComputer {
   private playerType;
@@ -46,7 +47,6 @@ export class BackgammonComputer {
   }
 
   private computerYouCanPlay = () => {
-    const allStatesTable = {gameStates: {}, recursiveStates: {}};
     const nextStatesArrays: any = {0: [], 1: [], 2: [], 3: [], 4: []};
     const {gameState} = BackgammonStateManager;
     let currentSpike = this.playerType === Players.playersMap.Black ? 0 : 23;
@@ -63,22 +63,30 @@ export class BackgammonComputer {
       spikes.push(newSpike);
     });
 
-    if (this.checkIfHasOutSideCheckers(gameState)) {
-      this.getAllPossibleOutSideCheckerMoves(gameState, nextStatesArrays, allStatesTable, spikes);
-      // check if there is a different dices and only one checker so there are 2 possible flows.
-      if (this.bar.checkers[Players.playersNamesMap[this.playerType]].length < 2 && gameState.dices.length === 2) {
-        gameState.dices = [gameState.dices[1], gameState.dices[0]];
-        this.getAllPossibleOutSideCheckerMoves(gameState, nextStatesArrays, allStatesTable, spikes);
-      }
-    } else {
-      if (checkIfOffBoardState(this.checkers, this.playerType, Players.playersMap)) {
-        currentSpike = this.playerType === Players.playersMap.Black ? 18 : 5;
-        this.getAllPossibleOffBoardMoves(gameState, nextStatesArrays, currentSpike, allStatesTable, spikes);
-      } else {
-        this.getAllPossibleMoves(gameState, nextStatesArrays, currentSpike, allStatesTable, spikes);
-      }
-    }
+    for (let i = 0; i < 2; i++) {
+      const allStatesTable = {gameStates: {}, recursiveStates: {}}; // todo - check if it possible to move outside the for loop
 
+      if (this.checkIfHasOutSideCheckers(gameState)) {
+        this.getAllPossibleOutSideCheckerMoves(gameState, nextStatesArrays, allStatesTable, spikes);
+        // check if there is a different dices and only one checker so there are 2 possible flows.
+        if (this.bar.checkers[Players.playersNamesMap[this.playerType]].length < 2 && gameState.dices.length === 2) {
+          gameState.dices = [gameState.dices[1], gameState.dices[0]];
+          this.getAllPossibleOutSideCheckerMoves(gameState, nextStatesArrays, allStatesTable, spikes);
+        }
+      } else {
+        if (checkIfOffBoardState(this.checkers, this.playerType, Players.playersMap)) {
+          currentSpike = this.playerType === Players.playersMap.Black ? 18 : 5;
+          this.getAllPossibleOffBoardMoves(gameState, nextStatesArrays, currentSpike, allStatesTable, spikes);
+        } else {
+          this.getAllPossibleMoves(gameState, nextStatesArrays, currentSpike, allStatesTable, spikes);
+        }
+      }
+
+      if (gameState.dices.length > 2) {
+        break;
+      }
+      gameState.dices.reverse();
+    }
     const newState = this.getBestMove(nextStatesArrays, gameState);
     if (!newState) {
       gameState.currentState = (gameState.currentState + 1 ) % 4;
@@ -215,9 +223,13 @@ export class BackgammonComputer {
           }
 
           const selectedSpikeCheckers = newSpikes[possibleSpikeToMoveIndex].checkers;
-          if (selectedSpikeCheckers[0] && selectedSpikeCheckers[0].type !== this.playerType) { // remove eaten checker
+          if (selectedSpikeCheckers.length === 1 && selectedSpikeCheckers[0].type !== this.playerType) { // remove eaten checker
             selectedSpikeCheckers.shift();
+            selectedSpikeCheckers.shift();
+            this.removeEatenChecker(newState1, possibleSpikeToMoveIndex);
+            this.removeEatenChecker(newState2, possibleSpikeToMoveIndex);
           }
+
           const selectedChecker = newSpikes[currentSpike].checkers.pop();
           selectedChecker.currentSpike = possibleSpikeToMoveIndex;
           newSpikes[possibleSpikeToMoveIndex].checkers.push(selectedChecker);
@@ -323,8 +335,10 @@ export class BackgammonComputer {
 
           if (possibleSpikeToMoveIndex !== null) {
             const selectedSpikeCheckers = newSpikes[possibleSpikeToMoveIndex].checkers;
-            if (selectedSpikeCheckers[0] && selectedSpikeCheckers[0].type !== this.playerType) { // remove eaten checker
+            if (selectedSpikeCheckers.length === 1 && selectedSpikeCheckers[0].type !== this.playerType) { // remove eaten checker
               selectedSpikeCheckers.shift();
+              this.removeEatenChecker(newState1, possibleSpikeToMoveIndex);
+              this.removeEatenChecker(newState2, possibleSpikeToMoveIndex);
             }
             newSpikes[possibleSpikeToMoveIndex].checkers.push(selectedChecker);
           } else {
@@ -342,7 +356,7 @@ export class BackgammonComputer {
           this.getAllPossibleOffBoardMoves(newState1, nextStatesArrays, currentSpike, allStatesTable, newSpikes); // 2
           this.getAllPossibleOffBoardMoves(newState2, nextStatesArrays, nextSpikeToCheck, allStatesTable, newSpikes); // 3
         }
-      } else { //no move for current dice
+      } else { // no move for current dice
         const dicesLength = gameState.dices.length;
         if (!allStatesTable.gameStates[encodedGameState]) {
           nextStatesArrays[dicesLength].push(gameState);
@@ -360,6 +374,21 @@ export class BackgammonComputer {
     return encodedState;
   }
 
+  private removeEatenChecker(gameState, spikeIndex) {
+    let opponentBar;
+    if (this.playerType === Players.playersMap.Black) {
+      opponentBar = BACKGAMMON_CONSTANTS.WHITE_BAR_INDEX;
+    } else {
+      opponentBar = BACKGAMMON_CONSTANTS.BLACK_BAR_INDEX;
+    }
+    const indexOffset = this.playerType === Players.playersMap.Black ? 16 : 1;
+    for (let i = indexOffset; i < indexOffset + 15; i++) {
+      if (gameState.checkers[i].currentSpike === spikeIndex) {
+        gameState.checkers[i].currentSpike = opponentBar;
+      }
+    }
+  }
+
   private getBestMove(nextStatesArrays, originalGameState) {
     const statesArr = Object.values(nextStatesArrays).find(_gameState => _gameState.length > 0);
     if (statesArr[0].dices.length === originalGameState.dices.length) { // todo - find a better way to check if there is no move.
@@ -367,37 +396,12 @@ export class BackgammonComputer {
     }
 
     const statesDiffInfArr = [];
-    statesArr.forEach((state, index) => statesDiffInfArr.push(this.getStateDiffInfo(state, originalGameState, index)));
+    statesArr.forEach((state, index) => statesDiffInfArr.push(getStateDiffInfo(state, index, this.playerType)));
 
-    const bestDiff = statesDiffInfArr.sort((diff1, diff2) => diff1.exposedCheckers - diff2.exposedCheckers)[0];
+    const bestDiff = statesDiffInfArr.sort((diff1, diff2) => diff2.score - diff1.score)[0];
     const newState = statesArr[bestDiff.index];
     this.updateSelectedState(newState);
     return newState;
-  }
-
-  private getStateDiffInfo(newState, gameState, index) {
-
-    const diff: any = {
-      exposedCheckers: [],
-      eatenOpponentsCheckers: [],
-      closedSpikes: [],
-      selectedCheckers: [],
-      winningsCheckers: [],
-      index
-    };
-    const spikes = {};
-
-    const indexOffset = this.playerType === Players.playersMap.Black ? 1 : 16;
-    for (let i = indexOffset; i < indexOffset + 15; i++) {
-      if (spikes[newState.checkers[i].currentSpike]) {
-        spikes[newState.checkers[i].currentSpike]++;
-      } else {
-        spikes[newState.checkers[i].currentSpike] = 1;
-      }
-    }
-
-    diff.exposedCheckers = Object.values(spikes).filter(spike => spike === 1).length;
-    return diff;
   }
 
   private updateSelectedState(newState) {
@@ -445,7 +449,6 @@ export class BackgammonComputer {
       selectedChecker = this.gameSpikes[fromSpike].checkers.pop();
     }
     let eatenChecker, xTarget, yTarget, targetPosition;
-
 
     if (toSpike && this.gameSpikes[toSpike].checkers.length && this.gameSpikes[toSpike].checkers[0].type !== this.playerType) { // todo - duplication
       eatenChecker = this.gameSpikes[toSpike].checkers.pop(); // todo - deep copy ?
