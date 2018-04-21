@@ -78,6 +78,8 @@ export class GameController {
 
       if (gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.COMPUTER) {
         BackgammonStateManager.onComputerMove(this.gameHandler);
+        Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.Black]] = 'You'; // todo - improve the game players names
+        Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.White]] = 'Computer'; // todo - improve the game players names
         this.gameState = gameData;
         this.gameState.players.black = 'You';
         this.gameState.players.white = 'Computer';

@@ -53,6 +53,11 @@ export class BackgammonStateManager {
     const cords = {x: $event.clientX - clientRect.left, y: $event.clientY - clientRect.top};
     const {gameState, mouseMove$, localUser, gameMode} = BackgammonStateManager;
 
+    if (!gameState || !gameState.players) {
+      console.log('game not initialized and mouse hover handler called');
+      return;
+    }
+
     switch (gameMode) {
       case BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL:
         mouseMove$.next(cords);
@@ -87,7 +92,7 @@ export class BackgammonStateManager {
   private static mouseClickHandler = ($event) => {
     const clientRect = Canvas.canvas.getBoundingClientRect();
     const cords = {x: $event.clientX - clientRect.left, y: $event.clientY - clientRect.top};
-    const {mouseMove$, mouseClick$, gameState, localUser, gameMode} = BackgammonStateManager;
+    const {mouseClick$, gameState, localUser, gameMode} = BackgammonStateManager;
 
     switch (gameMode) {
       case BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL:
@@ -118,7 +123,7 @@ export class BackgammonStateManager {
         }
         break;
     }
-  }
+  };
 
   public static onMouseMove(cb, id) {
     BackgammonStateManager.subscriptions.push({id, subscription: BackgammonStateManager.mouseMove$.subscribe(cb)});

@@ -20,7 +20,7 @@ export class BackgammonMockData {
         isComplete: false,
         checkers: {
           1: {currentSpike: 0, isOffBoard: false},
-          2: {currentSpike: 11, isOffBoard: false},
+          2: {currentSpike: 0, isOffBoard: false},
           3: {currentSpike: 11, isOffBoard: false},
           4: {currentSpike: 11, isOffBoard: false},
           5: {currentSpike: 11, isOffBoard: false},
@@ -35,8 +35,8 @@ export class BackgammonMockData {
           14: {currentSpike: 18, isOffBoard: false},
           15: {currentSpike: 18, isOffBoard: false},
 
-          16: {currentSpike: 2, isOffBoard: false},
-          17: {currentSpike: 2, isOffBoard: false},
+          16: {currentSpike: 5, isOffBoard: false},
+          17: {currentSpike: 5, isOffBoard: false},
           18: {currentSpike: 5, isOffBoard: false},
           19: {currentSpike: 5, isOffBoard: false},
           20: {currentSpike: 5, isOffBoard: false},
@@ -56,7 +56,7 @@ export class BackgammonMockData {
         players: {}
       }
     }
-  }
+  };
 }
 
 

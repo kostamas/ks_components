@@ -1,6 +1,6 @@
 import {Canvas} from './canvas';
 import {BackgammonStateManager} from './backgammonStateManager';
-import {isOverlap, isOnline} from './helpers/backgammonUtils';
+import {isOverlap, isOnline, isVSComputer} from './helpers/backgammonUtils';
 
 export class Players {
   public static canSurrenderPlayer = -1;
