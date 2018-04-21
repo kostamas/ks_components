@@ -10,8 +10,8 @@ export class Checker {
   public static selectedCheckers: any = {};
   private id;
   private checkerSvgImg;
-  private x;
-  private y;
+  public x;
+  public y;
   public type;
   public currentSpike;
   public isOffBoard = false;
@@ -78,6 +78,7 @@ export class Checker {
   };
 
   private mouseClickHandler = ({x, y}) => {
+
     if (this.type !== Players.currentState || this.isOffBoard || !Players.isCurrentOnlinePlayer()) {
       return;
     }
@@ -119,7 +120,7 @@ export class Checker {
   };
 
   private initPosition() {
-    let svgAsString = getCheckerSvg(Players.playersNamesMap[this.type]);
+    const svgAsString = getCheckerSvg(Players.playersNamesMap[this.type]);
     const _window: any = window;
     const DOMURL = _window.URL || _window.webkitURL || _window;
 

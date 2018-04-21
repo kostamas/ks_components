@@ -1,6 +1,8 @@
 <div class="backgammon-container">
 
   <div class="buttons-wrapper">
+    <div class="vs-computer" *ngIf="displayButtonHandler(buttonsNames.computer)" (click)="playAgainstComputer()">Vs Computer</div>
+
     <div class="play-online" *ngIf="displayButtonHandler(buttonsNames.playOnline)" (click)="playOnline()">Online</div>
 
     <div class="play-local" *ngIf="displayButtonHandler(buttonsNames.playLocal)" (click)="playLocal()">Local</div>
@@ -9,6 +11,7 @@
 
     <div class="menu" *ngIf="displayButtonHandler(buttonsNames.menu)" (click)="goToMenu()">Menu</div>
   </div>
+
   <div class="online-game-menu-container" [ngClass]="currentViewState + '-view'">
     <form [formGroup]="formGroup" (ngSubmit)="submit()">
       <div [ngClass]="currentViewState">

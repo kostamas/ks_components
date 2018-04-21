@@ -52,10 +52,11 @@ export class BackgammonMockData {
           30: {currentSpike: 23, isOffBoard: false}
         },
         dices: {},
-        currentState: 0
+        currentState: 0,
+        players: {}
       }
     }
-  }
+  };
 }
 
 

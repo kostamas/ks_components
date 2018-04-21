@@ -1,6 +1,6 @@
 import {Canvas} from './canvas';
 import {BackgammonStateManager} from './backgammonStateManager';
-import {isOverlap, isOnline} from './helpers/backgammonUtils';
+import {isOverlap, isOnline, isVSComputer} from './helpers/backgammonUtils';
 
 export class Players {
   public static canSurrenderPlayer = -1;
@@ -20,7 +20,7 @@ export class Players {
     [Players.playersNamesMap[Players.playersMap.White]]: ''
   }
 
-  public static currentState = 0;
+  public static currentState;
 
   public static showsSkipButton = false;
 
@@ -33,8 +33,9 @@ export class Players {
     this.init();
   }
 
-  public static nextPlayer() {
+  public static nextPlayerState() {
     Players.currentState = (Players.currentState + 1) % 4;
+    BackgammonStateManager.notifyNextPlayerState();
   }
 
   private init() {
@@ -57,6 +58,7 @@ export class Players {
         Players.currentState = 0;
       }
       BackgammonStateManager.notifySkipPlayer();
+      Players.nextPlayerState();
       Players.showsSkipButton = false;
     }
   }

@@ -1,5 +1,5 @@
 import {BackgammonDBToken} from './backgammonDb.types';
-import {getSpikeDirection, isOverlap, isValidSpike, isOnline} from './helpers/backgammonUtils';
+import {getSpikeDirection, isOverlap, isValidSpike, isOnline, isVSComputer} from './helpers/backgammonUtils';
 import {BackgammonStateManager} from './backgammonStateManager';
 import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
 import {drawBackground} from './helpers/uiHelper';
@@ -10,6 +10,7 @@ import {Checker} from './checker';
 import {Spike} from './spike';
 import {Dices} from './dices';
 import {Canvas} from './canvas';
+import {BackgammonComputer} from './backgammonComputer';
 
 @Injectable()
 export class GameController {
@@ -18,6 +19,7 @@ export class GameController {
   private outsideBoard: OutsideBoard;
   private dicesObj;
   private gamePlayers: Players;
+  private backgammonComputer: BackgammonComputer;
   private currentState;
   private backgroundImgUrl = 'assets/images/backgammon.jpg';
   private bar;
@@ -48,6 +50,8 @@ export class GameController {
     BackgammonStateManager.onMouseClick(this.newGame, 'gameController');
     BackgammonStateManager.onMouseMove(this.hoverOnNewGame, 'gameController');
 
+    Players.currentState = 0;
+
     drawBackground(this.backgroundImgUrl).subscribe(() => {
       this.initSpikes();
       this.initCheckers();
@@ -56,11 +60,6 @@ export class GameController {
       this.dicesObj = new Dices();
       this.gamePlayers = new Players();
       this.outsideBoard = new OutsideBoard();
-
-      if (gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL) {
-        this.gameState = gameData;
-        setTimeout(this.gameHandler.bind(this, gameData));
-      }
 
       if (gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.ONLINE) {
         this.gameId = gameId;
@@ -72,9 +71,21 @@ export class GameController {
         BackgammonStateManager.onRollClick(this.updateState);
       }
 
-      if (gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.COMPUTER) {
+      if (gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL) {
         this.gameState = gameData;
         setTimeout(this.gameHandler.bind(this, gameData));
+      }
+
+      if (gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.COMPUTER) {
+        BackgammonStateManager.onComputerMove(this.gameHandler);
+        Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.Black]] = 'You'; // todo - improve the game players names
+        Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.White]] = 'Computer'; // todo - improve the game players names
+        this.gameState = gameData;
+        this.gameState.players.black = 'You';
+        this.gameState.players.white = 'Computer';
+        setTimeout(this.gameHandler.bind(this, gameData));
+        const {spikes, checkers, bar, outsideBoard} = this;
+        this.backgammonComputer = new BackgammonComputer(Players.playersMap.White, spikes, checkers, bar, outsideBoard); // todo - don't send this.bar
       }
     });
   }
@@ -84,7 +95,7 @@ export class GameController {
     this.spikes = [];
 
     for (let i = 0; i < this.spikesPositions.length; i++) {
-      direction = i < this.spikesPositions.length / 2 ? 'down' : 'up';
+      direction = i < this.spikesPositions.length / 2 ? 'down' : 'up'; // todo - use constant
       spike = new Spike(this.spikesPositions[i].x, this.spikesPositions[i].y, direction);
       this.spikes.push(spike);
     }
@@ -189,7 +200,7 @@ export class GameController {
     this.dicesObj.dices.splice(diceIndex, 1);
     if (this.dicesObj.dices.length === 0) {
       this.dicesObj.setShowRollButton(true);
-      Players.nextPlayer();
+      Players.nextPlayerState();
     }
     this.outsideBoard.showArrow[Players.playersNamesMap[checker.type]] = false;
     this.updateState();
@@ -228,7 +239,7 @@ export class GameController {
 
     if (this.dicesObj.dices.length === 0) {
       this.dicesObj.setShowRollButton(true);
-      Players.nextPlayer();
+      Players.nextPlayerState();
     }
 
     if (!isOnline()) {
@@ -297,6 +308,7 @@ export class GameController {
     checker.setPosition(this.bar.getNextCheckerPosition(checker.type));
 
     this.bar.checkers[Players.playersNamesMap[checker.type]].push(checker);
+
     if (checker.type === Players.playersMap.Black) {
       checker.currentSpike = BACKGAMMON_CONSTANTS.BLACK_BAR_INDEX;
     } else {
@@ -399,7 +411,7 @@ export class GameController {
   }
 
   private gameHandler = (gameData) => {
-    BackgammonStateManager.gameState = gameData.state;
+    BackgammonStateManager.gameState = gameData;
 
     if (isOnline()) {
       Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.Black]] = gameData.players.black;
@@ -414,6 +426,7 @@ export class GameController {
 
     this.checkers.forEach(checker => {
       checker.isOffBoard = gameData.checkers[checker.getCheckerId()].isOffBoard;
+      checker.currentSpike = gameData.checkers[checker.getCheckerId()].currentSpike;
       if (checker.isOffBoard) {
         this.outsideBoard.checkers[Players.playersNamesMap[checker.type]].push(checker);
         checker.setPosition(this.outsideBoard.getNextCheckerPosition(checker.type));
@@ -545,7 +558,9 @@ export class GameController {
       surrenderedPlayer: this.gameState.surrenderedPlayer || -1,
       timeStamp: Date.now()  // patch - trigger firebase observable change
     };
+
     this.checkers.forEach((checker: any, index) => {
+
       newState.checkers[index + 1] = {
         currentSpike: checker.currentSpike,
         isOffBoard: checker.isOffBoard
@@ -565,7 +580,7 @@ export class GameController {
     const updatedGame = {
       state: newState,
       selectedChecker: {index: -1, x: -1, y: -1}
-    }
+    };
 
     if (isOnline()) {
       this.backgammonDBService.updateGameState(this.gameId, updatedGame);
