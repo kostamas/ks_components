@@ -63,6 +63,7 @@ export class Dices {
   }
 
   private clickHandler = ({x, y}) => {
+    debugger
     if (this.showRollButton
       && Players.isCurrentOnlinePlayer()
       && isOverlap(x, y, this.rollButtonPosition.x - 30, this.rollButtonPosition.y - 30, 60, 60)) {

@@ -216,7 +216,7 @@ export class GameController {
 
     const currentSpike = checker.currentSpike;
     const homeSpike = checker.type === Players.playersMap.White ? currentSpike + 1 : 24 - currentSpike;
-    checker.currentSpike = null;
+    checker.currentSpike = 'winning spike';
 
     let diceToRemove = 7, diceIndex;
     this.dicesObj.dices.forEach(diceResult => {
@@ -462,7 +462,9 @@ export class GameController {
       }
     } else {
       if (this.checkIfToSkipTurn()) { // one scenario - there is a checker on the bar and the whole home is occupied
-        Players.currentState = (Players.currentState + 2) % 4;
+        gameData.currentState = (Players.currentState + 2) % 4; // todo - write this current state sync better
+        Players.currentState = gameData.currentState;
+        this.currentState = gameData.currentState;
       }
     }
 
