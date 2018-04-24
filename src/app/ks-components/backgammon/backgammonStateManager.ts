@@ -58,6 +58,11 @@ export class BackgammonStateManager {
       return;
     }
 
+    if (gameState.winningPlayer === 1 || gameState.winningPlayer === 3) {
+      mouseMove$.next(cords);
+      return;
+    }
+
     switch (gameMode) {
       case BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL:
         mouseMove$.next(cords);
@@ -87,7 +92,7 @@ export class BackgammonStateManager {
         }
         break;
     }
-  };
+  }
 
   private static mouseClickHandler = ($event) => {
     const clientRect = Canvas.canvas.getBoundingClientRect();

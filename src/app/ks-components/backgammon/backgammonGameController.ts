@@ -529,6 +529,7 @@ export class GameController {
 
   private onSurrender = (surrenderedPlayer) => {
     this.gameState.surrenderedPlayer = surrenderedPlayer;
+    this.gameState.winningPlayer = (surrenderedPlayer + 2) % 4;
     this.updateState();
   }
 
@@ -554,7 +555,7 @@ export class GameController {
       checkers: {},
       dices: {},
       currentState: Players.currentState,
-      winningPlayer: this.gamePlayers.winningPlayer,
+      winningPlayer: this.gameState.winningPlayer,
       moveSuggestion: {},
       players: this.gameState.players,
       surrenderedPlayer: this.gameState.surrenderedPlayer || -1,
