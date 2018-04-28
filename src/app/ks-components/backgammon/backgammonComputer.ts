@@ -36,7 +36,8 @@ export class BackgammonComputer {
       Object.keys(checkers).forEach(key => checkers[key].type = +key < 16 ? playersMap.Black : playersMap.White);
 
       if (this.playerType === Players.getCurrentPlayerType()) {
-        _gameState.dices = rollDices();
+        // _gameState.dices = rollDices();
+        _gameState.dices = [2, 4];
         _gameState.currentState = this.playerType; // player type = 3, current state = 2, for showing the dices - currentState++;
         setTimeout(() => {
           BackgammonStateManager.notifyComputerMove(_gameState); // render dice.
@@ -44,7 +45,7 @@ export class BackgammonComputer {
         }, 1000);
       }
     });
-  }
+  };
 
   private computerYouCanPlay = () => {
     const nextStatesArrays: any = {0: [], 1: [], 2: [], 3: [], 4: []};
@@ -86,6 +87,14 @@ export class BackgammonComputer {
       }
       gameState.dices.reverse();
     }
+
+    // nextStatesArrays[0].forEach((state, index) => {
+    //   if (state.movesInfo[0].fromSpike === 12 && state.movesInfo[0].toSpike === 10) {
+    //     if (state.movesInfo[1].fromSpike === 12 && state.movesInfo[1].toSpike === 8) {
+    //       debugger;
+    //     }
+    //   }
+    // });
     const newState = this.getBestMove(nextStatesArrays, gameState);
     if (!newState) {
       gameState.currentState = (gameState.currentState + 1) % 4;
@@ -110,7 +119,7 @@ export class BackgammonComputer {
 
       });
     }
-  }
+  };
 
   /** 3 recursive calls:
    *  1. (same state,next spike)
@@ -396,7 +405,13 @@ export class BackgammonComputer {
     }
 
     const statesDiffInfArr = [];
-    statesArr.forEach((state, index) => statesDiffInfArr.push(getStateDiffInfo(state, index, this.playerType)));
+    statesArr.forEach((state, index) => {
+        if (index === 10) {
+          debugger;
+        }
+        statesDiffInfArr.push(getStateDiffInfo(state, index, this.playerType));
+      }
+    );
 
     const bestDiff = statesDiffInfArr.sort((diff1, diff2) => diff2.score - diff1.score)[0];
     const newState = statesArr[bestDiff.index];
@@ -511,7 +526,7 @@ export class BackgammonComputer {
         setTimeout(() => this.animateMovesRec(movesArr, moveIndex + 1, observer));
       }
     }, 45);
-  }
+  };
 
   private checkIfHasOutSideCheckers(gameState) {
     const {BLACK_BAR_INDEX, WHITE_BAR_INDEX} = BACKGAMMON_CONSTANTS;
