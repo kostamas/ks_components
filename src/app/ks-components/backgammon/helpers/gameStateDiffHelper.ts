@@ -94,9 +94,7 @@ const calcIfIsHomeRace = (newState, diffInfo) => {
 };
 
 const calcWinningsCheckers = (diffInfo, checker) => {
-  const {BLACK_BAR_INDEX, WHITE_BAR_INDEX} = BACKGAMMON_CONSTANTS;
-  const barIndex = playerType === playersMap.Black ? BLACK_BAR_INDEX : WHITE_BAR_INDEX;
-  if (checker.currentSpike === barIndex) {
+  if (checker.currentSpike === null) {
     diffInfo.winningsCheckers++;
   }
 };
@@ -216,7 +214,7 @@ const calcExposedCheckersScore = (spikesArray, diffInfo) => {
 
     if (spikesArray[index] && spikesArray[index].type !== playerType) {
       opponentLastSixCheckers.amount++;
-      if(opponentLastSixCheckers.lastIndex === -1){
+      if (opponentLastSixCheckers.lastIndex === -1) {
         opponentLastSixCheckers.lastIndex = index;
       }
     }
@@ -237,11 +235,11 @@ const updateLastIndexOfLasSixCheckers = (spikesArray, opponentLastSixCheckers, c
     }
   }
   opponentLastSixCheckers.lastIndex = -1; // no opponent checkers in the last 6 spike
-}
+};
 
 const scoreTable = {
   eatenOpponentChecker: 50,
-  winningsCheckers: 24,
+  winningsCheckers: 40,
   homeCheckers: 1000000,
   outsideHomeCheckers: -100,
   opponentCheckersEatenAtHome: 10,
@@ -251,6 +249,9 @@ const scoreTable = {
     return score;
   },
   closedSpikes: (spikeIndex) => {
+    if (spikeIndex === 'null') { // todo - check why it's a string
+      return 1;
+    }
     return playerType === playersMap.Black ? Number(spikeIndex) : (NUM_OF_SPIKES - Number(spikeIndex));
   }
 };
