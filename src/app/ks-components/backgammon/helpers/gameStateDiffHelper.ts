@@ -5,10 +5,10 @@ import {getSpikeDirection} from './backgammonUtils';
 const {playersMap} = Players;
 const {NUM_OF_SPIKES} = BACKGAMMON_CONSTANTS;
 
-let playerType;
+let playerType, direction;
 export const getStateDiffInfo = (newState, index, _playerType) => {
   playerType = _playerType;
-
+  direction = getSpikeDirection(playerType, Players);
   const diffInfo: any = {
     exposedCheckers: {},
     eatenOpponentsCheckers: 0,
@@ -175,18 +175,21 @@ const CalcOutSideHomeCheckersScore = (diffInfo) => {
 };
 
 const calcExposedCheckersScore = (spikesArray, diffInfo) => {
-  let opponentLastSixCheckers = {amount: 0, index: -1};
+  const opponentLastSixCheckers = {amount: 0, lastIndex: -1};
   let indexOffset = playerType === playersMap.Black ? 23 : 0;
-  const direction = getSpikeDirection(playerType, Players) * (-1);
   const numOfExposedHomeCheckers = {amount: 0, opponentCheckersThreat: 0};
 
   for (let i = 0; i < 6; i++) {
-    const index = indexOffset + direction * i;
-    opponentLastSixCheckers += spikesArray[index] && spikesArray[index].type !== playerType ? 1 : 0;
+    const index = indexOffset - direction * i;
+    opponentLastSixCheckers.amount += spikesArray[index] && spikesArray[index].type !== playerType ? 1 : 0;
 
     if (spikesArray[index] && spikesArray[index].type === playerType && spikesArray[index].amount === 1) {
       numOfExposedHomeCheckers.amount++;
-      numOfExposedHomeCheckers.opponentCheckersThreat += opponentLastSixCheckers;
+      numOfExposedHomeCheckers.opponentCheckersThreat += opponentLastSixCheckers.amount;
+    }
+
+    if (opponentLastSixCheckers.amount === 1 && opponentLastSixCheckers.lastIndex === -1) {
+      opponentLastSixCheckers.lastIndex = index;
     }
   }
 
@@ -205,14 +208,36 @@ const calcExposedCheckersScore = (spikesArray, diffInfo) => {
 
   indexOffset = playerType === playersMap.Black ? 19 : 6;
   for (let i = 0; i < 18; i++) {
-    const index = indexOffset + direction * i;
+    const index = indexOffset - direction * i;
+
     if (spikesArray[index] && spikesArray[index].type === playerType && spikesArray[index].amount === 1) {
-      diffInfo.score += scoreTable.exposedChecker(indexOffset, opponentLastSixCheckers);
+      diffInfo.score += scoreTable.exposedChecker(index, opponentLastSixCheckers.amount);
     }
-    opponentLastSixCheckers += spikesArray[index] && spikesArray[index].type !== playerType ? 1 : -1;
-    opponentLastSixCheckers = opponentLastSixCheckers > 0 ? opponentLastSixCheckers : 0;
+
+    if (spikesArray[index] && spikesArray[index].type !== playerType) {
+      opponentLastSixCheckers.amount++;
+      if(opponentLastSixCheckers.lastIndex === -1){
+        opponentLastSixCheckers.lastIndex = index;
+      }
+    }
+
+    if (index - 5 === opponentLastSixCheckers.lastIndex) {
+      opponentLastSixCheckers.amount--;
+      updateLastIndexOfLasSixCheckers(spikesArray, opponentLastSixCheckers, index);
+    }
   }
 };
+
+const updateLastIndexOfLasSixCheckers = (spikesArray, opponentLastSixCheckers, currentIndex) => {
+  for (let i = 4; i > 0; i--) {
+    const index = currentIndex + i * direction;
+    if (spikesArray[index] && spikesArray[index].type !== playerType) {
+      opponentLastSixCheckers.lastIndex = index;
+      return;
+    }
+  }
+  opponentLastSixCheckers.lastIndex = -1; // no opponent checkers in the last 6 spike
+}
 
 const scoreTable = {
   eatenOpponentChecker: 50,
