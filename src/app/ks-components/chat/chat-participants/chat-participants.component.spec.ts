@@ -1,11 +1,11 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ChatParticipantsComponent } from './chat-participants.component';
+import {ChatParticipantsComponent} from './chat-participants.component';
 import {ChatMessageComponent} from '../chat-message/chat-message.component';
 import {ChatterComponent} from '../chatter/chatter.component';
 import {ChatStoreService} from '../services/chat-store.service';
 import {ChatService} from '../services/chat.service';
-import {chatServiceConfigFn} from "../../../adapters/adapters.module";
+import {ChatDataService} from '../../../adapters/chat-adapter/chatDataService';
 
 describe('ChatParticipantsComponent', () => {
   let component: ChatParticipantsComponent;
@@ -18,15 +18,15 @@ describe('ChatParticipantsComponent', () => {
         ChatMessageComponent,
         ChatterComponent
       ],
-      providers:[
+      providers: [
         ChatStoreService,
         {
           provide: ChatService,
-          useFactory: chatServiceConfigFn
+          useFactory: ChatDataService
         }
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
