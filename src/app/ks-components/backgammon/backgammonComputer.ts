@@ -1,9 +1,6 @@
 import {BackgammonStateManager} from './backgammonStateManager';
 import {Players} from './players';
-import {
-  checkIfOffBoardState, getHighestCheckerSpikeNumber, getSpikeDirection, isValidSpike,
-  rollDices
-} from './helpers/backgammonUtils';
+import {checkIfOffBoardState, getHighestCheckerSpikeNumber, getSpikeDirection, isValidSpike, rollDices} from './helpers/backgammonUtils';
 import {deepCopy} from '../../utils/jsUtils';
 import {Observable} from 'rxjs/Observable';
 import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
@@ -44,7 +41,7 @@ export class BackgammonComputer {
         }, 1000);
       }
     });
-  }
+  };
 
   private computerYouCanPlay = () => {
     const nextStatesArrays: any = {0: [], 1: [], 2: [], 3: [], 4: []};
@@ -110,16 +107,16 @@ export class BackgammonComputer {
 
       });
     }
-  }
+  };
 
   /** 3 recursive calls:
-   *  1. (same state,next spike)
-   *  2. (new state ,same spike)
+   *  1. (same state, next spike)
+   *  2. (new state, same spike)
    *  1. (new state, next spike)**/
   private getAllPossibleOutSideCheckerMoves(gameState, nextStatesArrays, allStatesTable, spikes) {
     const homeSpikeIndex = this.playerType === Players.playersMap.White ? 24 : -1;
     let dice, possibleSpikeToMoveIndex, currCheckers, currentSpike;
-    const newState = deepCopy(gameState); // todo - copy only if there is a move.
+    const newState = deepCopy(gameState);
     const newSpikes = deepCopy(spikes);
     newState.movesInfo = [];
     const deicesLength = newState.dices.length;
@@ -169,8 +166,8 @@ export class BackgammonComputer {
   }
 
   /** 3 recursive calls:
-   *  1. (same state,next spike)
-   *  2. (new state ,same spike)
+   *  1. (same state, next spike)
+   *  2. (new state, same spike)
    *  1. (new state, next spike)**/
   private getAllPossibleMoves(gameState, nextStatesArrays, currentSpike, allStatesTable, spikes) {
     const encodedGameState = this.encodeGameState(gameState);
@@ -197,12 +194,7 @@ export class BackgammonComputer {
     const nextSpikeToCheck = this.spikeDirection + currentSpike;
     let dice;
     for (let i = 0; i < gameState.dices.length; i++) {
-      const newState1 = deepCopy(gameState); // todo - copy only if there is a move.
-      const newState2 = deepCopy(gameState);
-      const newSpikes = deepCopy(spikes);
       let possibleSpikeToMoveIndex;
-      newState1.movesInfo = newState1.movesInfo || [];
-      newState2.movesInfo = newState2.movesInfo || [];
       dice = gameState.dices[i];
 
       this.getAllPossibleMoves(gameState, nextStatesArrays, nextSpikeToCheck, allStatesTable, spikes); // 1.
@@ -222,6 +214,12 @@ export class BackgammonComputer {
             }
           }
 
+          const newState1 = deepCopy(gameState);
+          const newState2 = deepCopy(gameState);
+          const newSpikes = deepCopy(spikes);
+          newState1.movesInfo = newState1.movesInfo || [];
+          newState2.movesInfo = newState2.movesInfo || [];
+
           const selectedSpikeCheckers = newSpikes[possibleSpikeToMoveIndex].checkers;
           if (selectedSpikeCheckers.length === 1 && selectedSpikeCheckers[0].type !== this.playerType) { // remove eaten checker
             selectedSpikeCheckers.shift();
@@ -233,13 +231,9 @@ export class BackgammonComputer {
           const selectedChecker = newSpikes[currentSpike].checkers.pop();
           selectedChecker.currentSpike = possibleSpikeToMoveIndex;
           newSpikes[possibleSpikeToMoveIndex].checkers.push(selectedChecker);
-          newState1.dices.splice(gameState.dices.indexOf(dice), 1);
-          newState2.dices.splice(gameState.dices.indexOf(dice), 1);
-          newState1.checkers[selectedCheckerIndex].currentSpike = possibleSpikeToMoveIndex;
-          newState2.checkers[selectedCheckerIndex].currentSpike = possibleSpikeToMoveIndex;
-          const moveInfo = {fromSpike: currentSpike, toSpike: possibleSpikeToMoveIndex};
-          newState1.movesInfo.push(moveInfo);
-          newState2.movesInfo.push(moveInfo);
+
+          this.updateNewStates(newState1, newState2, gameState, dice, selectedCheckerIndex, possibleSpikeToMoveIndex, currentSpike);
+
           if (checkIfOffBoardState(Object.values(newState1.checkers), this.playerType, Players.playersMap)) {
             currentSpike = this.playerType === Players.playersMap.Black ? 0 : 23;
             this.getAllPossibleOffBoardMoves(newState1, nextStatesArrays, currentSpike, allStatesTable, newSpikes);
@@ -259,8 +253,8 @@ export class BackgammonComputer {
   }
 
   /** 3 recursive calls:
-   *  1. (same state,next spike)
-   *  2. (new state ,same spike)
+   *  1. (same state, next spike)
+   *  2. (new state, same spike)
    *  1. (new state, next spike)**/
   private getAllPossibleOffBoardMoves(gameState, nextStatesArrays, currentSpike, allStatesTable, spikes) {
     const encodedGameState = this.encodeGameState(gameState);
@@ -287,12 +281,7 @@ export class BackgammonComputer {
     const nextSpikeToCheck = this.spikeDirection + currentSpike;
     let dice;
     for (let i = 0; i < gameState.dices.length; i++) {
-      const newState1 = deepCopy(gameState); // todo - copy only if there is a move.
-      const newState2 = deepCopy(gameState);
-      const newSpikes = deepCopy(spikes);
       let possibleSpikeToMoveIndex;
-      newState1.movesInfo = newState1.movesInfo || [];
-      newState2.movesInfo = newState2.movesInfo || [];
       dice = gameState.dices[i];
 
       this.getAllPossibleOffBoardMoves(gameState, nextStatesArrays, nextSpikeToCheck, allStatesTable, spikes); // 1.
@@ -330,6 +319,12 @@ export class BackgammonComputer {
             }
           }
 
+          const newState1 = deepCopy(gameState);
+          const newState2 = deepCopy(gameState);
+          const newSpikes = deepCopy(spikes);
+          newState1.movesInfo = newState1.movesInfo || [];
+          newState2.movesInfo = newState2.movesInfo || [];
+
           const selectedChecker = newSpikes[currentSpike].checkers.pop();
           selectedChecker.currentSpike = possibleSpikeToMoveIndex;
 
@@ -346,13 +341,9 @@ export class BackgammonComputer {
             newState2.checkers[selectedCheckerIndex].isOffBoard = true;
             selectedChecker.isOffBoard = true;
           }
-          newState1.dices.splice(gameState.dices.indexOf(dice), 1);
-          newState2.dices.splice(gameState.dices.indexOf(dice), 1);
-          newState1.checkers[selectedCheckerIndex].currentSpike = possibleSpikeToMoveIndex;
-          newState2.checkers[selectedCheckerIndex].currentSpike = possibleSpikeToMoveIndex;
-          const moveInfo = {fromSpike: currentSpike, toSpike: possibleSpikeToMoveIndex};
-          newState1.movesInfo.push(moveInfo);
-          newState2.movesInfo.push(moveInfo);
+
+          this.updateNewStates(newState1, newState2, gameState, dice, selectedCheckerIndex, possibleSpikeToMoveIndex, currentSpike);
+
           this.getAllPossibleOffBoardMoves(newState1, nextStatesArrays, currentSpike, allStatesTable, newSpikes); // 2
           this.getAllPossibleOffBoardMoves(newState2, nextStatesArrays, nextSpikeToCheck, allStatesTable, newSpikes); // 3
         }
@@ -364,6 +355,16 @@ export class BackgammonComputer {
         }
       }
     }
+  }
+
+  private updateNewStates(newState1, newState2, gameState, dice, selectedCheckerIndex, possibleSpikeToMoveIndex, currentSpike) {
+    newState1.dices.splice(gameState.dices.indexOf(dice), 1);
+    newState2.dices.splice(gameState.dices.indexOf(dice), 1);
+    newState1.checkers[selectedCheckerIndex].currentSpike = possibleSpikeToMoveIndex;
+    newState2.checkers[selectedCheckerIndex].currentSpike = possibleSpikeToMoveIndex;
+    const moveInfo = {fromSpike: currentSpike, toSpike: possibleSpikeToMoveIndex};
+    newState1.movesInfo.push(moveInfo);
+    newState2.movesInfo.push(moveInfo);
   }
 
   private encodeGameState(gameSate) {
@@ -511,7 +512,7 @@ export class BackgammonComputer {
         setTimeout(() => this.animateMovesRec(movesArr, moveIndex + 1, observer));
       }
     }, 45);
-  }
+  };
 
   private checkIfHasOutSideCheckers(gameState) {
     const {BLACK_BAR_INDEX, WHITE_BAR_INDEX} = BACKGAMMON_CONSTANTS;

@@ -54,8 +54,7 @@ export class BackgammonStateManager {
     const {gameState, mouseMove$, localUser, gameMode} = BackgammonStateManager;
 
     if (!gameState || !gameState.players) {
-      console.log('game not initialized and mouse hover handler called');
-      return;
+      return; // game not initialized and mouse hover handler called'
     }
 
     if (gameState.winningPlayer === 1 || gameState.winningPlayer === 3) {
@@ -220,12 +219,6 @@ export class BackgammonStateManager {
       subscription: BackgammonStateManager.nextPlayerState$.subscribe(cb)
     });
   }
-
-  public static isOnline = () => BackgammonStateManager.gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.ONLINE;
-
-  public static isVSComputer = () => BackgammonStateManager.gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.COMPUTER;
-
-  public static isLocal = () => BackgammonStateManager.gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL;
 
   public static removeSubscriptions() {
     if (BackgammonStateManager.subscriptions) {
