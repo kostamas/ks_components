@@ -143,7 +143,6 @@ const calcScore = (diffInfo) => {
   CalcOutSideHomeCheckersScore(diffInfo);
 };
 
-
 const CalcEatenOpponentsCheckersScore = (diffInfo) => {
   diffInfo.score += diffInfo.eatenOpponentsCheckers * scoreTable.eatenOpponentChecker;
 };
