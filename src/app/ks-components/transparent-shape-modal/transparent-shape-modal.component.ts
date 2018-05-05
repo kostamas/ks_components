@@ -11,10 +11,9 @@ export class TransparentShapeModalComponent implements AfterViewInit {
 
   @Input() position: any;
   @Input() radius: number;
-  @Input() backgroundClickHandler: any = () => null;
   @Input() shape = 'circle';
-
   @ViewChild('svg') svg;
+  @Input() backgroundClickHandler: any = () => null;
 
   constructor() {
   }

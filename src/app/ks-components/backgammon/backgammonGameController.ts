@@ -245,7 +245,7 @@ export class GameController {
     if (!isOnline()) {
       this.redrawHandler();
     }
-  }
+  };
 
   private selectCheckerHandler = ({checker}) => {
     let checkersArr, spikeIndex, updateState;
@@ -465,6 +465,9 @@ export class GameController {
         gameData.currentState = (Players.currentState + 2) % 4; // todo - write this current state sync better
         Players.currentState = gameData.currentState;
         this.currentState = gameData.currentState;
+        if (isVSComputer()) {
+          BackgammonStateManager.notifyNextPlayerState();
+        }
       }
     }
 
@@ -497,7 +500,7 @@ export class GameController {
     this.dicesObj.showRollButton = Players.currentState % 2 === 0;
 
     this.redrawHandler();
-  }
+  };
 
   private countWinningCheckers(checkerType) {
     let winningCheckersCounter = 0;
@@ -519,18 +522,19 @@ export class GameController {
     if (isOnline()) {
       this.backgammonDBService.updateSelectedCheckerMove(x, y, checker, this.gameId, BackgammonStateManager.localUser);
     }
-  }
+  };
 
   private skipPlayerHandler = () => {
     this.dicesObj.dices = [];
     this.dicesObj.setShowRollButton(true);
     this.updateState();
-  }
+  };
 
   private onSurrender = (surrenderedPlayer) => {
     this.gameState.surrenderedPlayer = surrenderedPlayer;
+    this.gameState.winningPlayer = (surrenderedPlayer + 2) % 4;
     this.updateState();
-  }
+  };
 
   private hasOtherOutChecker(checker) {
     return this.bar.checkers[Players.playersNamesMap[checker.type]].length > 0 &&
@@ -547,14 +551,14 @@ export class GameController {
       this.checkers[data.id - 1].setPosition({x: data.x - radius * 1.5, y: data.y - radius * 1.5});
       this.redrawHandler();
     }
-  }
+  };
 
   private updateState = () => {
     const newState = {
       checkers: {},
       dices: {},
       currentState: Players.currentState,
-      winningPlayer: this.gamePlayers.winningPlayer,
+      winningPlayer: this.gameState.winningPlayer,
       moveSuggestion: {},
       players: this.gameState.players,
       surrenderedPlayer: this.gameState.surrenderedPlayer || -1,
@@ -589,7 +593,7 @@ export class GameController {
     } else {
       this.gameHandler(updatedGame.state);
     }
-  }
+  };
 
   private drawPlayAgainOption(color?) {
     Canvas.context.font = '20px serif';
@@ -608,14 +612,14 @@ export class GameController {
       const secondPlayerName = !!random ? whitePlayerName : blackPlayerName;
       this.backgammonDBService.newGame(firstPlayerName, secondPlayerName, this.gameId);
     }
-  }
+  };
 
   private hoverOnNewGame = ({x, y}) => {
     const target = BACKGAMMON_CONSTANTS.PLAY_AGAIN_POSITION;
     if (this.showPlayAgain && isOverlap(x, y, target.x, target.y, 100, 20)) {
       this.drawPlayAgainOption('#b3f744');
     }
-  }
+  };
 
   private checkIfToSkipTurn() {
     const currentPlayerType = Players.getCurrentPlayerType();
@@ -657,7 +661,7 @@ export class GameController {
         this.drawPlayAgainOption();
       }
     });
-  }
+  };
 
   public destroy = () => {
     Checker.destroy();
@@ -672,5 +676,5 @@ export class GameController {
     if (this.selectedCheckerObservable) {
       this.selectedCheckerObservable.unsubscribe();
     }
-  }
+  };
 }

@@ -83,15 +83,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     this.activatedRoute.params.subscribe((params: Params) => {
       this.localUser = JSON.parse(localStorage.getItem('backgammonUser'));
 
-      this.formGroup.statusChanges.subscribe(status => {
-        Object.keys(this.formErrorMessages).forEach(controlName => this.formErrorMessages[controlName] = '');
-        if (status === 'INVALID') {
-          this.formErrorHandler();
-        }
-      });
-
       if (params['gameId'] && this.localUser) {
-
         this.startGame(null, BACKGAMMON_CONSTANTS.GAME_MODES.ONLINE, params['gameId']);
         this.changeDetector.detectChanges();
         return;
@@ -140,11 +132,13 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   }
 
   public logOut() {
-    this.location.go('/backgammon');
-    localStorage.removeItem('backgammonUser');
     this.clearGame();
     this.logout$.next();
-    this.playLocal();
+    localStorage.removeItem('backgammonUser');
+    this.router.navigate(['/backgammon/']);
+    if (this.currentViewState === this.onlineViewStates.onlineMenu) {
+      this.playLocal();
+    }
   }
 
   public goToMenu() {
@@ -155,7 +149,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     this.showCanvas = false;
   }
 
-  private formErrorHandler() {
+  public formErrorHandler() {
     let control, validatorName;
     Object.keys(this.formGroup.controls).forEach(controlName => {
       control = this.formGroup.controls[controlName];
@@ -164,6 +158,10 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
         this.formErrorMessages[controlName] = this.formErrorMessagesBuilder[controlName][validatorName];
       }
     });
+  }
+
+  public onFocus(controlName) {
+    this.formErrorMessages[controlName] = '';
   }
 
   public isDisabled() {
@@ -245,7 +243,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
           });
         }
       });
-  }
+  };
 
   public checkIfOpenGameExists(selectedPlayer) {
     if (!this.localUser || !this.localUser.gameIds || !selectedPlayer || !selectedPlayer.gameIds) {
@@ -253,8 +251,8 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     }
 
     return Object.keys(this.localUser.gameIds)
-        .filter(gameId => !!selectedPlayer.gameIds[gameId])
-        .length > 0;
+      .filter(gameId => !!selectedPlayer.gameIds[gameId])
+      .length > 0;
   }
 
   public checkIfCanInvite(selectedPlayer) {

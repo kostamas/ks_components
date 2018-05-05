@@ -4,14 +4,11 @@ import {KsChatComponent} from './chat.component';
 import {MatIconModule} from '@angular/material';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
-import {ChatterComponent} from './chatter/chatter.component';
-import {ChatParticipantsComponent} from './chat-participants/chat-participants.component';
-import {ChatPaneComponent} from './chat-pane/chat-pane.component';
-import {ChatMessageComponent} from './chat-message/chat-message.component';
 import {ChatService} from './services/chat.service';
-import {chatServiceConfigFn} from '../../adapters/adapters.module';
 import {ChatStoreService} from './services/chat-store.service';
-import {HttpModule} from '@angular/http';
+import {HttpClientModule} from '@angular/common/http';
+import {ChatDataService} from '../../adapters/chat-adapter/chatDataService';
+import {ChatModule} from './chat.module';
 
 describe('KsChatComponent', () => {
   let component: KsChatComponent;
@@ -23,21 +20,12 @@ describe('KsChatComponent', () => {
         CommonModule,
         FormsModule,
         MatIconModule,
-        HttpModule
-      ],
-      declarations: [
-        KsChatComponent,
-        ChatMessageComponent,
-        ChatPaneComponent,
-        ChatParticipantsComponent,
-        ChatterComponent
+        HttpClientModule,
+        ChatModule.config(ChatDataService)
       ],
       providers: [
         ChatStoreService,
-        {
-          provide: ChatService,
-          useFactory: chatServiceConfigFn
-        }
+        ChatService
       ]
     })
       .compileComponents();

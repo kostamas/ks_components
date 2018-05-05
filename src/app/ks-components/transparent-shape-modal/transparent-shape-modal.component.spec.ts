@@ -25,8 +25,7 @@ describe('TransparentShapeModalComponent', () => {
     fixture = TestBed.createComponent(TransparentShapeModalComponent);
 
     component = fixture.componentInstance;
-    component.position = {left:30,top:30};
-    component.circleRadius= 50;
+    component.position = {left: 30, top: 30};
     fixture.detectChanges();
   });
 

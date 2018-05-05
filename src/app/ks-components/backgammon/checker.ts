@@ -8,19 +8,20 @@ import {Players} from './players';
 export class Checker {
   private static checkersCount = 0;
   public static selectedCheckers: any = {};
-  private id;
-  private checkerSvgImg;
+  readonly id;
+  readonly checkerSvgImg;
   public x;
   public y;
   public type;
   public currentSpike;
   public isOffBoard = false;
-  private radius;  // todo - define as constant
+  readonly radius;  // todo - define as constant
   private isHovered;
   private isClicked;
   private svgData;
   private static animFrame = null;
   private static timeout = null;
+  private static isGlobalClicked = false;
 
   constructor(x, y, type, currentSpike) {
     Checker.checkersCount++;
@@ -86,15 +87,18 @@ export class Checker {
     if (this.isClicked) {
       BackgammonStateManager.notifySelectedCheckerDrop({x, y, checker: this});
       this.isClicked = false;
+      setTimeout(() => Checker.isGlobalClicked = false, 0);
       Checker.selectedCheckers[this.type] = false;
       window.cancelAnimationFrame(Checker.animFrame);
       clearTimeout(Checker.timeout);
       Checker.animFrame = null;
       this.draw();
     } else {
-      if (!Checker.selectedCheckers[this.type] &&
+      if (!Checker.selectedCheckers[this.type] && !Checker.isGlobalClicked &&
         isOverlap(x, y, this.x, this.y, BACKGAMMON_CONSTANTS.CHECKERS_SIZE, BACKGAMMON_CONSTANTS.CHECKERS_SIZE)) {
+        let x = Checker.isGlobalClicked;
         this.isClicked = true;
+        Checker.isGlobalClicked = true;
         Checker.selectedCheckers[this.type] = true;
         this.animateSelectedChecker();
         BackgammonStateManager.notifySelectChecker({x, y, checker: this});

@@ -18,13 +18,13 @@
         <div class="title">{{currentViewState===onlineViewStates.register ? 'Register': 'Sign In'}}</div>
         <div class="input-wrapper">
           <div class="label">Name:</div>
-          <input type="text" formControlName="name">
+          <input (focus)="onFocus('name')" (blur)="formErrorHandler()" type="text" formControlName="name">
         </div>
         <div class="form-error">{{formErrorMessages['name']}}</div>
 
         <div class="input-wrapper">
           <div class="label">Password:</div>
-          <input type="password" formControlName="password">
+          <input (focus)="onFocus('password')" (blur)="formErrorHandler()" type="password" formControlName="password">
         </div>
         <div class="form-error">{{formErrorMessages['password']}}</div>
         <div class="sign-in-register-toggle"
@@ -58,7 +58,7 @@
       </div>
     </div>
 
-    <div class="online-game-details">
+    <div class="online-game-details scrollbar-style">
       <div class="invitations-container">
 
         <div *ngIf="localUser && localUser.invitations">

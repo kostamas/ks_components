@@ -8,7 +8,7 @@ import {CommonModule} from '@angular/common';
 import {ChatterComponent} from '../chatter/chatter.component';
 import {ChatStoreService} from '../services/chat-store.service';
 import {ChatService} from '../services/chat.service';
-import {chatServiceConfigFn} from "../../../adapters/adapters.module";
+import {ChatDataService} from '../../../adapters/chat-adapter/chatDataService';
 
 describe('ChatPaneComponent', () => {
   let component: ChatPaneComponent;
@@ -30,7 +30,7 @@ describe('ChatPaneComponent', () => {
         ChatStoreService,
         {
           provide: ChatService,
-          useFactory: chatServiceConfigFn
+          useFactory: ChatDataService
         }
       ]
     })

@@ -1,6 +1,7 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { GalleryAdapterComponent } from './gallery-adapter.component';
+import {GalleryAdapterComponent} from './gallery-adapter.component';
+import {GalleryModule} from '../../ks-components/gallery/gallery.module';
 
 describe('GalleryAdapterComponent', () => {
   let component: GalleryAdapterComponent;
@@ -8,14 +9,16 @@ describe('GalleryAdapterComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GalleryAdapterComponent ]
+      imports: [GalleryModule],
+      declarations: [GalleryAdapterComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(GalleryAdapterComponent);
     component = fixture.componentInstance;
+    component.imagesPaths = [];
     fixture.detectChanges();
   });
 

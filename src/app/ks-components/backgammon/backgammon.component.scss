@@ -145,11 +145,19 @@
     }
 
     .online-game-details {
-      @include dimension(330px, auto);
+      @include dimension(260px, auto);
       @include text-style(22px, $electricViolet, Lato);
+      max-height: 323px;
+      overflow-y: auto;
       position: absolute;
       left: 460px;
-      top: 0;
+      top: -2px;
+
+      &.scrollbar-style {
+        &::-webkit-scrollbar {
+          width: 12px;
+        }
+      }
 
       .list-title {
         color: $kimberlyDark;

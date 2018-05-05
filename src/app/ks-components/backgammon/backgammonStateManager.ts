@@ -54,7 +54,11 @@ export class BackgammonStateManager {
     const {gameState, mouseMove$, localUser, gameMode} = BackgammonStateManager;
 
     if (!gameState || !gameState.players) {
-      console.log('game not initialized and mouse hover handler called');
+      return; // game not initialized and mouse hover handler called'
+    }
+
+    if (gameState.winningPlayer === 1 || gameState.winningPlayer === 3) {
+      mouseMove$.next(cords);
       return;
     }
 
@@ -93,6 +97,11 @@ export class BackgammonStateManager {
     const clientRect = Canvas.canvas.getBoundingClientRect();
     const cords = {x: $event.clientX - clientRect.left, y: $event.clientY - clientRect.top};
     const {mouseClick$, gameState, localUser, gameMode} = BackgammonStateManager;
+
+    if (gameState.winningPlayer === 1 || gameState.winningPlayer === 3) {
+      mouseClick$.next(cords);
+      return;
+    }
 
     switch (gameMode) {
       case BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL:
@@ -210,12 +219,6 @@ export class BackgammonStateManager {
       subscription: BackgammonStateManager.nextPlayerState$.subscribe(cb)
     });
   }
-
-  public static isOnline = () => BackgammonStateManager.gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.ONLINE;
-
-  public static isVSComputer = () => BackgammonStateManager.gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.COMPUTER;
-
-  public static isLocal = () => BackgammonStateManager.gameMode === BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL;
 
   public static removeSubscriptions() {
     if (BackgammonStateManager.subscriptions) {
