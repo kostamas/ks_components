@@ -135,8 +135,7 @@ const calcExposedAndClosedCheckers = (spikes, diffInfo) => {
 /********************      Scoring Area            ***********************/
 
 const calcScore = (diffInfo) => {
-  const {exposedCheckers, closedSpikes} = diffInfo;
-  // calcExposedCheckersScore(diffInfo, exposedCheckers);
+  const {closedSpikes} = diffInfo;
   CalcEatenOpponentsCheckersScore(diffInfo);
   CalcClosedSpikesScore(diffInfo, closedSpikes);
   CalcWinningsCheckersScore(diffInfo);
@@ -144,11 +143,6 @@ const calcScore = (diffInfo) => {
   CalcOutSideHomeCheckersScore(diffInfo);
 };
 
-// const calcExposedCheckersScore = (diffInfo, exposedCheckers) => {
-//   let score = 0;
-//   Object.keys(exposedCheckers).forEach((spikeIndex) => score += scoreTable.exposedChecker(spikeIndex));
-//   diffInfo.score += score;
-// };
 
 const CalcEatenOpponentsCheckersScore = (diffInfo) => {
   diffInfo.score += diffInfo.eatenOpponentsCheckers * scoreTable.eatenOpponentChecker;
