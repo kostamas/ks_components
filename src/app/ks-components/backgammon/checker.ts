@@ -2,8 +2,10 @@ import {Canvas} from './canvas';
 import {BackgammonStateManager} from './backgammonStateManager';
 import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
 import {isOverlap} from './helpers/backgammonUtils';
-import {calcPointsCircle, getCheckerSvg} from './helpers/uiHelper';
+import {getCheckerSvg} from './helpers/uiHelper';
 import {Players} from './players';
+
+const {playersMap} = Players;
 
 export class Checker {
   private static checkersCount = 0;
@@ -48,7 +50,7 @@ export class Checker {
   private subscribeToMouseEvents = () => {
     BackgammonStateManager.onMouseClick(this.mouseClickHandler, this.id);
     BackgammonStateManager.onMouseMove(this.mouseMoveHandler, this.id);
-  };
+  }
 
   private mouseMoveHandler = ({x, y}) => {
     if (this.type !== Players.currentState || !Players.isCurrentOnlinePlayer()) {
@@ -65,8 +67,8 @@ export class Checker {
     if (isOverlap(x, y, this.x, this.y, BACKGAMMON_CONSTANTS.CHECKERS_SIZE, BACKGAMMON_CONSTANTS.CHECKERS_SIZE)) {
       if (!this.isHovered) {
         Canvas.context.beginPath();
-        Canvas.context.arc(this.x + this.radius, this.y + this.radius, this.radius, 0, 2 * Math.PI, false);
-        Canvas.context.fillStyle = 'rgba(255, 0, 0, 0.6)';
+        Canvas.context.arc(this.x + this.radius, this.y + this.radius, this.radius - 5, 0, 2 * Math.PI, false);
+        Canvas.context.fillStyle = this.type === playersMap.Black ? 'rgba(0, 255, 0, 0.4)' : 'rgba(0, 0, 255, 0.4)';
         Canvas.context.fill();
         this.isHovered = true;
       }
@@ -100,28 +102,10 @@ export class Checker {
         this.isClicked = true;
         Checker.isGlobalClicked = true;
         Checker.selectedCheckers[this.type] = true;
-        this.animateSelectedChecker();
         BackgammonStateManager.notifySelectChecker({x, y, checker: this});
       }
     }
-  };
-
-  private animateSelectedChecker = () => {
-    let degrees = 0;
-    const animatFn = () => {
-      this.draw();
-      Canvas.context.save();
-      Canvas.context.translate(this.x + this.radius, this.y + this.radius);
-      Canvas.context.rotate(degrees * (Math.PI / 180));
-      calcPointsCircle(0, 0, this.radius - 1, 1);
-      Canvas.context.rotate(-degrees * (Math.PI / 180));
-      Canvas.context.translate((this.x + this.radius) * -1, (this.y + this.radius) * -1);
-      Canvas.context.restore();
-      degrees += 20;
-      Checker.timeout = setTimeout(() => Checker.animFrame = window.requestAnimationFrame(animatFn), 100);
-    };
-    Checker.animFrame = window.requestAnimationFrame(animatFn);
-  };
+  }
 
   private initPosition() {
     const svgAsString = getCheckerSvg(Players.playersNamesMap[this.type]);
@@ -139,12 +123,19 @@ export class Checker {
     this.checkerSvgImg.src = url;
   }
 
-  public draw(x?, y?) {
+  public draw = (x?, y?) => {
     const _window: any = window;
     const DOMURL = _window.URL || _window.webkitURL || _window;
     Canvas.context.drawImage(this.checkerSvgImg, x || this.x, y || this.y);
     DOMURL.revokeObjectURL(this.svgData.url);
-  }
+
+    if (this.isClicked) {
+      Canvas.context.beginPath();
+      Canvas.context.arc(x || this.x + this.radius, y || this.y + this.radius, this.radius - 5, 0, 2 * Math.PI, false);
+      Canvas.context.fillStyle = this.type === playersMap.Black ? 'rgba(0, 255, 0, 0.6)' : 'rgba(0, 0, 255, 0.6)';
+      Canvas.context.fill();
+    }
+  };
 
   public getCheckerId() {
     return this.id;

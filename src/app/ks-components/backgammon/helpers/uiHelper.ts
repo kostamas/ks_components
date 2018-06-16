@@ -1,6 +1,6 @@
-import {Canvas} from "../canvas";
-import {distance} from "./backgammonUtils";
-import {Observable} from "rxjs/Observable";
+import {Canvas} from '../canvas';
+import {distance} from './backgammonUtils';
+import {Observable} from 'rxjs/Observable';
 
 const calcPointsCircle = (cx, cy, rad, dashLength) => {
   let n = rad / dashLength,
@@ -8,7 +8,7 @@ const calcPointsCircle = (cx, cy, rad, dashLength) => {
     pointArray = [],
     i = -1;
   while (i < n) {
-    let theta = alpha * i,
+    const theta = alpha * i,
       theta2 = alpha * (i + 1);
 
     pointArray.push({
@@ -35,7 +35,7 @@ const calcPointsCircle = (cx, cy, rad, dashLength) => {
 
 const drawArrow = (p1, p2) => {
   Canvas.context.save();
-  let dist = distance(p1[0], p2[0], p1[1], p2[1]);
+  const dist = distance(p1[0], p2[0], p1[1], p2[1]);
 
   Canvas.context.beginPath();
   Canvas.context.lineWidth = 6;
@@ -50,7 +50,7 @@ const drawArrow = (p1, p2) => {
     angle = 2 * Math.PI - angle;
   }
 
-  let size = 13;
+  const size = 13;
 
   Canvas.context.beginPath();
   Canvas.context.translate(p2[0], p2[1]);
@@ -69,29 +69,41 @@ const drawArrow = (p1, p2) => {
 };
 
 const getCheckerSvg = (playerType) => {
-  return `<svg class="${playerType}" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="34px" height="34px" viewBox="0 0 124 124">
-      <style>
-       .Black .inner-circle{
-            fill: #000;
-		    }
-
-		   .White .inner-circle {
-    			    fill: #fff;
-	      }
-	      
-	     .Black .outer-circle {
-	        fill: #00c228;
-	      }
-	      .White .outer-circle {
-	        fill: #2c10ff;
-	      }
-      </style>
-      <g>
-  	    <circle class="outer-circle" cx="62" cy="62" r="62"/>
-        <circle class="inner-circle" cx="62" cy="62" r="54"/>
-      </g>
-    </svg>`;
+  return playerType === 'Black' ? blackChecker : whiteChecker;
 };
+
+const blackChecker = `<svg width="34px" height="34px" version="1.1" viewBox="-106 -106 212 212" xmlns="http://www.w3.org/2000/svg" 
+xmlns:xlink="http://www.w3.org/1999/xlink">
+ <title>Green round button</title>
+ <defs>
+  <linearGradient id="lg" x1="1" y1="1">
+   <stop offset="0" stop-color="#1eaa02"></stop>
+   <stop offset="1" stop-color="#000000"></stop>
+  </linearGradient>
+  <linearGradient id="lgb" x1="1" y1="1">
+   <stop offset="0" stop-color="#003e00"></stop>
+   <stop offset="1" stop-color="#000000"></stop>
+  </linearGradient>
+ </defs>
+  <circle r="100" fill="url(#lg)" transform="rotate(135)" stroke="url(#lgb)" stroke-width="6"></circle>
+  <circle r="80" fill="url(#lg)" transform="rotate(315)" stroke="none"></circle>
+</svg>`;
+
+const whiteChecker = `<svg width="34px" height="34px" version="1.1" viewBox="-106 -106 212 212" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <title>Green round button</title>
+ <defs>
+  <linearGradient id="lg" x1="1" y1="1">
+   <stop offset="0" stop-color="white"></stop>
+   <stop offset="1" stop-color="#3333ff"></stop>
+  </linearGradient>
+  <linearGradient id="lgb" x1="1" y1="1">
+   <stop offset="0" stop-color="white"></stop>
+   <stop offset="1" stop-color="#3333ff"></stop>
+  </linearGradient>
+ </defs>
+  <circle r="100" fill="url(#lg)" transform="rotate(135)" stroke="url(#lgb)" stroke-width="6"></circle>
+  <circle r="80" fill="url(#lg)" transform="rotate(315)" stroke="none"></circle>
+</svg>`;
 
 const getDiceSvg = (diceNum) => {
   return `<svg class="dice-wrapper-${diceNum}" xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 512 512">
@@ -109,39 +121,39 @@ const getDiceSvg = (diceNum) => {
       d="M74.5 36A38.5 38.5 0 0 0 36 74.5v363A38.5 38.5 0 0 0 74.5 476h363a38.5 38.5 0 0 0 38.5-38.5v-363A38.5 38.5 0 0 0 437.5 36h-363zM256 206a50 50 0 0 1 0 100 50 50 0 0 1 0-100z"
       fill="#fff" fill-opacity="1"></path>
   </g>
-  
+
   <g class="dice dice-2" transform="translate(0,0)" style="touch-action: none;">
    <path
       d="M74.5 36A38.5 38.5 0 0 0 36 74.5v363A38.5 38.5 0 0 0 74.5 476h363a38.5 38.5 0 0 0 38.5-38.5v-363A38.5 38.5 0 0 0 437.5 36h-363zm316.97 36.03A50 50 0 0 1 440 122a50 50 0 0 1-100 0 50 50 0 0 1 51.47-49.97zm-268 268A50 50 0 0 1 172 390a50 50 0 0 1-100 0 50 50 0 0 1 51.47-49.97z"
       fill="#fff" fill-opacity="1"></path>
   </g>
-  
+
   <g class="dice dice-3" transform="translate(0,0)" style="touch-action: none;">
     <path
       d="M74.5 36A38.5 38.5 0 0 0 36 74.5v363A38.5 38.5 0 0 0 74.5 476h363a38.5 38.5 0 0 0 38.5-38.5v-363A38.5 38.5 0 0 0 437.5 36h-363zm316.97 36.03A50 50 0 0 1 440 122a50 50 0 0 1-100 0 50 50 0 0 1 51.47-49.97zM256 206a50 50 0 0 1 0 100 50 50 0 0 1 0-100zM123.47 340.03A50 50 0 0 1 172 390a50 50 0 0 1-100 0 50 50 0 0 1 51.47-49.97z"
       fill="#fff" fill-opacity="1"></path>
   </g>
-  
+
   <g class="dice dice-4" transform="translate(0,0)" style="touch-action: none;">
     <path
       d="M74.5 36A38.5 38.5 0 0 0 36 74.5v363A38.5 38.5 0 0 0 74.5 476h363a38.5 38.5 0 0 0 38.5-38.5v-363A38.5 38.5 0 0 0 437.5 36h-363zm48.97 36.03A50 50 0 0 1 172 122a50 50 0 0 1-100 0 50 50 0 0 1 51.47-49.97zm268 0A50 50 0 0 1 440 122a50 50 0 0 1-100 0 50 50 0 0 1 51.47-49.97zm-268 268A50 50 0 0 1 172 390a50 50 0 0 1-100 0 50 50 0 0 1 51.47-49.97zm268 0A50 50 0 0 1 440 390a50 50 0 0 1-100 0 50 50 0 0 1 51.47-49.97z"
       fill="#fff" fill-opacity="1"></path>
   </g>
-  
+
   <g class="dice dice-5" transform="translate(0,0)" style="touch-action: none;">
      <path
       d="M74.5 36A38.5 38.5 0 0 0 36 74.5v363A38.5 38.5 0 0 0 74.5 476h363a38.5 38.5 0 0 0 38.5-38.5v-363A38.5 38.5 0 0 0 437.5 36h-363zm48.97 36.03A50 50 0 0 1 172 122a50 50 0 0 1-100 0 50 50 0 0 1 51.47-49.97zm268 0A50 50 0 0 1 440 122a50 50 0 0 1-100 0 50 50 0 0 1 51.47-49.97zM256 206a50 50 0 0 1 0 100 50 50 0 0 1 0-100zM123.47 340.03A50 50 0 0 1 172 390a50 50 0 0 1-100 0 50 50 0 0 1 51.47-49.97zm268 0A50 50 0 0 1 440 390a50 50 0 0 1-100 0 50 50 0 0 1 51.47-49.97z"
       fill="#fff" fill-opacity="1"></path>
   </g>
-  
+
   <g class="dice dice-6" transform="translate(0,0)" style="touch-action: none;">
     <path
       d="M74.5 36A38.5 38.5 0 0 0 36 74.5v363A38.5 38.5 0 0 0 74.5 476h363a38.5 38.5 0 0 0 38.5-38.5v-363A38.5 38.5 0 0 0 437.5 36h-363zm48.97 36.03A50 50 0 0 1 172 122a50 50 0 0 1-100 0 50 50 0 0 1 51.47-49.97zm268 0A50 50 0 0 1 440 122a50 50 0 0 1-100 0 50 50 0 0 1 51.47-49.97zM122 206a50 50 0 0 1 0 100 50 50 0 0 1 0-100zm268 0a50 50 0 0 1 0 100 50 50 0 0 1 0-100zM123.47 340.03A50 50 0 0 1 172 390a50 50 0 0 1-100 0 50 50 0 0 1 51.47-49.97zm268 0A50 50 0 0 1 440 390a50 50 0 0 1-100 0 50 50 0 0 1 51.47-49.97z"
       fill="#fff" fill-opacity="1"></path>
   </g>
 </svg>
-`
-}
+`;
+};
 
 
 const drawBackground = (backgroundImgUrl) => {
@@ -154,5 +166,5 @@ const drawBackground = (backgroundImgUrl) => {
       observer.complete();
     };
   });
-}
+};
 export {calcPointsCircle, drawArrow, getCheckerSvg, getDiceSvg, drawBackground};
