@@ -116,13 +116,13 @@ export class Players {
     Canvas.context.beginPath();
     Canvas.context.moveTo(90, 22);
     Canvas.context.lineWidth = 7;
-    Canvas.context.strokeStyle = Players.currentState < 2 ? '#000' : '#fff';
+    Canvas.context.strokeStyle = Players.currentState < 2 ? '#003e00' : '#99abff';
     Canvas.context.lineTo(110, 22);
     Canvas.context.stroke();
 
     if (Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.Black]] ||
       Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.White]]) {
-      Canvas.context.fillStyle = Players.currentState < 2 ? '#000' : '#fff';
+      Canvas.context.fillStyle = Players.currentState < 2 ? '#003e00' : '#99abff';
 
       if (Players.currentState < 2) {
         Canvas.context.fillText(Players.onlinePlayersName[Players.playersNamesMap[Players.playersMap.Black]], 120, 29);

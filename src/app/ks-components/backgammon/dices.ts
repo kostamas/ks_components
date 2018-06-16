@@ -49,7 +49,7 @@ export class Dices {
     Canvas.context.fillStyle = '#B7272A';
     Canvas.context.fill();
     Canvas.context.lineWidth = 5;
-    Canvas.context.strokeStyle = '#003300';
+    Canvas.context.strokeStyle = '#fff';
     Canvas.context.stroke();
     Canvas.context.font = '25px serif';
     Canvas.context.fillStyle = '#fff';
