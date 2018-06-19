@@ -1,8 +1,9 @@
-import {getDiceSvg} from './helpers/uiHelper';
+import {getCheckerSvg, getDiceSvg, getRollDiceSvg} from './helpers/uiHelper';
 import {Canvas} from './canvas';
 import {BackgammonStateManager} from './backgammonStateManager';
 import {isOverlap, rollDices} from './helpers/backgammonUtils';
 import {Players} from './players';
+import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
 
 export class Dices {
   public dices = [];
@@ -10,6 +11,8 @@ export class Dices {
   private svgImg = {};
   private showRollButton;
   private rollButtonPosition = {x: 598, y: 288};
+  private rollDiceImg = new Image();
+  private isHovering = false;
 
   constructor() {
     for (let i = 1; i < 7; i++) {
@@ -20,47 +23,64 @@ export class Dices {
   }
 
   private init() {
+    let svgAsString;
+    let svgBlob;
+    let url;
+    let DOMURL;
+    const _window: any = window;
     this.drawRollButton();
     BackgammonStateManager.onMouseClick(this.clickHandler, 'Dices');
+    BackgammonStateManager.onMouseMove(this.mouseMoveHandler, 'Dices');
+    let diceNum;
 
-    for (let diceNum = 1; diceNum < 7; diceNum++) {
+    for (diceNum = 1; diceNum < 7; diceNum++) {
 
-      let svgAsString = getDiceSvg(diceNum);
-      const _window: any = window;
-      const DOMURL = _window.URL || _window.webkitURL || _window;
+      svgAsString = getDiceSvg(diceNum);
+      DOMURL = _window.URL || _window.webkitURL || _window;
 
-      const svgBlob = new Blob([svgAsString], {type: 'image/svg+xml'});
-      const url = DOMURL.createObjectURL(svgBlob);
+      svgBlob = new Blob([svgAsString], {type: 'image/svg+xml'});
+      url = DOMURL.createObjectURL(svgBlob);
 
       this.svgData = {svgBlob: url};
 
       this.svgImg[diceNum].onload = () => {
-        const _window: any = window;
-        const DOMURL = _window.URL || _window.webkitURL || _window;
         DOMURL.revokeObjectURL(this.svgData.url);
       };
       this.svgImg[diceNum].src = url;
+
     }
+
+    svgAsString = getRollDiceSvg();
+    DOMURL = _window.URL || _window.webkitURL || _window;
+    svgBlob = new Blob([svgAsString], {type: 'image/svg+xml'});
+    url = DOMURL.createObjectURL(svgBlob);
+
+    this.svgData = {svgBlob: url};
+
+    this.rollDiceImg.onload = () => {
+      DOMURL.revokeObjectURL(this.svgData.url);
+    };
+
+    this.rollDiceImg.src = url;
   }
 
   public drawRollButton() {
     Canvas.context.beginPath();
-    Canvas.context.arc(598, 288, 30, 0, 2 * Math.PI, false);
-    Canvas.context.fillStyle = '#B7272A';
+    Canvas.context.arc(598, 287, 35, 0, 2 * Math.PI, false);
+    Canvas.context.fillStyle = Players.currentState < 2 ? '#005300' : '#6A6BFF';
     Canvas.context.fill();
     Canvas.context.lineWidth = 5;
-    Canvas.context.strokeStyle = '#fff';
+    Canvas.context.strokeStyle = '#272727';
     Canvas.context.stroke();
-    Canvas.context.font = '25px serif';
-    Canvas.context.fillStyle = '#fff';
-    Canvas.context.fillText('Roll', 576, 296);
+    Canvas.context.font = '22px serif';
+    Canvas.context.drawImage(this.rollDiceImg, 575, 265);
   }
 
   public rollDicesHandler = () => {
     this.dices = rollDices();
     this.showRollButton = false;
     BackgammonStateManager.notifyRedraw();
-  }
+  };
 
   private clickHandler = ({x, y}) => {
     if (this.showRollButton
@@ -86,6 +106,21 @@ export class Dices {
       Canvas.context.fillText(`+${this.dices.length - 2}`, 410, 560);
     }
   }
+
+  private mouseMoveHandler = ({x, y}) => {
+    if (this.showRollButton && isOverlap(x, y, this.rollButtonPosition.x - 30, this.rollButtonPosition.y - 30, 60, 60)) {
+      if (!this.isHovering) {
+        this.isHovering = true;
+        Canvas.context.beginPath();
+        Canvas.context.arc(598, 287, 32, 0, 2 * Math.PI, false);
+        Canvas.context.fillStyle = Players.currentState < 2 ? 'rgba(0, 255, 0, 0.1)' : 'rgba(227, 237, 240, 0.1)';
+        Canvas.context.fill();
+      }
+    } else {
+      this.isHovering = false;
+      this.draw();
+    }
+  };
 
   private drawOneDice(svgImgKey, x) {
     Canvas.context.drawImage(this.svgImg[svgImgKey], x, 535);

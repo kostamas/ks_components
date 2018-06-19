@@ -5,13 +5,13 @@ import {drawArrow} from './helpers/uiHelper';
 export class OutsideBoard {
   public checkers;
   public showArrow;
-  private position;
-  private dimensions;
+  readonly position;
+  readonly dimensions;
 
   constructor() {
     this.checkers = {
-        [Players.playersNamesMap[Players.playersMap.White]]: [],
-        [Players.playersNamesMap[Players.playersMap.Black]]: []
+      [Players.playersNamesMap[Players.playersMap.White]]: [],
+      [Players.playersNamesMap[Players.playersMap.Black]]: []
     };
 
     this.showArrow = {
@@ -49,8 +49,9 @@ export class OutsideBoard {
 
   public draw() {
     let x, y;
+    Canvas.context.beginPath();
     Canvas.context.lineWidth = 1;
-    Canvas.context.strokeStyle = '#003b0d';
+    Canvas.context.strokeStyle = Players.currentState < 2 ? '#005300' : '#9aa8ff';
 
     if (this.showArrow[Players.playersNamesMap[Players.playersMap.Black]]) {
       x = this.position[Players.playersNamesMap[Players.playersMap.Black]].x;
@@ -64,7 +65,6 @@ export class OutsideBoard {
       y = this.position[Players.playersNamesMap[Players.playersMap.White]].y;
       drawArrow([660, 290], [660, 260]);
       Canvas.context.rect(x, y, this.dimensions.width, this.dimensions.height);
-      Canvas.context.stroke();
       Canvas.context.stroke();
     }
   }
