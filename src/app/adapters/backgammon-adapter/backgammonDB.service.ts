@@ -6,9 +6,17 @@ import {BackgammonMockData} from './backgammon-mock';
 import {AngularFireDatabase} from 'angularfire2/database';
 import {initialState} from '../../ks-components/backgammon/helpers/initialGameState';
 import {IBackgammonDBService} from '../../ks-components/backgammon/backgammonDb.types';
+import {AngularFireAuth} from 'angularfire2/auth';
+import {Injectable} from '@angular/core';
 
+@Injectable()
 export class BackgammonDBSAdapter implements IBackgammonDBService {
-  constructor(private fireDatabase: AngularFireDatabase) {
+  readonly angularFireAuth;
+  private fireDatabase;
+
+  constructor(fireDatabase: AngularFireDatabase, angularFireAuth: AngularFireAuth) {
+    this.fireDatabase = fireDatabase;
+    this.angularFireAuth = angularFireAuth;
   }
 
   public getGameById(gameId: string) {
@@ -25,21 +33,19 @@ export class BackgammonDBSAdapter implements IBackgammonDBService {
       .map((user: any) => user && String(user.password) === String(password) ? user : null);
   }
 
-  public createNewUser(userName, password) {
-    return this.fireDatabase.object(`users/${userName}`)
-      .valueChanges()
-      .take(1)
-      .switchMap((user: any) => {
-        let observable;
-        if (user) {
-          observable = Observable.of({error: 'user name already exists'});
-        } else {
-          observable = Observable.fromPromise(this.fireDatabase.object(`users/${userName}`)
-            .set({name: userName, password}));
-        }
-        return observable;
-      });
-  }
+  public createNewUser = (email, password) => {
+    const prom = this.angularFireAuth.auth.createUserWithEmailAndPassword(email, password);
+    return Observable.fromPromise(prom);
+  };
+
+  public singIn = (email, password) => {
+    const prom = this.angularFireAuth.auth.signInWithEmailAndPassword(email, password);
+    return Observable.fromPromise(prom);
+  };
+
+  public isAuthenticated = () => {
+    return this.angularFireAuth.auth.isAuthenticated();
+  };
 
   public getAllUsers(localUser) {
     const usersArr = [];
@@ -89,7 +95,7 @@ export class BackgammonDBSAdapter implements IBackgammonDBService {
     return this.fireDatabase.object(`games/${gameId}`).set(_initialState);
   }
 
-  public getGameStateObserveable(gameId) {
+  public getGameStateObservable(gameId) {
     return this.fireDatabase.object(`games/${gameId}/state`).valueChanges();
   }
 
@@ -112,5 +118,19 @@ export class BackgammonDBSAdapter implements IBackgammonDBService {
       .set(localPlayer.name);
     this.fireDatabase.object(`users/${localPlayer.name}/invitations/sent/${selectedPlayer.name}`)
       .set(selectedPlayer.name);
+  }
+
+  public saveUserData(registrationData, nickName) {
+    const user = registrationData && registrationData.user;
+    if (!user) {
+      throw Observable.throw('Failed to register :(');
+    } else {
+      const newUsrToSave = {
+        uid: user.uid,
+        nickName,
+        email: user.email
+      };
+      return this.fireDatabase.object(`users/${user.uid}`).set(newUsrToSave);
+    }
   }
 }

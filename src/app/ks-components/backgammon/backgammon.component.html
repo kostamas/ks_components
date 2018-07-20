@@ -1,7 +1,9 @@
 <div class="backgammon-container">
 
   <div class="buttons-wrapper">
-    <div class="vs-computer" *ngIf="displayButtonHandler(buttonsNames.computer)" (click)="playAgainstComputer()">Vs Computer</div>
+    <div class="vs-computer" *ngIf="displayButtonHandler(buttonsNames.computer)" (click)="playAgainstComputer()">Vs
+      Computer
+    </div>
 
     <div class="play-online" *ngIf="displayButtonHandler(buttonsNames.playOnline)" (click)="playOnline()">Online</div>
 
@@ -17,23 +19,36 @@
       <div [ngClass]="currentViewState">
         <div class="title">{{currentViewState===onlineViewStates.register ? 'Register': 'Sign In'}}</div>
         <div class="input-wrapper">
-          <div class="label">Name:</div>
-          <input (focus)="onFocus('name')" (blur)="formErrorHandler()" type="text" formControlName="name">
+          <div class="label">Email:</div>
+          <input (keyup)="formErrorHandler()" (focus)="onFocus('Email')" (blur)="formErrorHandler()" type="text"
+                 formControlName="email">
         </div>
-        <div class="form-error">{{formErrorMessages['name']}}</div>
+        <div class="form-error">{{formErrorMessages['email']}}</div>
+
+        <div class="input-wrapper" *ngIf="currentViewState===onlineViewStates.register">
+          <div class="label">nickname:</div>
+          <input (keyup)="formErrorHandler()" (focus)="onFocus('Email')" (blur)="formErrorHandler()" type="text"
+                 formControlName="nickname">
+        </div>
+        <div class="form-error">{{formErrorMessages['nickname']}}</div>
 
         <div class="input-wrapper">
           <div class="label">Password:</div>
           <input (focus)="onFocus('password')" (blur)="formErrorHandler()" type="password" formControlName="password">
         </div>
         <div class="form-error">{{formErrorMessages['password']}}</div>
+
         <div class="sign-in-register-toggle"
              (click)="toggleSignInRegister()">
           {{currentViewState === onlineViewStates.signIn ? 'Register': 'Sign In'}}
         </div>
+
       </div>
+
       <div class="sign-in-error">{{signInError}}</div>
-      <button class="submit" type="submit" [disabled]="isDisabled()">{{submitButtonsText[currentViewState]}}
+
+      <button class="submit" [ngClass]="{'disabled': isDisabled()}"
+              type="submit" [disabled]="isDisabled()"> {{submitButtonsText[currentViewState]}}
       </button>
     </form>
 

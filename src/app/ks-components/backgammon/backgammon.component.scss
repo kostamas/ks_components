@@ -100,6 +100,10 @@
       display: block;
     }
 
+    &.register-view {
+      height: 380px;
+    }
+
     .submit {
       @include button-style($feijoa, 20px, 140px, 30px, 1px solid $gallery);
       margin: 30px auto 0 auto;
@@ -109,8 +113,12 @@
       left: 50%;
       transform: translateX(-50%);
 
-      &:hover {
+      &:hover:not(.disabled) {
         opacity: 0.7;
+      }
+
+      &.disabled {
+        cursor: default;
       }
     }
 

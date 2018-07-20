@@ -4,11 +4,13 @@ import {BackgammonStateManager} from './backgammonStateManager';
 import {GameController} from './backgammonGameController';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {BackgammonDBToken} from './backgammonDb.types';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DirtyRequired} from '../../shared/vaildators/dirty-required-validator.validator';
 import {Subject} from 'rxjs/Subject';
 import {Location} from '@angular/common';
 import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
+import {MatDialog} from '@angular/material';
+import {ErrorModalComponent} from '../../shared/components/error-modal/error-modal.component';
 
 @Component({
   selector: 'app-backgammon',
@@ -57,20 +59,32 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   };
 
   private formErrorMessagesBuilder = {
-    name: {dirtyRequired: 'This is a required field'},
-    password: {dirtyRequired: 'This is a required field'}
+    email: {
+      dirtyRequired: 'This is a required field',
+      email: 'not valid email',
+      maxlength: 'password is too long'
+    },
+    password: {
+      dirtyRequired: 'This is a required field',
+      minlength: '6 character minimum',
+      maxlength: 'password is too long'
+    },
+    nickname: {
+      maxlength: 'nickname is too long'
+    }
   };
 
-  public formErrorMessages = {name: '', password: ''};
+  public formErrorMessages = {email: '', password: '', minlength: '', maxlength: ''};
 
   @ViewChild('canvas') canvas;
 
-  constructor(@Inject(BackgammonDBToken) private backgammonDBService, private zone: NgZone, private gameController: GameController, private changeDetector: ChangeDetectorRef,
-              fBuilder: FormBuilder,
+  constructor(@Inject(BackgammonDBToken) private backgammonDBService, private zone: NgZone, private gameController: GameController,
+              private changeDetector: ChangeDetectorRef, fBuilder: FormBuilder, public dialog: MatDialog,
               private activatedRoute: ActivatedRoute, private router: Router, private location: Location) {
     this.formGroup = fBuilder.group({
-      name: [null, DirtyRequired],
-      password: [null, DirtyRequired]
+      email: [null, Validators.compose([DirtyRequired, Validators.email])],
+      password: [null, Validators.compose([DirtyRequired, Validators.minLength(6), Validators.maxLength(15)])],
+      nickname: [null, Validators.maxLength(15)]
     });
   }
 
@@ -90,9 +104,9 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
       }
 
       if (params['menu']) {
-        this.location.go('backgammon');
-        const {name, password} = this.localUser;
-        this.signIn(name, password);
+        // this.location.go('backgammon');
+        // const {email, password} = this.localUser;
+        // this.signIn(email, password);
         this.changeDetector.detectChanges();
         return;
       }
@@ -156,6 +170,8 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
       if (control.errors) {
         validatorName = Object.keys(control.errors)[0];
         this.formErrorMessages[controlName] = this.formErrorMessagesBuilder[controlName][validatorName];
+      } else {
+        this.formErrorMessages[controlName] = '';
       }
     });
   }
@@ -165,7 +181,7 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   }
 
   public isDisabled() {
-    return !this.formGroup.valid || !this.formGroup.value.name || !this.formGroup.value.password;
+    return !this.formGroup.valid || !this.formGroup.value.email || !this.formGroup.value.password;
   }
 
   public submit() {
@@ -185,33 +201,48 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  private signIn(_name?, _password?) {
-    const name = !!_name ? _name : this.formGroup.value.name;
-    const password = !!_password ? _password : this.formGroup.value.password;
-    this.backgammonDBService.getUser(name, password).subscribe(user => {
-      if (user) {
-        localStorage.removeItem('backgammonUser');
-        localStorage.setItem('backgammonUser', JSON.stringify({name: user.name, password: user.password}));
-        this.localUser = user;
-        this.onlineMenuHandler();
-      } else {
-        this.signInError = 'error - user does not exists';
-        setTimeout(() => this.signInError = '', 2000);
-      }
-    });
-  }
+  private signIn = (userData?) => {
+    const email = !!userData ? userData.user.email : this.formGroup.value.email;
+    const password = this.formGroup.value.password;
+    this.backgammonDBService.singIn(email, password)
+      .catch((error: any) => {
+        this.dialog.open(ErrorModalComponent, {
+          width: '100px',
+          data: {errorMessage: 'Wrong password or email'},
+          panelClass: 'error-modal'
+        });
+        return error;
+      })
+      .subscribe(user => {
+        const x = this.backgammonDBService.isAuthenticated();
 
-  private register() {
-    const {name, password} = this.formGroup.value;
-    this.logout$.next();
-    this.backgammonDBService.createNewUser(name, password)
-      .subscribe((err: any) => {
-        if (err) {
-          alert(err.error || 'something went wrong');
-        } else {
-          this.signIn();
+        if (user) {
+          //       localStorage.removeItem('backgammonUser');
+          //       localStorage.setItem('backgammonUser', JSON.stringify({email: user.name, password: user.password}));
+          //       this.localUser = user;
+          //       this.onlineMenuHandler();
+          //     } else {
+          //       this.signInError = 'error - user does not exists';
+          //       setTimeout(() => this.signInError = '', 2000);
+          //     }
         }
       });
+  };
+
+  private register() {
+    const {email, password, nickname} = this.formGroup.value;
+    this.logout$.next();
+    this.backgammonDBService.createNewUser(email, password)
+      .do(registrationData => this.backgammonDBService.saveUserData(registrationData, nickname))
+      .catch((err) => {
+        this.dialog.open(ErrorModalComponent, {
+          width: '250px',
+          data: {errorMessage: err.error || 'Something went wrong :('}
+        });
+        return;
+      })
+      .subscribe(this.signIn);
+
   }
 
   private onlineMenuHandler = () => {
@@ -285,15 +316,15 @@ export class BackgammonComponent implements AfterViewInit, OnDestroy {
   }
 
   public playOnline() {
-    const localUser: any = JSON.parse(localStorage.getItem('backgammonUser'));
-    if (localUser) {
-      this.localUser = localUser;
-      this.showCanvas = false;
-      this.signIn(localUser.name, localUser.password);
-    } else {
-      this.showCanvas = false;
-      this.currentViewState = this.onlineViewStates.signIn;
-    }
+    // const localUser: any = JSON.parse(localStorage.getItem('backgammonUser'));
+    // if (localUser) {
+    //   this.localUser = localUser;
+    this.showCanvas = false;
+    //   this.signIn(localUser.name, localUser.password);
+    // } else {
+    //   this.showCanvas = false;
+    this.currentViewState = this.onlineViewStates.signIn;
+    // }
   }
 
   public playAgainstComputer() {

@@ -1,41 +1,50 @@
-@import '@angular/material/prebuilt-themes/pink-bluegrey.css';
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '../src/app/scss/colors';
 
 html {
   height: 100%;
 }
 
-body{
-  background: #C9D6FF;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #E2E2E2, #C9D6FF);  /* Chrome 10-25, Safari 5.1-6 */
+body {
+  background: #C9D6FF; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #E2E2E2, #C9D6FF); /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to right, #E2E2E2, #C9D6FF); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   margin: 0;
 }
-.arrow-right, .arrow-left{
+
+.arrow-right, .arrow-left {
   width: 0;
   height: 0;
   border-top: 20px solid transparent;
   border-bottom: 20px solid transparent;
 }
 
-.arrow-right:hover, .arrow-left:hover{
+.arrow-right:hover, .arrow-left:hover {
   opacity: 0.9;
 }
 
-.arrow-right:active{
+.arrow-right:active {
   border-left-color: #767676;
 }
 
-.arrow-left:active{
+.arrow-left:active {
   border-right-color: #767676;
 
 }
 
-.arrow-right{
+.arrow-right {
   border-left: 30px solid #B7B7B7;
 
 }
 
 .arrow-left {
   border-right: 30px solid #B7B7B7;
+}
 
+.cdk-overlay-container .cdk-overlay-pane { //material fix - 250px hardcoded
+  width: auto !important;
+}
+
+.error-modal .mat-dialog-container {
+  padding: 0;
 }

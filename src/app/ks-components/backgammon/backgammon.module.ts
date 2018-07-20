@@ -4,10 +4,11 @@ import {BackgammonComponent} from './backgammon.component';
 import {GameController} from './backgammonGameController';
 import {BackgammonDBToken, IBackgammonSrvCtor} from './backgammonDb.types';
 import {ReactiveFormsModule} from '@angular/forms';
-import { FormsModule } from '@angular/forms';
+import {FormsModule} from '@angular/forms';
 
 import {AngularFireDatabase} from 'angularfire2/database';
 import {SharedModule} from '../../core/sharedModule.module';
+import {AngularFireAuth} from 'angularfire2/auth';
 
 @NgModule({
   imports: [
@@ -32,7 +33,7 @@ export class BackgammonModule {
       providers: [{
         provide: BackgammonDBToken,
         useClass: backgammonSrv,
-        deps: [AngularFireDatabase]
+        deps: [AngularFireDatabase, AngularFireAuth]
       }]
     };
   }

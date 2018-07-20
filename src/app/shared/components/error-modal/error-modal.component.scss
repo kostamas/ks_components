@@ -1,0 +1,36 @@
+@import "../../../scss/main";
+
+.error-modal-container {
+  min-height: 300px;
+  min-width: 280px;
+  text-align: center;
+
+  .error-title {
+    @include text-style(20px, $red, Lato, Light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $athensGray;
+    height: 35px;
+  }
+
+  .separator {
+    width: 100%;
+    height: 1px;
+    background-color: $rollingStone;
+    margin: 0 auto;
+  }
+
+  .error-content {
+    min-height: 150px;
+    display: flex; // todo - use mixin !!!
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+
+    .error-message {
+      @include text-style(20px, $manatee, Lato, Light);
+      margin-top: 20px;
+    }
+  }
+}
