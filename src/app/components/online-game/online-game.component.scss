@@ -1,0 +1,102 @@
+@import '../../scss/main';
+
+.online-game-menu-container {
+  @include dimension(400px, 320px);
+  background-color: $white;
+  box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
+  margin: 40px auto;
+  position: relative;
+
+  .onlineMenu {
+    .select-player {
+      @include dimension(230px, 30px);
+      @include text-style(19px, $lochinvar, Lato);
+      display: block;
+      margin: 35px auto 0 auto;
+      padding-bottom: 2px;
+    }
+
+    .online-game-operations {
+      display: flex;
+      justify-content: center;
+      margin-top: 130px;
+
+      .invite, .continue {
+        @include dimension(110px, 26px);
+        @include text-style(19px, $white, Lato);
+        border-radius: 12px;
+        border: 1px solid $nobel;
+        background-color: $conifer;
+        margin: 10px;
+        text-align: center;
+        cursor: pointer;
+        &:hover {
+          opacity: 0.7;
+        }
+      }
+    }
+  }
+
+  .online-game-details {
+    @include dimension(260px, auto);
+    @include text-style(22px, $electricViolet, Lato);
+    max-height: 323px;
+    overflow-y: auto;
+    position: absolute;
+    left: 460px;
+    top: -2px;
+
+    &.scrollbar-style {
+      &::-webkit-scrollbar {
+        width: 12px;
+      }
+    }
+
+    .list-title {
+      color: $kimberlyDark;
+    }
+
+    .received-invitations, .sent-invitations {
+      margin-bottom: 15px;
+
+      .invitation {
+        font-size: 19px;
+        padding-left: 10px;
+        margin-top: 3px;
+        span {
+          color: $malachite;
+          font-size: 21px;
+          cursor: pointer;
+          margin-left: 10px;
+          animation: animateText 0.7s infinite;
+        }
+      }
+    }
+
+    .opened-games {
+      .opened-game-wrapper {
+        display: flex;
+        align-items: center;
+        .second-player-name {
+          width: 100px;
+          padding-left: 10px;
+          font-size: 19px;
+        }
+
+        .continue {
+          @include dimension(80px, 20px);
+          @include text-style(16px, $white, Lato);
+          border-radius: 10px;
+          border: 1px solid $nobel;
+          background-color: $conifer;
+          margin: 10px;
+          text-align: center;
+          cursor: pointer;
+          &:hover {
+            opacity: 0.7;
+          }
+        }
+      }
+    }
+  }
+}

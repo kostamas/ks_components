@@ -1,8 +1,10 @@
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
-import {Observable} from 'rxjs/Observable';
-import {BackgammonMockData} from '../backgammon-mock';
 
+import {Observable} from 'rxjs/Observable';
+import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
+import { fromPromise } from 'rxjs/observable/fromPromise';
+import {BackgammonMockData} from '../backgammon-mock';
 import {AngularFireDatabase} from 'angularfire2/database';
 import {initialState} from '../components/backgammon/helpers/initialGameState';
 import {IBackgammonDBService} from '../components/backgammon/backgammonDb.types';
@@ -27,24 +29,28 @@ export class BackgammonDBSAdapter implements IBackgammonDBService {
     return BackgammonMockData.db.games.game1;
   }
 
-  public getUser(userName, password) {
-    return this.fireDatabase.object(`users/${userName}`)
-      .valueChanges()
-      .map((user: any) => user && String(user.password) === String(password) ? user : null);
+  public getUser() {
+    const {currentUser} = this.angularFireAuth.auth;
+    if (!currentUser) {
+      return new ErrorObservable('sad');
+    } else {
+      return this.fireDatabase.object(`users/${currentUser.uid}`)
+        .valueChanges();
+    }
   }
 
   public createNewUser = (email, password) => {
     const prom = this.angularFireAuth.auth.createUserWithEmailAndPassword(email, password);
-    return Observable.fromPromise(prom);
+    return fromPromise(prom);
   };
 
   public singIn = (email, password) => {
     const prom = this.angularFireAuth.auth.signInWithEmailAndPassword(email, password);
-    return Observable.fromPromise(prom);
+    return fromPromise(prom);
   };
 
   public isAuthenticated = () => {
-    return this.angularFireAuth.auth.isAuthenticated();
+    return !!this.angularFireAuth.auth.currentUser;
   };
 
   public getAllUsers(localUser) {
@@ -123,7 +129,7 @@ export class BackgammonDBSAdapter implements IBackgammonDBService {
   public saveUserData(registrationData, nickName) {
     const user = registrationData && registrationData.user;
     if (!user) {
-      throw Observable.throw('Failed to register :(');
+       throw Observable.throw('Failed to register :(');
     } else {
       const newUsrToSave = {
         uid: user.uid,

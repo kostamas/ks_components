@@ -1,0 +1,85 @@
+@import '../../scss/main';
+
+.online-game-menu-container {
+  @include dimension(400px, 320px);
+  background-color: $white;
+  box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
+  margin: 40px auto;
+  position: relative;
+
+  .signIn, .register{
+    @include text-style(20px, $malachite);
+    padding: 20px 10px;
+    display: none;
+
+    .title {
+      @include text-style(22px, $malachite);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .input-wrapper {
+      @include dimension(380px, 30px);
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+      padding-left: 15px;
+
+      .label {
+        @include dimension(100px, auto);
+        display: inline-block;
+      }
+
+      input {
+        @include text-style(18px, $blueLagoon, Lato);
+      }
+    }
+  }
+
+  .form-error, .sign-in-error {
+    height: 20px;
+    @include text-style(15px, $roofTerracotta, Lato);
+    text-align: center;
+  }
+
+  .sign-in-error {
+    position: relative;
+    bottom: 15px;
+  }
+
+  .sign-in-register-toggle {
+    @include text-style(14px, $lochinvar, Lato);
+    margin-top: 20px;
+    text-align: center;
+    cursor: pointer;
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+
+  &.signIn-view .signIn, &.register-view .register, &.onlineMenu-view .onlineMenu {
+    display: block;
+  }
+
+  &.register-view {
+    height: 380px;
+  }
+
+  .submit {
+    @include button-style($feijoa, 20px, 140px, 30px, 1px solid $gallery);
+    margin: 30px auto 0 auto;
+    color: $white;
+    bottom: 30px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+
+    &:hover:not(.disabled) {
+      opacity: 0.7;
+    }
+
+    &.disabled {
+      cursor: default;
+    }
+  }
+}

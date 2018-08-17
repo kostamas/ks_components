@@ -1,7 +1,7 @@
 import {BackgammonStateManager} from './backgammonStateManager';
 import {Players} from './players';
 import {checkIfOffBoardState, getHighestCheckerSpikeNumber, getSpikeDirection, isValidSpike, rollDices} from './helpers/backgammonUtils';
-import {deepCopy} from '../utils/jsUtils';
+import {deepCopy} from '../../utils/jsUtils';
 import {Observable} from 'rxjs/Observable';
 import {BACKGAMMON_CONSTANTS} from './helpers/backgammonConstants';
 import {getStateDiffInfo} from './helpers/gameStateDiffHelper';

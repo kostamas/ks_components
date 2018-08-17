@@ -1,7 +1,18 @@
-<img class="ks-img" src="../../assets/images/kosta.jpg">
+<div class="home-component">
 
-<div class="components-container">
-  <div *ngFor="let component of components;">
-    <div class="component" (click)="clickHandler('image-expander')" [routerLink]="component.link">{{component.text}}</div>
+  <div class="buttons-wrapper">
+    <div class="vs-computer" *ngIf="displayButtonHandler(buttonsNames.computer)" (click)="playAgainstComputer()">
+      Vs Computer
+    </div>
+
+    <div class="play-online" *ngIf="displayButtonHandler(buttonsNames.playOnline)" (click)="playOnline()">Online</div>
+
+    <div class="play-local" *ngIf="displayButtonHandler(buttonsNames.playLocal)" (click)="playLocal()">Local</div>
+
+    <div class="logout" *ngIf="displayButtonHandler(buttonsNames.logout)" (click)="logOut()">Logout</div>
+
+    <div class="menu" *ngIf="displayButtonHandler(buttonsNames.menu)" (click)="goToMenu()">Menu</div>
   </div>
+
+  <app-backgammon></app-backgammon>
 </div>

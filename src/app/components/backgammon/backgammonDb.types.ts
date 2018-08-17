@@ -3,7 +3,7 @@ import {InjectionToken} from '@angular/core';
 export interface IBackgammonDBService {
   getGameById: (id: string) => any;
   getLocalGame: () => any;
-  getUser: (userName: string, password: string) => any;
+  getUser: (...params) => any;
   createNewUser: (userName: string, password: string) => any;
   saveUserData: (...params) => any;
   getAllUsers: (localUser: any) => any;
