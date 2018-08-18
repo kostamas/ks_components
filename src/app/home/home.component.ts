@@ -1,10 +1,4 @@
-import {Component, Inject, OnInit, ViewEncapsulation} from '@angular/core';
-import {BackgammonStateManager} from '../components/backgammon/backgammonStateManager';
-import {Location} from '@angular/common';
-import {Router} from '@angular/router';
-import {BackgammonDBToken} from '../components/backgammon/backgammonDb.types';
-import {GameController} from '../components/backgammon/backgammonGameController';
-import {BACKGAMMON_CONSTANTS} from '../components/backgammon/helpers/backgammonConstants';
+import {Component, ViewEncapsulation} from '@angular/core';
 
 @Component({
   selector: 'app-home',
@@ -13,90 +7,29 @@ import {BACKGAMMON_CONSTANTS} from '../components/backgammon/helpers/backgammonC
   encapsulation: ViewEncapsulation.None
 
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
+  public things = ['Rock', 'Paper', 'Scissor', 'book',
+    'orem ipsum nothing show bla bla', './home.component.html HomeComponent ViewEncapsulation', 'export class HomeComponent '];
 
-  public components;
-  public selectedPlayer;
-  public openedGames;
-  public onlinePlayers$;
-  public showCanvas;
-  public logout$;
-  public localUser;
+  public arr;
 
-  public onlineViewStates = {
-    'localGame': 'localGame',
-    'onlineGame': 'onlineGame',
-    'vsComputer': 'vsComputer',
-    'onlineMenu': 'onlineMenu'
-  };
-  public currentViewState = this.onlineViewStates.localGame;
+  constructor() {
+    this.arr = [];
 
-  public buttonsNames = {
-    'playOnline': 'playOnline',
-    'playLocal': 'playLocal',
-    'logout': 'logout',
-    'menu': 'menu',
-    'computer': 'computer'
-  };
-
-  private displayedButtonsByCurrState = {
-    [this.onlineViewStates.localGame]: [this.buttonsNames.playOnline, this.buttonsNames.computer],
-    [this.onlineViewStates.onlineGame]: [this.buttonsNames.menu, this.buttonsNames.logout],
-    [this.onlineViewStates.onlineMenu]: [this.buttonsNames.playLocal, this.buttonsNames.logout, this.buttonsNames.computer],
-    [this.onlineViewStates.vsComputer]: [this.buttonsNames.playOnline, this.buttonsNames.playLocal],
-  };
-
-
-  constructor(private router: Router, private location: Location, @Inject(BackgammonDBToken) private backgammonDBService,
-              private gameController: GameController) {
-  }
-
-  ngOnInit() {
-  }
-
-  public goToMenu() {
-    this.router.navigate(['/backgammon/', {menu: true}]);
-    BackgammonStateManager.removeSubscriptions();
-    this.gameController.destroy();
-    this.currentViewState = this.onlineViewStates.onlineMenu;
-    this.showCanvas = false;
-  }
-
-  public displayButtonHandler(btnName) {
-    return this.displayedButtonsByCurrState[this.currentViewState].indexOf(btnName) > -1;
-  }
-
-  public playAgainstComputer() {
-    this.playLocalOrAgainstComputer(BACKGAMMON_CONSTANTS.GAME_MODES.COMPUTER, this.onlineViewStates.vsComputer);
-
-  }
-
-  public playLocal() {
-    this.playLocalOrAgainstComputer(BACKGAMMON_CONSTANTS.GAME_MODES.LOCAL, this.onlineViewStates.localGame);
-  }
-
-  private playLocalOrAgainstComputer(gameMode, newViewState) {
-    if (this.currentViewState === this.onlineViewStates.onlineGame) {
-      this.gameController.destroy();
-      BackgammonStateManager.removeSubscriptions();
-    }
-    this.currentViewState = newViewState;
-    this.showCanvas = true;
-    this.openedGames = [];
-    const gameData = this.backgammonDBService.getLocalGame();
-    // this.startGame(gameData, gameMode);
-  }
-
-  public playOnline() {
-    const isAuthenticated = this.backgammonDBService.isAuthenticated();
-    const pageToNavigate = isAuthenticated ? 'online' : 'login';
-    this.router.navigate([`/${pageToNavigate}`]);
-  }
-
-  public logOut() {
-
-  }
-
-  clickHandler(page) {
+    setTimeout(() => {
+      for (let i = 0; i < 2000; i++) {
+        this.arr.push(
+          {
+            hotelName: this.things[Math.floor(Math.random() * this.things.length)],
+            hotelCode: this.things[Math.floor(Math.random() * this.things.length)],
+            city: this.things[Math.floor(Math.random() * this.things.length)],
+            country: this.things[Math.floor(Math.random() * this.things.length)],
+            numberOfStories: this.things[Math.floor(Math.random() * this.things.length)],
+            visitorsPerYear: Math.floor(Math.random() * 10),
+            operation: this.things[Math.floor(Math.random() * this.things.length)]
+          }
+        );
+      }
+    });
   }
 }

@@ -1,36 +1,96 @@
 @import '../scss/main';
 
-.home-component{
-  .buttons-wrapper {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    left: 43px;
-    top: 80px;
-    width: 100px;
-    align-items: center;
+.home-component {
 
-    .play-online, .logout, .menu, .play-local, .vs-computer {
-      @include dimension(65px, 65px);
-      @include text-style(19px, $malachite);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50px;
-      background-color: $hintOfRed;
-      box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.75);
-      cursor: pointer;
-      margin-top: 20px;
 
-      &:hover {
-        opacity: 0.8;
-      }
-    }
-
-    .vs-computer {
-      @include dimension(120px, 55px);
-      border-radius: 30px;
-    }
+  .side-bar {
+    position: fixed;
+    height: calc(100vh - 40px);
+    width: 50px;
+    background-color: #0a9bad;
+    left: 0;
+    top: 30px;
   }
 
+  .header {
+    position: fixed;
+    width: 100vw;
+    height: 50px;
+    background-color: #767676;
+    left: 0;
+    top: 0;
+  }
+
+  .table-wrapper-fixed {
+    position: fixed;
+    top: 50px;
+    left: 70px;
+    margin: 0 !important;
+    padding-top: 40px;
+    background: #CAC848;
+    z-index: 2;
+  }
+
+  .table-wrapper {
+    width: calc(100% - 100px);
+    margin: 92px 0 0 70px;
+
+    .table {
+      display: table;
+      border-collapse: collapse;
+
+      .thead {
+        display: table-header-group;
+        width: 5%;
+        .tr {
+          display: table-row;
+
+          .td {
+            display: table-cell;
+            border: 1px solid black;
+            padding-left: 10px;
+          }
+
+          .td1 {
+            width: 10%;
+          }
+          .td2 {
+            width: 18%;
+          }
+          .td3 {
+            width: 7%;
+          }
+          .td4 {
+            width: 21%;
+          }
+          .td5 {
+            width: 14%;
+          }
+          .td6 {
+            width: 14%;
+          }
+          .td7 {
+            width: 14%;
+          }
+        }
+      }
+
+      .hide-thead{
+        visibility: hidden;
+      }
+
+      .tbody {
+        display: table-row-group;
+
+        .tr {
+          display: table-row;
+          border: 1px solid black;
+          .td {
+            display: table-cell;
+            padding-left: 10px;
+          }
+        }
+      }
+    }
+  }
 }

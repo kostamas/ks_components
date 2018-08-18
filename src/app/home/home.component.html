@@ -1,18 +1,50 @@
 <div class="home-component">
 
-  <div class="buttons-wrapper">
-    <div class="vs-computer" *ngIf="displayButtonHandler(buttonsNames.computer)" (click)="playAgainstComputer()">
-      Vs Computer
+  <div class="side-bar"></div>
+  <div class="header"></div>
+
+  <div class="table-wrapper table-wrapper-fixed">
+    <div class="table">
+      <div class="thead">
+        <div class="tr">
+          <div class="td1 td">Hotel Name</div>
+          <div class="td2 td">Hotel Code</div>
+          <div class="td3 td">City</div>
+          <div class="td4 td">Country</div>
+          <div class="td5 td">Number of Stories</div>
+          <div class="td6 td">visitors Per Year</div>
+          <div class="td7 td">operation</div>
+        </div>
+      </div>
     </div>
-
-    <div class="play-online" *ngIf="displayButtonHandler(buttonsNames.playOnline)" (click)="playOnline()">Online</div>
-
-    <div class="play-local" *ngIf="displayButtonHandler(buttonsNames.playLocal)" (click)="playLocal()">Local</div>
-
-    <div class="logout" *ngIf="displayButtonHandler(buttonsNames.logout)" (click)="logOut()">Logout</div>
-
-    <div class="menu" *ngIf="displayButtonHandler(buttonsNames.menu)" (click)="goToMenu()">Menu</div>
   </div>
 
-  <app-backgammon></app-backgammon>
+  <div class="table-wrapper">
+    <div class="table">
+
+      <div class="thead hide-thead">
+        <div class="tr">
+          <div class="td1 td">Hotel Name</div>
+          <div class="td2 td">Hotel Code</div>
+          <div class="td3 td">City</div>
+          <div class="td4 td">Country</div>
+          <div class="td5 td">Number of Stories</div>
+          <div class="td6 td">visitors Per Year</div>
+          <div class="td7 td">operation</div>
+        </div>
+      </div>
+
+      <div class="tbody">
+        <div class="tr" *ngFor="let row of arr">
+          <div class="td1 td">{{row.hotelName | elipsis:3}}</div>
+          <div class="td2 td">{{row.hotelCode | elipsis:3}}</div>
+          <div class="td3 td">{{row.city | elipsis:3}}</div>
+          <div class="td4 td">{{row.country | elipsis:3}}</div>
+          <div class="td5 td">{{row.numberOfStories | elipsis:3}}</div>
+          <div class="td6 td">{{row.visitorsPerYear | elipsis:3}}</div>
+          <div class="td7 td">{{row.operation | elipsis:3}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
