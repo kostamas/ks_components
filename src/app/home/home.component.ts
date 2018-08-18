@@ -17,7 +17,7 @@ export class HomeComponent {
     this.arr = [];
 
     setTimeout(() => {
-      for (let i = 0; i < 2000; i++) {
+      for (let i = 0; i < 10000; i++) {
         this.arr.push(
           {
             hotelName: this.things[Math.floor(Math.random() * this.things.length)],
