@@ -1,0 +1,46 @@
+@import "shared";
+
+.multi-date-picker {
+  padding: 10px;
+  border: 1px solid $doveGray;
+
+  .controls {
+    @include flex(space-between);
+
+    .controls-left {
+      .input-from, .input-to {
+        @include dimension(230px, 27px);
+        @include text-style(16px, $alto);
+        padding-left: 10px;
+      }
+
+      .input-from {
+        margin-right: 10px;
+      }
+    }
+
+    .controls-right {
+      @include flex();
+    }
+  }
+
+  .date-range-pickers-wrapper {
+    @include flex();
+    margin-top: 10px;
+
+    app-calendar-date-range-picker:first-child .calendar-date-range-picker, app-calendar-date-range-picker:nth-child(2) .calendar-date-range-picker{
+      border-right: none;
+    }
+  }
+
+  .controls-bottom {
+    @include dimension(100%);
+    @include flex();
+    flex-direction: row-reverse;
+    margin-top: 10px;
+
+    .select-btn {
+
+    }
+  }
+}

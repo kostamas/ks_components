@@ -1,0 +1,46 @@
+@import "shared";
+
+$dayCellSize: 30px;
+$dateRangeContainerWidth: 210px;
+
+.calendar-date-range-picker {
+  @include dimension($dateRangeContainerWidth, auto);
+  @include text-style(15px, $codeGray);
+  padding: 10px 20px 20px 20px;
+  border: 1px solid $silver;
+
+  .month-title {
+    @include flex(center, center);
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .date-range-header {
+    @include dimension($dateRangeContainerWidth, auto);
+    @include flex();
+    margin-bottom: 10px;
+    font-weight: bold;
+
+    .header-days {
+      @include dimension($dayCellSize, auto);
+      @include flex(center, center);
+    }
+  }
+
+  .days-to-select {
+    @include dimension($dateRangeContainerWidth, auto);
+    @include flex();
+    flex-wrap: wrap;
+
+    .day {
+      @include dimension($dayCellSize, $dayCellSize);
+      @include flex(center, center);
+      user-select: none;
+
+      &.selected {
+        background-color: #E0F4FE;
+      }
+    }
+  }
+}

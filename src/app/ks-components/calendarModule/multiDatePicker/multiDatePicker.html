@@ -1,0 +1,39 @@
+<div class="multi-date-picker">
+
+  <div class="controls">
+    <div class="controls-left">
+      <input class="input-from" placeholder="From Date">
+      <input class="input-to" placeholder="To Date">
+    </div>
+
+    <div class="controls-right">
+      <div> x</div>
+      <div> <</div>
+      <div> ></div>
+    </div>
+  </div>
+
+  <div class="date-range-pickers-wrapper" #multiDatePicker>
+    <app-calendar-date-range-picker
+      [disableRangeSelection]="true"
+      [externalSelection$]="selection$"
+      [date]="'2018-10-18'">
+    </app-calendar-date-range-picker>
+
+    <app-calendar-date-range-picker
+      [disableRangeSelection]="true"
+      [externalSelection$]="selection$"
+      [date]="'2018-11-18'">
+    </app-calendar-date-range-picker>
+
+    <app-calendar-date-range-picker
+      [disableRangeSelection]="true"
+      [externalSelection$]="selection$"
+      [date]="'2018-12-18'">
+    </app-calendar-date-range-picker>
+  </div>
+
+  <div class="controls-bottom">
+    <div class="select-btn" (click)="select()" > Select</div>
+  </div>
+</div>
