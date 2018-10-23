@@ -1,7 +1,7 @@
 import {Component, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import * as moment from 'moment';
 import {fromEvent, Subject} from 'rxjs';
-import {switchMap, takeUntil, tap} from 'rxjs/operators';
+import {filter, skip, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {CalendarDatePickerService} from '../calendarDatePicker/calendarDatePicker.service';
 
 @Component({
@@ -14,6 +14,10 @@ export class MultiDatePickerComponent implements OnInit, OnDestroy {
   public daysToSelect: any;
   public selection$: any = new Subject();
   public moment: any = moment;
+  public calendarDates: string[];
+  public unSubscribe$: any = new Subject();
+  public DATE_FORMAT: string = 'YYYY-MM-DD';
+  public canSelect: boolean;  // todo - find better solution
 
   @ViewChild('multiDatePicker') multiDatePicker: any;
 
@@ -23,45 +27,92 @@ export class MultiDatePickerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    fromEvent(this.multiDatePicker.nativeElement, 'mousedown')
+    const now = moment();
+    this.calendarDates = [
+      now.format(this.DATE_FORMAT),
+      now.add(1, 'month').format(this.DATE_FORMAT),
+      now.add(1, 'month').format(this.DATE_FORMAT)
+    ];
+
+    this.initMouseEventsHandler();
+    this.initSelectedRangeHandler();
+  }
+
+  initMouseEventsHandler(): void {
+    fromEvent(this.multiDatePicker.nativeElement, 'click')
       .pipe(
-        tap(() => this.selection$.next({clear: true})),
+        takeUntil(this.unSubscribe$),
+        tap(() => {
+          this.canSelect = !this.canSelect;
+          if (this.canSelect) {
+            this.selection$.next({clear: true});
+          }
+        }),
+        filter(() => this.canSelect),
         switchMap(() => {
-          return fromEvent(this.multiDatePicker.nativeElement, 'mousemove')
-            .pipe(takeUntil(fromEvent(this.multiDatePicker.nativeElement, 'click')));
-        }))
+            return fromEvent(this.multiDatePicker.nativeElement, 'mousemove')
+              .pipe(takeUntil(fromEvent(this.multiDatePicker.nativeElement, 'click')));
+          }
+        ))
       .subscribe((event: any) => {
         const {clientX, clientY} = event;
         this.selection$.next({clientX, clientY});
       });
+  }
 
-    this.calendarDatePickerService.selectDate$.subscribe((selectedDate: any) => {
-      const {selectedRange} = this.calendarDatePickerService;
+  initSelectedRangeHandler(): void {
+    this.calendarDatePickerService.selectDate$
+      .pipe(takeUntil(this.unSubscribe$))
+      .subscribe((selectedDate: any) => {
+        const {selectedRange} = this.calendarDatePickerService;
 
-      if (!selectedRange.firsDate) {
-        selectedRange.firsDate = selectedDate;
-      } else {
-        if (selectedRange.lastDate && selectedDate.diff(selectedRange.firsDate) < 0) {
+        if (!selectedRange.firsDate) {
           selectedRange.firsDate = selectedDate;
         } else {
-          selectedRange.lastDate = selectedDate;
+          if (selectedRange.lastDate && selectedDate.diff(selectedRange.firsDate) < 0) {
+            selectedRange.firsDate = selectedDate;
+          } else {
+            selectedRange.lastDate = selectedDate;
+          }
         }
-      }
 
-      if (selectedRange.lastDate && selectedRange.lastDate.diff(selectedRange.firsDate) < 0) {
-        const firstDay = selectedRange.firsDate;
-        selectedRange.firsDate = selectedRange.lastDate;
-        selectedRange.lastDate = firstDay;
-      }
-    });
+        if (selectedRange.lastDate && selectedRange.lastDate.diff(selectedRange.firsDate) < 0) {
+          const firstDay = selectedRange.firsDate;
+          selectedRange.firsDate = selectedRange.lastDate;
+          selectedRange.lastDate = firstDay;
+        }
+      });
+  }
+
+  updateCalendarDates(direction: number): void {
+    const format = 'YYYY-MM-DD';
+    const currentViewDate = moment(this.calendarDates[0]);
+
+    if (direction > 0) {
+      this.calendarDates = [
+        currentViewDate.add(direction, 'month').format(format),
+        currentViewDate.add(direction, 'month').format(format),
+        currentViewDate.add(direction, 'month').format(format)
+      ];
+    } else {
+      this.calendarDates[1] = this.calendarDates[0];
+      this.calendarDates[2] = this.calendarDates[1];
+      this.calendarDates[0] = currentViewDate.add(direction, 'month').format(format);
+    }
   }
 
   select(): void {
     const {selectedRange} = this.calendarDatePickerService;
-    console.log(selectedRange.firsDate.format('MMMM Do YYYY') + ' - ' + selectedRange.lastDate.format('MMMM Do YYYY'));
+    if (selectedRange.firsDate && selectedRange.lastDate) {
+      console.log(selectedRange.firsDate.format('MMMM Do YYYY') + ' - ' + selectedRange.lastDate.format('MMMM Do YYYY'));
+    }
+  }
+
+  cancel(): void {
+    this.calendarDatePickerService.clearSelectRange();
   }
 
   ngOnDestroy(): void {
-
+    this.unSubscribe$.next();
   }
 }

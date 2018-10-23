@@ -7,9 +7,17 @@
     </div>
 
     <div class="controls-right">
-      <div> x</div>
-      <div> <</div>
-      <div> ></div>
+      <div class="cancel-btn click-able" (click)="cancel()">
+        <div class="icon-cancel-1"></div>
+      </div>
+
+      <div class="previous-month click-able" (click)="updateCalendarDates(-1)">
+        <div class="icon-angle-left"></div>
+      </div>
+
+      <div class="next-month click-able" (click)="updateCalendarDates(1)">
+        <div class="icon-angle-right"></div>
+      </div>
     </div>
   </div>
 
@@ -17,23 +25,23 @@
     <app-calendar-date-range-picker
       [disableRangeSelection]="true"
       [externalSelection$]="selection$"
-      [date]="'2018-10-18'">
+      [date]="calendarDates[0]">
     </app-calendar-date-range-picker>
 
     <app-calendar-date-range-picker
       [disableRangeSelection]="true"
       [externalSelection$]="selection$"
-      [date]="'2018-11-18'">
+      [date]="calendarDates[1]">
     </app-calendar-date-range-picker>
 
     <app-calendar-date-range-picker
       [disableRangeSelection]="true"
       [externalSelection$]="selection$"
-      [date]="'2018-12-18'">
+      [date]="calendarDates[2]">
     </app-calendar-date-range-picker>
   </div>
 
   <div class="controls-bottom">
-    <div class="select-btn" (click)="select()" > Select</div>
+    <div class="select-btn click-able" (click)="select()"> Select</div>
   </div>
 </div>

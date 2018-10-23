@@ -5,9 +5,14 @@ import {Subject} from 'rxjs';
   providedIn: 'root'
 })
 export class CalendarDatePickerService {
-  public selectDate$ = new Subject();
-  public selectedRange = {firsDate: null, lastDate: null};
+  public selectDate$: any = new Subject();
+  public selectedRange: any = {firsDate: null, lastDate: null};
 
   constructor() {
+  }
+
+  clearSelectRange(): void {
+    this.selectedRange = {firsDate: null, lastDate: null};
+    this.selectDate$.next();
   }
 }

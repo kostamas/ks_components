@@ -8,6 +8,8 @@ $dateRangeContainerWidth: 210px;
   @include text-style(15px, $codeGray);
   padding: 10px 20px 20px 20px;
   border: 1px solid $silver;
+  cursor: pointer;
+  user-select: none;
 
   .month-title {
     @include flex(center, center);
@@ -36,11 +38,33 @@ $dateRangeContainerWidth: 210px;
     .day {
       @include dimension($dayCellSize, $dayCellSize);
       @include flex(center, center);
-      user-select: none;
+      box-sizing: border-box;
+      border: 1px solid transparent;
+    }
 
-      &.selected {
-        background-color: #E0F4FE;
-      }
+    .day.selected {
+      background-color: #E0F4FE;
+    }
+
+    .day.border-left {
+      border-left: 1px solid $malibu;
+    }
+    .day.border-top {
+      border-top: 1px solid $malibu;
+    }
+    .day.border-right {
+      border-right: 1px solid $malibu;
+    }
+    .day.border-bottom {
+      border-bottom: 1px solid $malibu;
+    }
+
+    .day.first-day, .day.last-day {
+      background-color: $blueLagoon;
+    }
+
+    .today{
+      background-color: $manatee !important;
     }
   }
 }

@@ -21,6 +21,45 @@
 
     .controls-right {
       @include flex();
+
+      .cancel-btn {
+        @include flex(center, center);
+      }
+
+      .previous-month, .next-month {
+        @include dimension(35px, 35px);
+        @include flex(center, center);
+        border: 1px solid $silverChalice;
+      }
+
+      .previous-month {
+        border-right: none;
+        border-radius: 3px 0 0 3px;
+      }
+
+      .next-month {
+        border-radius: 0 3px 3px 0;
+      }
+
+      .icon-angle-left, .icon-angle-right {
+        @include text-style(30px, $cadetBlue);
+      }
+
+      .cancel-btn {
+        @include dimension(35px, 35px);
+        @include flex(center, center);
+        margin-right: 10px;
+        border: 1px solid $silverChalice;
+        border-radius: 3px;
+
+        .icon-cancel-1 {
+          @include dimension(21px, 20px);
+          @include flex(center, center);
+          @include text-style(15px, $white);
+          background-color: $stTropaz;
+          border-radius: 100%;
+        }
+      }
     }
   }
 
@@ -28,7 +67,8 @@
     @include flex();
     margin-top: 10px;
 
-    app-calendar-date-range-picker:first-child .calendar-date-range-picker, app-calendar-date-range-picker:nth-child(2) .calendar-date-range-picker{
+    app-calendar-date-range-picker:first-child .calendar-date-range-picker,
+    app-calendar-date-range-picker:nth-child(2) .calendar-date-range-picker {
       border-right: none;
     }
   }
@@ -40,7 +80,11 @@
     margin-top: 10px;
 
     .select-btn {
-
+      @include dimension(85px, 37px);
+      @include flex(center, center);
+      border-radius: 3px;
+      background-color: $veniceBlue;
+      color: $white;
     }
   }
 }
