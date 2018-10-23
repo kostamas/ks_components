@@ -95,8 +95,8 @@ export class MultiDatePickerComponent implements OnInit, OnDestroy {
         currentViewDate.add(direction, 'month').format(format)
       ];
     } else {
-      this.calendarDates[1] = this.calendarDates[0];
       this.calendarDates[2] = this.calendarDates[1];
+      this.calendarDates[1] = this.calendarDates[0];
       this.calendarDates[0] = currentViewDate.add(direction, 'month').format(format);
     }
   }
