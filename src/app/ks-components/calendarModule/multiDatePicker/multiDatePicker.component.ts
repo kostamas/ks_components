@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
 import * as moment from 'moment';
 import {fromEvent, Subject} from 'rxjs';
 import {filter, skip, switchMap, takeUntil, tap} from 'rxjs/operators';
@@ -21,7 +21,9 @@ export class MultiDatePickerComponent implements OnInit, OnDestroy {
 
   @ViewChild('multiDatePicker') multiDatePicker: any;
 
-  @Input('date') date: any;
+  @Input('config') config: any;
+
+  @Output('onSelectRange') onSelectRange: EventEmitter<any> = new EventEmitter();
 
   constructor(private calendarDatePickerService: CalendarDatePickerService) {
   }
@@ -42,23 +44,29 @@ export class MultiDatePickerComponent implements OnInit, OnDestroy {
     fromEvent(this.multiDatePicker.nativeElement, 'click')
       .pipe(
         takeUntil(this.unSubscribe$),
-        tap(() => {
-          this.canSelect = !this.canSelect;
-          if (this.canSelect) {
-            this.selection$.next({clear: true});
-          }
-        }),
+        tap(this.tapHandler),
         filter(() => this.canSelect),
-        switchMap(() => {
-            return fromEvent(this.multiDatePicker.nativeElement, 'mousemove')
-              .pipe(takeUntil(fromEvent(this.multiDatePicker.nativeElement, 'click')));
-          }
-        ))
+        switchMap(this.switchMapHandler)
+      )
       .subscribe((event: any) => {
         const {clientX, clientY} = event;
         this.selection$.next({clientX, clientY});
       });
   }
+
+  tapHandler = (event: any) => {
+    this.canSelect = !this.canSelect;
+    if (this.canSelect) {
+      this.selection$.next({clear: true});
+      const {clientX, clientY} = event;
+      this.selection$.next({clientX, clientY});
+    }
+  };
+
+  switchMapHandler = () => {
+    return fromEvent(this.multiDatePicker.nativeElement, 'mousemove')
+      .pipe(takeUntil(fromEvent(this.multiDatePicker.nativeElement, 'click')));
+  };
 
   initSelectedRangeHandler(): void {
     this.calendarDatePickerService.selectDate$
@@ -68,6 +76,7 @@ export class MultiDatePickerComponent implements OnInit, OnDestroy {
 
         if (!selectedRange.firsDate) {
           selectedRange.firsDate = selectedDate;
+          selectedRange.lastDate = selectedDate;
         } else {
           if (selectedRange.lastDate && selectedDate.diff(selectedRange.firsDate) < 0) {
             selectedRange.firsDate = selectedDate;
@@ -106,6 +115,10 @@ export class MultiDatePickerComponent implements OnInit, OnDestroy {
     if (selectedRange.firsDate && selectedRange.lastDate) {
       console.log(selectedRange.firsDate.format('MMMM Do YYYY') + ' - ' + selectedRange.lastDate.format('MMMM Do YYYY'));
     }
+    this.onSelectRange.next({
+      from: moment(selectedRange.firsDate).format(this.config.format || 'MMMM Do YYYY'),
+      to: moment(selectedRange.lastDate).format(this.config.format || 'MMMM Do YYYY')
+    });
   }
 
   cancel(): void {

@@ -52,18 +52,24 @@ export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, Afte
     fromEvent(this.daysToSelectRef.nativeElement, 'click')  // todo - duplication with multiDatePicker
       .pipe(
         takeUntil(this.unSubscribe$),
-        tap(() => {
-          this.canSelect = !this.canSelect;
-          if (this.canSelect) {
-            this.unMark();
-          }
-        }),
-        switchMap(() => {
-          return fromEvent(this.daysToSelectRef.nativeElement, 'mousemove')
-            .pipe(takeUntil(fromEvent(this.daysToSelectRef.nativeElement, 'click')));
-        }))
+        tap(this.tapHandler),
+        switchMap(this.switchMapHandler))
       .subscribe(this.mark.bind(this));
   }
+
+  tapHandler = (event: any) => {
+    this.canSelect = !this.canSelect;
+    if (this.canSelect) {
+      this.unMark();
+      const {clientX, clientY} = event;
+      this.mark({clientX, clientY});
+    }
+  };
+
+  switchMapHandler = () => {
+    return fromEvent(this.daysToSelectRef.nativeElement, 'mousemove')
+      .pipe(takeUntil(fromEvent(this.daysToSelectRef.nativeElement, 'click')));
+  };
 
   initSelectDateHandler(): void {
     this.calendarDatePickerService.selectDate$
