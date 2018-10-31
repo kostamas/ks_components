@@ -1,0 +1,18 @@
+<div class="scroll-able-sub-menu">
+  <div class="sub-menu-item">
+
+    <div class="sub-menu-columns-container" *ngFor="let subMenuColumnArr of menuData.items">
+
+      <div class="sub-menu-title">{{subMenuColumnArr.title}}</div>
+
+      <div *ngFor="let column of subMenuColumnArr.items " class="sub-menu-category click-able">
+        <div class="favorite-div" [ngClass]="{'show-favorite': column.isFavorite}">
+          <img [src]="favoriteImgSrc(column.isFavorite)"/>
+        </div>
+        <div class="column-name">
+          {{column.name}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
