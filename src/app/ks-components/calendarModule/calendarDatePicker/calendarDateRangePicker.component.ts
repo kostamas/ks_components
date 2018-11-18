@@ -123,6 +123,7 @@ export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, Afte
   unMark(): void {
     this.resetDaysToSelectStyle();
     this.calendarDatePickerService.selectedRange = {firsDate: null, lastDate: null};
+    this.selectedDay = null;
   }
 
   initDaysToSelect(): void {
