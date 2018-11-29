@@ -3,10 +3,16 @@ import {CalendarDatePickerService} from './calendarDatePicker/calendarDatePicker
 import {CalendarDateRangePickerComponent} from './calendarDatePicker/calendarDateRangePicker.component';
 import {MultiDatePickerComponent} from './multiDatePicker/multiDatePicker.component';
 import {BrowserModule} from '@angular/platform-browser';
+import {SvgIconModule} from "../svgIconModule/svg-icon.module";
+import {FormsModule} from "@angular/forms";
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
-    BrowserModule
+    BrowserModule,
+    SvgIconModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   declarations: [
     CalendarDateRangePickerComponent,

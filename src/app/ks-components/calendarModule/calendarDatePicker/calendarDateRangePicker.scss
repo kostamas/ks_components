@@ -5,8 +5,8 @@ $dateRangeContainerWidth: 210px;
 
 .calendar-date-range-picker {
   @include dimension($dateRangeContainerWidth, auto);
-  @include text-style(15px, $codeGray);
-  padding: 10px 20px 20px 20px;
+  @include text-style(14px, $codeGray);
+  padding: 10px 5px;
   border: 1px solid $silver;
   cursor: pointer;
   user-select: none;
@@ -14,7 +14,7 @@ $dateRangeContainerWidth: 210px;
   .month-title {
     @include flex(center, center);
     font-size: 17px;
-    font-weight: bold;
+    font-weight: 500;
     margin-bottom: 10px;
   }
 
@@ -47,24 +47,33 @@ $dateRangeContainerWidth: 210px;
     }
 
     .day.border-left {
-      border-left: 1px solid $malibu;
+      border-left: 1px solid #9ddcfb;
     }
     .day.border-top {
-      border-top: 1px solid $malibu;
+      border-top: 1px solid #9ddcfb;
     }
     .day.border-right {
-      border-right: 1px solid $malibu;
+      border-right: 1px solid #9ddcfb;
     }
     .day.border-bottom {
-      border-bottom: 1px solid $malibu;
+      border-bottom: 1px solid #9ddcfb;
     }
 
     .day.first-day, .day.last-day {
-      background-color: $blueLagoon;
+      background-color: #9ddcfb;
     }
 
+    .today {
+      border: 1px solid #c2c2c2;
+    }
+
+<<<<<<< HEAD
     .today{
       background-color: $alto !important;
+=======
+    .past {
+      color: #bab8b8;;
+>>>>>>> 3f991ddb0320564aa00be7e6b3cbdd478381968e
     }
   }
 }

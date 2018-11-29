@@ -1,0 +1,64 @@
+@import "shared";
+
+.menu-item {
+  @include dimension(1000px, auto);
+  @include position(absolute, 0, null, null, 0);
+  @include flex();
+  border: 1px solid $alto;
+  border-top: none;
+  background-color: $white;
+  box-shadow: 0 1px 3px 0 $silver;
+  padding: 20px;
+  box-sizing: border-box;
+
+  .top-triangle {
+    @include dimension(0, 0);
+    border-left: 16px solid transparent;
+    border-right: 16px solid transparent;
+    border-bottom: 16px solid $white;
+    position: absolute;
+    top: -15px;
+    transition: 0.5s;
+  }
+
+  .menu-item-categories-container {
+    @include dimension(200px, auto);
+    padding: 10px;
+    background-color: $catskillWhite;
+
+    .menu-item-category {
+      @include dimension(180px, 40px);
+      @include flex(start, center);
+      padding-left: 20px;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+
+    .menu-item-category.selected {
+      background-color: $white;
+    }
+
+    .menu-item-category:hover:not(.selected) {
+      background-color: $periwinkleGray;
+      transition: 0.2s;
+    }
+  }
+}
+
+@media only screen and (max-width: $tablet) {
+  .menu-item {
+    flex-direction: column;
+
+    .menu-item-categories-container {
+      @include dimension(100%, 40px);
+      @include flex();
+
+      .menu-item-category {
+        font-size: 14px;
+        width: auto;
+        padding: 0 10px;
+        margin-right: 10px;
+      }
+    }
+  }
+}

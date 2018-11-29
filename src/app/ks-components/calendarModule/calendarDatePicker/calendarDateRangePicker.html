@@ -12,10 +12,8 @@
   </div>
 
   <div class="days-to-select" #daysToSelectRef>
-    <div *ngFor="let day of daysToSelect">
-      <div class="day" [ngClass]="getDayClass(day)">
-        <div class="click-able" *ngIf="!day.isEmpty">{{day.dayNumber}}</div>
-      </div>
+    <div class="day" [ngClass]="getDayClass(day)" *ngFor="let day of daysToSelect">
+        <div class="click-able day-number" *ngIf="!day.isEmpty">{{day.dayNumber}}</div>
     </div>
   </div>
 </div>

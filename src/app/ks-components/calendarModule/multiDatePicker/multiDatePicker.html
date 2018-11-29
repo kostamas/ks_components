@@ -2,12 +2,21 @@
 
   <div class="controls">
     <div class="controls-left">
+<<<<<<< HEAD
       <!--<input class="input-from" placeholder="From Date">-->
       <!--<input class="input-to" placeholder="To Date">-->
+=======
+      <form [formGroup]="formGroup">
+        <input class="input-from" [ngClass]="errorsClass(formGroup.controls.to.errors)" placeholder="From Date"
+               formControlName="from">
+        <input class="input-to" [ngClass]="errorsClass(formGroup.controls.from.errors)" placeholder="To Date" formControlName="to">
+      </form>
+>>>>>>> 3f991ddb0320564aa00be7e6b3cbdd478381968e
     </div>
 
     <div class="controls-right">
       <div class="cancel-btn click-able" (click)="cancel()">
+<<<<<<< HEAD
         <div class="icon-cancel-1">x</div>
       </div>
 
@@ -17,6 +26,17 @@
 
       <div class="next-month click-able" (click)="updateCalendarDates(1)">
         <div class="icon-angle-right">></div>
+=======
+        <app-svg-icon [svg]="SVG_ICONS.round_close"></app-svg-icon>
+      </div>
+
+      <div class="previous-month click-able" (click)="updateCalendarDates(-1)">
+        <app-svg-icon [svg]="SVG_ICONS.back"></app-svg-icon>
+      </div>
+
+      <div class="next-month click-able" (click)="updateCalendarDates(1)">
+        <app-svg-icon [svg]="SVG_ICONS.next"></app-svg-icon>
+>>>>>>> 3f991ddb0320564aa00be7e6b3cbdd478381968e
       </div>
     </div>
   </div>
