@@ -2,21 +2,21 @@
 
   <div class="controls">
     <div class="controls-left">
-      <input class="input-from" placeholder="From Date">
-      <input class="input-to" placeholder="To Date">
+      <!--<input class="input-from" placeholder="From Date">-->
+      <!--<input class="input-to" placeholder="To Date">-->
     </div>
 
     <div class="controls-right">
       <div class="cancel-btn click-able" (click)="cancel()">
-        <div class="icon-cancel-1"></div>
+        <div class="icon-cancel-1">x</div>
       </div>
 
       <div class="previous-month click-able" (click)="updateCalendarDates(-1)">
-        <div class="icon-angle-left"></div>
+        <div class="icon-angle-left"><</div>
       </div>
 
       <div class="next-month click-able" (click)="updateCalendarDates(1)">
-        <div class="icon-angle-right"></div>
+        <div class="icon-angle-right">></div>
       </div>
     </div>
   </div>

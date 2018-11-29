@@ -1,8 +1,11 @@
-@import "shared";
+@import '../../../scss/main';
 
 .multi-date-picker {
+  @include dimension(755px, auto);
   padding: 10px;
   border: 1px solid $doveGray;
+  margin: 20px auto 0 auto;
+  background-color: white;
 
   .controls {
     @include flex(space-between);

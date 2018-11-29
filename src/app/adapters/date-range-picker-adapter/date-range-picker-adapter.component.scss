@@ -1,0 +1,14 @@
+@import '../../scss/main';
+
+.selected-range{
+  @include dimension(200px, auto);
+  @include text-style(20px, $minehaft);
+  margin: 50px auto 40px auto;
+
+  div{
+    margin-bottom: 10px;
+  }
+}
+
+//877
+//583

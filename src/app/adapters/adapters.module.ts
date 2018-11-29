@@ -27,6 +27,8 @@ import {ImageExpanderModule} from '../ks-components/image-expander/image-expande
 import {TransparentShapeModalModule} from '../ks-components/transparent-shape-modal/transparent-shape-modal.module';
 
 import {ChatDataService} from './chat-adapter/chatDataService';
+import {CalendarModule} from '../ks-components/calendarModule/calendar.module';
+import {DateRangePickerAdapterComponent} from './date-range-picker-adapter/date-range-picker-adapter.component';
 
 @NgModule({
   imports: [
@@ -46,7 +48,8 @@ import {ChatDataService} from './chat-adapter/chatDataService';
     ChatModule.config(ChatDataService),
     GalleryModule,
     ImageExpanderModule,
-    TransparentShapeModalModule
+    TransparentShapeModalModule,
+    CalendarModule
   ],
   declarations: [
     SchedulerAdapterComponent,
@@ -58,7 +61,8 @@ import {ChatDataService} from './chat-adapter/chatDataService';
     ImageExpanderAdapterComponent,
     TransparentShapeModalAdapterComponent,
     BackgammonAdapterComponent,
-    GalleryAdapterComponent
+    GalleryAdapterComponent,
+    DateRangePickerAdapterComponent
   ],
   exports: [],
   entryComponents: [

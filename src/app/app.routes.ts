@@ -8,6 +8,7 @@ import {ImageExpanderAdapterComponent} from './adapters/image-expander-adapter/i
 import {TransparentShapeModalAdapterComponent} from './adapters/transparent-shape-modal-adapter/transparent-shape-modal-adapter.component';
 import {BackgammonAdapterComponent} from './adapters/backgammon-adapter/backgammon-adapter.component';
 import {GalleryAdapterComponent} from './adapters/gallery-adapter/gallery-adapter.component';
+import {DateRangePickerAdapterComponent} from './adapters/date-range-picker-adapter/date-range-picker-adapter.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -19,6 +20,7 @@ export const routes: Routes = [
   {path: 'backgammon', component: BackgammonAdapterComponent},
   {path: 'backgammon/:gameId', component: BackgammonAdapterComponent},
   {path: 'gallery', component: GalleryAdapterComponent},
+  {path: 'date-range-picker', component: DateRangePickerAdapterComponent},
   {path: '**', component: PageNotFoundComponent}
 ];
 

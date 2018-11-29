@@ -1,8 +1,9 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
 import * as moment from 'moment';
-import {fromEvent, Subject} from 'rxjs';
-import {filter, skip, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import {filter, merge, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {CalendarDatePickerService} from '../calendarDatePicker/calendarDatePicker.service';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
   selector: 'app-multi-date-picker',
@@ -16,7 +17,8 @@ export class MultiDatePickerComponent implements OnInit, OnDestroy {
   public moment: any = moment;
   public calendarDates: string[];
   public unSubscribe$: any = new Subject();
-  public DATE_FORMAT: string = 'YYYY-MM-DD';
+  public cancelSelection$: any = new Subject();
+  public DATE_FORMAT = 'YYYY-MM-DD';
   public canSelect: boolean;  // todo - find better solution
 
   @ViewChild('multiDatePicker') multiDatePicker: any;
@@ -41,7 +43,7 @@ export class MultiDatePickerComponent implements OnInit, OnDestroy {
   }
 
   initMouseEventsHandler(): void {
-    fromEvent(this.multiDatePicker.nativeElement, 'click')
+    Observable.fromEvent(this.multiDatePicker.nativeElement, 'click')
       .pipe(
         takeUntil(this.unSubscribe$),
         tap(this.tapHandler),
@@ -64,8 +66,13 @@ export class MultiDatePickerComponent implements OnInit, OnDestroy {
   };
 
   switchMapHandler = () => {
-    return fromEvent(this.multiDatePicker.nativeElement, 'mousemove')
-      .pipe(takeUntil(fromEvent(this.multiDatePicker.nativeElement, 'click')));
+    return Observable.fromEvent(this.multiDatePicker.nativeElement, 'mousemove')
+      .pipe(
+          takeUntil(Observable.merge(
+              this.cancelSelection$,
+              Observable.fromEvent(this.multiDatePicker.nativeElement, 'click'))
+          )
+      );
   };
 
   initSelectedRangeHandler(): void {
@@ -122,6 +129,12 @@ export class MultiDatePickerComponent implements OnInit, OnDestroy {
   }
 
   cancel(): void {
+    this.onSelectRange.next({
+      from: '',
+      to: ''
+    });
+    this.canSelect = false;
+    this.cancelSelection$.next();
     this.calendarDatePickerService.clearSelectRange();
   }
 

@@ -1,8 +1,9 @@
-import {AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {fromEvent, Subject} from 'rxjs';
+import {AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Subject} from 'rxjs';
 import * as moment from 'moment';
 import {switchMap, takeUntil, tap} from 'rxjs/operators';
 import {CalendarDatePickerService} from './calendarDatePicker.service';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
   selector: 'app-calendar-date-range-picker',
@@ -10,7 +11,7 @@ import {CalendarDatePickerService} from './calendarDatePicker.service';
   styleUrls: ['./calendarDateRangePicker.scss']
 })
 export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
-  public NUM_OF_CELLS: number = 40;
+  public NUM_OF_CELLS = 40;
   public daysToSelect: any;
   public moment: any = moment;
   public selectedDay: any;
@@ -49,7 +50,7 @@ export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, Afte
   }
 
   initSelectRangeHandler(): void {
-    fromEvent(this.daysToSelectRef.nativeElement, 'click')  // todo - duplication with multiDatePicker
+    Observable.fromEvent(this.daysToSelectRef.nativeElement, 'click')  // todo - duplication with multiDatePicker
       .pipe(
         takeUntil(this.unSubscribe$),
         tap(this.tapHandler),
@@ -67,8 +68,8 @@ export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, Afte
   };
 
   switchMapHandler = () => {
-    return fromEvent(this.daysToSelectRef.nativeElement, 'mousemove')
-      .pipe(takeUntil(fromEvent(this.daysToSelectRef.nativeElement, 'click')));
+    return Observable.fromEvent(this.daysToSelectRef.nativeElement, 'mousemove')
+      .pipe(takeUntil(Observable.fromEvent(this.daysToSelectRef.nativeElement, 'click')));
   };
 
   initSelectDateHandler(): void {

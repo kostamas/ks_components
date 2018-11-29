@@ -3,3 +3,11 @@
 'fonts',
 'mixins',
 'scrollbar-style';
+
+.click-able{
+  cursor: pointer;
+
+  &:hover{
+    opacity: 0.8;
+  }
+}

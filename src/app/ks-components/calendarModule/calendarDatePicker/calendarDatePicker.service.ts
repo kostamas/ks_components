@@ -1,9 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class CalendarDatePickerService {
   public selectDate$: any = new Subject();
   public selectedRange: any = {firsDate: null, lastDate: null};

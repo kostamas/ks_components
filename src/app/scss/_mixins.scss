@@ -72,3 +72,16 @@
     height: $height;
   }
 }
+
+@mixin flex($justifyContent:null, $alignItems: null){
+  display: flex;
+
+  @if $justifyContent {
+    justify-content: $justifyContent;
+  }
+
+  @if $alignItems{
+    align-items: $alignItems;
+  }
+}
+
