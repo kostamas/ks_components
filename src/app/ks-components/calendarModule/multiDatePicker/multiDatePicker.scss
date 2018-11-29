@@ -1,19 +1,12 @@
 @import '../../../scss/main';
 
 .multi-date-picker {
-  @include dimension(755px, auto);
   padding: 10px;
-<<<<<<< HEAD
-  border: 1px solid $doveGray;
-  margin: 20px auto 0 auto;
-  background-color: white;
-=======
   width: 664px;
   background-color: white;
   border: 1px solid #c3c9d8;
   border-radius: 5px;
   box-shadow: 2px 2px 8px -1px #ccc;
->>>>>>> 3f991ddb0320564aa00be7e6b3cbdd478381968e
 
   .controls {
     @include flex(space-between);

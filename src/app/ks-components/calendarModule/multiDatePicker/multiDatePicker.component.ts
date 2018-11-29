@@ -1,19 +1,12 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
 import * as moment from 'moment';
-<<<<<<< HEAD
-import {Subject} from 'rxjs';
-import {filter, merge, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {CalendarDatePickerService} from '../calendarDatePicker/calendarDatePicker.service';
-import {Observable} from 'rxjs/Observable';
-=======
-import {fromEvent, merge, Subject} from 'rxjs';
+import { Subject} from 'rxjs';
 import {filter, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {CalendarDatePickerService} from '../calendarDatePicker/calendarDatePicker.service';
-import {SVG_ICONS} from "../../svgIconModule/svg-icons.const";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {AbstractControl} from '@angular/forms';
-import {isEmpty} from "../../../utils/jsUtils";
->>>>>>> 3f991ddb0320564aa00be7e6b3cbdd478381968e
+import {isEmpty} from '../../../utils/jsUtils';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
   selector: 'app-multi-date-picker',
@@ -28,18 +21,11 @@ export class MultiDatePickerComponent implements OnInit, OnDestroy {
   public moment: any = moment;
   public calendarDates: string[];
   public unSubscribe$: any = new Subject();
-<<<<<<< HEAD
-  public cancelSelection$: any = new Subject();
-  public DATE_FORMAT = 'YYYY-MM-DD';
-  public canSelect: boolean;  // todo - find better solution
-=======
   public DATE_INPUT_FORMAT: string = 'DD/MM/YYYY';
   public canSelect: boolean;
-  public SVG_ICONS: any = SVG_ICONS;
   public formGroup: FormGroup;
   private rgx = new RegExp('[0-9]{2}/[0-9]{2}/20[0-9]{2}');
-  private RANGE_SIZE = 31;
->>>>>>> 3f991ddb0320564aa00be7e6b3cbdd478381968e
+  private RANGE_SIZE = 100;
 
   @ViewChild('multiDatePicker') multiDatePicker: any;
   @Input('config') config?: any;
@@ -77,7 +63,7 @@ export class MultiDatePickerComponent implements OnInit, OnDestroy {
         this.calendarDatePickerService.selectedRange = {date1: moment(firstDate), date2: moment(lastDate)};
         this.calendarDatePickerService.selectDate$.next(moment(firstDate));
         this.calendarDatePickerService.selectDate$.next(moment(lastDate));
-      })
+      });
     }
   }
 
@@ -105,21 +91,12 @@ export class MultiDatePickerComponent implements OnInit, OnDestroy {
   };
 
   switchMapHandler = () => {
-<<<<<<< HEAD
     return Observable.fromEvent(this.multiDatePicker.nativeElement, 'mousemove')
-      .pipe(
-          takeUntil(Observable.merge(
-              this.cancelSelection$,
-              Observable.fromEvent(this.multiDatePicker.nativeElement, 'click'))
-          )
-=======
-    return fromEvent(this.multiDatePicker.nativeElement, 'mousemove')
       .pipe(takeUntil(
-        merge(
+        Observable.merge(
           this.cancelSelection$,
-          fromEvent(this.multiDatePicker.nativeElement, 'click'))
+          Observable.fromEvent(this.multiDatePicker.nativeElement, 'click'))
         )
->>>>>>> 3f991ddb0320564aa00be7e6b3cbdd478381968e
       );
   };
 
@@ -165,16 +142,8 @@ export class MultiDatePickerComponent implements OnInit, OnDestroy {
   }
 
   cancel(): void {
-<<<<<<< HEAD
-    this.onSelectRange.next({
-      from: '',
-      to: ''
-    });
-    this.canSelect = false;
-=======
     this.canSelect = false;
     this.formGroup.setValue({from: '', to: ''});
->>>>>>> 3f991ddb0320564aa00be7e6b3cbdd478381968e
     this.cancelSelection$.next();
     this.calendarDatePickerService.clearSelectRange();
   }
@@ -190,10 +159,10 @@ export class MultiDatePickerComponent implements OnInit, OnDestroy {
 
     const newFrom = this.fixFormat(from.value);
     const newTo = this.fixFormat(to.value);
-    let date = moment(this.fixFormat(from.value));
+    const date = moment(this.fixFormat(from.value));
 
     if (newFrom === moment(firstDate).format(DATE_FORMAT) && newTo === moment(lastDate).format(DATE_FORMAT)) {
-      return
+      return;
     }
 
     this.calendarDates = [

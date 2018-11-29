@@ -1,9 +1,9 @@
 import {AfterViewInit, ChangeDetectorRef, Component, HostListener, NgZone, OnInit, ViewChild} from '@angular/core';
-import {AuthService} from '../../../services/auth.service';
+// import {AuthService} from '../../../services/auth.service';
 import {DomSanitizer} from '@angular/platform-browser';
 import {DatePipe} from '@angular/common';
 import {MenusService} from './menus.service';
-import {OverlayService} from '../../../services/overlay.service';
+// import {OverlayService} from '../../../services/overlay.service';
 
 @Component({
   selector: 'app-main-header',
@@ -33,18 +33,18 @@ export class MainHeaderComponent implements OnInit, AfterViewInit {
   @ViewChild('currentDate') currentDate: any;
   @ViewChild('currentDateMobile') currentDateMobile: any;
 
-  constructor(public auth: AuthService, public domSanitizer: DomSanitizer, private zone: NgZone, private datePipe: DatePipe,
-              private menusService: MenusService, private overlayService: OverlayService, private cdRef: ChangeDetectorRef) {
+  constructor(public domSanitizer: DomSanitizer, private zone: NgZone, private datePipe: DatePipe,
+              private menusService: MenusService, private cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
-    this.auth.user$.subscribe(user => this.user = user);
-    this.auth.isAuthenticated$.subscribe(isAuthenticated => this.isAuthenticated = isAuthenticated);
-    this.overlayService.overlayClick$.subscribe(this.closeMenuAndUserDetails);
-    this.overlayService.overlayClick$.subscribe(() => {
-      this.closeMenu();
-      this.displayUserMenu = false;
-    });
+    // this.auth.user$.subscribe(user => this.user = user);
+    // this.auth.isAuthenticated$.subscribe(isAuthenticated => this.isAuthenticated = isAuthenticated);
+    // this.overlayService.overlayClick$.subscribe(this.closeMenuAndUserDetails);
+    // this.overlayService.overlayClick$.subscribe(() => {
+    //   this.closeMenu();
+    //   this.displayUserMenu = false;
+    // });
     this.menusService.getMenus(headerTabs => {
       this.headerTabs = headerTabs;
       this.mainHeaderView = this.mainHeaderViewTypes.expanded;
@@ -82,7 +82,7 @@ export class MainHeaderComponent implements OnInit, AfterViewInit {
     this.isMenuItemOpen = this.selectedHeaderTabElement === null || this.selectedHeaderTabElement !== selectedHeaderTabElement;
 
     if (this.isMenuItemOpen) {
-      this.overlayService.isOverlayOpen$.next(true);
+      // this.overlayService.isOverlayOpen$.next(true);
       this.selectedHeaderTabElement = selectedHeaderTabElement;
       this.selectedHeaderTab = selectedHeaderTab;
       this.displayUserMenu = false;
@@ -104,7 +104,7 @@ export class MainHeaderComponent implements OnInit, AfterViewInit {
   openUserMenu(): boolean {
     this.displayUserMenu = !this.displayUserMenu;
     if (this.displayUserMenu) {
-      this.overlayService.isOverlayOpen$.next(true);
+      // this.overlayService.isOverlayOpen$.next(true);
       this.closeMenu();
     }
     return this.displayUserMenu;

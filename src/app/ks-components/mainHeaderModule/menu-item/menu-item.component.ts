@@ -1,5 +1,4 @@
 import {Component, HostListener, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {OverlayService} from '../../../../services/overlay.service';
 
 @Component({
   selector: 'app-menu-item',

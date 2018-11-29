@@ -1,9 +1,5 @@
 import {AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-<<<<<<< HEAD
 import {Subject} from 'rxjs';
-=======
-import {fromEvent, Subject} from 'rxjs';
->>>>>>> 3f991ddb0320564aa00be7e6b3cbdd478381968e
 import * as moment from 'moment';
 import {switchMap, takeUntil, tap} from 'rxjs/operators';
 import {CalendarDatePickerService} from './calendarDatePicker.service';
@@ -151,7 +147,7 @@ export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, Afte
         isSelected: false,
         today: todayMonth === dateMonth && todayDayNumber === day,
         past: todayYear > dateYear || (todayYear === dateYear && todayMonth > dateMonth)
-          || (todayYear === dateYear && todayMonth === dateMonth && todayDayNumber > day)
+        || (todayYear === dateYear && todayMonth === dateMonth && todayDayNumber > day)
       });
 
       if (!isEmpty) {
@@ -184,7 +180,7 @@ export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, Afte
     for (let i = 0; i < this.NUM_OF_CELLS; i++) {
       if (!this.daysToSelect[i].isEmpty) {
         this.daysToSelect[i].past = todayYear > dateYear || (todayYear === dateYear && todayMonth > dateMonth)
-          || (todayYear === dateYear && todayMonth === dateMonth && todayDayNumber > this.daysToSelect[i].dayNumber)
+          || (todayYear === dateYear && todayMonth === dateMonth && todayDayNumber > this.daysToSelect[i].dayNumber);
       }
     }
 

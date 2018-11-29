@@ -16,4 +16,13 @@ export const deepCopy = (obj) => {
     }
     return clonedObj;
   }
-}
+};
+
+export const isEmpty = (arrayOrObject) => {
+  if (!arrayOrObject) {
+    return true;
+  }
+  else {
+    return Array.isArray(arrayOrObject) ? arrayOrObject.length : Object.keys(arrayOrObject).length;
+  }
+};
