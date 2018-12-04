@@ -16,7 +16,7 @@ export interface IBackgammonDBService {
 }
 
 export interface IBackgammonSrvCtor {
-  new(args: any): IBackgammonDBService;
+  new(...any: any[]): IBackgammonDBService;
 }
 
 export const BackgammonDBToken = new InjectionToken<IBackgammonDBService>('BackgammonDBService');
