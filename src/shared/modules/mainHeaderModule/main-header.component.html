@@ -1,0 +1,79 @@
+<nav class="main-header" [ngClass]="mainHeaderView">
+
+  <div class="main-header-left-section">
+    <div class="logo"><img [src]="getIcon('atlas_logo-icon.png')"></div>
+
+    <div class="header-tabs-wrapper" #headerButtonsWrapperElement>
+
+      <div *ngFor="let headerTab of headerTabs"
+           (click)="onHeaderTabClick(headerTabElement, headerTab)"
+           #headerTabElement
+           class="cursor-pointer header-button"
+           [ngClass]="{'selected-tab': selectedMenu === headerTab}">
+        <div class="header-tab-name">{{headerTab.name}}</div>
+        <div class="header-tab-icon" [title]="headerTab.name"><img [src]="getIcon(headerTab.icon)"></div>
+      </div>
+
+      <div class="header-button last-right-border"></div>
+
+      <app-menu-item *ngIf="isMenuItemOpen"
+                     [headerTabElement]="selectedHeaderTabElement"
+                     [mainHeaderElement]="headerButtonsWrapperElement"
+                     [headerTabData]="selectedHeaderTab">
+      </app-menu-item>
+
+    </div>
+
+  </div>
+
+  <div class="place-holder" (click)="closeMenuAndUserDetails()"></div>
+
+  <div class="main-header-right-section">
+    <div class="office-data">
+      <div class="current-office">Current Office: {{userDetails.officeNumber}}, Division: {{userDetails.division}}</div>
+      <div class="current-office mobile-and-tablet-only"
+           title="Current Office: {{userDetails.officeNumber}}, Division: {{userDetails.division}}">Current Office:
+        {{userDetails.officeNumber}}, Division: {{userDetails.division}}
+      </div>
+      <div class="user-ip"> {{userDetails.ip}}</div>
+    </div>
+
+    <div class="user">
+      <img class="user-img" [src]="domSanitizer.bypassSecurityTrustUrl(userDetails.image)">
+      <div class="user-data">
+        <div class="user-name-and-logout">
+          <div class="firstname-and-lastname">{{userDetails.username}}</div>
+          <img class="click-able logout-icon" src="../../../../assets/icons/images/logout-icon.png">
+        </div>
+
+        <div class="datetime-text" #currentDate></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="main-header-right-section mobile-and-tablet-only " (click)="openUserMenu()">
+    <img src="../../../../assets/icons/images/more_details.png" class="click-able"/>
+    <div class="menu-user-section" *ngIf="displayUserMenu">
+      <div class="menu-user-content">
+        <div class="right-menu">
+          <div class="user">
+            <p>{{userDetails.username}} <img class="click-able logout-icon"
+                                             src="../../../../assets/icons/images/logout_black.png"></p>
+            <p class="current-date-mobile" #currentDateMobile></p>
+          </div>
+          <div class="user-img-data">
+            <img class="user-img" [src]="domSanitizer.bypassSecurityTrustUrl(userDetails.image)">
+          </div>
+          <div class="office-data">
+            Current Office: {{userDetails.officeNumber}}, Division: {{userDetails.division}}
+            <br/>
+            {{userDetails.ip}}
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav>
+

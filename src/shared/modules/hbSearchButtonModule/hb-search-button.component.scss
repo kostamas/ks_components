@@ -1,0 +1,36 @@
+@import "shared";
+
+.hb-button-container {
+  .icon-container {
+    @include flex(center, center);
+    position: relative;
+    width: 20px;
+    margin-right: 7px;
+  }
+
+  app-svg-icon {
+
+    svg {
+      @include dimension(18px, 18px);
+      padding-top: 7px;
+
+      path {
+        fill: white !important;
+      }
+    }
+  }
+
+  app-loader .loader-component {
+    @include dimension(32px, 32px);
+    left: 5px !important;
+    top: 0 !important;
+
+    .circle-loader {
+      @include dimension(20px, 20px);
+
+      .circle {
+        border-width: 3px;
+      }
+    }
+  }
+}

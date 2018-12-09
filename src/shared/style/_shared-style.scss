@@ -1,0 +1,61 @@
+@import "./shared-mixins";
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.hover-opacity:hover {
+  opacity: 0.8;
+}
+
+.animate {
+  transition: 0.2s;
+}
+
+.click-able {
+  cursor: pointer;
+  transition: 0.2s;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:active {
+    opacity: 1;
+  }
+}
+
+///////////////////////////      buttons      ////////////////////
+
+.hb-button {
+  @include hb-button(130px, 40px);
+}
+
+.hb-button-small {
+  @include hb-button(100px, 40px);
+}
+
+.hb-button-big {
+  @include hb-button(150px, 40px);
+}
+
+.hb-button-fit-content {
+  @include hb-button(auto, 40px);
+}
+
+////      scrollbar
+
+.scrollbar-style {
+  &::-webkit-scrollbar {
+    height: 20px;
+    width: 7px;
+    background-color: $hintOfRed;
+    border-radius: 100px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $gallery;
+    -webkit-border-radius: 1ex;
+
+  }
+}
+

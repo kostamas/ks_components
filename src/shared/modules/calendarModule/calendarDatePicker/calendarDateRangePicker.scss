@@ -1,0 +1,74 @@
+@import "shared";
+
+$dayCellSize: 30px;
+$dateRangeContainerWidth: 210px;
+
+.calendar-date-range-picker {
+  @include dimension($dateRangeContainerWidth, auto);
+  @include text-style(14px, $codeGray);
+  padding: 10px 5px;
+  border: 1px solid $silver;
+  cursor: pointer;
+  user-select: none;
+
+  .month-title {
+    @include flex(center, center);
+    font-size: 17px;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+
+  .date-range-header {
+    @include dimension($dateRangeContainerWidth, auto);
+    @include flex();
+    margin-bottom: 10px;
+    font-weight: bold;
+
+    .header-days {
+      @include dimension($dayCellSize, auto);
+      @include flex(center, center);
+    }
+  }
+
+  .days-to-select {
+    @include dimension($dateRangeContainerWidth, auto);
+    @include flex();
+    flex-wrap: wrap;
+
+    .day {
+      @include dimension($dayCellSize, $dayCellSize);
+      @include flex(center, center);
+      box-sizing: border-box;
+      border: 1px solid transparent;
+    }
+
+    .day.selected {
+      background-color: #E0F4FE;
+    }
+
+    .day.border-left {
+      border-left: 1px solid #9ddcfb;
+    }
+    .day.border-top {
+      border-top: 1px solid #9ddcfb;
+    }
+    .day.border-right {
+      border-right: 1px solid #9ddcfb;
+    }
+    .day.border-bottom {
+      border-bottom: 1px solid #9ddcfb;
+    }
+
+    .day.first-day, .day.last-day {
+      background-color: #9ddcfb;
+    }
+
+    .today {
+      border: 1px solid #c2c2c2;
+    }
+
+    .past {
+      color: #bab8b8;;
+    }
+  }
+}

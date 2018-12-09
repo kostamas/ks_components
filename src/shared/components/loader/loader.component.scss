@@ -1,0 +1,142 @@
+
+.loader-component.container-loader {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+}
+
+.loader-component.page-loader {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+}
+
+/*************************** rectangle loader **********************************/
+
+.loader-component:not(.rectangle-loader) .rectangle-loader {
+  display: none;
+}
+
+.rectangle-loader {
+  width: 75px;
+  height: 50px;
+  text-align: center;
+  font-size: 10px;
+  margin-bottom: 15px;
+
+  .rect {
+    background-color: #055885;
+    height: 100%;
+    width: 8px;
+    display: inline-block;
+    margin-right: 2px;
+    -webkit-animation: sk-stretchdelay 1s infinite ease-in-out;
+    animation: sk-stretchdelay 1s infinite ease-in-out;
+    box-shadow: 0 2px 2px 0 #fff;
+  }
+
+  .rect2 {
+    -webkit-animation-delay: -0.9s;
+    animation-delay: -0.9s;
+  }
+
+  .rect3 {
+    -webkit-animation-delay: -0.8s;
+    animation-delay: -0.8s;
+
+  }
+
+  .rect4 {
+    -webkit-animation-delay: -0.7s;
+    animation-delay: -0.7s;
+  }
+
+  .rect5 {
+    -webkit-animation-delay: -0.6s;
+    animation-delay: -0.6s;
+  }
+
+  .rect6 {
+    -webkit-animation-delay: -0.5s;
+    animation-delay: -0.5s;
+  }
+}
+
+@-webkit-keyframes sk-stretchdelay {
+  0%, 40%, 100% {
+    -webkit-transform: scaleY(0.4)
+  }
+  20% {
+    -webkit-transform: scaleY(1.0)
+  }
+}
+
+@keyframes sk-stretchdelay {
+  0%, 40%, 100% {
+    transform: scaleY(0.4);
+    -webkit-transform: scaleY(0.4);
+  }
+  20% {
+    transform: scaleY(1.0);
+    -webkit-transform: scaleY(1.0);
+  }
+}
+
+/*************************** rectangle loader **********************************/
+
+/*************************** circle loader **********************************/
+.loader-component:not(.circle-loader) .circle-loader {
+  display: none;
+}
+
+.circle-loader {
+  display: inline-block;
+  position: relative;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 15px;
+}
+
+.circle-loader .circle {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin: 6px;
+  border: 6px solid #fff;
+  border-radius: 50%;
+  animation: circle-loader-key-frame 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #fff transparent transparent transparent;
+}
+
+.circle-loader div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+
+.circle-loader div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+
+.circle-loader div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+
+@keyframes circle-loader-key-frame {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/*************************** circle loader **********************************/
+
+.loading_text {
+  text-align: center;
+  text-shadow: 1px 1px 0 #fff;
+  font-size: 15px;
+}

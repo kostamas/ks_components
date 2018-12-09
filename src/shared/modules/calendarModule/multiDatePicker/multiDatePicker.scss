@@ -1,0 +1,105 @@
+@import "shared";
+
+.multi-date-picker {
+  padding: 10px;
+  width: 664px;
+  background-color: white;
+  border: 1px solid #c3c9d8;
+  border-radius: 5px;
+  box-shadow: 2px 2px 8px -1px #ccc;
+
+  .controls {
+    @include flex(space-between);
+
+    .controls-left {
+      .input-from, .input-to {
+        @include dimension(180px, 28px);
+        @include text-style(16px, #3a3a3a);
+        padding-left: 10px;
+        border: 1px solid #c3c9d8;
+        border-radius: 3px;
+      }
+
+      .input-from {
+        margin-right: 10px;
+      }
+
+      .input-from.format-error, .input-to.format-error, .input-from.wrong-range, .input-to.wrong-range {
+        border: 1px solid red;
+        outline: none;
+      }
+    }
+
+    .controls-right {
+      @include flex();
+
+      .cancel-btn, .previous-month, .next-month {
+        @include dimension(33px, 32px);
+        box-sizing: border-box;
+        padding-top: 3px;
+      }
+
+      .previous-month, .next-month {
+        @include flex(center, center);
+        border: 1px solid $silverChalice;
+      }
+
+      .previous-month {
+        border-right: none;
+        border-radius: 3px 0 0 3px;
+      }
+
+      .next-month {
+        border-radius: 0 3px 3px 0;
+      }
+
+      .icon-angle-left, .icon-angle-right {
+        @include text-style(30px, $cadetBlue);
+      }
+
+      .cancel-btn {
+        @include flex(center, center);
+        margin-right: 10px;
+        border: 1px solid $silverChalice;
+        border-radius: 3px;
+        padding-top: 3px;
+
+        .icon-cancel-1 {
+          @include dimension(21px, 20px);
+          @include flex(center, center);
+          @include text-style(15px, $white);
+          background-color: $stTropaz;
+          border-radius: 100%;
+        }
+      }
+    }
+  }
+
+  .date-range-pickers-wrapper {
+    @include flex();
+    margin-top: 10px;
+
+    app-calendar-date-range-picker:first-child .calendar-date-range-picker,
+    app-calendar-date-range-picker:nth-child(2) .calendar-date-range-picker {
+      border-right: none;
+    }
+  }
+
+  .controls-bottom {
+    @include dimension(100%);
+    @include flex();
+    flex-direction: row-reverse;
+    margin-top: 10px;
+
+    .select-btn {
+      @include dimension(85px, 37px);
+      @include flex(center, center);
+      @include text-style(20px, $white);
+      border-radius: 3px;
+      background-color: $veniceBlue;
+      font-weight: 400;
+      width: 120px;
+
+    }
+  }
+}

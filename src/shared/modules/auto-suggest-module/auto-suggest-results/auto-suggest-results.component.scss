@@ -1,0 +1,41 @@
+@import "shared";
+
+.auto-suggest-result-container {
+  border-radius: 3px;
+  font-size: 15px;
+  font-weight: 400;
+  font-family: 'Roboto', sans-serif;
+  z-index: 20;
+  border: #000000 1px solid;
+  min-height: 50px;
+  max-height: 200px;
+  position: absolute;
+  background-color: #fcfcfc;
+  overflow-y: auto;
+
+  .item-result {
+    height: 36px;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+  }
+
+  .item-result.selected {
+    background-color: #e8e8e8;
+    margin-right: 2px;
+  }
+  .item-result:hover {
+    background-color: #e8e8e8;
+  }
+}
+
+.modal-container.auto-suggest-results {
+  .modal-overlay {
+    background-color: transparent;
+  }
+
+  .component-wrapper {
+    background-color: white;
+    transform: none;
+  }
+}

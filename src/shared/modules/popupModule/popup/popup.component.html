@@ -1,0 +1,13 @@
+<div class="popup-container" [ngClass]="data.type">
+
+  <div class="title-and-content">
+    <div class="title">{{data.title}}</div>
+    <div class="content scrollbar-style">{{data.content}}</div>
+  </div>
+
+  <div class="buttons-wrapper">
+    <div class="hb-button click-able" (click)="data.onDone()" >Done</div>
+    <div class="hb-button click-able" (click)="data.onCancel()">Cancel</div>
+  </div>
+
+</div>

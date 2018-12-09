@@ -1,0 +1,100 @@
+@import "shared-colors";
+
+@mixin text-style($size: null,$color: null,$family: null,$weight: null,$letter-spacing:null,$text-transform: null, $style: null, $align: null) {
+  @if ($size) {
+    font-size: $size;
+  }
+
+  @if ($color) {
+    color: $color;
+  }
+
+  font-family: sans-serif;
+  @if ($family) {
+    font-family: $family, sans-serif;
+  }
+
+  @if $weight {
+    font-weight: $weight;
+  }
+
+  @if $letter-spacing {
+    letter-spacing: $letter-spacing;
+  }
+
+  @if $text-transform {
+    text-transform: $text-transform;
+  }
+
+  @if $style {
+    font-style: $style;
+  }
+
+  @if $align {
+    text-align: $align;
+  }
+}
+
+@mixin dimension($width, $height: null) {
+  width: $width;
+
+  @if $height == null {
+    height: $width;
+  } @else {
+    height: $height;
+  }
+}
+
+@mixin flex($justify-content: null, $align-items: null) {
+  display: flex;
+
+  @if $justify-content {
+    justify-content: $justify-content;
+  }
+
+  @if $align-items {
+    align-items: $align-items;
+  }
+}
+
+@mixin position($position, $top: null, $right: null, $left: null, $bottom: null, $z-index: null) {
+  position: $position;
+
+  @if $top {
+    top: $top;
+  }
+
+  @if $right {
+    right: $right;
+  }
+
+  @if $left {
+    bottom: $left;
+  }
+
+  @if $bottom {
+    left: $bottom;
+  }
+
+  @if $z-index {
+    z-index: $z-index;
+  }
+}
+
+@mixin hb-button($width, $height) {
+  @include flex(center, center);
+  @include dimension($width, $height);
+  @include text-style(20px, white);
+  border-radius: 3px;
+  border: 1px solid $rollingStone;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background-color: #055885;
+  box-sizing: border-box;
+  cursor: pointer;
+
+  &:hover{
+    background-color: #0880ad;
+  }
+}

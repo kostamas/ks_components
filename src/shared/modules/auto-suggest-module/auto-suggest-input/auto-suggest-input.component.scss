@@ -1,0 +1,49 @@
+@import "shared";
+
+$inputWidth: 100%;
+
+.input-wrapper {
+  width: $inputWidth;
+  position: relative;
+
+  .search-icon {
+    @include position(absolute, 11px, 8px);
+
+    svg {
+      @include dimension(15px, 15px);
+    }
+  }
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+input {
+  border-radius: 3px;
+  font-size: 15px;
+  font-weight: 400;
+  font-family: 'Roboto', sans-serif;
+  height: 36px;
+  box-sizing: border-box;
+  padding: 0 5px 0 5px;
+  border: 1px solid #c3c9d8;
+  width: $inputWidth;
+  background-color: #fcfcfc;
+}

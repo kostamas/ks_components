@@ -1,0 +1,7 @@
+<div class="auto-suggest-result-container" [ngStyle]="autoSuggestResultsStyle" #autoSuggest>
+  <div class="item-result" *ngFor="let item of data.results; let i = index"
+       (click)="setValue(i, true)"
+       [ngClass]="isSelected(i)"
+       id="itemResult{{i}}">{{item.key}}
+  </div>
+</div>

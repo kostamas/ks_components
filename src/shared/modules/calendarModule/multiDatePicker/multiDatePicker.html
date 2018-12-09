@@ -1,0 +1,50 @@
+<div class="multi-date-picker">
+
+  <div class="controls">
+    <div class="controls-left">
+      <form [formGroup]="formGroup">
+        <input class="input-from" [ngClass]="errorsClass(formGroup.controls.to.errors)" placeholder="From Date"
+               formControlName="from">
+        <input class="input-to" [ngClass]="errorsClass(formGroup.controls.from.errors)" placeholder="To Date" formControlName="to">
+      </form>
+    </div>
+
+    <div class="controls-right">
+      <div class="cancel-btn click-able" (click)="cancel()">
+        <app-svg-icon [svg]="SVG_ICONS.round_close"></app-svg-icon>
+      </div>
+
+      <div class="previous-month click-able" (click)="updateCalendarDates(-1)">
+        <app-svg-icon [svg]="SVG_ICONS.back"></app-svg-icon>
+      </div>
+
+      <div class="next-month click-able" (click)="updateCalendarDates(1)">
+        <app-svg-icon [svg]="SVG_ICONS.next"></app-svg-icon>
+      </div>
+    </div>
+  </div>
+
+  <div class="date-range-pickers-wrapper" #multiDatePicker>
+    <app-calendar-date-range-picker
+      [disableRangeSelection]="true"
+      [externalSelection$]="selection$"
+      [date]="calendarDates[0]">
+    </app-calendar-date-range-picker>
+
+    <app-calendar-date-range-picker
+      [disableRangeSelection]="true"
+      [externalSelection$]="selection$"
+      [date]="calendarDates[1]">
+    </app-calendar-date-range-picker>
+
+    <app-calendar-date-range-picker
+      [disableRangeSelection]="true"
+      [externalSelection$]="selection$"
+      [date]="calendarDates[2]">
+    </app-calendar-date-range-picker>
+  </div>
+
+  <div class="controls-bottom">
+    <div class="select-btn click-able" (click)="select()"> Select</div>
+  </div>
+</div>
