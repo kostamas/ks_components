@@ -5,7 +5,9 @@ import {EllipsisPipe} from '../../../pips/ellipsis.pipe';
 import {FilterPipe} from '../../../pips/filter.pipe';
 import {MainHeaderComponent} from '../main-header.component';
 import {MenuItemComponent} from '../menu-item/menu-item.component';
-import {AdfWrapperComponent} from '../../../../components/adf-wrapper/adf-wrapper.component';
+import {SvgIconModule} from '../../svgIconModule/svg-icon.module';
+import {LoaderModule} from '../../loader-module/loader..module';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('SubMenuItemComponent', () => {
   let component: SubMenuItemComponent;
@@ -13,13 +15,17 @@ describe('SubMenuItemComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        SvgIconModule,
+        LoaderModule,
+        HttpClientTestingModule
+      ],
       declarations: [
         EllipsisPipe,
         FilterPipe,
         MainHeaderComponent,
         MenuItemComponent,
-        SubMenuItemComponent,
-        AdfWrapperComponent
+        SubMenuItemComponent
       ]
     })
       .compileComponents();
@@ -29,15 +35,19 @@ describe('SubMenuItemComponent', () => {
     fixture = TestBed.createComponent(SubMenuItemComponent);
     component = fixture.componentInstance;
     component.menuData = {
-      items: [
-        {title: 'Hotels maintenance', items: []},
-        {title: 'Hotels maintenance 2.0', items: []},
-        {title: 'Hotels by office', items: []},
-        {title: 'Hotels by office 2.0', items: []},
-        {title: 'XML sendings (BMS) 2.0', items: []},
-      ],
-      name: 'Hotel'
+      name: 'Distribution',
+      menus: [{
+        title: 'Traditional sale contract',
+        menus: [{
+          id: 1,
+          isFavorite: false,
+          name: 'Create offer / unified contract',
+          formCode: 'RE_FM_CO_CREAR_OFERT',
+          link: 'http://pulse20.hotelbeds.com/webcenter/content/conn/WebCenterSpaces-ucm/path/WebCenterSpaces-Root/atlas2_0/Atlas%2011g%20Help/Accommodation/Create%20Offer%20Contracts.docx?rendition=Web'
+        }]
+      }]
     };
+
     fixture.detectChanges();
   });
 

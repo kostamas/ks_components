@@ -1,11 +1,13 @@
 import {AfterViewInit, ChangeDetectorRef, Component, HostListener, NgZone, OnInit, ViewChild} from '@angular/core';
-import {AuthService} from '../../../services/auth.service';
+import {AuthService} from '../../services/auth.service';
 import {DomSanitizer} from '@angular/platform-browser';
 import {DatePipe} from '@angular/common';
 import {MenusService} from './menus.service';
 import {OverlayService} from '../../../services/overlay.service';
 import {filter, tap} from 'rxjs/operators';
 import {UserDetails} from './user-details';
+import {FavoritesService} from './favorites.service';
+import {WrapperConnectorService} from '../../../services/wrapper-connector.service';
 
 @Component({
   selector: 'app-main-header',
@@ -16,8 +18,8 @@ export class MainHeaderComponent implements OnInit, AfterViewInit {
   public mainHeaderViewTypes: any = {expanded: 'expanded', collapsed: 'collapsed', collapsedIcons: 'collapsedIcons'};
   public mainHeaderView: string = this.mainHeaderViewTypes.expanded;
   public displayUserMenu: boolean = false;
-  public user: IUser;
   public headerTabs: IHeaderTab[];
+  public favoritePages: IMenuLink[];
   public selectedHeaderTabElement: any;
   public selectedHeaderTab: IHeaderTab;
   public isAuthenticated: boolean = false;
@@ -33,29 +35,33 @@ export class MainHeaderComponent implements OnInit, AfterViewInit {
   @ViewChild('currentDateMobile') currentDateMobile: any;
 
   constructor(public auth: AuthService, public domSanitizer: DomSanitizer, private zone: NgZone, private datePipe: DatePipe,
-              private menusService: MenusService, private overlayService: OverlayService, private cdRef: ChangeDetectorRef) {
+              private menusService: MenusService, private overlayService: OverlayService, private cdRef: ChangeDetectorRef,
+              private favoritesService: FavoritesService, private wrapperConnectorService: WrapperConnectorService) {
   }
 
   ngOnInit(): void {
-    this.auth.user$.subscribe(user => this.user = user);
     this.auth.isAuthenticated$.subscribe(isAuthenticated => this.isAuthenticated = isAuthenticated);
     this.auth.isAuthenticated$
       .pipe(
         filter(isAuthenticated => !!isAuthenticated),
         tap((isAuthenticated: boolean) => this.isAuthenticated = isAuthenticated)
       )
-      .subscribe(userDetails => this.auth.getUserDetails(ud => this.userDetails = ud));
+      .subscribe(() => this.auth.getUserDetails(ud => this.userDetails = ud));
+
+    this.wrapperConnectorService.officeName$.subscribe(officeName => this.userDetails.officeNumber = officeName);
+    this.wrapperConnectorService.divisionName$.subscribe(divisionName => this.userDetails.division = divisionName);
+    this.wrapperConnectorService.server$.subscribe(server => this.userDetails.ip = server);
+    this.menusService.isMenuItemOpen$.subscribe(isMenuItemOpen => this.isMenuItemOpen = isMenuItemOpen);
 
     this.overlayService.overlayClick$.subscribe(this.closeMenuAndUserDetails);
     this.overlayService.overlayClick$.subscribe(() => {
       this.closeMenu();
       this.displayUserMenu = false;
+      setTimeout(() => {
+        this.favoritesService.getFavorites();
+      }, 500);
     });
-    this.menusService.getMenus(headerTabs => {
-      this.headerTabs = headerTabs;
-      this.mainHeaderView = this.mainHeaderViewTypes.expanded;
-      setTimeout(this.calcViewPortBreak.bind(this));
-    });
+    this.initMenus();
   }
 
   ngAfterViewInit(): void {
@@ -73,6 +79,45 @@ export class MainHeaderComponent implements OnInit, AfterViewInit {
     this.cdRef.detectChanges();
   }
 
+  initMenus(): void {
+    this.menusService.getMenus(headerTabs => {
+      this.headerTabs = headerTabs;
+      this.mainHeaderView = this.mainHeaderViewTypes.expanded;
+      this.favoritesService.favoritesList.subscribe(result => {
+          if (result != null) {
+            this.mapFavoritePages(result);
+          }
+          this.menusService.menuLoaded$.next(true);
+        }
+      );
+      this.favoritesService.getFavorites();
+      setTimeout(this.calcViewPortBreak.bind(this));
+      this.buildPagePaths(headerTabs);
+    });
+  }
+
+  buildPagePaths(headerTabs: IHeaderTab[]): void {
+    const pagesPaths = {};
+    headerTabs.forEach(level1 => {
+      level1.menus.forEach(level2 => {
+        level2.menus.forEach(level3 => {
+          level3.menus.forEach(page => {
+            pagesPaths[page.id] = {
+              name: page.name,
+              id: page.id,
+              path: [
+                {id: level1.id, name: level1.name},
+                {id: level2.id, name: level2.name},
+                {id: level3.id, name: level3.name},
+              ]
+            };
+          });
+        });
+      });
+    });
+    this.menusService.pagesPaths$.next(pagesPaths);
+  }
+
   @HostListener('window:resize', ['$event'])
   onResize(): void {
     if (!this.lockHeaderResize) {
@@ -85,9 +130,9 @@ export class MainHeaderComponent implements OnInit, AfterViewInit {
   }
 
   onHeaderTabClick(selectedHeaderTabElement: any, selectedHeaderTab: IHeaderTab): void {
-    this.isMenuItemOpen = this.selectedHeaderTabElement === null || this.selectedHeaderTabElement !== selectedHeaderTabElement;
-
-    if (this.isMenuItemOpen) {
+    const isMenuItemOpen = this.selectedHeaderTabElement === null || this.selectedHeaderTabElement !== selectedHeaderTabElement;
+    if (isMenuItemOpen) {
+      this.favoritesService.getFavorites();
       this.overlayService.isOverlayOpen$.next(true);
       this.selectedHeaderTabElement = selectedHeaderTabElement;
       this.selectedHeaderTab = selectedHeaderTab;
@@ -95,16 +140,17 @@ export class MainHeaderComponent implements OnInit, AfterViewInit {
     } else {
       this.closeMenu();
     }
+    this.menusService.isMenuItemOpen$.next(isMenuItemOpen)
   }
 
   closeMenu = () => {
-    this.isMenuItemOpen = false;
     this.selectedHeaderTabElement = null;
     this.selectedHeaderTab = null;
-  };
+    this.menusService.isMenuItemOpen$.next(false)
+  }
 
   getIcon(iconName: string): string {
-    return `../../../../assets/icons/images/${iconName}`;
+    return `assets/icons/images/${iconName}`;
   }
 
   openUserMenu(): boolean {
@@ -119,7 +165,12 @@ export class MainHeaderComponent implements OnInit, AfterViewInit {
   closeMenuAndUserDetails = () => {
     this.closeMenu();
     this.displayUserMenu = false;
-  };
+    this.overlayService.isOverlayOpen$.next(false);
+  }
+
+  placeHolderClick = () => {
+    this.overlayService.overlayClick$.next();
+  }
 
   resizeMainHeader(): void {
     const viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
@@ -132,7 +183,6 @@ export class MainHeaderComponent implements OnInit, AfterViewInit {
       this.mainHeaderView = this.mainHeaderViewTypes.collapsed;
       return;
     }
-
     this.calcViewPortBreak();
   }
 
@@ -158,5 +208,28 @@ export class MainHeaderComponent implements OnInit, AfterViewInit {
     const leftSection = document.getElementsByClassName('main-header-left-section')[0].getBoundingClientRect();
     const rightSection = document.getElementsByClassName('main-header-right-section')[0].getBoundingClientRect();
     return rightSection.width + leftSection.left + leftSection.width;
+  }
+
+  public mapFavoritePages(favorites: IMenuLink[]): void {
+    this.favoritePages = favorites;
+    const favoriteIds: number[] = this.favoritePages.map(f => f.id);
+    this.headerTabs.forEach(headers => {
+      headers.menus.forEach(subHeaders => {
+        subHeaders.menus.forEach(subItems => {
+          subItems.menus.forEach(subMenus => {
+            subMenus.isFavorite = favoriteIds.includes(subMenus.id);
+          });
+        });
+      });
+    });
+  }
+
+  public getUserImage() {
+    if (this.userDetails && this.userDetails.image) {
+      return this.domSanitizer.bypassSecurityTrustUrl(this.userDetails.image);
+    } else {
+      return this.getIcon('icono_no-registrado1.png');
+    }
+
   }
 }

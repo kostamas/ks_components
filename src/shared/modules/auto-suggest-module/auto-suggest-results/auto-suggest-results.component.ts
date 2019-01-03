@@ -1,5 +1,5 @@
 import {Component, ElementRef, HostListener, Input, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {AutoSuggestService} from "../auto-suggest.service";
+import {SVG_ICONS} from "../../svgIconModule/svg-icons.const";
 
 @Component({
   selector: 'app-auto-suggest-results',
@@ -9,14 +9,17 @@ import {AutoSuggestService} from "../auto-suggest.service";
 })
 export class AutoSuggestResultsComponent implements OnInit {
   public autoSuggestResultsStyle: any = {};
-  public selectedIndex: number = 0;
+  public selectedIndex: number = -1;
   public selectedValue: string = '';
+  public SVG_ICONS: any = SVG_ICONS;
 
-  @Input('data') data;
+  private isHovered: boolean = false;
+
+  @Input('data') data: any;
 
   @ViewChild('autoSuggest') resultContainer: ElementRef;
 
-  constructor(public autoSuggestService: AutoSuggestService) {
+  constructor() {
   }
 
   ngOnInit() {
@@ -24,12 +27,16 @@ export class AutoSuggestResultsComponent implements OnInit {
   }
 
   @HostListener('document:keyup', ['$event'])
-  keyUpHandler(keyEvent: KeyboardEvent) {
+  keyUpHandler(keyEvent: KeyboardEvent): void {
     const key = keyEvent.key;
 
     switch (key.toUpperCase()) {
       case 'ENTER':
-        this.data.setText();
+        if (this.selectedIndex < 0) {
+          return;
+        }
+        this.data.setText(this.data.results[this.selectedIndex]);
+        this.data.closeModal();
         break;
       case 'ARROWDOWN':
         this.nextIndex();
@@ -59,7 +66,7 @@ export class AutoSuggestResultsComponent implements OnInit {
   }
 
   nextIndex(): void {
-    if (this.selectedIndex + 1 !== this.data.results.length) {
+    if (!this.isHovered && this.selectedIndex + 1 !== this.data.results.length) {
       const nextIndex = this.selectedIndex + 1;
       this.setValue(nextIndex, true);
     }
@@ -76,7 +83,7 @@ export class AutoSuggestResultsComponent implements OnInit {
   }
 
   previousIndex(): void {
-    if (this.selectedIndex - 1 > -1) {
+    if (!this.isHovered && this.selectedIndex - 1 > -1) {
       const previousIndex = this.selectedIndex - 1;
       this.setValue(previousIndex, true);
     }
@@ -96,8 +103,26 @@ export class AutoSuggestResultsComponent implements OnInit {
       this.resultContainer.nativeElement.scrollTop = scrollPercentage;
 
       if (setText) {
-        this.data.setText(selected.key);
+        this.data.setText(selected);
       }
     }
+  }
+
+  selectResultHandler(index): any {
+    this.setValue(index, true);
+    this.data.closeModal();
+  }
+
+  mouseEnterHandler(): any {
+    this.selectedIndex = -1;
+    this.isHovered = true;
+  }
+
+  mouseLeaveHandler(): any {
+    this.isHovered = false;
+  }
+
+  onCloseIconClick(): any {
+    this.data.onCloseIconClick()
   }
 }

@@ -15,12 +15,11 @@ import {isEmpty} from "../../../utils/jsUtils";
   encapsulation: ViewEncapsulation.None
 })
 export class MultiDatePickerComponent implements OnInit, OnDestroy {
-  public daysToSelect: any;
-  public selection$: any = new Subject();
-  public cancelSelection$: any = new Subject();
+  public selection$: Subject<ICalendarClickPosition> = new Subject();
+  public cancelSelection$: Subject<boolean> = new Subject();
   public moment: any = moment;
   public calendarDates: string[];
-  public unSubscribe$: any = new Subject();
+  public unSubscribe$: Subject<any> = new Subject();
   public DATE_INPUT_FORMAT: string = 'DD/MM/YYYY';
   public canSelect: boolean;
   public SVG_ICONS: any = SVG_ICONS;
@@ -135,9 +134,9 @@ export class MultiDatePickerComponent implements OnInit, OnDestroy {
 
   select(): void {
     const {firstDate, lastDate} = this.calendarDatePickerService.getSelectedRange();
-    const  format = this.config.format || 'MMMM Do YYYY';
+    const format = this.config.format || 'MMMM Do YYYY';
 
-    if(firstDate.format(format) === lastDate.format(format)){
+    if (firstDate.format(format) === lastDate.format(format)) {
       this.onSelectRange.next(null);
       return
     }

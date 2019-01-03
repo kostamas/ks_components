@@ -1,17 +1,17 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {HbSearchButtonComponent} from './hb-search-button.component';
-import {LoaderComponent} from '../../components/loader/loader.component';
-import {SvgIconModule} from "../svgIconModule/svg-icon.module";
+import {SvgIconModule} from '../svgIconModule/svg-icon.module';
+import {LoaderModule} from '../loader-module/loader..module';
 
 @NgModule({
   imports: [
     BrowserModule,
-    SvgIconModule
+    SvgIconModule,
+    LoaderModule
   ],
   declarations: [
     HbSearchButtonComponent,
-    LoaderComponent
   ],
   providers: [],
   exports: [HbSearchButtonComponent]

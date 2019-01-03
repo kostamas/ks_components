@@ -1,16 +1,16 @@
 <div class="scroll-able-sub-menu" #subMenuContainer>
   <div class="sub-menu-item">
 
-    <div class="sub-menu-columns-container" *ngFor="let subMenuColumnArr of menuData.pageGroupNames">
+    <div class="sub-menu-columns-container" *ngFor="let subMenuColumnArr of menuData.menus">
 
-      <div class="sub-menu-title">{{subMenuColumnArr.title}}</div>
+      <div class="sub-menu-title">{{subMenuColumnArr.name}}</div>
 
-      <div *ngFor="let column of subMenuColumnArr.pages " class="sub-menu-category click-able">
-        <div class="favorite-div" [ngClass]="{'show-favorite': column.isFavorite}">
-          <img [src]="favoriteImgSrc(column.isFavorite)"/>
+      <div *ngFor="let page of subMenuColumnArr.menus " class="sub-menu-category click-able">
+        <div class="favorite-div" [ngClass]="{'show-favorite': page.isFavorite}">
+          <img [src]="favoriteImgSrc(page.isFavorite)" (click)="favoriteClick(page)"/>
         </div>
-        <div class="column-name">
-          {{column.name}}
+        <div class="column-name" (click)="pageClickHandler(page)">
+          {{page.name}}
         </div>
       </div>
     </div>

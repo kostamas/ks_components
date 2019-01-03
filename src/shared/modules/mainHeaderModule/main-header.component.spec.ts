@@ -6,6 +6,8 @@ import {FilterPipe} from '../../pips/filter.pipe';
 import {DatePipe} from '@angular/common';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {MainHeaderModule} from './main-header.module';
+import {SvgIconModule} from '../svgIconModule/svg-icon.module';
+import {LoaderModule} from '../loader-module/loader..module';
 
 const mockMenus = require('../../../../../test/mock/mockMenus');
 
@@ -24,7 +26,9 @@ describe('MainHeaderComponent', () => {
       ],
       imports: [
         HttpClientTestingModule,
-        MainHeaderModule
+        MainHeaderModule,
+        SvgIconModule,
+        LoaderModule
       ],
       providers: [
         DatePipe
@@ -68,66 +72,91 @@ describe('MainHeaderComponent', () => {
     expect(!component.isMenuItemOpen && component.selectedHeaderTabElement === null && component.selectedHeaderTab === null).toBeTruthy();
   });
 
-  it('test main header responsive', (done) => {
-    const _window: any = window;
 
-    if (_window.isCopiedWindow) {
-      component.headerTabs = mockMenus;
-      component.lockHeaderResize = true;
-      fixture.detectChanges();
-      component.calcViewPortBreak();
-      testMainHeaderClass(_window, component.mainHeaderViewTypes.collapsedIcons)
-        .then(() => {
-          // component.headerTabs = mockMenus.filter((item, index) => index < 5);
-          // if there is some issues with the resize action it can be replaced with mockMenus.filter.
-          _window.resizeTo(700, 500);
-          return testMainHeaderClass(_window, component.mainHeaderViewTypes.collapsed);
-        })
-        .then(() => {
-          // component.headerTabs = mockMenus.filter((item, index) => index < 2);
-          // if there is some issues with the resize action it can be replaced with mockMenus.filter.
-          _window.resizeTo(1500, 500);
-          return testMainHeaderClass(_window, component.mainHeaderViewTypes.expanded);
-        })
-        .then(_window.testPass);
+  describe('favorite functionality', () => {
+    it('mapped favorites', () => {
 
-    } else {
-      const newWindow: any = window.open('http://localhost:9876/debug.html', '', 'width=900, height=800');
-      newWindow.isCopiedWindow = true;
-      newWindow.testPass = () => {
-        component.lockHeaderResize = false;
-        expect(true).toBeTruthy();
-        newWindow.close();
-        done();
-      };
 
-      newWindow.testFail = function () {
-        component.lockHeaderResize = true;
-        expect(false).toBeTruthy();
-        newWindow.close();
-        done();
-      };
-    }
-  }, 15000);
+      component.favoritePages = [{
+        id: 4042144,
+        formCode: 'AT2MDMSP0013',
+        path: undefined,
+        name: 'HSI Profiles maintenance 2.0',
+        isFavorite: true,
+        link: undefined
+      }];
 
-  const testMainHeaderClass = (_window, expectedClass) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        component.mainHeaderView = component.mainHeaderViewTypes.expanded;
-        fixture.detectChanges();
-        component.calcViewPortBreak();
-        setTimeout(() => {
-          fixture.detectChanges();
-          setTimeout(() => {
-            const mainHeaderElement = _window.document.querySelector('.main-header');
-            if (!mainHeaderElement.classList.contains(expectedClass)) {
-              _window.testFail();
-              reject();
+
+      component.headerTabs = [
+        {
+          'name': 'Master Data',
+          'icon': 'ico_master_data.png',
+          'menus': [
+            {
+              'name': 'Distribution',
+              'menus': [
+                {
+                  title: 'Exclusions maintenance 2.0',
+                  'menus': [
+                    {
+                      'id': 4042307,
+                      'name': 'Exclusions maintenance 2.0',
+                      'formCode': 'AT2ACCDI0028',
+                      isFavorite: false,
+                      link: undefined
+                    }
+                  ],
+                },
+                {
+                  'title': 'Set up',
+                  'menus': [
+                    {
+                      'id': 4042229,
+                      'name': 'Concept types maintenance 2.0',
+                      'formCode': 'AT2MDMRM0016',
+                      isFavorite: false,
+                      link: undefined
+                    },
+                    {
+                      'id': 4042166,
+                      'name': 'Countries maintenance 2.0',
+                      'formCode': 'AT2MDMDE0003',
+                      isFavorite: false,
+                      link: undefined
+                    }
+                  ]
+                },
+                {
+                  'title': 'Hotelopia',
+                  'menus': [
+                    {
+                      'id': 4042144,
+                      'name': 'Promotions 2.0',
+                      'formCode': 'AT2MDMRM0044',
+                      isFavorite: false,
+                      link: undefined
+                    }
+                  ]
+                }
+              ]
             }
-            resolve();
-          });
-        });
-      }, 500);
+          ]
+        }];
+
+      component.mapFavoritePages(component.favoritePages);
+      const favoritePageInMenu = [];
+      component.headerTabs.forEach(h => h.menus.forEach(m1 => m1.menus.forEach(m2 => m2.menus.forEach(m3 => {
+        if (m3.id === component.favoritePages[0].id) {
+          favoritePageInMenu.push(m3);
+        }
+      }))));
+      expect(favoritePageInMenu.length).toEqual(1);
+      expect(favoritePageInMenu[0].isFavorite).toBeTruthy();
+      expect(favoritePageInMenu[0].id).toEqual(component.favoritePages[0].id);
     });
-  };
+
+
+  });
+
+
 });

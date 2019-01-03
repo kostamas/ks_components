@@ -6,26 +6,41 @@
   font-weight: 400;
   font-family: 'Roboto', sans-serif;
   z-index: 20;
-  border: #000000 1px solid;
-  min-height: 50px;
-  max-height: 200px;
+  border: 1px solid #c3c9d8;
   position: absolute;
   background-color: #fcfcfc;
-  overflow-y: auto;
+  overflow: visible;
+  box-sizing: border-box;
+
+  .round-search-icon {
+    @include position(absolute, -26px, 17px);
+
+    svg {
+      @include dimension(15px, 15px);
+    }
+  }
 
   .item-result {
-    height: 36px;
+    min-width: auto;
     cursor: pointer;
     font-family: 'Roboto', sans-serif;
-    font-size: 20px;
+    font-size: 16px;
+    padding: 8px 10px;
+
+    .item-value {
+      width: 95%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
   .item-result.selected {
-    background-color: #e8e8e8;
-    margin-right: 2px;
+    background-color: #c1e9fe;
   }
+
   .item-result:hover {
-    background-color: #e8e8e8;
+    background-color: #c1e9fe;
   }
 }
 

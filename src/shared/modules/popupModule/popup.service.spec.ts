@@ -1,10 +1,16 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { PopupService } from './popup.service';
+import {LoaderModule} from '../loader-module/loader..module';
+import {SvgIconModule} from '../svgIconModule/svg-icon.module';
 
 describe('PopupService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports:[
+        SvgIconModule,
+        LoaderModule
+      ],
       providers: [PopupService]
     });
   });

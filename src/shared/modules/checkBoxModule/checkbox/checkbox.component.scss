@@ -1,0 +1,41 @@
+@import "shared";
+
+.checkbox-component {
+  @include dimension(30px, 20px);
+  margin-right: 2px;
+  display: block;
+  position: relative;
+
+  input {
+    @include dimension(20px, 20px);
+    @include user-select(none);
+    position: absolute;
+    opacity: 0;
+    z-index: 1;
+  }
+
+  .check-mark {
+    @include position(absolute, 0, null, null, 0);
+    @include dimension(20px, 20px);
+    background-color: white;
+    border: 1px #c3c9d8 solid;
+    border-radius: 4px;
+  }
+
+  .check-mark:after {
+    @include dimension(5px, 10px);
+    @include position(absolute, 2px, null, null, 7px);
+    content: "";
+    border: solid white;
+    border-width: 0 2.4px 2.4px 0;
+    transform: rotate(45deg);
+    display: none;
+  }
+
+  input:checked ~ .check-mark {
+    background-color: #055885;
+    &:after {
+      display: block;
+    }
+  }
+}

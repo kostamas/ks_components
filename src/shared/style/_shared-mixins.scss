@@ -81,6 +81,13 @@
   }
 }
 
+@mixin user-select($val){
+  -webkit-user-select: $val;
+  -moz-user-select: $val;
+  -ms-user-select: $val;
+  user-select: $val;
+}
+
 @mixin hb-button($width, $height) {
   @include flex(center, center);
   @include dimension($width, $height);
@@ -95,6 +102,6 @@
   cursor: pointer;
 
   &:hover{
-    background-color: #0880ad;
+    background-color: #5798bb;
   }
 }

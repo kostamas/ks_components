@@ -11,6 +11,11 @@
   padding: 20px;
   box-sizing: border-box;
 
+  &.hidden {
+    display: none;
+  }
+
+
   .top-triangle {
     @include dimension(0, 0);
     border-left: 16px solid transparent;

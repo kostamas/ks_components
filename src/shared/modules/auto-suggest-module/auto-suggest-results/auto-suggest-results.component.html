@@ -1,7 +1,14 @@
-<div class="auto-suggest-result-container" [ngStyle]="autoSuggestResultsStyle" #autoSuggest>
+<div class="auto-suggest-result-container" [ngStyle]="autoSuggestResultsStyle" #autoSuggest
+     (mouseenter)="mouseEnterHandler()" (mouseleave)="mouseLeaveHandler()">
+
+  <app-svg-icon [svg]="SVG_ICONS.round_close" class="round-search-icon click-able"
+                (click)="onCloseIconClick();"></app-svg-icon>
+
   <div class="item-result" *ngFor="let item of data.results; let i = index"
-       (click)="setValue(i, true)"
+       (click)="selectResultHandler(i);"
        [ngClass]="isSelected(i)"
-       id="itemResult{{i}}">{{item.key}}
+       id="itemResult{{i}}">
+    <div class="item-value">{{item.name}}</div>
   </div>
+
 </div>

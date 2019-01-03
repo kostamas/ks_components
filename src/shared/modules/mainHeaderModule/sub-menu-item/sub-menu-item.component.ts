@@ -1,13 +1,6 @@
-import {
-  AfterViewInit,
-  Component,
-  HostListener,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+import {Component, HostListener, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {FavoritesService} from '../favorites.service';
+import {MenusService} from '../menus.service';
 
 @Component({
   selector: 'app-sub-menu-item',
@@ -16,14 +9,16 @@ import {
 })
 export class SubMenuItemComponent implements OnInit, OnChanges {
   public lockHeaderResize: boolean = false;
+  public favoritesList: IMenuLink[];
 
   @Input() menuData: IMenu;
   @ViewChild('subMenuContainer') subMenuContainer;
 
-  constructor() {
+  constructor(public favoriteService: FavoritesService, public menusService: MenusService) {
   }
 
   ngOnInit(): void {
+    this.favoriteService.favoritesList.subscribe(result => this.favoritesList = result);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -54,14 +49,16 @@ export class SubMenuItemComponent implements OnInit, OnChanges {
   }
 
   favoriteImgSrc(isFavorite: boolean): string {
+    return this.favoriteService.favoriteImgSrc(isFavorite);
+  }
 
-    let favoriteIcon: string = '';
-    const favoriteIconPath: string = '../../../../assets/icons/images/';
-    if (isFavorite) {
-      favoriteIcon = 'favorites_on.jpg';
-    } else {
-      favoriteIcon = 'favorites_off.jpg';
-    }
-    return favoriteIconPath + favoriteIcon;
+
+  favoriteClick(link: IMenuLink): void {
+    this.favoriteService.favoriteClick(link);
+  }
+
+  pageClickHandler(selectedPage): void {
+    this.menusService.menuTab$.next(selectedPage);
+    this.menusService.isMenuItemOpen$.next(false);
   }
 }

@@ -1,10 +1,16 @@
-import { TestBed, inject } from '@angular/core/testing';
+import {inject, TestBed} from '@angular/core/testing';
 
-import { ModalService } from './modal.service';
+import {ModalService} from './modal.service';
+import {SvgIconModule} from '../svgIconModule/svg-icon.module';
+import {LoaderModule} from '../loader-module/loader..module';
 
 describe('ModalService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [
+        SvgIconModule,
+        LoaderModule
+      ],
       providers: [ModalService]
     });
   });

@@ -11,7 +11,9 @@
            class="cursor-pointer header-button"
            [ngClass]="{'selected-tab': selectedMenu === headerTab}">
         <div class="header-tab-name">{{headerTab.name}}</div>
-        <div class="header-tab-icon" [title]="headerTab.name"><img [src]="getIcon(headerTab.icon)"></div>
+        <div class="header-tab-icon" [title]="headerTab.name"><img
+          [src]="headerTab.icon === null && headerTab.name === 'Trash-Quarentine' ? getIcon('trash_quarantine-icon.png') : getIcon(headerTab.icon)">
+        </div>
       </div>
 
       <div class="header-button last-right-border"></div>
@@ -23,12 +25,11 @@
       </app-menu-item>
 
     </div>
-
   </div>
 
-  <div class="place-holder" (click)="closeMenuAndUserDetails()"></div>
+  <div class="place-holder" (click)="placeHolderClick()"></div>
 
-  <div class="main-header-right-section">
+  <div class="main-header-right-section" *ngIf="userDetails">
     <div class="office-data">
       <div class="current-office">Current Office: {{userDetails.officeNumber}}, Division: {{userDetails.division}}</div>
       <div class="current-office mobile-and-tablet-only"
@@ -38,12 +39,12 @@
       <div class="user-ip"> {{userDetails.ip}}</div>
     </div>
 
-    <div class="user">
-      <img class="user-img" [src]="domSanitizer.bypassSecurityTrustUrl(userDetails.image)">
+    <div class="user" *ngIf="userDetails">
+      <img class="user-img" [src]="getUserImage()">
       <div class="user-data">
         <div class="user-name-and-logout">
           <div class="firstname-and-lastname">{{userDetails.username}}</div>
-          <img class="click-able logout-icon" src="../../../../assets/icons/images/logout-icon.png">
+          <img class="click-able logout-icon" src="assets/icons/images/logout-icon.png">
         </div>
 
         <div class="datetime-text" #currentDate></div>
@@ -51,29 +52,27 @@
     </div>
 
   </div>
-  <div class="main-header-right-section mobile-and-tablet-only " (click)="openUserMenu()">
-    <img src="../../../../assets/icons/images/more_details.png" class="click-able"/>
+  <div class="main-header-right-section mobile-and-tablet-only " *ngIf="auth.isAuthenticated" (click)="openUserMenu()">
+    <img [src]="getIcon('more_details.png')" class="click-able"/>
     <div class="menu-user-section" *ngIf="displayUserMenu">
       <div class="menu-user-content">
         <div class="right-menu">
           <div class="user">
             <p>{{userDetails.username}} <img class="click-able logout-icon"
-                                             src="../../../../assets/icons/images/logout_black.png"></p>
+                                             src="assets/icons/images/logout_black.png"></p>
             <p class="current-date-mobile" #currentDateMobile></p>
           </div>
           <div class="user-img-data">
-            <img class="user-img" [src]="domSanitizer.bypassSecurityTrustUrl(userDetails.image)">
+            <img class="user-img" [src]="getUserImage()">
           </div>
           <div class="office-data">
             Current Office: {{userDetails.officeNumber}}, Division: {{userDetails.division}}
             <br/>
             {{userDetails.ip}}
           </div>
-
         </div>
       </div>
     </div>
-
   </div>
 </nav>
 

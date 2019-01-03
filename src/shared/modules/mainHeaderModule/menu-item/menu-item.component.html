@@ -1,16 +1,14 @@
-<div class="menu-item" #subMenu [style.width]="menuItemWidth" [style.top]="menuItemTopStyle">
+<div [ngClass]="getMenuItemClass()" #subMenu [style.width]="menuItemWidth" [style.top]="menuItemTopStyle">
 
   <div class="top-triangle" [style.left]="triangleLeftPosition"></div>
 
   <div class="menu-item-categories-container">
-    <div *ngFor="let menu of headerTabData.secondLevelMainMenus"
+    <div *ngFor="let menu of headerTabData.menus"
          class="menu-item-category"
          [ngClass]="{'selected': menu===selectedMenu}"
          (click)="onSelectMenu(menu)">
       {{menu.name}}
     </div>
   </div>
-
   <app-sub-menu-item [menuData]="selectedMenu"></app-sub-menu-item>
-
 </div>

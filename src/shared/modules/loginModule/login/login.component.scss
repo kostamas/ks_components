@@ -1,0 +1,123 @@
+@import "shared";
+
+.login-page {
+  @include dimension(100vw, calc(100vh - 200px));
+  @include flex(center, center);
+  background-color: #fafcfe;
+  position: relative;
+
+  .logged-in-area {
+    @include text-style(14px, white, Lato);
+    @include position(absolute, 20px, 50px);
+    width: 100%;
+
+    .logout-btn-wrapper {
+      @include flex();
+      flex-direction: row-reverse;
+
+      .logout-btn {
+        @include flex(center, center);
+        @include dimension(150px, 40px);
+        @include text-style(20px, white, $roofTerracotta);
+        background-color: #055885;
+        border-radius: 30px;
+        float: right;
+        position: relative;
+        left: 43px;
+      }
+    }
+
+    .page-content {
+      @include flex(center);
+      padding-top: 200px;
+
+      .welcome {
+        @include text-style(55px, #0a7aba, $roofTerracotta);
+
+      }
+    }
+  }
+
+  .login-box {
+    @include dimension(500px, 380px);
+    background-color: $white;
+    margin: 10px auto;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.33);
+    border: solid #c3c9d8 2px;
+
+    .lb-header {
+      @include flex(space-around, center);
+      color: $blueLagoon;
+      margin: 5px 5px 10px 5px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+      text-align: center;
+      height: 28px;
+
+      .header-buttons {
+        @include text-style(15px, $manatee, Lato, bold);
+      }
+
+      .active-view {
+        @include text-style(18px, $darkBrown, Lato, bold);
+      }
+    }
+  }
+
+  .username-login{
+    float: left;
+    width: 100%;
+    height: auto;
+    margin-top: 40px;
+    text-align: center;
+  }
+
+  .u-form-group {
+    width: 100%;
+  }
+
+  .username-input, .password-input{
+    width: calc(80% - 22px);
+    height: 45px;
+    outline: none;
+    border: 1px solid #ddd;
+    padding: 0 10px;
+    margin-bottom: 30px;
+    border-radius: 5px;
+    color: #333;
+    font-size: 14px;
+    -webkit-transition: all 0.1s linear;
+    -moz-transition: all 0.1s linear;
+    transition: all 0.1s linear;
+  }
+
+  .u-form-group input:focus {
+    border-color: #358efb;
+  }
+
+  .submit-btn-wrapper button {
+    width: 80%;
+    background-color: #055885;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 20px;
+    font-weight: normal;
+    padding: 14px 0;
+    border-radius: 5px;
+  }
+
+  .submit-btn-wrapper button.disabled {
+    cursor: default;
+    opacity: 0.8;
+  }
+
+  .form-error {
+    @include text-style(14px, $roofTerracotta, Lato);
+    @include dimension(250px, 20px);
+    margin: 4px auto 10px auto;
+    text-align: left;
+  }
+}

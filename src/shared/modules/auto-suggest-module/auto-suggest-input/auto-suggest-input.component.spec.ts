@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AutoSuggestInputComponent } from './auto-suggest-input.component';
+import {SvgIconModule} from '../../svgIconModule/svg-icon.module';
+import {LoaderModule} from '../../loader-module/loader..module';
+import {FormsModule} from '@angular/forms';
 
 describe('AutoSuggestInputComponent', () => {
   let component: AutoSuggestInputComponent;
@@ -8,6 +11,11 @@ describe('AutoSuggestInputComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        SvgIconModule,
+        LoaderModule,
+        FormsModule
+      ],
       declarations: [ AutoSuggestInputComponent ]
     })
     .compileComponents();

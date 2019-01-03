@@ -1,6 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { HbSearchButtonComponent } from './hb-search-button.component';
+import {HbSearchButtonComponent} from './hb-search-button.component';
+import {LoaderModule} from '../loader-module/loader..module';
+import {SvgIconModule} from '../svgIconModule/svg-icon.module';
 
 describe('HbSearchButtonComponent', () => {
   let component: HbSearchButtonComponent;
@@ -8,9 +10,13 @@ describe('HbSearchButtonComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HbSearchButtonComponent ]
+      imports: [
+        SvgIconModule,
+        LoaderModule
+      ],
+      declarations: [HbSearchButtonComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

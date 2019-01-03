@@ -25,3 +25,7 @@ export const isEmpty = (arrayOrObject) => {
     return !arrayOrObject || Object.keys(arrayOrObject).length === 0;
   }
 }
+
+export const generateId = () => {
+  return 'id-' + Math.random().toString(36).substr(2, 16);
+};

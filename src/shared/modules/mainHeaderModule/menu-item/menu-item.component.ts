@@ -1,5 +1,5 @@
 import {Component, HostListener, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {OverlayService} from '../../../../services/overlay.service';
+import {MenusService} from '../menus.service';
 
 @Component({
   selector: 'app-menu-item',
@@ -13,17 +13,18 @@ export class MenuItemComponent implements OnInit, OnChanges {
   public menuItemWidth: string;
   public menuItemTopStyle: string;
   public menuWidthBreakPoint: number = 1600;
+  public menuLoaded: boolean = false;
 
   @Input() headerTabElement: any;
   @Input() mainHeaderElement: any;
   @Input() headerTabData: IHeaderTab;
 
-  constructor() {
+  constructor(public menusService: MenusService) {
   }
 
   ngOnInit(): void {
-
     this.setMenuPosition();
+    this.menusService.menuLoaded$.subscribe(c => this.menuLoaded = c);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -32,7 +33,7 @@ export class MenuItemComponent implements OnInit, OnChanges {
     }
 
     if (changes.headerTabData) {
-      this.selectedMenu = changes.headerTabData.currentValue.secondLevelMainMenus[0];
+      this.selectedMenu = changes.headerTabData.currentValue.menus[0];
     }
   }
 
@@ -59,5 +60,9 @@ export class MenuItemComponent implements OnInit, OnChanges {
 
   onSelectMenu(menuItem: IMenu): void {
     this.selectedMenu = menuItem;
+  }
+
+  getMenuItemClass(): string {
+    return this.menuLoaded ? 'menu-item' : 'menu-item hidden';
   }
 }

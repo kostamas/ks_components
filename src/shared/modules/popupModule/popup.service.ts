@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ModalService} from '../modalModule/modal.service';
 import {PopupComponent} from './popup/popup.component';
+import {IModalConfig, IPopupData} from "../../types/modal";
 
 @Injectable({
   providedIn: 'root'

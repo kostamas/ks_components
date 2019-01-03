@@ -1,0 +1,76 @@
+@import "shared";
+
+:host {
+  margin-top: 20px;
+  @include dimension(100%);
+}
+
+.multiple-select-result {
+  @include dimension(100%);
+  margin-top: 15px;
+  padding-bottom: 5px;
+
+  .filter-row {
+    @include flex(null, center);
+    padding-left: 10px;
+    margin-bottom: 10px;
+
+    .filter-text {
+      label {
+        @include text-style(13px, white);
+        padding: 2px 13px 2px 13px;
+        border-radius: 3px;
+      }
+    }
+
+    .all-option label {
+      @include text-style(14px, black);
+    }
+
+    .filter-checkbox {
+      @include dimension(30px, 20px);
+      margin-right: 7px;
+      display: block;
+      position: relative;
+
+      input {
+        @include dimension(20px, 20px);
+        @include user-select(none);
+        position: absolute;
+        opacity: 0;
+        z-index: 1;
+      }
+
+      .check-mark {
+        @include position(absolute, 0, null, null, 0);
+        @include dimension(20px, 20px);
+        background-color: white;
+        border: 1px #c3c9d8 solid;
+        border-radius: 4px;
+      }
+
+      .check-mark:after {
+        @include dimension(5px, 10px);
+        @include position(absolute, 2px, null, null, 7px);
+        content: "";
+        border: solid white;
+        border-width: 0 2.4px 2.4px 0;
+        transform: rotate(45deg);
+        display: none;
+      }
+
+      input:checked ~ .check-mark{
+        background-color: #055885;
+        &:after{
+          display: block;
+        }
+      }
+    }
+  }
+
+  .separator {
+    @include dimension(100%, 1px);
+    background-color: #c3c9d8;
+    margin: 10px 0;
+  }
+}

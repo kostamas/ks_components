@@ -1,0 +1,22 @@
+<div class="multiple-select-result">
+  <div class="filter-row">
+
+    <app-checkbox id="all" [item]="allOptionItem" (onChecked)="selectAll()"></app-checkbox>
+
+    <div class="cursor-pointer">
+      <label (click)="selectAll()" class="cursor-pointer">All</label>
+    </div>
+  </div>
+
+  <div class="separator"></div>
+
+  <div class="filter-row" *ngFor="let selectItem of selectList; let index = index" [ngClass]="selectItem.cssClass">
+
+    <app-checkbox [id]="selectItem.text" [item]="selectItem" (onChecked)="checkboxChecked(index)"></app-checkbox>
+
+    <div class="filter-text">
+      <label class="click-able" (click)="checkboxChecked(index)">{{selectItem.text}}</label>
+    </div>
+
+  </div>
+</div>

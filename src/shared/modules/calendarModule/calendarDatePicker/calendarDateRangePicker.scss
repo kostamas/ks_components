@@ -39,7 +39,10 @@ $dateRangeContainerWidth: 210px;
       @include dimension($dayCellSize, $dayCellSize);
       @include flex(center, center);
       box-sizing: border-box;
-      border: 1px solid transparent;
+
+      .day-number {
+        position: relative;
+      }
     }
 
     .day.selected {
@@ -58,6 +61,32 @@ $dateRangeContainerWidth: 210px;
     .day.border-bottom {
       border-bottom: 1px solid #9ddcfb;
     }
+
+    /*-------------   content jump fix   -------------*/
+    .day.border-top:not(.border-bottom) {
+      .day-number {
+        bottom: 0.5px;
+      }
+    }
+    .day.border-bottom:not(.border-top) {
+      .day-number {
+        top: 0.5px;
+      }
+    }
+
+    .day.border-right:not(.border-left) {
+      .day-number {
+        left: 0.5px;
+      }
+    }
+
+    .day.border-left:not(.border-right) {
+      .day-number {
+        right: 0.5px;
+      }
+    }
+    /*-------------   content jump fix   -------------*/
+
 
     .day.first-day, .day.last-day {
       background-color: #9ddcfb;

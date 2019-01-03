@@ -1,4 +1,14 @@
-import {AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {fromEvent, Subject} from 'rxjs';
 import * as moment from 'moment';
 import {switchMap, takeUntil, tap} from 'rxjs/operators';
@@ -11,18 +21,18 @@ import {CalendarDatePickerService} from './calendarDatePicker.service';
 })
 export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
   public NUM_OF_CELLS: number = 40;
-  public daysToSelect: any;
+  public daysToSelect: ICalendarDay[];
   public moment: any = moment;
-  public selectedDay: any;
-  public daysWrapperPosition: any;
-  public unSubscribe$: any = new Subject();
+  public selectedDay: ICalendarDay;
+  public daysWrapperPosition: IDaysWrapperPosition;
+  public unSubscribe$: Subject<any> = new Subject();
   public canSelect: boolean;
 
-  @Input() date: any;
-  @Input() disableRangeSelection: any;
-  @Input() externalSelection$: any;
+  @Input() date: string;
+  @Input() disableRangeSelection: boolean;
+  @Input() externalSelection$: Subject<ICalendarClickPosition>;
 
-  @ViewChild('daysToSelectRef') daysToSelectRef: any;
+  @ViewChild('daysToSelectRef') daysToSelectRef: ElementRef;
 
   constructor(private calendarDatePickerService: CalendarDatePickerService) {
   }
@@ -221,7 +231,7 @@ export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, Afte
     return {today, dateMonth, dateYear, todayYear, todayMonth, todayDayNumber};
   }
 
-  getDayClass(day: any): string {
+  getDayClass(day: ICalendarDay): string {
     let classToAdd = day.classToAdd ? day.classToAdd : ' ';
     classToAdd += day.isSelected ? ' selected' : '';
     classToAdd += day.firstDay ? ' first-day' : '';

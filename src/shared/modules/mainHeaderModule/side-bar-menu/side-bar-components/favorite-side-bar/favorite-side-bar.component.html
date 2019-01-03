@@ -1,0 +1,35 @@
+<div class="favorite-menu-modal">
+  <ng-container *ngIf="favoriteList?.length > 0">
+    <div class="title">
+      Atlas 2.0 Favorites Management
+    </div>
+    <div class="favorite-results">
+    <div class="favorite-row" *ngFor="let page of favoriteList">
+      <div class="favorite-icon click-able" (click)="favoriteClick(page)">
+        <img [src]="favoriteImgSrc(page.isFavorite)"/>
+      </div>
+      <div class="favorite-name">
+        <span title="{{page.path}}">
+          {{page.name}}
+        </span>
+      </div>
+    </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="favoriteList?.length === 0">
+    <div class="no-favorite-results">
+      <div class="no-favorite-results-icon">
+
+        <img src="assets/icons/images/no_favorites.png"
+             height="75" width="80"/>
+      </div>
+      <div class="no-favorite-results-text">
+        <div class="text">
+          There are currently
+          no favorites to display
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

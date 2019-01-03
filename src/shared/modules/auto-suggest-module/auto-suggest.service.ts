@@ -6,11 +6,9 @@ import {SearchResult} from './mock-results';
   providedIn: 'root'
 })
 export class AutoSuggestService {
-  public searchCallback: Observable<SearchResult[]>;
   public textToSearch: string;
   public displayResults$: Subject<boolean> = new Subject<boolean>();
   public textChanged$: Subject<string> = new Subject<string>();
-  public resetSearch: Subject<any> = new Subject<any>();
 
   constructor() {
     this.textChanged$.subscribe(t => {
@@ -22,11 +20,9 @@ export class AutoSuggestService {
 
   search(text: string): void {
     this.textToSearch = text;
-    this.displayResults$.next(false);
-    console.log('searching for ' + text + '...');
   }
 
   requestResults(): void {
-      this.textChanged$.next(this.textToSearch);
+    this.textChanged$.next(this.textToSearch);
   }
 }

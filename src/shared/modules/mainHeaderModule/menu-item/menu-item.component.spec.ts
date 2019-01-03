@@ -5,7 +5,9 @@ import {EllipsisPipe} from '../../../pips/ellipsis.pipe';
 import {FilterPipe} from '../../../pips/filter.pipe';
 import {MainHeaderComponent} from '../main-header.component';
 import {SubMenuItemComponent} from '../sub-menu-item/sub-menu-item.component';
-import {AdfWrapperComponent} from '../../../../components/adf-wrapper/adf-wrapper.component';
+import {SvgIconModule} from '../../svgIconModule/svg-icon.module';
+import {LoaderModule} from '../../loader-module/loader..module';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('MenuItemComponent', () => {
   let component: MenuItemComponent;
@@ -13,13 +15,17 @@ describe('MenuItemComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        SvgIconModule,
+        LoaderModule,
+        HttpClientTestingModule
+      ],
       declarations: [
         EllipsisPipe,
         FilterPipe,
         MainHeaderComponent,
         MenuItemComponent,
-        SubMenuItemComponent,
-        AdfWrapperComponent
+        SubMenuItemComponent
       ]
     })
       .compileComponents();
@@ -31,7 +37,7 @@ describe('MenuItemComponent', () => {
 
     component.headerTabElement = document.createElement('div');
     component.mainHeaderElement = document.createElement('div');
-    component.headerTabData  =  <any>{
+    component.headerTabData = <any>{
       items: [
         {name: 'Hotels maintenance', link: ''},
         {name: 'Hotels maintenance 2.0', link: ''},

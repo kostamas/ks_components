@@ -4,7 +4,16 @@
   @include dimension(100%, 64px);
   @include flex(space-between, center);
   min-width: $mobile;
+
+  background: rgba(38, 100, 133, 1);
+  background: -moz-linear-gradient(top, rgba(38, 100, 133, 1) 0%, rgba(38, 100, 133, 1) 85%, rgba(35, 93, 124, 1) 96%, rgba(35, 93, 124, 1) 100%);
   background: -webkit-linear-gradient(top, rgba(38, 100, 133, 1) 0%, rgba(38, 100, 133, 1) 85%, rgba(35, 93, 124, 1) 96%, rgba(35, 93, 124, 1) 100%);
+  background: -o-linear-gradient(top, rgba(38, 100, 133, 1) 0%, rgba(38, 100, 133, 1) 85%, rgba(35, 93, 124, 1) 96%, rgba(35, 93, 124, 1) 100%);
+  background: -ms-linear-gradient(top, rgba(38, 100, 133, 1) 0%, rgba(38, 100, 133, 1) 85%, rgba(35, 93, 124, 1) 96%, rgba(35, 93, 124, 1) 100%);
+  background: linear-gradient(to bottom, rgba(38, 100, 133, 1) 0%, rgba(38, 100, 133, 1) 85%, rgba(35, 93, 124, 1) 96%, rgba(35, 93, 124, 1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(
+      startColorstr='#266485', endColorstr='#235d7c', GradientType=0);
+  //background: -webkit-linear-gradient(top, rgba(38, 100, 133, 1) 0%, rgba(38, 100, 133, 1) 85%, rgba(35, 93, 124, 1) 96%, rgba(35, 93, 124, 1) 100%);
   box-shadow: 2px -4px 7px 4px rgba(126, 118, 118, 0.75);
   padding-left: 20px;
   box-sizing: border-box;
@@ -117,6 +126,7 @@
             }
             .current-date-mobile {
               @include dimension(110px, 15px);
+              white-space: nowrap;
             }
           }
         }
@@ -130,6 +140,7 @@
     position: relative;
 
     .office-data {
+      white-space: nowrap;
       min-width: 220px;
       margin-right: 15px;
 

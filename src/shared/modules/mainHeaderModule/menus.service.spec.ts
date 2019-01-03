@@ -1,13 +1,17 @@
 import {TestBed, inject} from '@angular/core/testing';
 
 import {MenusService} from './menus.service';
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('MenusService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MenusService],
-      imports: [HttpClientTestingModule]
+      providers: [
+        MenusService
+      ],
+      imports: [
+        HttpClientTestingModule,
+      ]
     });
   });
 

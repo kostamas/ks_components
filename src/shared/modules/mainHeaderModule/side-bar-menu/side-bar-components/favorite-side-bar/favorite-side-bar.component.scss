@@ -1,0 +1,62 @@
+@import "shared";
+
+.favorite-menu-modal {
+  @include dimension(350px, 400px);
+  background: #ffffff;
+
+  .title {
+    @include text-style(16px, #000000, 'Roboto');
+    margin-top: 20px;
+    margin-left: 20px;
+    border-bottom: 1px #c3c9d8 dashed;
+    width: 94%;
+    padding-bottom: 10px;
+  }
+  .favorite-results {
+    @include dimension(100%, 90%);
+    overflow: auto;
+
+    .favorite-row {
+      @include text-style(13px, $sanMarino);
+      @include flex();
+      font-family: 'Roboto', sans-serif !important;
+      text-decoration: underline;
+      cursor: pointer;
+      margin-left: 20px;
+      margin-top: 10px;
+      border-bottom: 1px #c3c9d8 dashed;
+      width: 94%;
+      padding-bottom: 7px;
+
+      .favorite-icon {
+
+      }
+      .favorite-name {
+        padding-left: 10px;
+        &:hover {
+          color: $chestnutRose;
+        }
+      }
+    }
+  }
+  .no-favorite-results {
+    padding-top: 140px;
+    .no-favorite-results-icon {
+      @include flex(center, center);
+      margin-top: -20px;
+    }
+
+    .no-favorite-results-text {
+      @include flex(center, center);
+      font-size: 16px;
+      color: #c3c9d8;
+      font-weight: 400;
+      width: 100%;
+      text-align: center;
+      padding-top: 10px;
+      .text {
+        width: 50%;
+      }
+    }
+  }
+}
