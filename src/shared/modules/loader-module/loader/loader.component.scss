@@ -1,16 +1,14 @@
+@import "shared";
+
 
 .loader-component.container-loader {
-  position: absolute;
+  @include position(absolute, 50%, null, null, 50%, 10);
   transform: translate(-50%, -50%);
-  left: 50%;
-  top: 50%;
 }
 
 .loader-component.page-loader {
-  position: absolute;
+  @include position(absolute, 50%, null, null, 50%, 10);
   transform: translate(-50%, -50%);
-  left: 50%;
-  top: 50%;
 }
 
 /*************************** rectangle loader **********************************/
@@ -20,16 +18,14 @@
 }
 
 .rectangle-loader {
-  width: 75px;
-  height: 50px;
+  @include dimension(75px, 50px);
   text-align: center;
   font-size: 10px;
   margin-bottom: 15px;
 
   .rect {
+    @include dimension(8px, 100%);
     background-color: #055885;
-    height: 100%;
-    width: 8px;
     display: inline-block;
     margin-right: 2px;
     -webkit-animation: sk-stretchdelay 1s infinite ease-in-out;
@@ -92,19 +88,17 @@
 }
 
 .circle-loader {
+  @include dimension(64px);
   display: inline-block;
   position: relative;
-  width: 64px;
-  height: 64px;
   margin-bottom: 15px;
 }
 
 .circle-loader .circle {
+  @include dimension(100%);
   box-sizing: border-box;
   display: block;
   position: absolute;
-  width: 100%;
-  height: 100%;
   margin: 6px;
   border: 6px solid #fff;
   border-radius: 50%;

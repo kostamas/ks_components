@@ -1,11 +1,17 @@
 @import "shared";
+
 .side-menu-container {
-  @include dimension(100%, 50px);
+  @include dimension(20px, 52px);
+  margin-left: calc(100vw - 345px);
   position: absolute;
   margin-bottom: 5px;
   z-index: 10;
-  min-width: 768px;
   @include flex(space-between, center);
+
+
+  &.has-scroll {
+    margin-left: calc(100vw - 363px);
+  }
 
   .left-side {
     margin-left: 20px;
@@ -13,8 +19,7 @@
 
   .right-side {
     display: flex;
-    margin-right: 20px;
-    margin-bottom: 8px;
+    margin-top: -5px;
     .side-menu-item {
       width: 30px;
 
@@ -28,8 +33,8 @@
   }
 }
 
-.modal-container.side-bar-modal{
-  .modal-overlay{
+.modal-container.side-bar-modal {
+  .modal-overlay {
     background-color: transparent;
   }
   .component-wrapper {
@@ -53,8 +58,19 @@
       float: right;
     }
   }
+
 }
 
 .side-bar-modal {
   background: none;
+}
+
+@media only screen and (max-width: $mobile) {
+  .side-menu-container {
+    margin-left: 430px;
+
+    &.has-scroll {
+      margin-left: 423px;
+    }
+  }
 }

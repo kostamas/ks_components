@@ -11,9 +11,7 @@
            class="cursor-pointer header-button"
            [ngClass]="{'selected-tab': selectedMenu === headerTab}">
         <div class="header-tab-name">{{headerTab.name}}</div>
-        <div class="header-tab-icon" [title]="headerTab.name"><img
-          [src]="headerTab.icon === null && headerTab.name === 'Trash-Quarentine' ? getIcon('trash_quarantine-icon.png') : getIcon(headerTab.icon)">
-        </div>
+        <div class="header-tab-icon" [title]="headerTab.name"><img [src]="headerTab.icon === null && headerTab.name === 'Trash-Quarentine' ? getIcon('trash_quarantine-icon.png') :getIcon(headerTab.icon)"></div>
       </div>
 
       <div class="header-button last-right-border"></div>
@@ -44,7 +42,7 @@
       <div class="user-data">
         <div class="user-name-and-logout">
           <div class="firstname-and-lastname">{{userDetails.username}}</div>
-          <img class="click-able logout-icon" src="assets/icons/images/logout-icon.png">
+          <img class="click-able logout-icon" [src]="getIcon('logout-icon.png')" (click)="logoutClick()">
         </div>
 
         <div class="datetime-text" #currentDate></div>
@@ -53,13 +51,13 @@
 
   </div>
   <div class="main-header-right-section mobile-and-tablet-only " *ngIf="auth.isAuthenticated" (click)="openUserMenu()">
-    <img [src]="getIcon('more_details.png')" class="click-able"/>
+    <img [src]= "getIcon('more_details.png')" class="click-able"/>
     <div class="menu-user-section" *ngIf="displayUserMenu">
       <div class="menu-user-content">
         <div class="right-menu">
           <div class="user">
             <p>{{userDetails.username}} <img class="click-able logout-icon"
-                                             src="assets/icons/images/logout_black.png"></p>
+                                      [src]="getIcon('logout_black.png')" (click)="logoutClick()"></p>
             <p class="current-date-mobile" #currentDateMobile></p>
           </div>
           <div class="user-img-data">

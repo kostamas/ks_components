@@ -13,7 +13,7 @@
   box-sizing: border-box;
 
   .round-search-icon {
-    @include position(absolute, -26px, 17px);
+    @include position(absolute, -26px, 10px);
 
     svg {
       @include dimension(15px, 15px);

@@ -5,8 +5,8 @@ import {
   Injectable,
   Injector
 } from '@angular/core';
-import {generateId} from "../../utils/jsUtils";
-import {IModal, IModalConfig} from "../../types/modal";
+import {generateId} from '../../utils/jsUtils';
+import {IModal, IModalConfig} from '../../types/modal';
 
 @Injectable({
   providedIn: 'root'
@@ -52,6 +52,10 @@ export class ModalService {
     // 4. Append modal container element to the body
     document.body.appendChild(modal.modalContainer);
 
+    if (data) {
+      data.modal = modal;
+    }
+
     modal.componentRef.instance.data = data;
     modal.componentRef.instance.closeModal = this.closeModal.bind(this, modal);
     modal.componentRef.changeDetectorRef.detectChanges();
@@ -80,6 +84,9 @@ export class ModalService {
     modal.modalOverlay = this.buildElement('modal-overlay', modal.modalContainer);
     modal.componentWrapper = this.buildElement('component-wrapper', modal.modalContainer);
 
+    if (modalConfig.style) {
+      this.updateStyle(modal, modalConfig.style);
+    }
 
     if (!modalConfig.disableClose) {
       modal.modalOverlay.addEventListener('click', this.closeModal.bind(this, modal));
@@ -100,21 +107,21 @@ export class ModalService {
     return elementRef;
   }
 
-  updateComponentData(modal, data) {
+  updateComponentData(modal: IModal, data: any): void {
     modal.componentRef.instance.data = data;
   }
 
-  updateStyle(modal, style) {
+  updateStyle(modal: IModal, style: any): void {
     Object.keys(style).forEach(styleKey => {
       modal.componentWrapper.style[styleKey] = style[styleKey];
     });
   }
 
-  isModalOpen(modalId): boolean {
+  isModalOpen(modalId: string): boolean {
     return this.modals.filter(modal => modal.id === modalId).length > 0;
   }
 
-  closeModal = (modal, skipAnimation?: boolean) => {
+  closeModal = (modal: IModal, skipAnimation?: boolean) => {
     const timeOut = skipAnimation ? 0 : 250;
 
     if (!skipAnimation) {
@@ -138,13 +145,13 @@ export class ModalService {
       }
 
       let index = -1;
-      for(let i = 0 ; i < this.modals.length; i++){
+      for (let i = 0; i < this.modals.length; i++) {
         index = this.modals[i].id === modal.id ? i : 0;
       }
 
-      if(index > -1){
+      if (index > -1) {
         this.modals.slice(index, 1);
       }
     }, timeOut);
-  };
+  }
 }

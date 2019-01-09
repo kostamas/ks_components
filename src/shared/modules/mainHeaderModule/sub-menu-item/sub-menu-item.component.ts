@@ -13,6 +13,7 @@ export class SubMenuItemComponent implements OnInit, OnChanges {
 
   @Input() menuData: IMenu;
   @ViewChild('subMenuContainer') subMenuContainer;
+  private isMenuItemOpen: boolean;
 
   constructor(public favoriteService: FavoritesService, public menusService: MenusService) {
   }
@@ -58,7 +59,7 @@ export class SubMenuItemComponent implements OnInit, OnChanges {
   }
 
   pageClickHandler(selectedPage): void {
-    this.menusService.menuTab$.next(selectedPage);
-    this.menusService.isMenuItemOpen$.next(false);
+    this.menusService.pageClick$.next(selectedPage);
+    this.isMenuItemOpen = false;
   }
 }

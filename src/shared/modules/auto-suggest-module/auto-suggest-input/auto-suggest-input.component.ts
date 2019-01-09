@@ -1,17 +1,10 @@
 import {
-  AfterViewInit,
-  Component,
-  ElementRef, EventEmitter,
-  HostListener,
-  Input, OnDestroy,
-  OnInit, Output,
-  ViewChild,
-  ViewEncapsulation
+  AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output,
+  ViewChild, ViewEncapsulation
 } from '@angular/core';
 import {SearchResult} from '../mock-results';
-import {AutoSuggestService} from '../auto-suggest.service';
 import {fromEvent, Observable, Subject} from 'rxjs';
-import {debounceTime, distinctUntilChanged, map, take} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, filter, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {SVG_ICONS} from '../../svgIconModule/svg-icons.const';
 import {ModalService} from '../../modalModule/modal.service';
 import {AutoSuggestResultsComponent} from '../auto-suggest-results/auto-suggest-results.component';
@@ -21,8 +14,7 @@ import {IModal, IModalConfig} from '../../../types/modal';
   selector: 'app-auto-suggest-input',
   templateUrl: './auto-suggest-input.component.html',
   styleUrls: ['./auto-suggest-input.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  providers: [AutoSuggestService]
+  encapsulation: ViewEncapsulation.None
 })
 export class AutoSuggestInputComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -30,19 +22,21 @@ export class AutoSuggestInputComponent implements OnInit, AfterViewInit, OnDestr
   displayResults: boolean = false;
   distinctUntilChanged: boolean = true;
   selectedValue: string;
+  unsubscribe$: Subject<boolean> = new Subject();
+  unsubscribeArr: any[] = [];
   results: SearchResult[] = [];
   modal: IModal;
-
+  isValid: boolean = true;
+  validationStatus: any = {};
   SVG_ICONS: any = SVG_ICONS;
-
-  modalConfig: IModalConfig = {
-    hidCloseButton: true,
-    modalClass: 'auto-suggest-results',
-  }
+  modalConfig: IModalConfig;
 
   @Input() maxResultsToDisplay: number = 10;
-  @Input() searchCallback: (searchText) => Observable<any>;
+  @Input() searchCallback: (searchText: string) => Observable<any>;
   @Input() searchTextValue$: Subject<string>;
+  @Input() validators: ((x?: any) => any)[];
+  @Input() initialValue: any;
+  @Input() validationStatus$: Subject<any>;
 
   @Output('onSelectValue') onSelectValue: EventEmitter<string> = new EventEmitter<string>();
   @Output('onReset') onReset: EventEmitter<string> = new EventEmitter<string>(); // todo - find better solution
@@ -50,37 +44,40 @@ export class AutoSuggestInputComponent implements OnInit, AfterViewInit, OnDestr
   @ViewChild('inputElement') inputElement: ElementRef;
   @ViewChild('autoSuggest') resultContainer: ElementRef;
 
-  constructor(public autoSuggestService: AutoSuggestService, private modalService: ModalService) {
+  constructor(private modalService: ModalService) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.distinctUntilChanged = true;
     this.displayResults = false;
-
-    this.initResultsHandler();
-
+    this.validationStatus = {isValid: true, message: ''};
     if (this.searchTextValue$) {
-      this.searchTextValue$.subscribe(searchText => this.searchTextValue = searchText);
+      const subscription = this.searchTextValue$.subscribe(searchText => this.searchTextValue = searchText);
+      this.unsubscribeArr.push(subscription);
     }
-
-    this.modalConfig.closeModalCallback = this.closeModalCallback;
+    this.modalConfig = {
+      hidCloseButton: true,
+      modalClass: 'auto-suggest-results',
+      closeModalCallback: this.closeModalCallback
+    };
+    this.initValidators();
+    if (this.initialValue) {
+      this.searchTextValue = this.initialValue.name;
+    }
+    if (this.validationStatus$) {
+      const subscription = this.validationStatus$.subscribe(validationStatus => this.validationStatus = validationStatus);
+      this.unsubscribeArr.push(subscription);
+    }
   }
 
-  initResultsHandler() {
-    this.autoSuggestService.displayResults$.subscribe(d => {
-      this.displayResults = d;
-      if (d) {
-        this.searchCallback(this.searchTextValue).subscribe(results => {
-          if (results.length > 0) {
-            this.showResults(results);
-          } else {
-            this.closeModal();
-          }
-        });
-      } else {
-        this.closeModal();
+  initValidators(): void {
+    this.validationStatus = {message: '', isValid: true};
+    if (this.validators) {
+      if (!Array.isArray(this.validators)) {
+        this.validators = [this.validators];
       }
-    });
+      this.validate(false);
+    }
   }
 
   closeModal = () => {
@@ -94,29 +91,33 @@ export class AutoSuggestInputComponent implements OnInit, AfterViewInit, OnDestr
     this.modal = null;
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     fromEvent(this.inputElement.nativeElement, 'input')
       .pipe(
+        takeUntil(this.unsubscribe$),
         debounceTime(500),
         map(() => this.searchTextValue),
-        distinctUntilChanged((a, b) => {
-          return a.trim() === b.trim() && this.distinctUntilChanged;
-        })
+        distinctUntilChanged((a, b) => a.trim() === b.trim() && this.distinctUntilChanged),
+        tap(this.inputTapHandler),
+        filter(() => !!this.searchTextValue),
+        switchMap(() => this.searchCallback(this.searchTextValue))
       )
-      .subscribe(() => {
-        this.resetSuggestState();
-        this.autoSuggestService.textToSearch = this.searchTextValue;
-        if (this.searchTextValue) {
-          this.searchCallback(this.searchTextValue)
-            .pipe(take(1))
-            .subscribe(() => {
-              this.autoSuggestService.requestResults();
-            });
+      .subscribe(results => {
+        if (results.length > 0) {
+          this.showResults(results);
         } else {
-          this.onReset.next('');
-          this.autoSuggestService.displayResults$.next(false);
+          this.closeModal();
         }
       });
+  }
+
+  inputTapHandler = () => {
+    this.resetSuggestState();
+    this.validate(true);
+    if (!this.searchTextValue) {
+      this.closeModal();
+      this.onReset.next('');
+    }
   }
 
   @HostListener('window:resize', ['$event'])
@@ -124,7 +125,7 @@ export class AutoSuggestInputComponent implements OnInit, AfterViewInit, OnDestr
     this.closeModal();
   }
 
-  showResults(originalResults) {
+  showResults(originalResults: any[]): void {
     const {x, y, width, height} = this.inputElement.nativeElement.getBoundingClientRect();
     const results = originalResults.slice(0, this.maxResultsToDisplay);
     const autoSuggestData = {
@@ -137,44 +138,56 @@ export class AutoSuggestInputComponent implements OnInit, AfterViewInit, OnDestr
 
     if (!this.modal || !this.modalService.isModalOpen(this.modal.id)) {
       this.modal = this.modalService.open(AutoSuggestResultsComponent, this.modalConfig, autoSuggestData);
-      this.modal.updateStyle({top: `${y + height}px`, left: `${x}px`})
+      this.modal.updateStyle({top: `${y + height}px`, left: `${x}px`});
     } else {
-      this.modal && this.modal.updateComponentData(autoSuggestData);
+      if (this.modal) {
+        this.modal.updateComponentData(autoSuggestData);
+      }
     }
   }
 
-  resetSuggestState()
-    :
-    void {
+  resetSuggestState(): void {
     this.results = [];
     this.selectedValue = null;
     this.distinctUntilChanged = true;
   }
 
-  onCloseIconClick() {
+  onCloseIconClick(): void {
     this.results = [];
     this.selectedValue = null;
     this.searchTextValue = '';
     this.distinctUntilChanged = false;
     this.closeModal();
+    this.validate(true);
+    this.onReset.next('');
   }
 
-  setText = (selectedItem) => {
+  setText = (selectedItem: any) => {
     this.searchTextValue = selectedItem.name;
     this.distinctUntilChanged = false;
-    this.autoSuggestService.search(this.searchTextValue);
     this.onSelectValue.next(selectedItem);
+    this.validate(true);
   }
 
   showCloseButton = () => {
-    return this.searchTextValue.length && (!this.modal || !this.modalService.isModalOpen(this.modal.id))
+    return this.searchTextValue.length && (!this.modal || !this.modalService.isModalOpen(this.modal.id));
   }
 
-  ngOnDestroy() {
-    if (this.searchTextValue$) {
-      this.searchTextValue$.unsubscribe();
+  validate(isDirty: boolean): void {
+    if (this.validators) {
+      this.validationStatus = {message: '', isValid: true};
+      this.validators.forEach(cb => {
+        const validationResult = cb({val: this.searchTextValue, isDirty});
+        if (!validationResult.isValid) {
+          this.validationStatus = validationResult;
+        }
+      });
     }
+  }
 
-    this.autoSuggestService.displayResults$.unsubscribe();
+  ngOnDestroy(): void {
+    this.onReset.next('');
+    this.unsubscribeArr.forEach(subscription => subscription.unsubscribe());
+    this.unsubscribe$.next(true);
   }
 }

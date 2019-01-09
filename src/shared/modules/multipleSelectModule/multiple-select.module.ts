@@ -1,8 +1,9 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MultipleSelectInputComponent} from './multiple-select-input/multiple-select-input.component';
-import {MultipleSelectResultsComponent} from './multiple-select-results/multiple-select-results.component';
-import {CheckboxModule} from "../checkBoxModule/checkbox.module";
+import {MultipleSelectColorfulOptionsComponent} from './options/multiple-select-colorful-options/multiple-select-colorful-options.component';
+import {CheckboxModule} from '../checkBoxModule/checkbox.module';
+import {MultiSelectRegularOptionsComponent} from './options/multi-select-regular-options/multi-select-regular-options.component';
 
 @NgModule({
   imports: [
@@ -11,13 +12,16 @@ import {CheckboxModule} from "../checkBoxModule/checkbox.module";
   ],
   declarations: [
     MultipleSelectInputComponent,
-    MultipleSelectResultsComponent],
+    MultipleSelectColorfulOptionsComponent,
+    MultiSelectRegularOptionsComponent
+  ],
   exports: [
     MultipleSelectInputComponent,
-    MultipleSelectResultsComponent
+    MultipleSelectColorfulOptionsComponent
   ],
   entryComponents: [
-    MultipleSelectResultsComponent
+    MultipleSelectColorfulOptionsComponent,
+    MultiSelectRegularOptionsComponent
   ]
 })
 export class MultipleSelectModule {

@@ -7,7 +7,7 @@ $inputWidth: 100%;
   position: relative;
 
   .search-icon, .round-search-icon {
-    @include position(absolute, 11px, 18px);
+    @include position(absolute, 11px, 11px);
 
     svg {
       @include dimension(15px, 15px);
@@ -32,6 +32,10 @@ $inputWidth: 100%;
     &:focus {
       outline: none;
     }
+  }
+
+  &.invalid input{
+    border: 1px solid red;
   }
 
   /* width */

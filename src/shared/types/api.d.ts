@@ -4,6 +4,6 @@ interface IEndpoints {
   destinationAutoSuggest: string;
   tourOperatorAutoSuggest: string;
   hotelAutoSuggest: string;
-  searchSimulator: string;
   favorites: string;
+  searchSimulator: string
 }

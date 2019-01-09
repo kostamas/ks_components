@@ -1,5 +1,4 @@
 <div [ngClass]="getMenuItemClass()" #subMenu [style.width]="menuItemWidth" [style.top]="menuItemTopStyle">
-
   <div class="top-triangle" [style.left]="triangleLeftPosition"></div>
 
   <div class="menu-item-categories-container">
@@ -7,7 +6,7 @@
          class="menu-item-category"
          [ngClass]="{'selected': menu===selectedMenu}"
          (click)="onSelectMenu(menu)">
-      {{menu.name}}
+      {{menu.name}} <img *ngIf="newMenus.includes(menu.name.replace(' ', ''))" [src]="getIcon('new_tag.png')" />
     </div>
   </div>
   <app-sub-menu-item [menuData]="selectedMenu"></app-sub-menu-item>

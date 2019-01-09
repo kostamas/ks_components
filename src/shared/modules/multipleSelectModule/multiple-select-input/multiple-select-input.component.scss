@@ -2,8 +2,8 @@
 
 .multiple-select-input {
   @include flex(space-between, center);
-  @include dimension(270px, 36px);
-  padding: 0 20px;
+  @include dimension(100%, 36px);
+  padding: 0 6px 0 9px;
   outline: none;
   border-radius: 3px;
   font-size: 15px;

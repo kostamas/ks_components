@@ -1,4 +1,4 @@
-<div class="input-wrapper" #inputWrapper>
+<div class="input-wrapper" #inputWrapper [ngClass]="{'invalid': !validationStatus.isValid}">
   <input class="input" type="text" placeholder="" [(ngModel)]="searchTextValue" #inputElement/>
 
   <app-svg-icon *ngIf="!searchTextValue.length" [svg]="SVG_ICONS.search" class="search-icon"></app-svg-icon>
@@ -6,4 +6,3 @@
   <app-svg-icon *ngIf="showCloseButton()" [svg]="SVG_ICONS.round_close" class="round-search-icon click-able"
                 (click)="onCloseIconClick()"></app-svg-icon>
 </div>
-

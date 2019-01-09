@@ -55,7 +55,7 @@
     flex-direction: column;
 
     .menu-item-categories-container {
-      @include dimension(100%, 40px);
+      @include dimension(calc(100% - 18px), 40px);
       @include flex();
 
       .menu-item-category {

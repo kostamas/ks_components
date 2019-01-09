@@ -1,9 +1,9 @@
-<div class="side-menu-container">
+<div [ngClass]="sideBarClass">
   <div class="left-side">
   </div>
   <div class="right-side">
 
-    <div class="side-menu-item click-able" (click)="openFavoriteModal()">
+    <div class="side-menu-item click-able" (click)="openFavoriteModal()" title="Favorites">
       <img [src]="favoriteSrc()" height="24" width="22" #favoriteIcon/>
     </div>
 

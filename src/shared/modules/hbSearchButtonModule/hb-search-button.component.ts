@@ -1,6 +1,7 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
-import {ISvgIcons, SVG_ICONS} from "../svgIconModule/svg-icons.const";
-import {Observable} from "rxjs";
+import {Component, Input, OnDestroy, ViewEncapsulation} from '@angular/core';
+import {ISvgIcons, SVG_ICONS} from '../svgIconModule/svg-icons.const';
+import {Observable} from 'rxjs';
+import {take} from 'rxjs/operators';
 
 @Component({
   selector: 'app-hb-search-button',
@@ -10,17 +11,26 @@ import {Observable} from "rxjs";
 })
 export class HbSearchButtonComponent {
   public SVG_ICONS: ISvgIcons = SVG_ICONS;
-  public showLoader = false;
+  public showLoader: boolean = false;
 
   @Input() onClick: () => Observable<any> = (null);
+  @Input() disabledClickHandler: () => (null);
+  @Input() isDisabled: boolean;
+  @Input() markAsEnabled: boolean;
 
   constructor() {
   }
 
-  onClickWrapper() {
-    if (this.onClick) {
+  onClickWrapper(): void {
+    if (!this.isDisabled && this.onClick) {
       this.showLoader = true;
-      this.onClick().subscribe(() => this.showLoader = false);
+      this.onClick()
+        .pipe(take(1))
+        .subscribe(() => this.showLoader = false);
+    }
+
+    if (this.isDisabled && this.disabledClickHandler) {
+      this.disabledClickHandler();
     }
   }
 }

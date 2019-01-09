@@ -1,27 +1,32 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FavoritesService} from '../../../favorites.service';
-import {OverlayService} from '../../../../../../services/overlay.service';
+import {OverlayService} from '../../../../../services/overlay.service';
 import {MenusService} from '../../../menus.service';
+import {ModalService} from '../../../../modalModule/modal.service';
+import {IModal} from '../../../../../types/modal';
 
 @Component({
   selector: 'app-favorite-side-bar',
   templateUrl: './favorite-side-bar.component.html',
   styleUrls: ['./favorite-side-bar.component.scss']
 })
-export class FavoriteSideBarComponent implements OnInit {
-
+export class FavoriteSideBarComponent implements OnInit, OnDestroy {
   favoriteList: IMenuLink[] = [];
+  unsubscribe: any[] = [];
+  modal: IModal;
 
-  constructor(public favoriteService: FavoritesService, public overlayService: OverlayService, public menusService: MenusService) {
+  @Input('data') data: any;
+
+  constructor(public favoriteService: FavoritesService, public menusService: MenusService, public modalService: ModalService) {
   }
 
   ngOnInit(): void {
-    this.favoriteList = [];
-    this.favoriteService.favoriteLoad.subscribe(() => {
-      this.getFavorites();
-    });
+    this.modal = this.data.modal;
 
-    this.favoriteService.favoritesList.subscribe(results => {
+    this.favoriteList = [];
+
+    this.unsubscribe.push(this.favoriteService.favoriteLoad.subscribe(this.getFavorites));
+    this.unsubscribe.push(this.favoriteService.favoritesList.subscribe(results => {
       this.favoriteList = results;
       if (this.favoriteList) {
         this.favoriteList.forEach(p => {
@@ -32,18 +37,15 @@ export class FavoriteSideBarComponent implements OnInit {
           }
         );
       }
-
-
       this.favoriteService.favoriteLoaded.next();
-    });
+    }));
+
     this.getFavorites();
   }
 
-
-  public getFavorites(): void {
+  public getFavorites = () => {
     this.favoriteService.getFavorites();
-  }
-
+  };
 
   favoriteImgSrc(isFavorite: boolean): string {
     return this.favoriteService.favoriteImgSrc(isFavorite);
@@ -51,5 +53,15 @@ export class FavoriteSideBarComponent implements OnInit {
 
   favoriteClick(link: IMenuLink): void {
     this.favoriteService.favoriteClick(link);
+  }
+
+  pageClickHandler(selectedPage): void {
+    this.menusService.pageClick$.next(selectedPage);
+    this.menusService.closeMenu$.next(false);
+    this.modalService.closeModal(this.modal);
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe.forEach(subscription => subscription.unsubscribe());
   }
 }

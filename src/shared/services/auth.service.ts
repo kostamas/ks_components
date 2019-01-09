@@ -4,7 +4,9 @@ import * as jwtHandler from 'jwt-client';
 import {UserDetails} from '../modules/mainHeaderModule/user-details';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ApiService} from '../../services/api.service';
-import {tap} from "rxjs/operators";
+import {tap} from 'rxjs/operators';
+import * as moment from 'moment';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -13,14 +15,14 @@ export class AuthService {
   public isAuthenticated$: BehaviorSubject<any>;
   public logout$: Subject<any>;
   private userDetails: UserDetails;
-  private GET_TOKEN_URL = 'https://auth.hotelbeds.com/oauth/token';
+  private GET_TOKEN_URL: string = 'https://auth.hotelbeds.com/oauth/token';
 
 
-  constructor(public http: HttpClient, private apiService: ApiService) {
+  constructor(public http: HttpClient, private apiService: ApiService, public router: Router) {
     this.isAuthenticated$ = new BehaviorSubject(null);
     this.logout$ = new Subject();
 
-    this.isAuthenticated$.next(!!this.getToken());
+    this.isAuthenticated$.next(this.isAuthenticated());
   }
 
   public getToken(): string {
@@ -36,35 +38,40 @@ export class AuthService {
     this.isAuthenticated$.next(true);
   }
 
-  public isAuthenticated() {
-    return !!this.getToken();
+  public isAuthenticated(): boolean {
+    const token = this.getToken();
+    return token && !this.isExpired(token);
   }
 
-  login({username, password}): Observable<any> {
-    let headers = new HttpHeaders({
+  login({username, password}: any): Observable<any> {
+    const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded',
       'Authorization': 'Basic YXRsYXMtcGx1czphdGxhcy1wbHVz'
     });
 
-    let options = {headers: headers};
+    const options: any = {headers: headers};
 
     const url = `${this.GET_TOKEN_URL}?grant_type=password&password=${password}&username=${username}`;
     return this.http.post(url, null, options)
       .pipe(
         tap((result: any) => {
             if (result && result.access_token) {
-              this.saveToken(result.access_token)
+              this.saveToken(result.access_token);
             }
           },
-        ))
+        ));
   }
 
-  public logout(skipBroadcast?: boolean): void {
+  public logout(): void {
     jwtHandler.forget();
-    if (!skipBroadcast) {
-      this.isAuthenticated$.next(false);
-      this.logout$.next();
-    }
+    this.isAuthenticated$.next(false);
+    this.userDetails = null;
+    this.logout$.next();
+    const img = new Image();
+    img.onerror = () => {
+      this.router.navigate(['login']);
+    };
+    img.src = 'http://loginsis.hotelbeds.com//oam/server/logout';
   }
 
   private isTokenValid(token: string): boolean {
@@ -74,6 +81,13 @@ export class AuthService {
       console.error(error);
       return false;
     }
+  }
+
+  private isExpired(token: string): boolean {
+    const decodedToken = jwtHandler.read(token);
+    const expiration = decodedToken && decodedToken.claim && decodedToken.claim.exp;
+    const fixedExpiration = Number(`${expiration}000`); // the expiration comes without milliseconds.
+    return fixedExpiration ? moment(fixedExpiration).diff(moment()) < 0 : false;
   }
 
   getUserDetails(cb: any): void {

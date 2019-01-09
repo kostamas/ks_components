@@ -7,6 +7,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {SideBarMenuComponent} from './side-bar-menu/side-bar-menu.component';
 import {FavoriteSideBarComponent} from './side-bar-menu/side-bar-components/favorite-side-bar/favorite-side-bar.component';
 import {FavoritesService} from './favorites.service';
+import {SharedConstants} from '../../services/shared-constants.service';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import {FavoritesService} from './favorites.service';
   ],
   providers: [
     MenusService,
-    FavoritesService
+    FavoritesService,
+    SharedConstants
   ],
   declarations: [
     MainHeaderComponent,

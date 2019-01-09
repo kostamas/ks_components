@@ -1,20 +1,29 @@
-import {AfterViewInit, ChangeDetectorRef, Component, HostListener, NgZone, OnInit, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
-import {DomSanitizer} from '@angular/platform-browser';
 import {DatePipe} from '@angular/common';
 import {MenusService} from './menus.service';
-import {OverlayService} from '../../../services/overlay.service';
+import {OverlayService} from '../../services/overlay.service';
 import {filter, tap} from 'rxjs/operators';
 import {UserDetails} from './user-details';
 import {FavoritesService} from './favorites.service';
 import {WrapperConnectorService} from '../../../services/wrapper-connector.service';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-main-header',
   templateUrl: './main-header.component.html',
   styleUrls: ['./main-header.component.scss']
 })
-export class MainHeaderComponent implements OnInit, AfterViewInit {
+export class MainHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   public mainHeaderViewTypes: any = {expanded: 'expanded', collapsed: 'collapsed', collapsedIcons: 'collapsedIcons'};
   public mainHeaderView: string = this.mainHeaderViewTypes.expanded;
   public displayUserMenu: boolean = false;
@@ -28,39 +37,35 @@ export class MainHeaderComponent implements OnInit, AfterViewInit {
   public viewPointBreakLevel2: number = 0;
   public lockHeaderResize: boolean = false;
   public userDetails: UserDetails = new UserDetails();
+  public unsubscribeArr: any[] = [];
 
   private viewPointBreakOffset: number = 25;
 
   @ViewChild('currentDate') currentDate: any;
   @ViewChild('currentDateMobile') currentDateMobile: any;
 
-  constructor(public auth: AuthService, public domSanitizer: DomSanitizer, private zone: NgZone, private datePipe: DatePipe,
+  constructor(public auth: AuthService, private zone: NgZone, private datePipe: DatePipe,
               private menusService: MenusService, private overlayService: OverlayService, private cdRef: ChangeDetectorRef,
               private favoritesService: FavoritesService, private wrapperConnectorService: WrapperConnectorService) {
   }
 
   ngOnInit(): void {
-    this.auth.isAuthenticated$.subscribe(isAuthenticated => this.isAuthenticated = isAuthenticated);
-    this.auth.isAuthenticated$
+    const {auth, wrapperConnectorService, menusService, overlayService, unsubscribeArr} = this;
+
+    unsubscribeArr.push((wrapperConnectorService.officeName$.subscribe(officeName => this.userDetails.officeNumber = officeName)));
+    unsubscribeArr.push((wrapperConnectorService.divisionName$.subscribe(divisionName => this.userDetails.division = divisionName)));
+    unsubscribeArr.push((wrapperConnectorService.server$.subscribe(server => this.userDetails.ip = server)));
+    unsubscribeArr.push((menusService.closeMenu$.subscribe(this.closeMenu)));
+    unsubscribeArr.push((menusService.pageClick$.subscribe(this.closeMenu)));
+    unsubscribeArr.push((overlayService.overlayClick$.subscribe(this.overlayClickHandler)));
+    unsubscribeArr.push((auth.isAuthenticated$.subscribe(isAuthenticated => this.isAuthenticated = isAuthenticated)));
+    unsubscribeArr.push(auth.isAuthenticated$
       .pipe(
         filter(isAuthenticated => !!isAuthenticated),
         tap((isAuthenticated: boolean) => this.isAuthenticated = isAuthenticated)
       )
-      .subscribe(() => this.auth.getUserDetails(ud => this.userDetails = ud));
+      .subscribe(() => this.auth.getUserDetails(ud => this.userDetails = ud)));
 
-    this.wrapperConnectorService.officeName$.subscribe(officeName => this.userDetails.officeNumber = officeName);
-    this.wrapperConnectorService.divisionName$.subscribe(divisionName => this.userDetails.division = divisionName);
-    this.wrapperConnectorService.server$.subscribe(server => this.userDetails.ip = server);
-    this.menusService.isMenuItemOpen$.subscribe(isMenuItemOpen => this.isMenuItemOpen = isMenuItemOpen);
-
-    this.overlayService.overlayClick$.subscribe(this.closeMenuAndUserDetails);
-    this.overlayService.overlayClick$.subscribe(() => {
-      this.closeMenu();
-      this.displayUserMenu = false;
-      setTimeout(() => {
-        this.favoritesService.getFavorites();
-      }, 500);
-    });
     this.initMenus();
   }
 
@@ -82,6 +87,7 @@ export class MainHeaderComponent implements OnInit, AfterViewInit {
   initMenus(): void {
     this.menusService.getMenus(headerTabs => {
       this.headerTabs = headerTabs;
+      this.headerTabs = this.addSearchSimulatorLInk(this.headerTabs);
       this.mainHeaderView = this.mainHeaderViewTypes.expanded;
       this.favoritesService.favoritesList.subscribe(result => {
           if (result != null) {
@@ -94,6 +100,15 @@ export class MainHeaderComponent implements OnInit, AfterViewInit {
       setTimeout(this.calcViewPortBreak.bind(this));
       this.buildPagePaths(headerTabs);
     });
+  }
+
+  overlayClickHandler = () => {
+    this.closeMenu();
+    this.displayUserMenu = false;
+    setTimeout(() => {
+      this.favoritesService.getFavorites();
+    }, 500);
+    this.closeMenuAndUserDetails();
   }
 
   buildPagePaths(headerTabs: IHeaderTab[]): void {
@@ -130,8 +145,8 @@ export class MainHeaderComponent implements OnInit, AfterViewInit {
   }
 
   onHeaderTabClick(selectedHeaderTabElement: any, selectedHeaderTab: IHeaderTab): void {
-    const isMenuItemOpen = this.selectedHeaderTabElement === null || this.selectedHeaderTabElement !== selectedHeaderTabElement;
-    if (isMenuItemOpen) {
+    const isMenuItemClosed = this.selectedHeaderTabElement === null || this.selectedHeaderTabElement !== selectedHeaderTabElement;
+    if (isMenuItemClosed) {
       this.favoritesService.getFavorites();
       this.overlayService.isOverlayOpen$.next(true);
       this.selectedHeaderTabElement = selectedHeaderTabElement;
@@ -140,14 +155,14 @@ export class MainHeaderComponent implements OnInit, AfterViewInit {
     } else {
       this.closeMenu();
     }
-    this.menusService.isMenuItemOpen$.next(isMenuItemOpen)
+    this.isMenuItemOpen = isMenuItemClosed;
   }
 
   closeMenu = () => {
     this.selectedHeaderTabElement = null;
     this.selectedHeaderTab = null;
-    this.menusService.isMenuItemOpen$.next(false)
-  }
+    this.isMenuItemOpen = false;
+  };
 
   getIcon(iconName: string): string {
     return `assets/icons/images/${iconName}`;
@@ -166,11 +181,11 @@ export class MainHeaderComponent implements OnInit, AfterViewInit {
     this.closeMenu();
     this.displayUserMenu = false;
     this.overlayService.isOverlayOpen$.next(false);
-  }
+  };
 
   placeHolderClick = () => {
     this.overlayService.overlayClick$.next();
-  }
+  };
 
   resizeMainHeader(): void {
     const viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
@@ -224,12 +239,34 @@ export class MainHeaderComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public getUserImage() {
-    if (this.userDetails && this.userDetails.image) {
-      return this.domSanitizer.bypassSecurityTrustUrl(this.userDetails.image);
-    } else {
-      return this.getIcon('icono_no-registrado1.png');
-    }
+  addSearchSimulatorLInk = (tabs: any[]) => {
+    const bookingTab = {name: 'Bookings', id: 1001843};
+    tabs.forEach(level1 => {
+      if (level1.id === bookingTab.id) {
+        level1.menus.push({
+          name: 'Availability ',
+          menus: [{
+            name: 'Search Simulator',
+            menus: [{
+              name: 'Search Simulator',
+              id: this.menusService.searchSimulatorId
+            }]
+          }]
+        });
+      }
+    });
+    return tabs;
+  }
 
+  public getUserImage() {
+    return this.getIcon('icono_no-registrado1.png');
+  }
+
+  logoutClick(): void {
+    this.auth.logout();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeArr.forEach(subscription => subscription.unsubscribe());
   }
 }

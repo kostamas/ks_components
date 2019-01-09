@@ -108,7 +108,7 @@ export class AutoSuggestResultsComponent implements OnInit {
     }
   }
 
-  selectResultHandler(index): any {
+  selectResultHandler(index: number): any {
     this.setValue(index, true);
     this.data.closeModal();
   }
@@ -123,6 +123,6 @@ export class AutoSuggestResultsComponent implements OnInit {
   }
 
   onCloseIconClick(): any {
-    this.data.onCloseIconClick()
+    this.data.onCloseIconClick();
   }
 }

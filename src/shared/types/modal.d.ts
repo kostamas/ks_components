@@ -1,4 +1,4 @@
-import {ComponentRef} from "@angular/core";
+import {ComponentRef} from '@angular/core';
 
 interface IModalConfig {
   disableClose?: boolean;
@@ -6,6 +6,7 @@ interface IModalConfig {
   modalClass?: string;
   position?: IModalPosition;
   closeModalCallback?: any;
+  style?: any;
 }
 
 interface IModalPosition {
@@ -29,7 +30,7 @@ interface IPopupTypes {
 
 interface IPopupButton {
   text: string;
-  handler: (any) => any;
+  handler: (p: any) => any;
 }
 
 interface IModal {

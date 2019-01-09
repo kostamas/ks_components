@@ -4,7 +4,7 @@ import {FormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {SvgIconModule} from '../svgIconModule/svg-icon.module';
 import {AutoSuggestResultsComponent} from './auto-suggest-results/auto-suggest-results.component';
-import {ModalModule} from "../modalModule/modal.module";
+import {ModalModule} from '../modalModule/modal.module';
 
 @NgModule({
   imports: [

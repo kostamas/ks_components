@@ -1,10 +1,32 @@
 @import "shared";
 
 .login-page {
-  @include dimension(100vw, calc(100vh - 200px));
+  @include dimension(100%, 100vh);
   @include flex(center, center);
-  background-color: #fafcfe;
   position: relative;
+  border: solid #c3c9d8 0;
+  box-shadow: 0 4px 8px 2px #999;
+  background: url('/assets/icons/images/hbg-login-background.jpg') no-repeat scroll center top;
+  min-width: 768px;
+
+  .login-area {
+    @include dimension(100%, 100vh);
+  }
+
+  .login-box-area {
+    width: auto;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .pulse-logo {
+    height: 20%;
+    padding-top: 15px;
+    @include flex(left, baseline);
+    margin-left: 28%;
+  }
 
   .logged-in-area {
     @include text-style(14px, white, Lato);
@@ -33,40 +55,38 @@
 
       .welcome {
         @include text-style(55px, #0a7aba, $roofTerracotta);
-
       }
     }
   }
 
   .login-box {
     @include dimension(500px, 380px);
-    background-color: $white;
-    margin: 10px auto;
-    padding: 10px;
+    padding: 40px;
+    box-sizing: border-box;
     border-radius: 5px;
     box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.33);
     border: solid #c3c9d8 2px;
-
+    background-image: -webkit-linear-gradient(top, #FFFFFF 40%, #F1F2F4 100%);
     .lb-header {
-      @include flex(space-around, center);
-      color: $blueLagoon;
-      margin: 5px 5px 10px 5px;
+      @include flex(baseline, center);
+      color: #0188cc;
       padding-bottom: 10px;
       border-bottom: 1px solid #eee;
-      text-align: center;
+      text-align: left;
       height: 28px;
+      padding-left: 42px;
 
       .header-buttons {
         @include text-style(15px, $manatee, Lato, bold);
       }
 
       .active-view {
-        @include text-style(18px, $darkBrown, Lato, bold);
+        @include text-style(18px, #0188cc, Lato, bold);
       }
     }
   }
 
-  .username-login{
+  .username-login {
     float: left;
     width: 100%;
     height: auto;
@@ -78,7 +98,7 @@
     width: 100%;
   }
 
-  .username-input, .password-input{
+  .username-input, .password-input {
     width: calc(80% - 22px);
     height: 45px;
     outline: none;

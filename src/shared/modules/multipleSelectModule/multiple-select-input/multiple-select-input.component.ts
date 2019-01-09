@@ -1,5 +1,4 @@
 import {
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -11,7 +10,6 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {ModalService} from '../../modalModule/modal.service';
-import {MultipleSelectResultsComponent} from '../multiple-select-results/multiple-select-results.component';
 import {IModal, IModalConfig} from '../../../types/modal';
 import {IMultipleSelectItem} from '../../../types/IMultipleSelect';
 
@@ -27,18 +25,27 @@ export class MultipleSelectInputComponent implements OnInit {
   modalConfig: IModalConfig;
   modal: IModal;
 
-  @Input() selectList: IMultipleSelectItem[];
+  @Input() selectList: any[];
+  @Input() optionsComponent: any;
+  @Input() inputTextHandler: (p: any, list: any[]) => any;
 
   @Output('multiSelectChanged') multiSelectChanged: EventEmitter<IMultipleSelectItem> = new EventEmitter();
 
   @ViewChild('multipleInput') multipleInput: ElementRef;
   @ViewChild('title') title: ElementRef;
 
-  constructor(public modalService: ModalService, private zone: NgZone, private cdRef: ChangeDetectorRef) {
+  constructor(public modalService: ModalService, private zone: NgZone) {
   }
 
   ngOnInit(): void {
-    this.multipleSelectTextInput();
+    let text = '';
+    if (this.inputTextHandler) {
+      const selectedOption = this.selectList.filter(option => option.isSelected)[0];
+      text = this.inputTextHandler(selectedOption, this.selectList);
+    } else {
+      this.selectList.forEach(option => option.isSelected ? text = option.text : '');
+    }
+    this.setText(text);
 
     this.zone.runOutsideAngular(() => window.addEventListener('resize', this.resizeHandler.bind(this)));
   }
@@ -50,37 +57,35 @@ export class MultipleSelectInputComponent implements OnInit {
   }
 
   multipleSelectClickHandler(): void {
-    const {x, y} = this.multipleInput.nativeElement.getBoundingClientRect();
+    const {x, y, width} = this.multipleInput.nativeElement.getBoundingClientRect();
     this.modalConfig = {
       modalClass: 'multiple-select-result-modal',
       position: {x, y: y + 35},
       hidCloseButton: true,
+      style: {width: `${width - 2}px`},
       closeModalCallback: () => this.modal = null
     };
     const data: any = {
       selectList: this.selectList,
-      getSelection: (key, value) => {
+      getSelection: (key, value, closeModal?: boolean) => {
         this.selectList[key].isSelected = value;
-        this.multipleSelectTextInput();
+        let inputText = this.selectList[key].text;
+        if (this.inputTextHandler) {
+          inputText = this.inputTextHandler(this.selectList[key], this.selectList);
+        }
+        this.setText(inputText);
         this.multiSelectChanged.emit(this.selectList[key]);
+
+        if (closeModal) {
+          this.modal.closeModal();
+        }
       },
-      resetSelection: () => {
-        this.multiSelectChanged.emit({text: 'All', value: 'All', isSelected: true});
-        this.multipleSelectTextInput();
-      }
     };
-    this.modal = this.modalService.open(MultipleSelectResultsComponent, this.modalConfig, data);
+    this.modal = this.modalService.open(this.optionsComponent, this.modalConfig, data);
     this.modalLoaded = true;
   }
 
-  multipleSelectTextInput = () => {
-    let selectedText: string = 'Show: ';
-    const selectionCount: number = this.selectList.filter(m => m.isSelected).length;
-    if (selectionCount > 0) {
-      selectedText += 'Selected (' + selectionCount + ')';
-    } else {
-      selectedText += ' All';
-    }
-    this.title.nativeElement.innerHTML = selectedText;
+  setText = (text: any) => {
+    this.title.nativeElement.innerHTML = text;
   }
 }

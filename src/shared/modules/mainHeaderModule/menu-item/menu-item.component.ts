@@ -1,4 +1,4 @@
-import {Component, HostListener, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {MenusService} from '../menus.service';
 
 @Component({
@@ -6,7 +6,7 @@ import {MenusService} from '../menus.service';
   templateUrl: './menu-item.component.html',
   styleUrls: ['./menu-item.component.scss']
 })
-export class MenuItemComponent implements OnInit, OnChanges {
+export class MenuItemComponent implements OnInit, OnChanges, OnDestroy {
 
   public triangleLeftPosition: string;
   public selectedMenu: IMenu;
@@ -14,6 +14,8 @@ export class MenuItemComponent implements OnInit, OnChanges {
   public menuItemTopStyle: string;
   public menuWidthBreakPoint: number = 1600;
   public menuLoaded: boolean = false;
+  public newMenus: string[] = ['Availability'];
+  public unsubscribe: any[] = [];
 
   @Input() headerTabElement: any;
   @Input() mainHeaderElement: any;
@@ -24,7 +26,7 @@ export class MenuItemComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.setMenuPosition();
-    this.menusService.menuLoaded$.subscribe(c => this.menuLoaded = c);
+    this.unsubscribe.push(this.menusService.menuLoaded$.subscribe(c => this.menuLoaded = c));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -64,5 +66,13 @@ export class MenuItemComponent implements OnInit, OnChanges {
 
   getMenuItemClass(): string {
     return this.menuLoaded ? 'menu-item' : 'menu-item hidden';
+  }
+
+  getIcon(iconName: string): string {
+    return `assets/icons/images/${iconName}`;
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe.forEach(subscription => subscription.unsubscribe())
   }
 }

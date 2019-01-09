@@ -9,9 +9,10 @@ import {BehaviorSubject, Subject} from 'rxjs';
 export class MenusService {
 
   public menuLoaded$: Subject<boolean> = new Subject<boolean>();
-  public menuTab$: Subject<any> = new Subject();
+  public pageClick$: Subject<any> = new Subject();
   public pagesPaths$:  BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  public isMenuItemOpen$: Subject<boolean> = new Subject();
+  public closeMenu$: Subject<boolean> = new Subject();
+  public searchSimulatorId: number = -13;
 
   constructor(private http: HttpClient, private apiService: ApiService) {
     this.menuLoaded$.next(false);

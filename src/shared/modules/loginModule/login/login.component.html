@@ -2,9 +2,20 @@
 
   <app-loader *ngIf="showLoader"></app-loader>
 
-  <div class="login-box" *ngIf="!authService.isAuthenticated()">
+  <div class="login-area">
+    <div class="pulse-logo">
+
+
+      <img [src]="getIcon('tui-travel.png')"/>
+    </div>
+
+
+    <div class="login-box-area">
+
+
+  <div class="login-box">
     <div class="lb-header">
-      <div class="header-buttons click-able" [ngClass]="{'active-view': currentView === views.login.value}">Login
+      <div class="header-buttons click-able" [ngClass]="{'active-view': currentView === views.login.value}">Sign-in to your account
       </div>
     </div>
 
@@ -25,4 +36,6 @@
     </form>
 
   </div>
+</div>
+</div>
 </div>

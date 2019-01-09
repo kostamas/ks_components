@@ -1,6 +1,10 @@
 @import "shared";
 
 .hb-button-container {
+  &.disabled {
+    opacity: 0.8;
+  }
+
   .icon-container {
     @include flex(center, center);
     position: relative;

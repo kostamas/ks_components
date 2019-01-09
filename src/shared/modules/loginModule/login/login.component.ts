@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, Validators} from '@angular/forms';
 import {AuthService} from '../../../services/auth.service';
 import {Router} from '@angular/router';
 import {PopupService} from '../../popupModule/popup.service';
 import {IPopupData} from '../../../types/modal';
+import {LoginService} from '../login.service';
 
 @Component({
   selector: 'login',
@@ -16,13 +17,13 @@ export class LoginComponent implements OnInit {
     signUp: {value: 'signUp', text: 'Sign Up'}
   };
 
-  public currentView: string;
-  public formGroup: FormGroup;
-  public formErrorMessagesBuilder: any;
+  public currentView;
+  public formGroup;
+  public formErrorMessagesBuilder;
   public showLoader: boolean;
 
   constructor(fBuilder: FormBuilder, public authService: AuthService, private router: Router,
-              private popupService: PopupService) {
+              private popupService: PopupService, private loginService: LoginService) {
     this.formGroup = fBuilder.group({
       username: [null, Validators.compose([Validators.required])],
       password: [null, Validators.compose([Validators.required, Validators.minLength(2), Validators.maxLength(15)])]
@@ -35,11 +36,11 @@ export class LoginComponent implements OnInit {
     this.formErrorMessagesBuilder = {username: {required, username}, password: {required, minlength, maxlength}};
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.currentView = this.views.login.value;
   }
 
-  submit() {
+  submit(): void {
     const {username, password} = this.formGroup.value;
 
     if (this.currentView === this.views.login.value) {
@@ -52,7 +53,7 @@ export class LoginComponent implements OnInit {
   onLoginError = (err) => {
     let message: string;
     if (err.status === 0) {
-      message = '';
+      message = 'go to https://auth.hotelbeds.com/oauth/token and allow this url';
     } else {
       message = 'Wrong username or password';
     }
@@ -68,6 +69,10 @@ export class LoginComponent implements OnInit {
 
   onLoginSuccess = () => {
     this.showLoader = false;
-    this.router.navigate(['searchSimulator']);
-  };
+    this.router.navigate([this.loginService.loginConfig.onLoginSuccessRedirect]);
+  }
+
+  getIcon(iconName: string): string {
+    return `assets/icons/images/${iconName}`;
+  }
 }

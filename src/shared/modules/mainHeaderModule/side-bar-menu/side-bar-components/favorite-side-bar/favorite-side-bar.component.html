@@ -8,7 +8,7 @@
       <div class="favorite-icon click-able" (click)="favoriteClick(page)">
         <img [src]="favoriteImgSrc(page.isFavorite)"/>
       </div>
-      <div class="favorite-name">
+      <div class="favorite-name" (click)="pageClickHandler(page)">
         <span title="{{page.path}}">
           {{page.name}}
         </span>

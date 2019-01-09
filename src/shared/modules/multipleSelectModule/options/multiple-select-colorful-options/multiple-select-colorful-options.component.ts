@@ -1,13 +1,13 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
-import {IMultipleSelectItem} from "../../../types/IMultipleSelect";
+import {IMultipleSelectItem} from '../../../../types/IMultipleSelect';
 
 @Component({
-  selector: 'app-multiple-select-results',
-  templateUrl: './multiple-select-results.component.html',
-  styleUrls: ['./multiple-select-results.component.scss'],
+  selector: 'app-multiple-select-colorful-options',
+  templateUrl: './multiple-select-colorful-options.component.html',
+  styleUrls: ['./multiple-select-colorful-options.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class MultipleSelectResultsComponent implements OnInit {
+export class MultipleSelectColorfulOptionsComponent implements OnInit {
 
   @Input('data') data: any;
   public selectList: IMultipleSelectItem[];
@@ -30,21 +30,18 @@ export class MultipleSelectResultsComponent implements OnInit {
     }
   }
 
-  selectAll(): boolean {
+  selectAll(): void {
     this.allOptionItem.isSelected = !this.allOptionItem.isSelected;
-    this.resetFilter();
-    return this.selectList.filter(m => m.isSelected).length === 0;
+    this.selectList.forEach(option  =>  option.isSelected = false);
+    this.selectList['-1'].isSelected = this.allOptionItem.isSelected;
+    this.data.getSelection('-1', this.selectList['-1'].value);
   }
 
   checkboxChecked(index: string): void {
     const value: boolean = !this.selectList[index].isSelected;
     this.selectList[index].isSelected = value;
-    this.data.getSelection(index, value, this.selectList);
+    this.data.getSelection(index, value);
     this.allOptionItem.isSelected = false;
   }
 
-  resetFilter(): void {
-    this.selectList.forEach(m => m.isSelected = false);
-    this.data.resetSelection();
-  }
 }
