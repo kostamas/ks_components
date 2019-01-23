@@ -6,7 +6,7 @@
          class="menu-item-category"
          [ngClass]="{'selected': menu===selectedMenu}"
          (click)="onSelectMenu(menu)">
-      {{menu.name}} <img *ngIf="newMenus.includes(menu.name.replace(' ', ''))" [src]="getIcon('new_tag.png')" />
+      {{menu.name}} <img *ngIf="newMenus.includes(menu.name.replace(' ', ''))" [src]="getIcon('new_tag.png')" class="new-tag-label" />
     </div>
   </div>
   <app-sub-menu-item [menuData]="selectedMenu"></app-sub-menu-item>

@@ -4,7 +4,6 @@ import {AuthService} from '../../../services/auth.service';
 import {Router} from '@angular/router';
 import {PopupService} from '../../popupModule/popup.service';
 import {IPopupData} from '../../../types/modal';
-import {LoginService} from '../login.service';
 
 @Component({
   selector: 'login',
@@ -23,7 +22,7 @@ export class LoginComponent implements OnInit {
   public showLoader: boolean;
 
   constructor(fBuilder: FormBuilder, public authService: AuthService, private router: Router,
-              private popupService: PopupService, private loginService: LoginService) {
+              private popupService: PopupService) {
     this.formGroup = fBuilder.group({
       username: [null, Validators.compose([Validators.required])],
       password: [null, Validators.compose([Validators.required, Validators.minLength(2), Validators.maxLength(15)])]
@@ -69,7 +68,7 @@ export class LoginComponent implements OnInit {
 
   onLoginSuccess = () => {
     this.showLoader = false;
-    this.router.navigate([this.loginService.loginConfig.onLoginSuccessRedirect]);
+    this.router.navigate([this.authService.authConfig.onLoginSuccessRedirect]);
   }
 
   getIcon(iconName: string): string {

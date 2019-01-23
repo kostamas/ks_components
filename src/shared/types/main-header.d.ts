@@ -31,3 +31,11 @@ interface IPage {
   link: string;
 }
 
+interface IMainHeaderConfig {
+  calcSideBarClass?: (...args: any[]) => string;
+}
+
+interface IMainHeaderConfigConstructor {
+  new(...args: any[]): IMainHeaderConfig;
+}
+

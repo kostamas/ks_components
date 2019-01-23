@@ -1,5 +1,5 @@
-import {NgModule} from '@angular/core';
-import {MenusService} from './menus.service';
+import {ModuleWithProviders, NgModule} from '@angular/core';
+import {MainHeaderConfig, MainHeaderService} from './main-header.service';
 import {MainHeaderComponent} from './main-header.component';
 import {SubMenuItemComponent} from './sub-menu-item/sub-menu-item.component';
 import {MenuItemComponent} from './menu-item/menu-item.component';
@@ -14,7 +14,7 @@ import {SharedConstants} from '../../services/shared-constants.service';
     BrowserModule
   ],
   providers: [
-    MenusService,
+    MainHeaderService,
     FavoritesService,
     SharedConstants
   ],
@@ -34,4 +34,10 @@ import {SharedConstants} from '../../services/shared-constants.service';
   ]
 })
 export class MainHeaderModule {
+  static config(mainHeaderConfig: IMainHeaderConfigConstructor): ModuleWithProviders {
+    return {
+      ngModule: MainHeaderModule,
+      providers: [{provide: MainHeaderConfig, useClass: mainHeaderConfig}]
+    };
+  }
 }

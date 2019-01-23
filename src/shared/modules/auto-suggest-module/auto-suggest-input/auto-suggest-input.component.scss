@@ -14,6 +14,10 @@ $inputWidth: 100%;
     }
   }
 
+  .auto-suggest-results-wrapper {
+    @include position(absolute, 35px, null, null, 0);
+  }
+
   .input {
     border-radius: 3px;
     font-size: 15px;
@@ -34,7 +38,7 @@ $inputWidth: 100%;
     }
   }
 
-  &.invalid input{
+  &.invalid input {
     border: 1px solid red;
   }
 

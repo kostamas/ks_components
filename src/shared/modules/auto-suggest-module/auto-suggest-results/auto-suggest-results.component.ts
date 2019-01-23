@@ -1,5 +1,14 @@
-import {Component, ElementRef, HostListener, Input, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {SVG_ICONS} from "../../svgIconModule/svg-icons.const";
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
+import {SVG_ICONS} from '../../svgIconModule/svg-icons.const';
 
 @Component({
   selector: 'app-auto-suggest-results',
@@ -7,8 +16,10 @@ import {SVG_ICONS} from "../../svgIconModule/svg-icons.const";
   styleUrls: ['./auto-suggest-results.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class AutoSuggestResultsComponent implements OnInit {
+export class AutoSuggestResultsComponent implements AfterViewInit {
   public autoSuggestResultsStyle: any = {};
+  public itemsResultsScrollStyle: any = {};
+  public closeIconStyle: any = {};
   public selectedIndex: number = -1;
   public selectedValue: string = '';
   public SVG_ICONS: any = SVG_ICONS;
@@ -17,13 +28,37 @@ export class AutoSuggestResultsComponent implements OnInit {
 
   @Input('data') data: any;
 
-  @ViewChild('autoSuggest') resultContainer: ElementRef;
+  @ViewChild('resultContainer') resultContainer: ElementRef;
+  @ViewChild('closeIcon') closeIcon: ElementRef;
 
   constructor() {
   }
 
-  ngOnInit() {
-    this.autoSuggestResultsStyle.width = this.data.inputWidth + 'px';
+  ngAfterViewInit(): void {
+    setTimeout(this.calcResultsPosition);
+  }
+
+  calcResultsPosition = () => {
+    const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    const {inputClientRect} = this.data;
+    this.autoSuggestResultsStyle['min-width'] = `${inputClientRect.width}px`;
+    this.closeIconStyle['left'] = `${(inputClientRect.width - 27)}px`;
+
+    if (viewportHeight - inputClientRect.y < 320) {
+      if (inputClientRect.y < 350) {
+        this.itemsResultsScrollStyle['max-height'] = `${viewportHeight - inputClientRect.y - 80}px`;
+        this.itemsResultsScrollStyle['overflow-y'] = 'auto';
+        this.data.updateResultsPosition(inputClientRect.x, inputClientRect.y + inputClientRect.height);
+      } else {
+        const resultsHeight = this.resultContainer.nativeElement.clientHeight;
+        this.closeIconStyle['top'] = 'auto';
+        this.closeIconStyle['bottom'] = '-30px';
+        this.data.updateResultsPosition(inputClientRect.x, inputClientRect.y - resultsHeight);
+      }
+    } else {
+      this.data.updateResultsPosition(inputClientRect.x, inputClientRect.y + inputClientRect.height);
+    }
+    setTimeout(() => this.autoSuggestResultsStyle['opacity'] = '1');
   }
 
   @HostListener('document:keyup', ['$event'])
@@ -35,8 +70,7 @@ export class AutoSuggestResultsComponent implements OnInit {
         if (this.selectedIndex < 0) {
           return;
         }
-        this.data.setText(this.data.results[this.selectedIndex]);
-        this.data.closeModal();
+        this.data.setText(this.data.results[this.selectedIndex], true);
         break;
       case 'ARROWDOWN':
         this.nextIndex();
@@ -68,7 +102,7 @@ export class AutoSuggestResultsComponent implements OnInit {
   nextIndex(): void {
     if (!this.isHovered && this.selectedIndex + 1 !== this.data.results.length) {
       const nextIndex = this.selectedIndex + 1;
-      this.setValue(nextIndex, true);
+      this.setValue(nextIndex, false);
     }
   }
 
@@ -79,13 +113,13 @@ export class AutoSuggestResultsComponent implements OnInit {
 
   endIndex(): void {
     const endIndex = this.data.results.length - 1;
-    this.setValue(endIndex, true);
+    this.setValue(endIndex, false);
   }
 
   previousIndex(): void {
     if (!this.isHovered && this.selectedIndex - 1 > -1) {
       const previousIndex = this.selectedIndex - 1;
-      this.setValue(previousIndex, true);
+      this.setValue(previousIndex, false);
     }
   }
 
@@ -93,7 +127,7 @@ export class AutoSuggestResultsComponent implements OnInit {
     return itemIndex === this.selectedIndex ? 'selected' : '';
   }
 
-  setValue(index: number, setText: boolean = false): void {
+  setValue(index: number, closeReults: boolean): void {
     if (this.data.results.length > 0) {
       this.selectedIndex = index;
       const selected = this.data.results[index];
@@ -101,16 +135,13 @@ export class AutoSuggestResultsComponent implements OnInit {
       const scrollContainer: any = this.resultContainer.nativeElement.getClientRects()[0];
       const scrollPercentage: number = ((this.selectedIndex * (scrollContainer.height / (this.data.results.length - this.selectedIndex))) / scrollContainer.height) * 100;
       this.resultContainer.nativeElement.scrollTop = scrollPercentage;
+      this.data.setText(selected, closeReults);
 
-      if (setText) {
-        this.data.setText(selected);
-      }
     }
   }
 
   selectResultHandler(index: number): any {
     this.setValue(index, true);
-    this.data.closeModal();
   }
 
   mouseEnterHandler(): any {

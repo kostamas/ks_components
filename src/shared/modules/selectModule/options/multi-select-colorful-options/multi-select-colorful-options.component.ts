@@ -1,16 +1,16 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
-import {IMultipleSelectItem} from '../../../../types/IMultipleSelect';
+import {ISelectItem} from '../../../../types/ISelect';
 
 @Component({
-  selector: 'app-multiple-select-colorful-options',
-  templateUrl: './multiple-select-colorful-options.component.html',
-  styleUrls: ['./multiple-select-colorful-options.component.scss'],
+  selector: 'app-multi-select-colorful-options',
+  templateUrl: './multi-select-colorful-options.component.html',
+  styleUrls: ['./multi-select-colorful-options.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class MultipleSelectColorfulOptionsComponent implements OnInit {
+export class MultiSelectColorfulOptionsComponent implements OnInit {
 
   @Input('data') data: any;
-  public selectList: IMultipleSelectItem[];
+  public selectList: ISelectItem[];
   public allOptionItem: any = {value: 'all', isSelected: true};
 
   constructor() {
@@ -31,8 +31,8 @@ export class MultipleSelectColorfulOptionsComponent implements OnInit {
   }
 
   selectAll(): void {
-    this.allOptionItem.isSelected = !this.allOptionItem.isSelected;
-    this.selectList.forEach(option  =>  option.isSelected = false);
+    this.allOptionItem.isSelected = true;
+    this.selectList.forEach(option => option.isSelected = false);
     this.selectList['-1'].isSelected = this.allOptionItem.isSelected;
     this.data.getSelection('-1', this.selectList['-1'].value);
   }
@@ -42,6 +42,6 @@ export class MultipleSelectColorfulOptionsComponent implements OnInit {
     this.selectList[index].isSelected = value;
     this.data.getSelection(index, value);
     this.allOptionItem.isSelected = false;
+    this.calcAllOptionItem();
   }
-
 }

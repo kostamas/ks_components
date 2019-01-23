@@ -109,8 +109,9 @@ describe('Favorite functionality', () => {
       isFavorite: false,
       path: '',
       icon: '',
-      menus: null
-    };
+      menus: null,
+      isLocked: false
+  };
     component.favoriteClick(link);
     expect(link.isFavorite).toBeTruthy();
     component.favoriteClick(link);

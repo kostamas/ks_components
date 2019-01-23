@@ -1,8 +1,12 @@
-<div class="input-wrapper" #inputWrapper [ngClass]="{'invalid': !validationStatus.isValid}">
-  <input class="input" type="text" placeholder="" [(ngModel)]="searchTextValue" #inputElement/>
+<div class="input-wrapper" [ngClass]="{'invalid': !validationStatus.isValid}">
+  <input class="input" type="text" [(ngModel)]="searchTextValue" #inputElement [title]="searchTextValue"/>
 
   <app-svg-icon *ngIf="!searchTextValue.length" [svg]="SVG_ICONS.search" class="search-icon"></app-svg-icon>
 
   <app-svg-icon *ngIf="showCloseButton()" [svg]="SVG_ICONS.round_close" class="round-search-icon click-able"
                 (click)="onCloseIconClick()"></app-svg-icon>
+
+  <div class="auto-suggest-results-wrapper" #resultContainer [ngStyle]="resultsWrapperStyle">
+    <app-auto-suggest-results *ngIf="isResultsOpened" [data]="autoSuggestData"></app-auto-suggest-results>
+  </div>
 </div>

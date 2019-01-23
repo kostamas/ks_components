@@ -30,19 +30,24 @@ export class AutoSuggestInputComponent implements OnInit, AfterViewInit, OnDestr
   validationStatus: any = {};
   SVG_ICONS: any = SVG_ICONS;
   modalConfig: IModalConfig;
+  isResultsOpened: boolean = false;
+  autoSuggestData: any;
+  resultsWrapperStyle: any = {};
 
   @Input() maxResultsToDisplay: number = 10;
   @Input() searchCallback: (searchText: string) => Observable<any>;
-  @Input() searchTextValue$: Subject<string>;
   @Input() validators: ((x?: any) => any)[];
   @Input() initialValue: any;
+  @Input() searchTextValue$: Subject<string>;
   @Input() validationStatus$: Subject<any>;
+  @Input() openResultsInModal: boolean = false;
+  @Input() dataTransformation: (p: any) => any;
 
   @Output('onSelectValue') onSelectValue: EventEmitter<string> = new EventEmitter<string>();
   @Output('onReset') onReset: EventEmitter<string> = new EventEmitter<string>(); // todo - find better solution
 
   @ViewChild('inputElement') inputElement: ElementRef;
-  @ViewChild('autoSuggest') resultContainer: ElementRef;
+  @ViewChild('resultContainer') resultContainer: ElementRef;
 
   constructor(private modalService: ModalService) {
   }
@@ -104,6 +109,10 @@ export class AutoSuggestInputComponent implements OnInit, AfterViewInit, OnDestr
       )
       .subscribe(results => {
         if (results.length > 0) {
+          this.checkIfSearchValueInResults(results);
+          if (this.dataTransformation) {
+            this.dataTransformation(results);
+          }
           this.showResults(results);
         } else {
           this.closeModal();
@@ -125,24 +134,60 @@ export class AutoSuggestInputComponent implements OnInit, AfterViewInit, OnDestr
     this.closeModal();
   }
 
+  @HostListener('document:click', ['$event'])
+  clickout(event: any): void {
+    const {inputElement, resultContainer} = this;
+    if (!this.openResultsInModal) {
+      if (!inputElement.nativeElement.contains(event.target) && !resultContainer.nativeElement.contains(event.target)) {
+        this.isResultsOpened = false;
+      }
+    }
+  }
+
+  checkIfSearchValueInResults(results: any[]): void {
+    const searchText = this.searchTextValue.trim();
+    results.forEach(res => {
+      if (searchText === res.name || searchText === res.id || searchText === (res.name + ` (${res.id})`)) {
+        this.onSelectValue.next(res);
+      }
+    });
+  }
+
   showResults(originalResults: any[]): void {
-    const {x, y, width, height} = this.inputElement.nativeElement.getBoundingClientRect();
+    const {x, y, width, height, left, top} = this.inputElement.nativeElement.getBoundingClientRect();
     const results = originalResults.slice(0, this.maxResultsToDisplay);
-    const autoSuggestData = {
+    this.autoSuggestData = {
       results,
-      inputWidth: width,
-      setText: this.setText,
-      closeModal: this.closeModal,
-      onCloseIconClick: this.onCloseIconClick.bind(this)
+      inputClientRect: {width, height, x: x || left, y: y || top},
+      updateResultsPosition: this.updateResultsPosition,
+      setText: this.setText
     };
 
-    if (!this.modal || !this.modalService.isModalOpen(this.modal.id)) {
-      this.modal = this.modalService.open(AutoSuggestResultsComponent, this.modalConfig, autoSuggestData);
-      this.modal.updateStyle({top: `${y + height}px`, left: `${x}px`});
+    if (!this.openResultsInModal) {
+      this.isResultsOpened = true;
     } else {
-      if (this.modal) {
-        this.modal.updateComponentData(autoSuggestData);
+      this.autoSuggestData.closeModal = this.closeModal;
+      this.autoSuggestData.onCloseIconClick = this.onCloseIconClick.bind(this);
+      this.autoSuggestData.openedInModal = true;
+      if (!this.modal || !this.modalService.isModalOpen(this.modal.id)) {
+        this.modal = this.modalService.open(AutoSuggestResultsComponent, this.modalConfig, this.autoSuggestData);
+        this.updateResultsPosition(x, y + height);
+      } else {
+        if (this.modal) {
+          this.modal.updateComponentData(this.autoSuggestData);
+        }
       }
+    }
+  }
+
+  updateResultsPosition = (resultsX: number, resultsY: number) => {
+    if (this.openResultsInModal) {
+      this.modal.updateStyle({left: resultsX + 'px', top: resultsY + 'px'});
+    } else {
+      setTimeout(() => {
+        const {x, y, left, top} = this.inputElement.nativeElement.getBoundingClientRect();
+        this.resultsWrapperStyle = {left: `${resultsX - (x || left)}px`, top: `${resultsY - (y || top)}px`};
+      });
     }
   }
 
@@ -162,11 +207,18 @@ export class AutoSuggestInputComponent implements OnInit, AfterViewInit, OnDestr
     this.onReset.next('');
   }
 
-  setText = (selectedItem: any) => {
+  setText = (selectedItem: any, closeResults: boolean) => {
     this.searchTextValue = selectedItem.name;
     this.distinctUntilChanged = false;
     this.onSelectValue.next(selectedItem);
     this.validate(true);
+    if (closeResults) {
+      if (this.openResultsInModal) {
+        this.closeModal();
+      } else {
+        this.isResultsOpened = false;
+      }
+    }
   }
 
   showCloseButton = () => {

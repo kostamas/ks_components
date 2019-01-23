@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {DatePipe} from '@angular/common';
-import {MenusService} from './menus.service';
+import {MainHeaderService} from './main-header.service';
 import {OverlayService} from '../../services/overlay.service';
 import {filter, tap} from 'rxjs/operators';
 import {UserDetails} from './user-details';
@@ -44,27 +44,27 @@ export class MainHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('currentDate') currentDate: any;
   @ViewChild('currentDateMobile') currentDateMobile: any;
 
-  constructor(public auth: AuthService, private zone: NgZone, private datePipe: DatePipe,
-              private menusService: MenusService, private overlayService: OverlayService, private cdRef: ChangeDetectorRef,
+  constructor(public authService: AuthService, private zone: NgZone, private datePipe: DatePipe,
+              private mainHeaderService: MainHeaderService, private overlayService: OverlayService, private cdRef: ChangeDetectorRef,
               private favoritesService: FavoritesService, private wrapperConnectorService: WrapperConnectorService) {
   }
 
   ngOnInit(): void {
-    const {auth, wrapperConnectorService, menusService, overlayService, unsubscribeArr} = this;
+    const {authService, wrapperConnectorService, mainHeaderService, overlayService, unsubscribeArr} = this;
 
     unsubscribeArr.push((wrapperConnectorService.officeName$.subscribe(officeName => this.userDetails.officeNumber = officeName)));
     unsubscribeArr.push((wrapperConnectorService.divisionName$.subscribe(divisionName => this.userDetails.division = divisionName)));
     unsubscribeArr.push((wrapperConnectorService.server$.subscribe(server => this.userDetails.ip = server)));
-    unsubscribeArr.push((menusService.closeMenu$.subscribe(this.closeMenu)));
-    unsubscribeArr.push((menusService.pageClick$.subscribe(this.closeMenu)));
+    unsubscribeArr.push((mainHeaderService.closeMenu$.subscribe(this.closeMenu)));
+    unsubscribeArr.push((mainHeaderService.pageClick$.subscribe(this.closeMenu)));
     unsubscribeArr.push((overlayService.overlayClick$.subscribe(this.overlayClickHandler)));
-    unsubscribeArr.push((auth.isAuthenticated$.subscribe(isAuthenticated => this.isAuthenticated = isAuthenticated)));
-    unsubscribeArr.push(auth.isAuthenticated$
+    unsubscribeArr.push((authService.isAuthenticated$.subscribe(isAuthenticated => this.isAuthenticated = isAuthenticated)));
+    unsubscribeArr.push(authService.isAuthenticated$
       .pipe(
         filter(isAuthenticated => !!isAuthenticated),
         tap((isAuthenticated: boolean) => this.isAuthenticated = isAuthenticated)
       )
-      .subscribe(() => this.auth.getUserDetails(ud => this.userDetails = ud)));
+      .subscribe(() => this.authService.getUserDetails(ud => this.userDetails = ud)));
 
     this.initMenus();
   }
@@ -85,7 +85,7 @@ export class MainHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   initMenus(): void {
-    this.menusService.getMenus(headerTabs => {
+    this.mainHeaderService.getMenus(headerTabs => {
       this.headerTabs = headerTabs;
       this.headerTabs = this.addSearchSimulatorLInk(this.headerTabs);
       this.mainHeaderView = this.mainHeaderViewTypes.expanded;
@@ -93,7 +93,7 @@ export class MainHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
           if (result != null) {
             this.mapFavoritePages(result);
           }
-          this.menusService.menuLoaded$.next(true);
+          this.mainHeaderService.menuLoaded$.next(true);
         }
       );
       this.favoritesService.getFavorites();
@@ -130,7 +130,7 @@ export class MainHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
         });
       });
     });
-    this.menusService.pagesPaths$.next(pagesPaths);
+    this.mainHeaderService.pagesPaths$.next(pagesPaths);
   }
 
   @HostListener('window:resize', ['$event'])
@@ -146,6 +146,7 @@ export class MainHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onHeaderTabClick(selectedHeaderTabElement: any, selectedHeaderTab: IHeaderTab): void {
     const isMenuItemClosed = this.selectedHeaderTabElement === null || this.selectedHeaderTabElement !== selectedHeaderTabElement;
+
     if (isMenuItemClosed) {
       this.favoritesService.getFavorites();
       this.overlayService.isOverlayOpen$.next(true);
@@ -162,7 +163,7 @@ export class MainHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedHeaderTabElement = null;
     this.selectedHeaderTab = null;
     this.isMenuItemOpen = false;
-  };
+  }
 
   getIcon(iconName: string): string {
     return `assets/icons/images/${iconName}`;
@@ -181,11 +182,11 @@ export class MainHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     this.closeMenu();
     this.displayUserMenu = false;
     this.overlayService.isOverlayOpen$.next(false);
-  };
+  }
 
   placeHolderClick = () => {
     this.overlayService.overlayClick$.next();
-  };
+  }
 
   resizeMainHeader(): void {
     const viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
@@ -249,7 +250,7 @@ export class MainHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
             name: 'Search Simulator',
             menus: [{
               name: 'Search Simulator',
-              id: this.menusService.searchSimulatorId
+              id: this.mainHeaderService.searchSimulatorId
             }]
           }]
         });
@@ -258,12 +259,16 @@ export class MainHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     return tabs;
   }
 
-  public getUserImage() {
+  public getUserImage(): string {
     return this.getIcon('icono_no-registrado1.png');
   }
 
   logoutClick(): void {
-    this.auth.logout();
+    this.authService.logout();
+  }
+
+  showOfficeData() {
+    return this.authService.authConfig && this.authService.authConfig.showOfficeData;
   }
 
   ngOnDestroy(): void {

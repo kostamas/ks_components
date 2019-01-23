@@ -1,4 +1,4 @@
-<div class="multiple-select-result">
+<div class="multi-select-colorful-options">
   <div class="option-row">
 
     <app-checkbox id="all" [item]="allOptionItem" (onChecked)="selectAll()"></app-checkbox>
@@ -10,13 +10,12 @@
 
   <div class="separator"></div>
 
-  <div class="option-row" *ngFor="let selectItem of selectList; let index = index" [ngClass]="selectItem.cssClass">
+  <div class="option-row" *ngFor="let selectItem of selectList; let index = index">
 
     <app-checkbox [id]="selectItem.text" [item]="selectItem" (onChecked)="checkboxChecked(index)"></app-checkbox>
 
     <div class="option-text">
-      <label class="click-able" (click)="checkboxChecked(index)">{{selectItem.text}}</label>
+      <label class="click-able" (click)="checkboxChecked(index)" [style.background]="selectItem.color">{{selectItem.text}}</label>
     </div>
-
   </div>
 </div>

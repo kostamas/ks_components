@@ -1,12 +1,11 @@
 import {ModuleWithProviders, NgModule} from '@angular/core';
 import {LoginComponent} from './login/login.component';
-import {AuthService} from '../../services/auth.service';
+import {AuthConfig, AuthService} from '../../services/auth.service';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {LoaderModule} from '../loader-module/loader..module';
 import {PopupModule} from '../popupModule/popup.module';
-import {LoginConfig, LoginService} from './login.service';
-import {ILoginConfig} from '../../types/login';
+import {ILoginConfigConstructor} from '../../types/auth';
 
 @NgModule({
   imports: [
@@ -20,18 +19,17 @@ import {ILoginConfig} from '../../types/login';
     LoginComponent
   ],
   providers: [
-    AuthService,
-    LoginService
+    AuthService
   ],
   exports: [
     LoginComponent
   ]
 })
 export class LoginModule {
-  static config(loginConfig: ILoginConfig): ModuleWithProviders {
+  static config(loginConfig: ILoginConfigConstructor): ModuleWithProviders {
     return {
       ngModule: LoginModule,
-      providers: [{provide: LoginConfig, useValue:loginConfig}]
+      providers: [{provide: AuthConfig, useClass: loginConfig}]
     };
   }
 }

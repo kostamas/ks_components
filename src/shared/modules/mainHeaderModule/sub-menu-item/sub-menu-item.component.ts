@@ -1,6 +1,6 @@
-import {Component, HostListener, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {FavoritesService} from '../favorites.service';
-import {MenusService} from '../menus.service';
+import {MainHeaderService} from '../main-header.service';
 
 @Component({
   selector: 'app-sub-menu-item',
@@ -12,10 +12,9 @@ export class SubMenuItemComponent implements OnInit, OnChanges {
   public favoritesList: IMenuLink[];
 
   @Input() menuData: IMenu;
-  @ViewChild('subMenuContainer') subMenuContainer;
-  private isMenuItemOpen: boolean;
+  @ViewChild('subMenuContainer') subMenuContainer: ElementRef;
 
-  constructor(public favoriteService: FavoritesService, public menusService: MenusService) {
+  constructor(public favoriteService: FavoritesService, public mainHeaderService: MainHeaderService) {
   }
 
   ngOnInit(): void {
@@ -24,7 +23,10 @@ export class SubMenuItemComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes && changes.menuData && changes.menuData.currentValue) {
-      setTimeout(() => this.resizeMainHeader());
+      setTimeout(() => {
+        this.resizeMainHeader();
+        this.subMenuContainer.nativeElement.scrollTop = 0;
+      });
     }
   }
 
@@ -35,12 +37,12 @@ export class SubMenuItemComponent implements OnInit, OnChanges {
       setTimeout(() => {
         this.resizeMainHeader();
         this.lockHeaderResize = false;
-      }, 500);
+      }, 200);
     }
   }
 
   resizeMainHeader(): void {
-    const viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    const viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0) * 0.9;
     const {x, width} = this.subMenuContainer.nativeElement.getBoundingClientRect();
     if (x + width + 10 > viewportWidth) {
       this.subMenuContainer.nativeElement.style.width = `${viewportWidth - x - 10}px`;
@@ -59,7 +61,7 @@ export class SubMenuItemComponent implements OnInit, OnChanges {
   }
 
   pageClickHandler(selectedPage): void {
-    this.menusService.pageClick$.next(selectedPage);
-    this.isMenuItemOpen = false;
+    this.mainHeaderService.pageClick$.next(selectedPage);
+    this.mainHeaderService.closeMenu$.next(true);
   }
 }

@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Inject, Injectable, InjectionToken} from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import * as jwtHandler from 'jwt-client';
 import {UserDetails} from '../modules/mainHeaderModule/user-details';
@@ -7,6 +7,9 @@ import {ApiService} from '../../services/api.service';
 import {tap} from 'rxjs/operators';
 import * as moment from 'moment';
 import {Router} from '@angular/router';
+import {IAuthConfig} from '../types/auth';
+
+export const AuthConfig = new InjectionToken<any>(null);
 
 @Injectable({
   providedIn: 'root'
@@ -18,10 +21,10 @@ export class AuthService {
   private GET_TOKEN_URL: string = 'https://auth.hotelbeds.com/oauth/token';
 
 
-  constructor(public http: HttpClient, private apiService: ApiService, public router: Router) {
+  constructor(public http: HttpClient, private apiService: ApiService, public router: Router,
+              @Inject(AuthConfig) public authConfig: IAuthConfig) {
     this.isAuthenticated$ = new BehaviorSubject(null);
     this.logout$ = new Subject();
-
     this.isAuthenticated$.next(this.isAuthenticated());
   }
 
@@ -67,11 +70,15 @@ export class AuthService {
     this.isAuthenticated$.next(false);
     this.userDetails = null;
     this.logout$.next();
-    const img = new Image();
-    img.onerror = () => {
+    if (this.authConfig && this.authConfig.logoutFromHotelBeds) {
+      const img = new Image();
+      img.onerror = () => {
+        this.router.navigate(['login']);
+      };
+      img.src = 'http://loginsis.hotelbeds.com//oam/server/logout';
+    } else {
       this.router.navigate(['login']);
-    };
-    img.src = 'http://loginsis.hotelbeds.com//oam/server/logout';
+    }
   }
 
   private isTokenValid(token: string): boolean {

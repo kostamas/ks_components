@@ -1,7 +1,7 @@
 export interface ISvgIcons {
   excel: string;
-  search_close: string;
-  search_open: string;
+  left_arrow_in_box: string;
+  right_arrow_in_box: string;
   hotel: string;
   calendar: string;
   noResults: string;
@@ -10,13 +10,14 @@ export interface ISvgIcons {
   next: string;
   back: string;
   round_close: string;
+  arrowDown: string;
 }
 
 
 export const SVG_ICONS: ISvgIcons = {
   excel: 'excel',
-  search_close: 'search_close',
-  search_open: 'search_open',
+  left_arrow_in_box: 'left_arrow_in_box',
+  right_arrow_in_box: 'right_arrow_in_box',
   hotel: 'hotelCode',
   calendar: 'calendar',
   noResults: 'noResults',
@@ -24,5 +25,6 @@ export const SVG_ICONS: ISvgIcons = {
   next: 'next',
   back: 'back',
   round_close: 'round_close',
-  childAge: 'childAge'
+  childAge: 'childAge',
+  arrowDown: 'arrowDown'
 };

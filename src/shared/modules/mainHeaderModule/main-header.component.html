@@ -11,7 +11,9 @@
            class="cursor-pointer header-button"
            [ngClass]="{'selected-tab': selectedMenu === headerTab}">
         <div class="header-tab-name">{{headerTab.name}}</div>
-        <div class="header-tab-icon" [title]="headerTab.name"><img [src]="headerTab.icon === null && headerTab.name === 'Trash-Quarentine' ? getIcon('trash_quarantine-icon.png') :getIcon(headerTab.icon)"></div>
+        <div class="header-tab-icon" [title]="headerTab.name"><img
+          [src]="headerTab.icon === null && headerTab.name === 'Trash-Quarentine' ? getIcon('trash_quarantine-icon.png') :getIcon(headerTab.icon)">
+        </div>
       </div>
 
       <div class="header-button last-right-border"></div>
@@ -28,7 +30,7 @@
   <div class="place-holder" (click)="placeHolderClick()"></div>
 
   <div class="main-header-right-section" *ngIf="userDetails">
-    <div class="office-data">
+    <div class="office-data" *ngIf="showOfficeData()">
       <div class="current-office">Current Office: {{userDetails.officeNumber}}, Division: {{userDetails.division}}</div>
       <div class="current-office mobile-and-tablet-only"
            title="Current Office: {{userDetails.officeNumber}}, Division: {{userDetails.division}}">Current Office:
@@ -50,7 +52,7 @@
     </div>
 
   </div>
-  <div class="main-header-right-section mobile-and-tablet-only " *ngIf="auth.isAuthenticated" (click)="openUserMenu()">
+  <div class="main-header-right-section mobile-and-tablet-only " *ngIf="authService.isAuthenticated" (click)="openUserMenu()">
     <img [src]= "getIcon('more_details.png')" class="click-able"/>
     <div class="menu-user-section" *ngIf="displayUserMenu">
       <div class="menu-user-content">

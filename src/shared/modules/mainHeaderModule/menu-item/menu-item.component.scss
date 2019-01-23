@@ -27,16 +27,26 @@
   }
 
   .menu-item-categories-container {
-    @include dimension(200px, auto);
-    padding: 10px;
+    @include dimension(220px, auto);
     background-color: $catskillWhite;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-width: 200px;
+    padding: 10px;
+    box-sizing: border-box;
 
     .menu-item-category {
       @include dimension(180px, 40px);
       @include flex(start, center);
+      box-sizing: border-box;
       padding-left: 20px;
       margin-bottom: 8px;
       cursor: pointer;
+
+      .new-tag-label {
+        padding-left: 10px;
+      }
     }
 
     .menu-item-category.selected {
@@ -55,8 +65,11 @@
     flex-direction: column;
 
     .menu-item-categories-container {
-      @include dimension(calc(100% - 18px), 40px);
+      @include dimension(calc(100% - 18px), auto);
       @include flex();
+      overflow-y: hidden;
+      overflow-x: auto;
+      margin-bottom: 0;
 
       .menu-item-category {
         font-size: 14px;

@@ -29,10 +29,11 @@
   }
 
   .main-header-left-section {
-    @include flex(space-between, center);
+    @include flex(null, center);
 
     .header-tabs-wrapper {
       @include flex(space-between, center);
+      width: 100%;
       position: relative;
 
       .header-tab-icon {
@@ -183,7 +184,8 @@
   }
 
   .place-holder {
-    @include dimension(100%, 100%);
+    width: -webkit-fill-available;
+    height: 100%;
   }
 }
 

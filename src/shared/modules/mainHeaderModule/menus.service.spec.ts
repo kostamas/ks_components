@@ -1,13 +1,13 @@
 import {TestBed, inject} from '@angular/core/testing';
 
-import {MenusService} from './menus.service';
+import {MainHeaderService} from './main-header.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 
-describe('MenusService', () => {
+describe('MainHeaderService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        MenusService
+        MainHeaderService
       ],
       imports: [
         HttpClientTestingModule,
@@ -15,7 +15,7 @@ describe('MenusService', () => {
     });
   });
 
-  it('should be created', inject([MenusService], (service: MenusService) => {
+  it('should be created', inject([MainHeaderService], (service: MainHeaderService) => {
     expect(service).toBeTruthy();
   }));
 });

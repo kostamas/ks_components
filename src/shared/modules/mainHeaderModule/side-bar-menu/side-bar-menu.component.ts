@@ -1,17 +1,12 @@
 import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  HostListener,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation
+  AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild, ViewEncapsulation,
+  OnDestroy
 } from '@angular/core';
 import {ModalService} from '../../modalModule/modal.service';
 import {FavoriteSideBarComponent} from './side-bar-components/favorite-side-bar/favorite-side-bar.component';
 import {FavoritesService} from '../favorites.service';
 import {IModal, IModalConfig} from '../../../types/modal';
+import {MainHeaderService} from '../main-header.service';
 
 @Component({
   selector: 'app-side-bar-menu',
@@ -28,7 +23,7 @@ export class SideBarMenuComponent implements OnInit, AfterViewInit, OnDestroy {
   sideBarClass: string = 'side-menu-container';
   unsubscribe: any[] = [];
 
-  constructor(private modalService: ModalService, public favoritesService: FavoritesService) {
+  constructor(private modalService: ModalService, public favoritesService: FavoritesService, private mainHeaderService: MainHeaderService) {
   }
 
   @ViewChild('favoriteIcon') favoriteIcon: ElementRef;
@@ -51,11 +46,11 @@ export class SideBarMenuComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   openFavoriteModal(): void {
-    const {x, y} = this.favoriteIcon.nativeElement.getBoundingClientRect();
+    const {x, y, left, top} = this.favoriteIcon.nativeElement.getBoundingClientRect();
     this.modalConfig = {
       modalClass: 'side-bar-modal',
       position: {
-        x: x - 335, y: y + 25
+        x: (x || left) - 335, y: (y || top) + 25
       },
       closeModalCallback: () => {
         this.loadModal = false;
@@ -70,7 +65,6 @@ export class SideBarMenuComponent implements OnInit, AfterViewInit, OnDestroy {
     this.modal.componentWrapper.style.display = 'none';
   }
 
-
   favoriteSrc(): string {
     const filePath: string = 'assets/icons/images/';
     return this.hasFavoritesInList ? filePath + 'ico_favorites_on_peq.png' : filePath + 'ico_favorites_peq.png';
@@ -78,16 +72,17 @@ export class SideBarMenuComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @HostListener('window:resize', ['$event'])
   onResize(event): void {
-    const hasVerticalScrollbar: boolean = event.currentTarget.document.body.scrollHeight > event.currentTarget.document.body.clientHeight;
-    this.sideBarClass = hasVerticalScrollbar ? 'side-menu-container has-scroll' : 'side-menu-container';
+    if (this.mainHeaderService && this.mainHeaderService.menusConfig && this.mainHeaderService.menusConfig.calcSideBarClass) {
+      this.sideBarClass = this.mainHeaderService.menusConfig.calcSideBarClass(event)
+    }
 
     if (this.loadModal && this.favoriteIcon.nativeElement) {
-      const {x, y} = this.favoriteIcon.nativeElement.getBoundingClientRect();
-      this.modal.updateStyle({top: y + 25 + 'px', left: x - 335 + 'px'});
+      const {x, y, left, top} = this.favoriteIcon.nativeElement.getBoundingClientRect();
+      this.modal.updateStyle({top: (y || top) + 25 + 'px', left: (x || left) - 335 + 'px'});
     }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.unsubscribe.forEach(subscription => subscription.unsubscribe());
   }
 }

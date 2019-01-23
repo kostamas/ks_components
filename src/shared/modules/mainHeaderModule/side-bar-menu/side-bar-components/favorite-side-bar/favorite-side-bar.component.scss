@@ -9,11 +9,11 @@
     margin-top: 20px;
     margin-left: 20px;
     border-bottom: 1px #c3c9d8 dashed;
-    width: 94%;
+    width: 90%;
     padding-bottom: 10px;
   }
   .favorite-results {
-    @include dimension(100%, 90%);
+    @include dimension(96%, 90%);
     overflow: auto;
 
     .favorite-row {
@@ -35,6 +35,9 @@
         padding-left: 10px;
         &:hover {
           color: $chestnutRose;
+          text-decoration: underline;
+          -webkit-text-decoration-color: $chestnutRose;
+          text-decoration-color: $chestnutRose;
         }
       }
     }

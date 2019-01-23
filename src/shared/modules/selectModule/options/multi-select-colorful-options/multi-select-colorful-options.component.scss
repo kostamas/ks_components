@@ -1,17 +1,13 @@
 @import "shared";
 
-:host {
-  margin-top: 20px;
-}
-
-.multiple-select-result {
-  margin-top: 15px;
-  padding-bottom: 5px;
+.multi-select-colorful-options {
+  padding: 10px 0;
+  background-color: white;
 
   .option-row {
     @include flex(null, center);
     padding-left: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 
     .option-text {
       label {

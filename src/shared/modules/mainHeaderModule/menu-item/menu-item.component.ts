@@ -1,5 +1,5 @@
 import {Component, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {MenusService} from '../menus.service';
+import {MainHeaderService} from '../main-header.service';
 
 @Component({
   selector: 'app-menu-item',
@@ -21,12 +21,12 @@ export class MenuItemComponent implements OnInit, OnChanges, OnDestroy {
   @Input() mainHeaderElement: any;
   @Input() headerTabData: IHeaderTab;
 
-  constructor(public menusService: MenusService) {
+  constructor(public mainHeaderService: MainHeaderService) {
   }
 
   ngOnInit(): void {
     this.setMenuPosition();
-    this.unsubscribe.push(this.menusService.menuLoaded$.subscribe(c => this.menuLoaded = c));
+    this.unsubscribe.push(this.mainHeaderService.menuLoaded$.subscribe(c => this.menuLoaded = c));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -48,7 +48,7 @@ export class MenuItemComponent implements OnInit, OnChanges, OnDestroy {
   setMenuPosition(): void {
     const {left, height} = this.mainHeaderElement.getBoundingClientRect();
     const viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    this.menuItemWidth = viewportWidth > this.menuWidthBreakPoint ? `calc(90vw - ${left}px)` : `calc(100vw - ${left}px)`;
+    this.menuItemWidth = `calc(90vw - ${left}px)`;
     this.menuItemTopStyle = `${height + 1}px`;
   }
 

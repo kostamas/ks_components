@@ -1,7 +1,7 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FavoritesService} from '../../../favorites.service';
 import {OverlayService} from '../../../../../services/overlay.service';
-import {MenusService} from '../../../menus.service';
+import {MainHeaderService} from '../../../main-header.service';
 import {ModalService} from '../../../../modalModule/modal.service';
 import {IModal} from '../../../../../types/modal';
 
@@ -17,7 +17,7 @@ export class FavoriteSideBarComponent implements OnInit, OnDestroy {
 
   @Input('data') data: any;
 
-  constructor(public favoriteService: FavoritesService, public menusService: MenusService, public modalService: ModalService) {
+  constructor(public favoriteService: FavoritesService, public mainHeaderService: MainHeaderService, public modalService: ModalService) {
   }
 
   ngOnInit(): void {
@@ -30,8 +30,8 @@ export class FavoriteSideBarComponent implements OnInit, OnDestroy {
       this.favoriteList = results;
       if (this.favoriteList) {
         this.favoriteList.forEach(p => {
-            if (this.menusService.pagesPaths$.value[p.id]) {
-              const pagePath = this.menusService.pagesPaths$.value[p.id].path;
+            if (this.mainHeaderService.pagesPaths$.value[p.id]) {
+              const pagePath = this.mainHeaderService.pagesPaths$.value[p.id].path;
               p.path = pagePath[0].name + ' -> ' + pagePath[1].name + ' -> ' + pagePath[2].name;
             }
           }
@@ -56,8 +56,8 @@ export class FavoriteSideBarComponent implements OnInit, OnDestroy {
   }
 
   pageClickHandler(selectedPage): void {
-    this.menusService.pageClick$.next(selectedPage);
-    this.menusService.closeMenu$.next(false);
+    this.mainHeaderService.pageClick$.next(selectedPage);
+    this.mainHeaderService.closeMenu$.next(false);
     this.modalService.closeModal(this.modal);
   }
 
