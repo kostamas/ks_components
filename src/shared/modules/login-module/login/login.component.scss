@@ -1,0 +1,143 @@
+@import "shared";
+
+.login-page {
+  @include dimension(100%, 100vh);
+  @include flex(center, center);
+  position: relative;
+  border: solid #c3c9d8 0;
+  box-shadow: 0 4px 8px 2px #999;
+  background: url('/../assets/icons/images/hbg-login-background.jpg') no-repeat scroll center top;
+  min-width: 768px;
+
+  .login-area {
+    @include dimension(100%, 100vh);
+  }
+
+  .login-box-area {
+    width: auto;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .pulse-logo {
+    height: 20%;
+    padding-top: 15px;
+    @include flex(left, baseline);
+    margin-left: 28%;
+  }
+
+  .logged-in-area {
+    @include text-style(14px, white, Lato);
+    @include position(absolute, 20px, 50px);
+    width: 100%;
+
+    .logout-btn-wrapper {
+      @include flex();
+      flex-direction: row-reverse;
+
+      .logout-btn {
+        @include flex(center, center);
+        @include dimension(150px, 40px);
+        @include text-style(20px, white, $roofTerracotta);
+        background-color: #055885;
+        border-radius: 30px;
+        float: right;
+        position: relative;
+        left: 43px;
+      }
+    }
+
+    .page-content {
+      @include flex(center);
+      padding-top: 200px;
+
+      .welcome {
+        @include text-style(55px, #0a7aba, $roofTerracotta);
+      }
+    }
+  }
+
+  .login-box {
+    @include dimension(500px, 380px);
+    padding: 40px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.33);
+    border: solid #c3c9d8 2px;
+    background-image: -webkit-linear-gradient(top, #FFFFFF 40%, #F1F2F4 100%);
+    .lb-header {
+      @include flex(baseline, center);
+      color: #0188cc;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+      height: 28px;
+      padding-left: 42px;
+
+      .header-buttons {
+        @include text-style(15px, $manatee, Lato, bold);
+      }
+
+      .active-view {
+        @include text-style(18px, #0188cc, Lato, bold);
+      }
+    }
+  }
+
+  .username-login {
+    float: left;
+    width: 100%;
+    height: auto;
+    margin-top: 40px;
+    text-align: center;
+  }
+
+  .u-form-group {
+    width: 100%;
+  }
+
+  .username-input, .password-input {
+    width: calc(80% - 22px);
+    height: 45px;
+    outline: none;
+    border: 1px solid #ddd;
+    padding: 0 10px;
+    margin-bottom: 30px;
+    border-radius: 5px;
+    color: #333;
+    font-size: 14px;
+    -webkit-transition: all 0.1s linear;
+    -moz-transition: all 0.1s linear;
+    transition: all 0.1s linear;
+  }
+
+  .u-form-group input:focus {
+    border-color: #358efb;
+  }
+
+  .submit-btn-wrapper button {
+    width: 80%;
+    background-color: #055885;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 20px;
+    font-weight: normal;
+    padding: 14px 0;
+    border-radius: 5px;
+  }
+
+  .submit-btn-wrapper button.disabled {
+    cursor: default;
+    opacity: 0.8;
+  }
+
+  .form-error {
+    @include text-style(14px, $roofTerracotta, Lato);
+    @include dimension(250px, 20px);
+    margin: 4px auto 10px auto;
+    text-align: left;
+  }
+}

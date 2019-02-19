@@ -1,7 +1,7 @@
-import {Inject, Injectable, InjectionToken} from '@angular/core';
+import {Inject, Injectable, InjectionToken, Optional} from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import * as jwtHandler from 'jwt-client';
-import {UserDetails} from '../modules/mainHeaderModule/user-details';
+import {UserDetails} from '../modules/main-header-module/user-details';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ApiService} from '../../services/api.service';
 import {tap} from 'rxjs/operators';
@@ -22,7 +22,7 @@ export class AuthService {
 
 
   constructor(public http: HttpClient, private apiService: ApiService, public router: Router,
-              @Inject(AuthConfig) public authConfig: IAuthConfig) {
+              @Optional() @Inject(AuthConfig) public authConfig: IAuthConfig) {
     this.isAuthenticated$ = new BehaviorSubject(null);
     this.logout$ = new Subject();
     this.isAuthenticated$.next(this.isAuthenticated());
@@ -41,6 +41,25 @@ export class AuthService {
     this.isAuthenticated$.next(true);
   }
 
+  public tryAuthenticate(): boolean {
+    if (!this.isAuthenticated()) {
+      const accessToken = this.getAccessTokenCookie();
+      if (accessToken) {
+        this.saveToken(accessToken);
+      }
+    }
+    return this.isAuthenticated();
+  }
+
+  getAccessTokenCookie() : string {
+    const cookie = document.cookie.match(/(^| )hbg_access_token=([^;]+)/);
+    if (cookie) {
+      document.cookie = 'hbg_access_token=;path=/application;expires=Thu, 01 Jan 1970 00:00:01 GMT';
+      return decodeURIComponent(cookie[2]);
+    }
+    return null;
+  }
+
   public isAuthenticated(): boolean {
     const token = this.getToken();
     return token && !this.isExpired(token);
@@ -53,8 +72,8 @@ export class AuthService {
     });
 
     const options: any = {headers: headers};
-
-    const url = `${this.GET_TOKEN_URL}?grant_type=password&password=${password}&username=${username}`;
+    const urlParams = `grant_type=password&password=${encodeURIComponent(password)}&username=${encodeURIComponent((username))}`;
+    const url = `${this.GET_TOKEN_URL}?${urlParams}`;
     return this.http.post(url, null, options)
       .pipe(
         tap((result: any) => {
@@ -67,18 +86,17 @@ export class AuthService {
 
   public logout(): void {
     jwtHandler.forget();
-    this.isAuthenticated$.next(false);
-    this.userDetails = null;
-    this.logout$.next();
-    if (this.authConfig && this.authConfig.logoutFromHotelBeds) {
-      const img = new Image();
-      img.onerror = () => {
+    this.apiService.getEndpoints(endpoints => {
+      if (endpoints.logoutURL) {
+        location.href = endpoints.logoutURL;
+      }
+      else {
+        this.isAuthenticated$.next(false);
+        this.userDetails = null;
+        this.logout$.next();
         this.router.navigate(['login']);
-      };
-      img.src = 'http://loginsis.hotelbeds.com//oam/server/logout';
-    } else {
-      this.router.navigate(['login']);
-    }
+      }
+    });
   }
 
   private isTokenValid(token: string): boolean {

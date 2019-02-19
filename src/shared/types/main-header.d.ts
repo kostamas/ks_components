@@ -33,6 +33,7 @@ interface IPage {
 
 interface IMainHeaderConfig {
   calcSideBarClass?: (...args: any[]) => string;
+  sideBarCustomClass?: string;
 }
 
 interface IMainHeaderConfigConstructor {

@@ -1,0 +1,33 @@
+<div class="popup-container" [ngClass]="data.type">
+
+	<div class="title-and-content">
+		<div class="title">{{data.title}}</div>
+		<div class="content scrollbar-style" [innerHTML]="data.content"></div>
+	</div>
+
+	<div class="buttons-wrapper" *ngIf="!data.buttons">
+		<div class="pop-btn hb-button click-able" (click)="data.onDone()">Done</div>
+		<div class="pop-btn hb-button click-able" (click)="data.onCancel()">Cancel</div>
+	</div>
+
+	<div class="buttons-wrapper" *ngIf="data.buttons">
+		<div *ngFor="let button of data.buttons" (click)="button.handler(closeModal)">
+
+
+			<div *ngIf="!button.withLoader" class="hb-button popup-button" [ngStyle]="button.style">
+				<div class="popup-button-svg" *ngIf="button.svg">
+					<app-svg-icon [svg]="button.svg"></app-svg-icon>
+				</div>
+				<div class="popup-button-text">{{button.text}}</div>
+			</div>
+
+			<ng-container *ngIf="button.withLoader">
+				<app-button-with-loader [ngStyle]="button.style"
+																[onClick]="button.handler.bind(null, closeModal)"
+																[svg]="button.svg"
+																[text]="button.text">
+				</app-button-with-loader>
+			</ng-container>
+		</div>
+	</div>
+</div>

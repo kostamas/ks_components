@@ -1,8 +1,0 @@
-<div class="hb-button-container hb-button" (click)="onClickWrapper()"
-     [ngClass]="{'disabled': isDisabled && !markAsEnabled}">
-  <div class="icon-container">
-    <app-loader *ngIf="showLoader" shape="circle" type="container"></app-loader>
-    <app-svg-icon *ngIf="!showLoader" [svg]="SVG_ICONS.search"></app-svg-icon>
-  </div>
-  <div>Search</div>
-</div>

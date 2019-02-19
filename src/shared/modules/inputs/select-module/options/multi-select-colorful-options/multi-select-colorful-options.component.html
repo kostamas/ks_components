@@ -1,0 +1,39 @@
+<div class="multi-select-colorful-options"
+     [ngClass]="{'single-selected': isSingleSelected()}">
+  <div class="option-row">
+    <ng-container *ngIf="!data.headerButtons">
+      <app-checkbox id="all"
+                    [isManualControl]="true"
+                    [item]="allOptionItem"
+                    (onChecked)="selectAll()">
+      </app-checkbox>
+      <div class="cursor-pointer">
+        <label (click)="selectAll()" class="cursor-pointer">All</label>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="data.headerButtons">
+      <div *ngFor="let btn of data.headerButtons" class="header-button">
+        <div (click)="btn.handler();" class="cursor-pointer">
+          {{btn.text}}
+        </div>
+        <div *ngIf="btn.separator">{{btn.separator}}</div>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="separator"></div>
+  <div class="option-row" [ngClass]="{'select-item': selectItem.isSelected}" *ngFor="let selectItem of selectList; let index = index">
+    <app-checkbox [isManualControl]="true"
+                  *ngIf="selectItem.value !== 'All'"
+                  [id]="selectItem.text"
+                  [item]="selectItem"
+                  (onChecked)="checkboxChecked(index)">
+    </app-checkbox>
+
+    <div class="option-text" *ngIf="selectItem.value !== 'All'">
+      <label class="click-able" (click)="checkboxChecked(index)" [style.background]="selectItem.backgroundColor"
+             [style.color]="selectItem.color">{{selectItem.text}}</label>
+    </div>
+  </div>
+</div>

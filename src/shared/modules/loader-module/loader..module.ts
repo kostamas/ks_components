@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {LoaderComponent} from './loader/loader.component';
-import {SvgIconModule} from '../svgIconModule/svg-icon.module';
+import {SvgIconModule} from '../svg-icon-module/svg-icon.module';
 import {BrowserModule} from '@angular/platform-browser';
 
 @NgModule({

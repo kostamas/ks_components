@@ -1,0 +1,56 @@
+@import "shared";
+
+.auto-suggest-result-container {
+  font-size: 16px;
+  font-weight: 400;
+  font-family: 'Roboto', sans-serif;
+  z-index: 20;
+  position: absolute;
+  background-color: #fcfcfc;
+  box-sizing: border-box;
+  width: auto;
+  opacity: 0;
+  box-shadow: 2px 2px 2px -2px #bfbbbb;
+  border: 1px solid #c3c9d8;
+  border-radius: 3px;
+
+  .round-search-icon {
+    @include position(absolute, -26px);
+    height: 20px;
+
+    svg {
+      @include dimension(15px, 15px);
+    }
+  }
+
+  .item-result {
+    min-width: auto;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    padding: 6px 10px;
+
+    .item-value {
+      width: max-content;
+    }
+  }
+
+  .item-result.selected {
+    background-color: #c1e9fe;
+  }
+
+  .item-result:hover {
+    background-color: #c1e9fe;
+  }
+}
+
+.modal-container.auto-suggest-results {
+  .modal-overlay {
+    background-color: transparent;
+  }
+
+  .component-wrapper {
+    background-color: white;
+    transform: none;
+  }
+}

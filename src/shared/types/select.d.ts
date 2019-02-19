@@ -1,4 +1,4 @@
-interface ISelectOptions {
+interface ISelectOption {
   key: string;
   value: string;
 }

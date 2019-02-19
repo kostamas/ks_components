@@ -5,4 +5,5 @@ import {Injectable} from '@angular/core';
 })
 export class SharedConstants {
   public ADF_I_FRAME_URL_PARAM_NAME: string = 'adfIFrameTab';
+  public IMAGES_ICON_PATH: string = 'assets/icons/images/';
 }

@@ -1,0 +1,76 @@
+@import "shared";
+
+.side-menu-container {
+  @include dimension(20px, 52px);
+  @include flex(space-between, center);
+  margin-left: calc(100vw - 345px);
+  position: absolute;
+  margin-bottom: 5px;
+  z-index: 10;
+
+
+  &.has-scroll {
+    margin-left: calc(100vw - 363px);
+  }
+
+  .left-side {
+    margin-left: 20px;
+  }
+
+  .right-side {
+    display: flex;
+    margin-top: -5px;
+    .side-menu-item {
+      width: 30px;
+
+      .favorite-menu-modal {
+        @include dimension(100px, 100px);
+        position: absolute;
+        z-index: 900;
+        background-color: #0a8999;
+      }
+    }
+  }
+}
+
+.modal-container.side-bar-modal {
+  .modal-overlay {
+    background-color: transparent;
+  }
+  .component-wrapper {
+    -webkit-transform: none;
+    -moz-transform: none;
+    -ms-transform: none;
+    -o-transform: none;
+    transform: none;
+    border-radius: 0;
+    box-shadow: 2px 2px 5px -2px #bfbbbb;
+    border: 1px solid #d2cece;
+  }
+
+  .modal-close-button {
+    width: 30px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    .button {
+      padding: 10px;
+      float: right;
+    }
+  }
+
+}
+
+.side-bar-modal {
+  background: none;
+}
+
+@media only screen and (max-width: $mobile) {
+  .side-menu-container {
+    margin-left: 430px;
+
+    &.has-scroll {
+      margin-left: 423px;
+    }
+  }
+}

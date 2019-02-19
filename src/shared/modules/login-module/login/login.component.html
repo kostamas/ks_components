@@ -1,0 +1,39 @@
+<div class="login-page">
+
+  <app-loader *ngIf="showLoader"></app-loader>
+
+  <div class="login-area">
+    <div class="pulse-logo">
+      <img [src]="commonService.getImageIcon('tui-travel.png')"/>
+    </div>
+
+
+    <div class="login-box-area">
+
+
+      <div class="login-box">
+        <div class="lb-header">
+          <div class="header-buttons click-able" [ngClass]="{'active-view': currentView === views.login.value}">Sign-in to your account
+          </div>
+        </div>
+
+        <form class="username-login" [formGroup]="formGroup" (ngSubmit)="submit()">
+          <div class="u-form-group">
+            <input class="username-input" type="text" placeholder="User Name" formControlName="username"/>
+          </div>
+
+          <div class="u-form-group">
+            <input class="password-input" type="password" placeholder="Password" formControlName="password"/>
+          </div>
+
+          <div class="submit-btn-wrapper">
+            <button class="click-able" [ngClass]="{'disabled': !formGroup.valid}" [disabled]="!formGroup.valid">
+              Login
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

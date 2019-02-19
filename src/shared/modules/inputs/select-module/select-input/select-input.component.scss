@@ -1,0 +1,62 @@
+@import "shared";
+
+.select-input {
+  @include flex(space-between, center);
+  @include dimension(100%, 36px);
+  padding: 0 6px 0 9px;
+  outline: none;
+  border-radius: 3px;
+  font-size: 15px;
+  font-family: 'Roboto', sans-serif !important;
+  box-sizing: border-box;
+  border: 1px solid #c3c9d8;
+  background-color: white;
+  margin-right: 5px;
+  box-shadow: inset 0 0 1px 1px #fff;
+  position: relative;
+  color: black;
+  .title {
+    width: 100%;
+    font-size: 16px;
+  }
+  .arrowDown {
+    margin-right: 4px;
+  }
+  .options-wrapper {
+    @include position(absolute, 35px, null, null, 0, 1);
+    width: 100%;
+    max-height: 400px;
+
+  }
+}
+.modal-container.select-options-modal {
+  background: none;
+  overflow: hidden;
+  .modal-overlay {
+    background-color: transparent;
+  }
+  .component-wrapper {
+    width: 268px;
+    height: auto !important;
+    opacity: 0;
+    -webkit-transform: none;
+    -moz-transform: none;
+    -ms-transform: none;
+    -o-transform: none;
+    transform: none;
+    display: block;
+    box-shadow: 2px 2px 2px -2px #bfbbbb;
+    border: 1px solid #c3c9d8;
+    border-radius: 3px;
+  }
+  .modal-close-button {
+    width: 30px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    .button {
+      padding: 10px;
+      float: right;
+    }
+  }
+}

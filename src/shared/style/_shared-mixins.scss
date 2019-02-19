@@ -53,11 +53,20 @@
   display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
 
   @if $justify-content {
+    -webkit-box-pack: $justify-content;
+    -moz-box-pack: $justify-content;
+    -ms-flex-pack: $justify-content;
+    -webkit-justify-content: $justify-content;
     justify-content: $justify-content;
   }
 
   @if $align-items {
     align-items: $align-items;
+    -webkit-box-align: $align-items;
+    -moz-box-align: $align-items;
+    -ms-flex-line-pack: $align-items;
+    -webkit-align-content: $align-items;
+    align-content: $align-items;
   }
 }
 
@@ -76,6 +85,15 @@
     flex: $flex;
   }
 }
+
+@mixin flex-direction($direction: null) {
+  flex-direction: $direction;
+  -webkit-box-direction: $direction;
+  -moz-box-direction: $direction;
+  -ms-flex-direction: $direction;
+  -webkit-flex-direction: $direction;
+}
+
 
 @mixin position($position, $top: null, $right: null, $left: null, $bottom: null, $z-index: null) {
   position: $position;
@@ -120,8 +138,4 @@
   background-color: #055885;
   box-sizing: border-box;
   cursor: pointer;
-
-  &:hover{
-    background-color: #5798bb;
-  }
 }

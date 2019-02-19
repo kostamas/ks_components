@@ -3,7 +3,7 @@ import {ComponentRef} from '@angular/core';
 interface IModalConfig {
   disableClose?: boolean;
   hidCloseButton?: boolean;
-  modalClass?: string;
+  modalClass?: string | string[];
   position?: IModalPosition;
   closeModalCallback?: any;
   style?: any;
@@ -20,6 +20,7 @@ interface IPopupData {
   onDone?: () => any;
   onCancel?: () => any;
   buttons?: IPopupButton[];
+	disableClose?: boolean;
 }
 
 interface IPopupTypes {
@@ -31,6 +32,9 @@ interface IPopupTypes {
 interface IPopupButton {
   text: string;
   handler: (p: any) => any;
+  style?: any;
+	svg?: string;
+	withLoader?: boolean;
 }
 
 interface IModal {
@@ -43,4 +47,5 @@ interface IModal {
   updateStyle: any;
   updateComponentData: any;
   id: string;
+  isOpen: boolean;
 }

@@ -1,0 +1,5 @@
+<div class="switch click-able" [ngClass]="{'enabled-state': enabled, 'disabled-state': !enabled}" (click)="clickHandler()">
+  <div class="enabled"><div class="text">{{text.enabled}}</div></div>
+  <div class="disabled"><div class="text">{{text.disabled}}</div></div>
+  <div class="indicator"></div>
+</div>
