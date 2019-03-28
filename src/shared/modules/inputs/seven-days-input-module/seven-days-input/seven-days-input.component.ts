@@ -1,9 +1,12 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {
+	Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewEncapsulation
+} from '@angular/core';
 import {ICheckboxItem} from '../../../../types/buttons';
 import {MultiSelectColorfulOptionsComponent} from '../../select-module/options/multi-select-colorful-options/multi-select-colorful-options.component';
 import {ISelectItem} from '../../../../types/ISelect';
 import {Subject} from 'rxjs';
 import {ISelectInputConfig, ISevenDaysInput} from '../../../../types/seven-days-input';
+import {capitalize} from '../../../../utils/jsUtils';
 
 @Component({
 	selector: 'app-seven-days-input',
@@ -11,33 +14,32 @@ import {ISelectInputConfig, ISevenDaysInput} from '../../../../types/seven-days-
 	styleUrls: ['./seven-days-input.component.scss'],
 	encapsulation: ViewEncapsulation.None
 })
-export class SevenDaysInputComponent implements OnInit {
+export class SevenDaysInputComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() sevenDaysMainList: ISevenDaysInput;
-	@Input() sevenDaysSelectInputOptions: ISelectItem[];
 	@Input() selectInputConfig: ISelectInputConfig;
 	@Input() reset$: Subject<any>;
+	@Input() isDisabled: boolean = false;
 
 	@Output() sevenDaysChanged: EventEmitter<ISevenDaysInput> = new EventEmitter();
 
+	public sevenDaysSelectInputOptions: ISelectItem[] = [];
 	public selectColorfulOptionsComponent: any = MultiSelectColorfulOptionsComponent;
 	public inputText$: Subject<string> = new Subject<string>();
-
-
+	public componentInputs: any = {};
 	public multiSelectInputs: any;
-	sevenDaysKeys: string[];
+
+	private sevenDaysKeys: string[];
+	private subscriptionArr: any[] = [];
 
 	constructor() {
 	}
 
 	ngOnInit(): void {
-
-
 		if (this.reset$) {
-			this.reset$.subscribe(() => {
+			this.subscriptionArr.push(this.reset$.subscribe(() => {
 				this.resetHandler();
-			});
+			}));
 		}
-
 		if (!this.sevenDaysMainList) {
 			this.sevenDaysMainList = {
 				sun: true, mon: true, tue: true, wed: true, thu: true, fri: true, sat: true
@@ -45,6 +47,23 @@ export class SevenDaysInputComponent implements OnInit {
 		}
 		this.sevenDaysKeys = Object.keys(this.sevenDaysMainList);
 		this.initializeSelectInput();
+		this.componentInputs = {
+			headerButtons: this.multiSelectInputs,
+			isSingleSelection: true,
+		};
+		if (this.selectInputConfig && this.selectInputConfig.selectAllConfig) {
+			this.componentInputs.selectAllConfig = this.selectInputConfig.selectAllConfig;
+		}
+	}
+
+	ngOnChanges(changes: SimpleChanges): void {
+		if (changes.sevenDaysMainList && !changes.sevenDaysMainList.firstChange) {
+			this.syncSevenDaysSelectInput();
+			this.inputText$.next(this.calcSelectInputText());
+		}
+		if (changes.selectInputConfig && !changes.selectInputConfig.firstChange) {
+			this.componentInputs.selectAllConfig = changes.selectInputConfig.currentValue.selectAllConfig;
+		}
 	}
 
 	resetHandler(): void {
@@ -52,16 +71,6 @@ export class SevenDaysInputComponent implements OnInit {
 			sun: true, mon: true, tue: true, wed: true, thu: true, fri: true, sat: true
 		};
 		if (this.selectInputConfig) {
-			this.sevenDaysSelectInputOptions = [
-				{text: 'Sunday', value: 'sun', isSelected: true},
-				{text: 'Monday', value: 'mon', isSelected: true},
-				{text: 'Tuesday', value: 'tue', isSelected: true},
-				{text: 'Wednesday', value: 'wed', isSelected: true},
-				{text: 'Thursday', value: 'thu', isSelected: true},
-				{text: 'Friday', value: 'fri', isSelected: true},
-				{text: 'Saturday', value: 'sat', isSelected: true},
-			];
-			this.syncSevenDaysMainList();
 		} else {
 			this.sevenDaysMainList = defaultSevenDaysMainList;
 		}
@@ -69,66 +78,61 @@ export class SevenDaysInputComponent implements OnInit {
 
 	initializeSelectInput(): void {
 		if (this.selectInputConfig) {
-			if (!this.sevenDaysSelectInputOptions) {
-				this.sevenDaysSelectInputOptions = [
-					{text: 'Sunday', value: 'sun', isSelected: true},
-					{text: 'Monday', value: 'mon', isSelected: true},
-					{text: 'Tuesday', value: 'tue', isSelected: true},
-					{text: 'Wednesday', value: 'wed', isSelected: true},
-					{text: 'Thursday', value: 'thu', isSelected: true},
-					{text: 'Friday', value: 'fri', isSelected: true},
-					{text: 'Saturday', value: 'sat', isSelected: true},
-				];
+			this.sevenDaysSelectInputOptions = [{name: 'Sunday', value: 'sun'}, {name: 'Monday', value: 'mon'},
+				{name: 'Tuesday', value: 'tue'}, {name: 'Wednesday', value: 'wed'}, {name: 'Thursday', value: 'thu'},
+				{name: 'Friday', value: 'fri'}, {name: 'Saturday', value: 'sat'}
+			];
+			if (this.sevenDaysMainList) {
+				this.syncSevenDaysSelectInput();
 			}
-			this.syncSevenDaysMainList();
+
 			this.multiSelectInputs = [
-				{text: 'All Days', handler: this.markDays.bind(this, 'all'), separator: ' |'},
-				{text: 'WeekDays', handler: this.markDays.bind(this, 'weekDays'), separator: ' |'},
-				{text: 'Weekend', handler: this.markDays.bind(this, 'weekend')},
+				{text: 'All Days', handler: this.markDays.bind(this, 'all'), separator: ' |', class: 'click-able-red'},
+				{text: 'Weekdays', handler: this.markDays.bind(this, 'weekdays'), separator: ' |', class: 'click-able-red'},
+				{text: 'Weekend', handler: this.markDays.bind(this, 'weekend'), class: 'click-able-red'},
 			];
 			this.inputText$.next(this.calcSelectInputText());
 		}
 	}
 
 	checkHandler(checkboxItem: ICheckboxItem, day: string): void {
-		const numOfCheckedItems = Object.values(this.sevenDaysMainList).filter(item => item).length;
+		const numOfCheckedItems = Object.keys(this.sevenDaysMainList).filter(key => this.sevenDaysMainList[key]).length;
 		const isLastCheckedItem = checkboxItem.isSelected && numOfCheckedItems === 1;
-		if (!isLastCheckedItem) {
+		if (!isLastCheckedItem || !this.componentInputs.isSingleSelection) {
 			this.sevenDaysMainList[day] = !checkboxItem.isSelected;
 			this.sevenDaysChanged.next(this.sevenDaysMainList);
 		}
 	}
 
 	markDays(daysType: string): void {
+		let daysKeys = {'sun': true, mon: true, tue: true, wed: true, thu: true, fri: true, sat: true};
+
 		switch (daysType) {
 			case 'all':
-				this.sevenDaysMainList = {
-					sun: true, mon: true, tue: true, wed: true, thu: true, fri: true, sat: true
-				};
 				break;
-			case 'weekDays':
-				this.sevenDaysMainList = {
-					sun: false, mon: true, tue: true, wed: true, thu: true, fri: true, sat: false
-				};
+			case 'weekdays':
+				daysKeys = {'sun': false, mon: true, tue: true, wed: true, thu: true, fri: true, sat: false};
 				break;
 			case'weekend':
-				this.sevenDaysMainList = {
-					sun: true, mon: false, tue: false, wed: false, thu: false, fri: false, sat: true
-				};
+				daysKeys = {'sun': true, mon: false, tue: false, wed: false, thu: false, fri: false, sat: true};
 				break;
 		}
-
+		Object.keys(daysKeys).forEach(k => this.sevenDaysMainList[k] = daysKeys[k]);
 		if (this.selectInputConfig) {
 			this.syncSevenDaysSelectInput();
 		}
 		this.sevenDaysChanged.next(this.sevenDaysMainList);
 	}
 
-
 	syncSevenDaysSelectInput(): void {
-		Object.keys(this.sevenDaysMainList).forEach((day, ind) => {
-			this.sevenDaysSelectInputOptions[ind].isSelected = this.sevenDaysMainList[day];
-		});
+		if (!this.sevenDaysSelectInputOptions.length) {
+			this.initializeSelectInput();
+		}
+		if (this.selectInputConfig) {
+			Object.keys(this.sevenDaysMainList).forEach((day, ind) => {
+				this.sevenDaysSelectInputOptions[ind].isSelected = this.sevenDaysMainList[day];
+			});
+		}
 		this.inputText$.next(this.calcSelectInputText());
 	}
 
@@ -153,6 +157,7 @@ export class SevenDaysInputComponent implements OnInit {
 		Object.keys(this.sevenDaysMainList).forEach((day, ind) => {
 			if (this.sevenDaysMainList[day]) {
 				selectedIndex.push(ind);
+				day = capitalize(day);
 				text += (text ? ' ,' + day : day);
 			}
 		});
@@ -166,13 +171,25 @@ export class SevenDaysInputComponent implements OnInit {
 			if (selectedIndex.includes(6) && selectedIndex.includes(0)) {
 				text = 'Weekend';
 			}
+		} else if (selectedIndex.length === 0) {
+			text = 'All Options';
 		}
 		return text;
 	}
 
 
 	isSingleSelected(): boolean {
-		return Object.values(this.sevenDaysMainList).filter(d => d).length === 1;
+		return Object.keys(this.sevenDaysMainList)
+			.filter(key => this.sevenDaysMainList[key]).length === 1 && this.componentInputs.isSingleSelection;
+	}
+
+	onListChange($event: ISelectItem[]): void {
+		this.syncSevenDaysMainList();
+		this.inputText$.next(this.calcSelectInputText());
+	}
+
+	ngOnDestroy(): void {
+		this.subscriptionArr.forEach((subscription: any) => subscription.unsubscribe());
 	}
 }
 

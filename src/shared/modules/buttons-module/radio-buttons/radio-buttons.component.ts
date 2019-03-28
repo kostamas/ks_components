@@ -1,26 +1,28 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {IRadioButton} from '../../../types/buttons';
 
 @Component({
   selector: 'app-radio-buttons',
   templateUrl: './radio-buttons.component.html',
-  styleUrls: ['./radio-buttons.component.scss']
+  styleUrls: ['./radio-buttons.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class RadioButtonsComponent implements OnInit {
 
-  @Input() radioButtons: IRadioButton[] = [];
+	@Input() radioButtons: IRadioButton[] = [];
+	@Input() isDisabled: boolean = false;
 
-  @Output() radioButtonClick: EventEmitter<{ checkedButton: IRadioButton, index: number }> = new EventEmitter();
+	@Output() radioButtonClick: EventEmitter<{ checkedButton: IRadioButton, index: number }> = new EventEmitter();
 
-  constructor() {
-  }
+	constructor() {
+	}
 
-  ngOnInit(): void {
-  }
+	ngOnInit(): void {
+	}
 
-  clickHandler(index: number): void {
-    this.radioButtons.forEach((btn: IRadioButton) => btn.isChecked = false);
-    this.radioButtons[index].isChecked = true;
-    this.radioButtonClick.emit({checkedButton: this.radioButtons[index], index});
-  }
+	clickHandler(index: number): void {
+		this.radioButtons.forEach((btn: IRadioButton) => btn.isChecked = false);
+		this.radioButtons[index].isChecked = true;
+		this.radioButtonClick.emit({checkedButton: this.radioButtons[index], index});
+	}
 }

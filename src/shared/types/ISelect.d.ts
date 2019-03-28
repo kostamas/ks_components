@@ -1,5 +1,5 @@
 export interface ISelectItem {
-  text: string;
+  name: string;
   value: any;
   isSelected?: boolean;
   backgroundColor?: string;
@@ -7,7 +7,14 @@ export interface ISelectItem {
   svg?: string;
 }
 
-export interface IOptionsComponentWrapper {
-  component: any;
-  inputs: any[];
+
+export interface ISelectInputValidationStatus {
+	message: string;
+	isValid: boolean;
+	invalidView?: string;
+}
+
+export  interface ISelectListValidatorObject {
+	val: ISelectItem[];
+	isDirty: boolean;
 }

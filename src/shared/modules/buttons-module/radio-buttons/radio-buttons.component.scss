@@ -1,40 +1,44 @@
 @import "shared";
 
 .radio-buttons {
-  @include flex();
+	@include flex();
 
-  .radio-button-repeater {
-    @include flex(null, center);
-    position: relative;
-    margin-right: 20px;
-    .input {
-      visibility: hidden;
-    }
-    .input:checked + .label:after {
-      width: 8px;
-      height: 8px;
-      position: absolute;
-      top: 4px;
-      left: 6px;
-      content: '';
-      background-color: #7a7a7a;
-      border-radius: 100%;
-      border-color: #c3c9d8;
-      transition: all 0.2s ease;
-    }
-    .label {
-      margin-left: 5px;
-      &:before {
-        width: 18px;
-        height: 18px;
-        position: absolute;
-        top: -2px;
-        left: 0;
-        content: '';
-        border: 1px solid #c3c9d8;
-        border-radius: 100%;
-        background: #fff;
-      }
-    }
-  }
+	.radio-button-repeater {
+		@include flex(null, center);
+		position: relative;
+		margin-right: 20px;
+		.input {
+			visibility: hidden;
+		}
+		.input:checked + .label:after {
+			width: 8px;
+			height: 8px;
+			position: absolute;
+			top: 4px;
+			left: 6px;
+			content: '';
+			background-color: $color26;
+			border-radius: 100%;
+			border-color: $color1;
+			transition: all 0.2s ease;
+		}
+		.label {
+			margin-left: 5px;
+			&:before {
+				width: 18px;
+				height: 18px;
+				position: absolute;
+				top: -2px;
+				left: 0;
+				content: '';
+				border: 1px solid $color1;
+				border-radius: 100%;
+				background: $white;
+			}
+		}
+	}
+}
+
+.radio-buttons.is-disabled {
+	pointer-events: none;
 }

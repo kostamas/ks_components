@@ -1,8 +1,10 @@
-<div class="select-input cursor-pointer" (click)="multipleSelectClickHandler()" #selectInput>
-  <div class="title" #title></div>
-  <app-svg-icon [svg]="SVG_ICONS.arrowDown"></app-svg-icon>
-
-  <div class="options-wrapper" #optionsWrapper>
-    <div #optionsContainer></div>
-  </div>
+<div class="select-input cursor-pointer"
+		 [ngClass]="[validationStatus.isValid === false ? 'invalid' : '', isDisabled ? 'is-disabled' : '']"
+		 (click)="multipleSelectClickHandler()" #selectInput>
+	<div class="title" #title></div>
+	<div class="triangle-error" app-tooltip [tooltipTitle]="validationStatus.message || 'Error'">!</div>
+	<app-svg-icon [svg]="SVG_ICONS.arrowDown"></app-svg-icon>
+	<div class="options-wrapper" #optionsWrapperElement>
+		<div #optionsContainer></div>
+	</div>
 </div>

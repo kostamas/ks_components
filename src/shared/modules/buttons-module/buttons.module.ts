@@ -6,6 +6,7 @@ import {LoaderModule} from '../loader-module/loader..module';
 import {ButtonWithLoaderComponent} from './button-with-loader/button-with-loader.component';
 import {SwitchComponent} from './switch/switch.component';
 import { RadioButtonsComponent } from './radio-buttons/radio-buttons.component';
+import {ButtonWithPopupComponent} from './button-with-popup/button-with-popup.component';
 
 @NgModule({
   imports: [
@@ -14,16 +15,18 @@ import { RadioButtonsComponent } from './radio-buttons/radio-buttons.component';
     LoaderModule,
   ],
   declarations: [
-    CheckboxComponent,
-    ButtonWithLoaderComponent,
-    SwitchComponent,
-    RadioButtonsComponent
+		ButtonWithLoaderComponent,
+		ButtonWithPopupComponent,
+		RadioButtonsComponent,
+		CheckboxComponent,
+		SwitchComponent
   ],
   exports: [
-    CheckboxComponent,
-    ButtonWithLoaderComponent,
-    SwitchComponent,
-    RadioButtonsComponent
+		ButtonWithLoaderComponent,
+		ButtonWithPopupComponent,
+		RadioButtonsComponent,
+		CheckboxComponent,
+		SwitchComponent
   ]
 })
 export class ButtonsModule {

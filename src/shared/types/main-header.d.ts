@@ -34,6 +34,7 @@ interface IPage {
 interface IMainHeaderConfig {
   calcSideBarClass?: (...args: any[]) => string;
   sideBarCustomClass?: string;
+	isMainHeaderOpenHandler?: (openOverlay: boolean) => void;
 }
 
 interface IMainHeaderConfigConstructor {

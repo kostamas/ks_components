@@ -1,13 +1,18 @@
 <div [ngClass]="getMenuItemClass()" #subMenu [style.width]="menuItemWidth" [style.top]="menuItemTopStyle">
-  <div class="top-triangle" [style.left]="triangleLeftPosition"></div>
+	<div class="top-triangle" [style.left]="triangleLeftPosition"></div>
 
-  <div class="menu-item-categories-container">
-    <div *ngFor="let menu of headerTabData.menus"
-         class="menu-item-category"
-         [ngClass]="{'selected': menu===selectedMenu}"
-         (click)="onSelectMenu(menu)">
-      {{menu.name}} <img *ngIf="newMenus.includes(menu.name.replace(' ', ''))" [src]="getIcon('new_tag.png')" class="new-tag-label" />
-    </div>
-  </div>
-  <app-sub-menu-item [menuData]="selectedMenu"></app-sub-menu-item>
+	<div class="menu-item-categories-container">
+		<div *ngFor="let menu of headerTabData.menus"
+				 class="menu-item-category"
+				 [ngClass]="{'selected': menu===selectedMenu}"
+				 (click)="onSelectMenu(menu)">
+			{{menu.name}}
+
+			<div *ngIf="newLevels1.indexOf(menu.id) > -1">
+				<img [src]="getIcon('new_tag.png')" class="new-tag-label" [ngClass]="'new-image-' + menu.name"/>
+			</div>
+		</div>
+	</div>
+
+	<app-sub-menu-item [menuData]="selectedMenu"></app-sub-menu-item>
 </div>

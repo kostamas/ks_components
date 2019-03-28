@@ -14,7 +14,7 @@ export class MainHeaderService {
 	public pageClick$: Subject<any> = new Subject();
 	public pagesPaths$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 	public closeMenu$: Subject<boolean> = new Subject();
-	public searchSimulatorId: number = -13;
+
 
 	constructor(private http: HttpClient, private apiService: ApiService, @Optional() @Inject(MainHeaderConfig) public mainHeaderConfig: IMainHeaderConfig) {
 		this.menuLoaded$.next(false);

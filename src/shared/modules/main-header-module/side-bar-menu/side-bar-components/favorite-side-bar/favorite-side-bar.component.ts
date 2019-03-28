@@ -1,6 +1,5 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FavoritesService} from '../../../favorites.service';
-import {OverlayService} from '../../../../../services/overlay.service';
 import {MainHeaderService} from '../../../main-header.service';
 import {ModalService} from '../../../../modal-module/modal.service';
 import {IModal} from '../../../../../types/modal';

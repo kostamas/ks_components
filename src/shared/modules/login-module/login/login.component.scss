@@ -4,8 +4,8 @@
   @include dimension(100%, 100vh);
   @include flex(center, center);
   position: relative;
-  border: solid #c3c9d8 0;
-  box-shadow: 0 4px 8px 2px #999;
+  border: solid $color1 0;
+  box-shadow: 0 4px 8px 2px $color56;
   background: url('/../assets/icons/images/hbg-login-background.jpg') no-repeat scroll center top;
   min-width: 768px;
 
@@ -40,8 +40,8 @@
       .logout-btn {
         @include flex(center, center);
         @include dimension(150px, 40px);
-        @include text-style(20px, white, $roofTerracotta);
-        background-color: #055885;
+        @include text-style(20px, white, $color73);
+        background-color: $color20;
         border-radius: 30px;
         float: right;
         position: relative;
@@ -54,7 +54,7 @@
       padding-top: 200px;
 
       .welcome {
-        @include text-style(55px, #0a7aba, $roofTerracotta);
+        @include text-style(55px, $color51, $color73);
       }
     }
   }
@@ -65,23 +65,23 @@
     box-sizing: border-box;
     border-radius: 5px;
     box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.33);
-    border: solid #c3c9d8 2px;
-    background-image: -webkit-linear-gradient(top, #FFFFFF 40%, #F1F2F4 100%);
+    border: solid $color1 2px;
+    background-image: -webkit-linear-gradient(top, $white 40%, $color52 100%);
     .lb-header {
       @include flex(baseline, center);
-      color: #0188cc;
+      color: $color50;
       padding-bottom: 10px;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid $color49;
       text-align: left;
       height: 28px;
       padding-left: 42px;
 
       .header-buttons {
-        @include text-style(15px, $manatee, Lato, bold);
+        @include text-style(15px, $color70, Lato, bold);
       }
 
       .active-view {
-        @include text-style(18px, #0188cc, Lato, bold);
+        @include text-style(18px, $color50, Lato, bold);
       }
     }
   }
@@ -102,11 +102,11 @@
     width: calc(80% - 22px);
     height: 45px;
     outline: none;
-    border: 1px solid #ddd;
+    border: 1px solid $color53;
     padding: 0 10px;
     margin-bottom: 30px;
     border-radius: 5px;
-    color: #333;
+    color: $color54;
     font-size: 14px;
     -webkit-transition: all 0.1s linear;
     -moz-transition: all 0.1s linear;
@@ -114,15 +114,15 @@
   }
 
   .u-form-group input:focus {
-    border-color: #358efb;
+    border-color: $color55;
   }
 
   .submit-btn-wrapper button {
     width: 80%;
-    background-color: #055885;
+    background-color: $color20;
     border: none;
     outline: none;
-    color: #fff;
+    color: $white;
     font-size: 20px;
     font-weight: normal;
     padding: 14px 0;
@@ -135,7 +135,7 @@
   }
 
   .form-error {
-    @include text-style(14px, $roofTerracotta, Lato);
+    @include text-style(14px, $color73, Lato);
     @include dimension(250px, 20px);
     margin: 4px auto 10px auto;
     text-align: left;

@@ -35,6 +35,8 @@ interface IPopupButton {
   style?: any;
 	svg?: string;
 	withLoader?: boolean;
+	btnClass?: string;
+	x?: string;
 }
 
 interface IModal {

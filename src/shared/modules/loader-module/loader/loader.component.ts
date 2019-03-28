@@ -1,38 +1,38 @@
 import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'app-loader',
-  templateUrl: './loader.component.html',
-  styleUrls: ['./loader.component.scss']
+	selector: 'app-loader',
+	templateUrl: './loader.component.html',
+	styleUrls: ['./loader.component.scss']
 })
 export class LoaderComponent implements OnInit {
-  public loaderClass;
+	public loaderClass;
 
-  @Input() text?;
-  @Input() type?;
-  @Input() shape?;
+	@Input() text?;
+	@Input() type?;
+	@Input() shape?;
 
-  ngOnInit() {
-    this.initLoaderClass();
-  }
+	ngOnInit(): void {
+		this.initLoaderClass();
+	}
 
-  initLoaderClass() {
-    this.loaderClass = ' ';
+	initLoaderClass(): void {
+		this.loaderClass = ' ';
 
-    switch (this.type) {
-      case 'container':
-        this.loaderClass += ' container-loader';
-        break;
-      default:
-        this.loaderClass += ' page-loader'
-    }
+		switch (this.type) {
+			case 'container':
+				this.loaderClass += ' container-loader';
+				break;
+			default:
+				this.loaderClass += ' page-loader';
+		}
 
-    switch (this.shape) {
-      case 'circle':
-        this.loaderClass += ' circle-loader';
-        break;
-      default:
-        this.loaderClass += ' rectangle-loader';
-    }
-  }
+		switch (this.shape) {
+			case 'circle':
+				this.loaderClass += ' circle-loader';
+				break;
+			default:
+				this.loaderClass += ' rectangle-loader';
+		}
+	}
 }

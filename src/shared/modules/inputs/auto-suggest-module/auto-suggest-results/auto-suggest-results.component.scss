@@ -5,23 +5,12 @@
   font-weight: 400;
   font-family: 'Roboto', sans-serif;
   z-index: 20;
-  position: absolute;
-  background-color: #fcfcfc;
+  background-color: $color19;
   box-sizing: border-box;
   width: auto;
-  opacity: 0;
-  box-shadow: 2px 2px 2px -2px #bfbbbb;
-  border: 1px solid #c3c9d8;
   border-radius: 3px;
-
-  .round-search-icon {
-    @include position(absolute, -26px);
-    height: 20px;
-
-    svg {
-      @include dimension(15px, 15px);
-    }
-  }
+  min-width: 100%;
+  position: relative;
 
   .item-result {
     min-width: auto;
@@ -36,11 +25,11 @@
   }
 
   .item-result.selected {
-    background-color: #c1e9fe;
+    background-color: $color44;
   }
 
   .item-result:hover {
-    background-color: #c1e9fe;
+    background-color: $color44;
   }
 }
 

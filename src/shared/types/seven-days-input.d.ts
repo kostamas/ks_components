@@ -10,4 +10,5 @@ export interface ISevenDaysInput {
 
 export interface ISelectInputConfig {
   openOptionsInModal: boolean;
+  selectAllConfig?: any;
 }

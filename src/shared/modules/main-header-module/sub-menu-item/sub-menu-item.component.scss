@@ -12,7 +12,7 @@
   .sub-menu-item {
     @include flex(flex-start);
     .sub-menu-columns-container {
-      border-right: 1px dashed $botticelli;
+      border-right: 1px dashed $color64;
       padding: 0 10px;
 
       .sub-menu-title {
@@ -26,7 +26,7 @@
 
       .sub-menu-category {
         @include flex();
-        @include text-style(13px, $sanMarino);
+        @include text-style(13px, $color74);
         font-family: 'Roboto', sans-serif !important;
         text-decoration: underline;
         cursor: pointer;
@@ -44,7 +44,6 @@
         }
 
         &:hover {
-          color: $chestnutRose;
           .favorite-div:not(.show-favorite) {
             img {
               display: block;

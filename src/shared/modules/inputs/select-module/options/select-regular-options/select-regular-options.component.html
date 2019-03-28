@@ -1,8 +1,8 @@
 <div class="select-regular-options">
-  <div class="option-row" *ngFor="let selectItem of selectList; let index = index">
-    <div class="option-text cursor-pointer" (click)="selectValue(index)">
+  <div class="option-row cursor-pointer" *ngFor="let selectItem of selectList; let index = index" (click)="selectValue(index)">
+    <div class="option-text">
       <app-svg-icon *ngIf="selectItem.svg" [svg]="selectItem.svg"></app-svg-icon>
-      <label class="click-able" >{{selectItem.text}}</label>
+      <label class="click-able" >{{selectItem.name}}</label>
     </div>
   </div>
 </div>

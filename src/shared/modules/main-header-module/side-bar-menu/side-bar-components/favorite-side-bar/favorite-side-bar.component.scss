@@ -2,13 +2,13 @@
 
 .favorite-menu-modal {
   @include dimension(350px, 400px);
-  background: #ffffff;
+  background: $white;
 
   .title {
-    @include text-style(16px, #000000, 'Roboto');
+    @include text-style(16px, $black, 'Roboto');
     margin-top: 20px;
     margin-left: 20px;
-    border-bottom: 1px #c3c9d8 dashed;
+    border-bottom: 1px $color1 dashed;
     width: 90%;
     padding-bottom: 10px;
   }
@@ -17,14 +17,14 @@
     overflow: auto;
 
     .favorite-row {
-      @include text-style(13px, $sanMarino);
+      @include text-style(13px, $color74);
       @include flex();
       font-family: 'Roboto', sans-serif !important;
       text-decoration: underline;
       cursor: pointer;
       margin-left: 20px;
       margin-top: 10px;
-      border-bottom: 1px #c3c9d8 dashed;
+      border-bottom: 1px $color1 dashed;
       width: 94%;
       padding-bottom: 7px;
 
@@ -33,12 +33,6 @@
       }
       .favorite-name {
         padding-left: 10px;
-        &:hover {
-          color: $chestnutRose;
-          text-decoration: underline;
-          -webkit-text-decoration-color: $chestnutRose;
-          text-decoration-color: $chestnutRose;
-        }
       }
     }
   }
@@ -52,7 +46,7 @@
     .no-favorite-results-text {
       @include flex(center, center);
       font-size: 16px;
-      color: #c3c9d8;
+      color: $color1;
       font-weight: 400;
       width: 100%;
       text-align: center;

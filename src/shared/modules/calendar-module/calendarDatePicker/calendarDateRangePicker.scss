@@ -5,9 +5,9 @@ $dateRangeContainerWidth: 210px;
 
 .calendar-date-range-picker {
   @include dimension($dateRangeContainerWidth, auto);
-  @include text-style(14px, $codeGray);
+  @include text-style(14px, $color72);
   padding: 10px 5px;
-  border: 1px solid $silver;
+  border: 1px solid $color38;
   cursor: pointer;
   user-select: none;
 
@@ -46,20 +46,20 @@ $dateRangeContainerWidth: 210px;
     }
 
     .day.selected {
-      background-color: #E0F4FE;
+      background-color: $color36;
     }
 
     .day.border-left {
-      border-left: 1px solid #9ddcfb;
+      border-left: 1px solid $color37;
     }
     .day.border-top {
-      border-top: 1px solid #9ddcfb;
+      border-top: 1px solid $color37;
     }
     .day.border-right {
-      border-right: 1px solid #9ddcfb;
+      border-right: 1px solid $color37;
     }
     .day.border-bottom {
-      border-bottom: 1px solid #9ddcfb;
+      border-bottom: 1px solid $color37;
     }
 
     /*-------------   content jump fix   -------------*/
@@ -89,15 +89,15 @@ $dateRangeContainerWidth: 210px;
 
 
     .day.first-day, .day.last-day {
-      background-color: #9ddcfb;
+      background-color: $color37;
     }
 
     .today {
-      border: 1px solid #c2c2c2;
+      border: 1px solid $color38;
     }
 
     .past {
-      color: #bab8b8;;
+      color: $color79;
     }
   }
 }

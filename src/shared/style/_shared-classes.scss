@@ -1,0 +1,77 @@
+@import "./shared-mixins";
+
+.cursor-pointer:not(.disabled) {
+	cursor: pointer !important;
+}
+
+.hover-opacity:hover {
+	opacity: 0.8 !important;
+}
+
+.animate {
+	transition: 0.2s !important;
+}
+
+.click-able:not(.disabled) {
+	cursor: pointer !important;
+
+	&.underline {
+		&:hover {
+			text-decoration: underline !important;
+		}
+	}
+
+
+	&:active {
+		opacity: 1;
+	}
+}
+
+.disabled {
+  background-color: $color45 !important;
+  border: 1px solid $color81 !important;
+  color: $color46 !important;
+  pointer-events: none;
+}
+
+.click-able-red:not(.disabled) {
+	cursor: pointer !important;
+
+	&:active {
+		opacity: 1;
+	}
+
+	&:hover {
+		opacity: 0.8 !important;
+		color: $color48 !important;
+		text-decoration: underline !important;
+		text-decoration-color: $color48 !important;
+	}
+}
+
+///////////////////////////      buttons      ////////////////////
+
+.hb-button, .hb-button-blue {
+  @include hb-button($color20, $white, $color20);
+}
+
+.hb-button-white {
+  @include hb-button($white, $color20, $color20);
+}
+
+////      scrollbar
+
+.scrollbar-style {
+	&::-webkit-scrollbar {
+		height: 20px;
+		width: 7px;
+		background-color: $color66;
+		border-radius: 100px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background-color: $color63;
+		-webkit-border-radius: 1ex;
+	}
+}
+

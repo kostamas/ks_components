@@ -17,13 +17,16 @@ export interface ISvgIcons {
   chain: string;
   matrix: string;
   modify_edit: string;
-  modify_delete: any;
-  modify_duplicate: any;
-  modify_history: any;
-  regular_hotel: any;
-  bin: any;
-  info: any;
-  cancel: any;
+  modify_delete: string;
+  modify_duplicate: string;
+  modify_history: string;
+  regular_hotel: string;
+  bin: string;
+  info: string;
+  cancel: string;
+	checkMark: string;
+	close_toast: string;
+	plus: string;
 }
 
 
@@ -53,4 +56,7 @@ export const SVG_ICONS: ISvgIcons = {
   bin: 'bin',
   info: 'info',
 	cancel: 'cancel',
+	checkMark: 'checkMark',
+	close_toast: 'close_toast',
+	plus: 'plus'
 };

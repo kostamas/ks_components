@@ -25,12 +25,12 @@
 
   .rect {
     @include dimension(8px, 100%);
-    background-color: #055885;
+    background-color: $color20;
     display: inline-block;
     margin-right: 2px;
     -webkit-animation: sk-stretchdelay 1s infinite ease-in-out;
     animation: sk-stretchdelay 1s infinite ease-in-out;
-    box-shadow: 0 2px 2px 0 #fff;
+    box-shadow: 0 2px 2px 0 $white;
   }
 
   .rect2 {
@@ -100,10 +100,10 @@
   display: block;
   position: absolute;
   margin: 6px;
-  border: 6px solid #fff;
+  border: 6px solid $white;
   border-radius: 50%;
   animation: circle-loader-key-frame 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: #fff transparent transparent transparent;
+  border-color: $white transparent transparent transparent;
 }
 
 .circle-loader div:nth-child(1) {
@@ -131,6 +131,6 @@
 
 .loading_text {
   text-align: center;
-  text-shadow: 1px 1px 0 #fff;
+  text-shadow: 1px 1px 0 $white;
   font-size: 15px;
 }

@@ -9,7 +9,6 @@
     color: $color;
   }
 
-  font-family: sans-serif;
   @if ($family) {
     font-family: $family, sans-serif;
   }
@@ -44,6 +43,17 @@
     height: $height;
   }
 }
+
+@mixin transform($transform: null) {
+  @if $transform {
+    -webkit-transform: $transform;
+    -moz-transform: $transform;
+    -ms-transform: $transform;
+    -o-transform: $transform;
+    transform: $transform;
+  }
+}
+
 
 @mixin flex($justify-content: null, $align-items: null) {
   display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
@@ -126,16 +136,18 @@
   user-select: $val;
 }
 
-@mixin hb-button($width, $height) {
+@mixin hb-button($bg-color, $text-color, $border-color) {
+  @include text-style(18px, $text-color);
+  @include dimension(auto, 40px);
   @include flex(center, center);
-  @include dimension($width, $height);
-  @include text-style(20px, white);
-  border-radius: 3px;
-  border: 1px solid $rollingStone;
-  white-space: nowrap;
-  overflow: hidden;
+  border: 1px solid $border-color;
+  background-color: $bg-color;
   text-overflow: ellipsis;
-  background-color: #055885;
   box-sizing: border-box;
+  white-space: nowrap;
+  border-radius: 3px;
+  overflow: hidden;
+  padding: 0 16px;
   cursor: pointer;
+  outline: none;
 }

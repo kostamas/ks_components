@@ -1,159 +1,121 @@
 import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  HostListener,
-  Input,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation
+	AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild, ViewEncapsulation
 } from '@angular/core';
 import {SVG_ICONS} from '../../../svg-icon-module/svg-icons.const';
 
 @Component({
-  selector: 'app-auto-suggest-results',
-  templateUrl: './auto-suggest-results.component.html',
-  styleUrls: ['./auto-suggest-results.component.scss'],
-  encapsulation: ViewEncapsulation.None
+	selector: 'app-auto-suggest-results',
+	templateUrl: './auto-suggest-results.component.html',
+	styleUrls: ['./auto-suggest-results.component.scss'],
+	encapsulation: ViewEncapsulation.None
 })
-export class AutoSuggestResultsComponent implements AfterViewInit {
-  public autoSuggestResultsStyle: any = {};
-  public itemsResultsScrollStyle: any = {};
-  public closeIconStyle: any = {};
-  public selectedIndex: number = -1;
-  public selectedValue: string = '';
-  public SVG_ICONS: any = SVG_ICONS;
+export class AutoSuggestResultsComponent{
+	public closeIconStyle: any = {};
+	public selectedIndex: number = -1;
+	public selectedValue: string = '';
+	public SVG_ICONS: any = SVG_ICONS;
 
-  private isHovered: boolean = false;
+	private isHovered: boolean = false;
 
-  @Input('data') data: any;
+	@Input('data') data: any;
 
-  @ViewChild('resultContainer') resultContainer: ElementRef;
-  @ViewChild('closeIcon') closeIcon: ElementRef;
+	@ViewChild('resultContainer') resultContainer: ElementRef;
+	@ViewChild('closeIcon') closeIcon: ElementRef;
 
-  constructor() {
-  }
+	constructor() {
+	}
 
-  ngAfterViewInit(): void {
-    setTimeout(this.calcResultsPosition);
-  }
 
-  calcResultsPosition = () => {
-    const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    const {inputClientRect} = this.data;
-    this.autoSuggestResultsStyle['min-width'] = `${inputClientRect.width}px`;
-    this.closeIconStyle['left'] = `${(inputClientRect.width - 27)}px`;
+	@HostListener('document:keyup', ['$event'])
+	keyUpHandler(keyEvent: KeyboardEvent): void {
+		const key = keyEvent.key;
 
-    if (viewportHeight - inputClientRect.y < 320) {
-      if (inputClientRect.y < 350) {
-        this.itemsResultsScrollStyle['max-height'] = `${viewportHeight - inputClientRect.y - 80}px`;
-        this.itemsResultsScrollStyle['overflow-y'] = 'auto';
-        this.data.updateResultsPosition(inputClientRect.x, inputClientRect.y + inputClientRect.height);
-      } else {
-        const resultsHeight = this.resultContainer.nativeElement.clientHeight;
-        this.closeIconStyle['top'] = 'auto';
-        this.closeIconStyle['bottom'] = '-30px';
-        this.data.updateResultsPosition(inputClientRect.x, inputClientRect.y - resultsHeight);
-      }
-    } else {
-      this.data.updateResultsPosition(inputClientRect.x, inputClientRect.y + inputClientRect.height);
-    }
-    setTimeout(() => this.autoSuggestResultsStyle['opacity'] = '1');
-  }
+		switch (key.toUpperCase()) {
+			case 'ENTER':
+				if (this.selectedIndex < 0) {
+					return;
+				}
+				this.data.setValue(this.data.results[this.selectedIndex], true);
+				break;
+			case 'ARROWDOWN':
+				this.nextIndex();
+				break;
+			case 'ARROWUP':
+				this.previousIndex();
+				break;
+			case 'ARROWLEFT':
+				break;
+			case 'ARROWRIGHT':
+				break;
+			case 'ESCAPE':
+				break;
+			case 'PAGEUP':
+				break;
+			case 'PAGEDOWN':
+				break;
+			case 'HOME':
+				this.firstIndex();
+				break;
+			case 'END':
+				this.endIndex();
+				break;
+			case ' ':
+				break;
+		}
+	}
 
-  @HostListener('document:keyup', ['$event'])
-  keyUpHandler(keyEvent: KeyboardEvent): void {
-    const key = keyEvent.key;
+	nextIndex(): void {
+		if (!this.isHovered && this.selectedIndex + 1 !== this.data.results.length) {
+			const nextIndex = this.selectedIndex + 1;
+			this.setValue(nextIndex, false);
+		}
+	}
 
-    switch (key.toUpperCase()) {
-      case 'ENTER':
-        if (this.selectedIndex < 0) {
-          return;
-        }
-        this.data.setText(this.data.results[this.selectedIndex], true);
-        break;
-      case 'ARROWDOWN':
-        this.nextIndex();
-        break;
-      case 'ARROWUP':
-        this.previousIndex();
-        break;
-      case 'ARROWLEFT':
-        break;
-      case 'ARROWRIGHT':
-        break;
-      case 'ESCAPE':
-        break;
-      case 'PAGEUP':
-        break;
-      case 'PAGEDOWN':
-        break;
-      case 'HOME':
-        this.firstIndex();
-        break;
-      case 'END':
-        this.endIndex();
-        break;
-      case ' ':
-        break;
-    }
-  }
+	firstIndex(): void {
+		const firstIndex = 0;
+		this.setValue(firstIndex, true);
+	}
 
-  nextIndex(): void {
-    if (!this.isHovered && this.selectedIndex + 1 !== this.data.results.length) {
-      const nextIndex = this.selectedIndex + 1;
-      this.setValue(nextIndex, false);
-    }
-  }
+	endIndex(): void {
+		const endIndex = this.data.results.length - 1;
+		this.setValue(endIndex, false);
+	}
 
-  firstIndex(): void {
-    const firstIndex = 0;
-    this.setValue(firstIndex, true);
-  }
+	previousIndex(): void {
+		if (!this.isHovered && this.selectedIndex - 1 > -1) {
+			const previousIndex = this.selectedIndex - 1;
+			this.setValue(previousIndex, false);
+		}
+	}
 
-  endIndex(): void {
-    const endIndex = this.data.results.length - 1;
-    this.setValue(endIndex, false);
-  }
+	isSelected(itemIndex: number): string {
+		return itemIndex === this.selectedIndex ? 'selected' : '';
+	}
 
-  previousIndex(): void {
-    if (!this.isHovered && this.selectedIndex - 1 > -1) {
-      const previousIndex = this.selectedIndex - 1;
-      this.setValue(previousIndex, false);
-    }
-  }
+	setValue(index: number, closeReults: boolean): void {
+		if (this.data.results.length > 0) {
+			this.selectedIndex = index;
+			const selected = this.data.results[index];
+			this.selectedValue = selected.value;
+			this.data.syncScrollBar(index, this.data.results);
+			this.data.setValue(selected, closeReults);
+		}
+	}
 
-  isSelected(itemIndex: number): string {
-    return itemIndex === this.selectedIndex ? 'selected' : '';
-  }
+	selectResultHandler(index: number): any {
+		this.setValue(index, true);
+	}
 
-  setValue(index: number, closeReults: boolean): void {
-    if (this.data.results.length > 0) {
-      this.selectedIndex = index;
-      const selected = this.data.results[index];
-      this.selectedValue = selected.value;
-      const scrollContainer: any = this.resultContainer.nativeElement.getClientRects()[0];
-      const scrollPercentage: number = ((this.selectedIndex * (scrollContainer.height / (this.data.results.length - this.selectedIndex))) / scrollContainer.height) * 100;
-      this.resultContainer.nativeElement.scrollTop = scrollPercentage;
-      this.data.setText(selected, closeReults);
+	mouseEnterHandler(): any {
+		this.selectedIndex = -1;
+		this.isHovered = true;
+	}
 
-    }
-  }
+	mouseLeaveHandler(): any {
+		this.isHovered = false;
+	}
 
-  selectResultHandler(index: number): any {
-    this.setValue(index, true);
-  }
-
-  mouseEnterHandler(): any {
-    this.selectedIndex = -1;
-    this.isHovered = true;
-  }
-
-  mouseLeaveHandler(): any {
-    this.isHovered = false;
-  }
-
-  onCloseIconClick(): any {
-    this.data.onCloseIconClick();
-  }
+	onCloseIconClick(): any {
+		this.data.onCloseIconClick();
+	}
 }

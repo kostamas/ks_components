@@ -3,65 +3,65 @@ import {FavoritesService} from '../favorites.service';
 import {MainHeaderService} from '../main-header.service';
 
 @Component({
-  selector: 'app-sub-menu-item',
-  templateUrl: './sub-menu-item.component.html',
-  styleUrls: ['./sub-menu-item.component.scss']
+	selector: 'app-sub-menu-item',
+	templateUrl: './sub-menu-item.component.html',
+	styleUrls: ['./sub-menu-item.component.scss']
 })
 export class SubMenuItemComponent implements OnInit, OnChanges {
-  public lockHeaderResize: boolean = false;
-  public favoritesList: IMenuLink[];
+	public lockHeaderResize: boolean = false;
+	public favoritesList: IMenuLink[];
 
-  @Input() menuData: IMenu;
-  @ViewChild('subMenuContainer') subMenuContainer: ElementRef;
+	@Input() menuData: IMenu;
+	@ViewChild('subMenuContainer') subMenuContainer: ElementRef;
 
-  constructor(public favoriteService: FavoritesService, public mainHeaderService: MainHeaderService) {
-  }
+	constructor(public favoriteService: FavoritesService, public mainHeaderService: MainHeaderService) {
+	}
 
-  ngOnInit(): void {
-    this.favoriteService.favoritesList.subscribe(result => this.favoritesList = result);
-  }
+	ngOnInit(): void {
+		this.favoriteService.favoritesList.subscribe(result => this.favoritesList = result);
+	}
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes && changes.menuData && changes.menuData.currentValue) {
-      setTimeout(() => {
-        this.resizeMainHeader();
-        this.subMenuContainer.nativeElement.scrollTop = 0;
-      });
-    }
-  }
+	ngOnChanges(changes: SimpleChanges): void {
+		if (changes && changes.menuData && changes.menuData.currentValue) {
+			setTimeout(() => {
+				this.resizeMainHeader();
+				this.subMenuContainer.nativeElement.scrollTop = 0;
+			});
+		}
+	}
 
-  @HostListener('window:resize', ['$event'])
-  onResize(): void {
-    if (!this.lockHeaderResize) {
-      this.lockHeaderResize = true;
-      setTimeout(() => {
-        this.resizeMainHeader();
-        this.lockHeaderResize = false;
-      }, 200);
-    }
-  }
+	@HostListener('window:resize', ['$event'])
+	onResize(): void {
+		if (!this.lockHeaderResize) {
+			this.lockHeaderResize = true;
+			setTimeout(() => {
+				this.resizeMainHeader();
+				this.lockHeaderResize = false;
+			}, 200);
+		}
+	}
 
-  resizeMainHeader(): void {
-    const viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0) * 0.9;
-    const {x, width} = this.subMenuContainer.nativeElement.getBoundingClientRect();
-    if (x + width + 10 > viewportWidth) {
-      this.subMenuContainer.nativeElement.style.width = `${viewportWidth - x - 10}px`;
-    } else {
-      this.subMenuContainer.nativeElement.style.width = 'auto';
-    }
-  }
+	resizeMainHeader(): void {
+		const viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0) * 0.9;
+		const {x, width} = this.subMenuContainer.nativeElement.getBoundingClientRect();
+		if (x + width + 10 > viewportWidth) {
+			this.subMenuContainer.nativeElement.style.width = `${viewportWidth - x - 10}px`;
+		} else {
+			this.subMenuContainer.nativeElement.style.width = 'auto';
+		}
+	}
 
-  favoriteImgSrc(isFavorite: boolean): string {
-    return this.favoriteService.favoriteImgSrc(isFavorite);
-  }
+	favoriteImgSrc(isFavorite: boolean): string {
+		return this.favoriteService.favoriteImgSrc(isFavorite);
+	}
 
 
-  favoriteClick(link: IMenuLink): void {
-    this.favoriteService.favoriteClick(link);
-  }
+	favoriteClick(link: IMenuLink): void {
+		this.favoriteService.favoriteClick(link);
+	}
 
-  pageClickHandler(selectedPage): void {
-    this.mainHeaderService.pageClick$.next(selectedPage);
-    this.mainHeaderService.closeMenu$.next(true);
-  }
+	pageClickHandler(selectedPage: any): void {
+		this.mainHeaderService.pageClick$.next(selectedPage);
+		this.mainHeaderService.closeMenu$.next(true);
+	}
 }

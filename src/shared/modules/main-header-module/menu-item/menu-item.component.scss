@@ -4,17 +4,16 @@
   @include dimension(1000px, auto);
   @include position(absolute, 0, null, null, 0);
   @include flex();
-  border: 1px solid $alto;
+  border: 1px solid $color67;
   border-top: none;
   background-color: $white;
-  box-shadow: 0 1px 3px 0 $silver;
+  box-shadow: 0 1px 3px 0 $color38;
   padding: 20px;
   box-sizing: border-box;
 
   &.hidden {
     display: none;
   }
-
 
   .top-triangle {
     @include dimension(0, 0);
@@ -28,7 +27,7 @@
 
   .menu-item-categories-container {
     @include dimension(220px, auto);
-    background-color: $catskillWhite;
+    background-color: $color65;
     max-height: calc(100vh - 120px);
     overflow-y: auto;
     overflow-x: hidden;
@@ -43,10 +42,6 @@
       padding-left: 20px;
       margin-bottom: 8px;
       cursor: pointer;
-
-      .new-tag-label {
-        padding-left: 10px;
-      }
     }
 
     .menu-item-category.selected {
@@ -54,7 +49,7 @@
     }
 
     .menu-item-category:hover:not(.selected) {
-      background-color: $periwinkleGray;
+      background-color: $color75;
       transition: 0.2s;
     }
   }
@@ -79,4 +74,14 @@
       }
     }
   }
+}
+
+// new menus images fix
+
+.menu-item .new-image-Distribution {
+  padding-left: 0;
+}
+
+.menu-item .new-image-Availability {
+  padding-left: 10px;
 }

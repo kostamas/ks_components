@@ -27,7 +27,7 @@
         @include dimension(100px, 100px);
         position: absolute;
         z-index: 900;
-        background-color: #0a8999;
+        background-color: $color57;
       }
     }
   }
@@ -44,8 +44,8 @@
     -o-transform: none;
     transform: none;
     border-radius: 0;
-    box-shadow: 2px 2px 5px -2px #bfbbbb;
-    border: 1px solid #d2cece;
+    box-shadow: 2px 2px 5px -2px $color2;
+    border: 1px solid $color27;
   }
 
   .modal-close-button {

@@ -9,7 +9,7 @@
         <div class="favorite-div" [ngClass]="{'show-favorite': page.isFavorite}">
           <img [src]="favoriteImgSrc(page.isFavorite)" (click)="favoriteClick(page)"/>
         </div>
-        <div class="column-name" (click)="pageClickHandler(page)">
+        <div class="column-name click-able-red" (click)="pageClickHandler(page)">
           {{page.name}}
         </div>
       </div>

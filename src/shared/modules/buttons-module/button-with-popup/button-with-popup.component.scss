@@ -1,0 +1,32 @@
+@import "shared";
+
+.button-with-popup {
+  &.disabled {
+    font-size: 18px;
+  }
+
+  .button-text {
+    margin-left: 10px;
+  }
+}
+
+//icons style
+.button-with-popup {
+  .bin {
+    padding-top: 4px;
+
+    rect {
+      fill: $color20;
+      stroke: $color20;
+    }
+  }
+}
+
+.button-with-popup.disabled {
+  .bin {
+    rect {
+      fill: $color46;
+      stroke: $color46;
+    }
+  }
+}

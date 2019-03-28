@@ -2,28 +2,23 @@
 
 .popup-container {
   @include dimension(560px, auto);
-  @include flex();
-  flex-direction: column;
-  padding: 40px 40px 30px 60px;
+  padding: 50px 70px 50px 70px;
   margin: 0 auto;
-  border: 1px solid $tarawera;
   border-radius: 10px;
   background-color: $white;
   box-sizing: border-box;
 
   .title-and-content {
-    flex: 1;
-
     .title {
       @include dimension(100%, 40px);
       @include flex(null, center);
-      @include text-style(23px);
+      @include text-style(25px);
       border-radius: 10px 10px 0 0;
     }
 
     .content {
       @include text-style(17px);
-      padding: 20px 0;
+      padding: 10px 0 20px;
       overflow-y: auto;
       max-height: 220px;
       line-height: 23px;
@@ -35,23 +30,18 @@
     @include flex(null, center);
     @include dimension(100%, 65px);
 
-    .popup-button {
-      @include flex();
-      margin-right: 15px;
-      width: auto;
-      padding: 0 15px;
+    .popup-buttons-repeater {
+      margin-left: 15px;
 
-      &:hover {
-        opacity: 0.8;
+      &:first-child {
+        margin-left: 0;
       }
 
-      .popup-button-svg {
-        margin-right: 5px;
+      .popup-button {
+        .popup-button-svg {
+          margin-right: 5px;
+        }
       }
-    }
-
-    .button-with-loader {
-      margin-right: 15px;
     }
   }
 }
@@ -67,7 +57,7 @@
 
   .title-and-content {
     .title {
-      color: #557898;
+      color: $color60;
     }
   }
 }

@@ -1,0 +1,16 @@
+.side-menu-container.distribution-side-bar {
+  @include dimension(100%, 41px);
+  min-width: 768px;
+  margin-left: 0;
+
+  .right-side {
+    margin-right: 20px;
+    margin-top: 0;
+  }
+}
+
+@media only screen and (max-width: $mobile) {
+  .side-menu-container.distribution-side-bar {
+    margin-left: inherit;
+  }
+}

@@ -1,7 +1,7 @@
-<nav class="main-header" [ngClass]="mainHeaderView">
+<nav class="main-header" [ngClass]="mainHeaderView" >
 
-  <div class="main-header-left-section">
-    <div class="logo"><img [src]="getIcon('atlas_logo-icon.png')"></div>
+  <div class="main-header-left-section" #mainHeaderLeftElement>
+    <div class="logo"><img [src]="commonService.getImageIcon('atlas_logo-icon.png')"></div>
 
     <div class="header-tabs-wrapper" #headerButtonsWrapperElement>
 
@@ -12,7 +12,7 @@
            [ngClass]="{'selected-tab': selectedMenu === headerTab}">
         <div class="header-tab-name">{{headerTab.name}}</div>
         <div class="header-tab-icon" [title]="headerTab.name"><img
-          [src]="headerTab.icon === null && headerTab.name === 'Trash-Quarentine' ? getIcon('trash_quarantine-icon.png') :getIcon(headerTab.icon)">
+          [src]="headerTab.icon === null && headerTab.name === 'Trash-Quarentine' ? commonService.getImageIcon('trash_quarantine-icon.png') :commonService.getImageIcon(headerTab.icon)">
         </div>
       </div>
 
@@ -27,8 +27,6 @@
     </div>
   </div>
 
-  <div class="place-holder" (click)="placeHolderClick()"></div>
-
   <div class="main-header-right-section" *ngIf="userDetails">
     <div class="office-data" *ngIf="showOfficeData()">
       <div class="current-office">Current Office: {{userDetails.officeNumber}}, Division: {{userDetails.division}}</div>
@@ -40,11 +38,11 @@
     </div>
 
     <div class="user" *ngIf="userDetails">
-      <img class="user-img" [src]="getUserImage()">
+      <img class="user-img" [src]="commonService.getImageIcon('icono_no-registrado1.png')">
       <div class="user-data">
         <div class="user-name-and-logout">
           <div class="firstname-and-lastname">{{userDetails.username}}</div>
-          <img class="click-able logout-icon" [src]="getIcon('logout-icon.png')" (click)="logoutClick()">
+          <img class="click-able logout-icon" [src]="commonService.getImageIcon('logout-icon.png')" (click)="logoutClick()">
         </div>
 
         <div class="datetime-text" #currentDate></div>
@@ -52,18 +50,19 @@
     </div>
 
   </div>
-  <div class="main-header-right-section mobile-and-tablet-only " *ngIf="authService.isAuthenticated" (click)="openUserMenu()">
-    <img [src]= "getIcon('more_details.png')" class="click-able"/>
+  <div class="main-header-right-section mobile-and-tablet-only" #mainHeaderMobileRightSection
+       *ngIf="authService.isAuthenticated" (click)="openUserMenu()">
+    <img [src]= "commonService.getImageIcon('more_details.png')" class="click-able"/>
     <div class="menu-user-section" *ngIf="displayUserMenu">
       <div class="menu-user-content">
         <div class="right-menu">
           <div class="user">
             <p>{{userDetails.username}} <img class="click-able logout-icon"
-                                      [src]="getIcon('logout_black.png')" (click)="logoutClick()"></p>
+                                      [src]="commonService.getImageIcon('logout_black.png')" (click)="logoutClick()"></p>
             <p class="current-date-mobile" #currentDateMobile></p>
           </div>
           <div class="user-img-data">
-            <img class="user-img" [src]="getUserImage()">
+            <img class="user-img" [src]="commonService.getImageIcon('icono_no-registrado1.png')">
           </div>
           <div class="office-data">
             Current Office: {{userDetails.officeNumber}}, Division: {{userDetails.division}}

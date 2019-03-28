@@ -1,19 +1,9 @@
-<div class="auto-suggest-result-container" [ngStyle]="autoSuggestResultsStyle" #resultContainer
-     (mouseenter)="mouseEnterHandler()" (mouseleave)="mouseLeaveHandler()">
+<div class="auto-suggest-result-container" (mouseenter)="mouseEnterHandler()" (mouseleave)="mouseLeaveHandler()">
 
-  <app-svg-icon [svg]="SVG_ICONS.round_close"
-                class="round-search-icon click-able"
-                *ngIf="data.openedInModal"
-                [ngStyle]="closeIconStyle"
-                (click)="onCloseIconClick();"></app-svg-icon>
-
-  <div [ngStyle]="itemsResultsScrollStyle">
-    <div class="item-result" *ngFor="let item of data.results; let i = index"
-         (click)="selectResultHandler(i);"
-         [ngClass]="isSelected(i)"
-         id="itemResult{{i}}">
-      <div class="item-value">{{item.name}}</div>
-    </div>
-  </div>
-
+	<div class="item-result" *ngFor="let item of data.results; let i = index"
+			 (click)="selectResultHandler(i);"
+			 [ngClass]="isSelected(i)"
+			 id="itemResult{{i}}">
+		<div class="item-value">{{item.name}} ({{item.id}}) {{ item.countryName ? ' ,' + item.countryName : ''}}</div>
+	</div>
 </div>

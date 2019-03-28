@@ -1,9 +1,9 @@
 @import "shared";
 
 .button-with-loader {
-    &.disabled {
-      opacity: 0.8;
-    }
+  &.disabled {
+    opacity: 0.8;
+  }
 
   .icon-container {
     @include flex(center, center);
@@ -15,7 +15,7 @@
   app-svg-icon {
     svg {
       @include dimension(18px, 18px);
-      padding-top: 7px;
+      padding-top: 4px;
 
       path {
         fill: white !important;

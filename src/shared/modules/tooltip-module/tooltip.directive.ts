@@ -1,6 +1,6 @@
 import {
-  AfterViewInit, ApplicationRef, ComponentFactoryResolver, Directive, ElementRef, EmbeddedViewRef,
-  HostListener, Injector, Input, OnDestroy
+	AfterViewInit, ApplicationRef, ComponentFactoryResolver, Directive, ElementRef, EmbeddedViewRef,
+	HostListener, Injector, Input, NgZone, OnDestroy
 } from '@angular/core';
 
 @Directive({selector: '[app-tooltip]'})
@@ -18,11 +18,13 @@ export class TooltipDirective implements OnDestroy, AfterViewInit {
   public cancelClosingTooltip: boolean = false;
 
   constructor(private hostElement: ElementRef, private componentFactoryResolver: ComponentFactoryResolver,
-              private appRef: ApplicationRef, private injector: Injector) {
+              private appRef: ApplicationRef, private injector: Injector, private zone: NgZone) {
   }
 
   ngAfterViewInit(): void {
-    document.body.addEventListener('mouseover', this.closeOnMouseLeaveHandler);
+		this.zone.runOutsideAngular(() => {
+			document.body.addEventListener('mouseover', this.closeOnMouseLeaveHandler);
+		});
   }
 
   @HostListener('mouseenter')

@@ -21,14 +21,14 @@ $switch-transition-duration: 0.4s;
   }
 
   .enabled {
-    background-color: #679B12;
+    background-color: $color35;
     .text {
       left: 15px;
     }
   }
 
   .disabled {
-    background-color: #7A7A7A;
+    background-color: $color26;
     .text {
       left: 40px;
     }
@@ -53,6 +53,9 @@ $switch-transition-duration: 0.4s;
   }
   .indicator {
     left: calc(100% - 30px);
+  }
+  .text {
+    font-size: 16px;
   }
 }
 

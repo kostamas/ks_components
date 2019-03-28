@@ -6,15 +6,16 @@
 	</div>
 
 	<div class="buttons-wrapper" *ngIf="!data.buttons">
-		<div class="pop-btn hb-button click-able" (click)="data.onDone()">Done</div>
-		<div class="pop-btn hb-button click-able" (click)="data.onCancel()">Cancel</div>
+		<div class="pop-btn hb-button" (click)="data.onDone()">Done</div>
+		<div class="pop-btn hb-button" (click)="data.onCancel()">Cancel</div>
 	</div>
 
 	<div class="buttons-wrapper" *ngIf="data.buttons">
-		<div *ngFor="let button of data.buttons" (click)="button.handler(closeModal)">
+		<div class="popup-buttons-repeater" *ngFor="let button of data.buttons">
 
 
-			<div *ngIf="!button.withLoader" class="hb-button popup-button" [ngStyle]="button.style">
+			<div *ngIf="!button.withLoader"  [ngClass]="button.btnClass ? button.btnClass: 'hb-button'"
+					 class="popup-button" (click)="button.handler(closeModal)" [ngStyle]="button.style">
 				<div class="popup-button-svg" *ngIf="button.svg">
 					<app-svg-icon [svg]="button.svg"></app-svg-icon>
 				</div>
@@ -22,7 +23,8 @@
 			</div>
 
 			<ng-container *ngIf="button.withLoader">
-				<app-button-with-loader [ngStyle]="button.style"
+				<app-button-with-loader [btnClass]="button.btnClass"
+																[ngStyle]="button.style"
 																[onClick]="button.handler.bind(null, closeModal)"
 																[svg]="button.svg"
 																[text]="button.text">

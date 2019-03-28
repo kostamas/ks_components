@@ -3,10 +3,25 @@
 .multi-select-colorful-options {
   padding: 10px 0;
   background-color: white;
+  box-sizing: border-box;
+
+  &.hidden-headers {
+    padding: 5px 0;
+    margin-top: 10px;
+  }
+
 
   &.single-selected .select-item {
+    cursor: default;
+    .option-row, .checkbox-component.cursor-pointer, .check-mark, .check-mark::after, .option-text, label.click-able {
+      cursor: default;
+    }
+    .click-able:hover {
+      opacity: 1;
+    }
+
     .check-mark {
-      background-color: #d3d3d3;
+      background-color: $color45;
     }
     .check-mark::after {
       width: 5px;
@@ -15,7 +30,7 @@
       top: 2px;
       left: 7px;
       content: "";
-      border: solid #9e9c9d;
+      border: solid $color46;
       border-width: 0 2.4px 2.4px 0;
       transform: rotate(45deg);
     }
@@ -29,7 +44,7 @@
     .option-text {
       label {
         @include text-style(13px, white);
-        padding: 2px 10px 2px 10px;
+        padding: 2px 10px 2px 0;
         border-radius: 3px;
       }
     }
@@ -53,7 +68,7 @@
   }
   .separator {
     @include dimension(100%, 1px);
-    background-color: #c3c9d8;
+    background-color: $color1;
     margin: 10px 0;
   }
 }

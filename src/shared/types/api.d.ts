@@ -12,4 +12,7 @@ interface IEndpoints {
 	logoutURL?: string;
 	productSensitivitiesRules?: string;
 	productSensitivities?: string;
+	clientSensitivitiesRules?: string;
+	clientSensitivities?: string;
+	regionsAutoSuggest?: string;
 }

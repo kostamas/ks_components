@@ -4,9 +4,9 @@
   padding: 10px;
   width: 664px;
   background-color: white;
-  border: 1px solid #c3c9d8;
+  border: 1px solid $color1;
   border-radius: 5px;
-  box-shadow: 2px 2px 8px -1px #ccc;
+  box-shadow: 2px 2px 8px -1px $color12;
 
   .controls {
     @include flex(space-between);
@@ -14,9 +14,9 @@
     .controls-left {
       .input-from, .input-to {
         @include dimension(180px, 28px);
-        @include text-style(16px, #3a3a3a);
+        @include text-style(16px, $color10);
         padding-left: 10px;
-        border: 1px solid #c3c9d8;
+        border: 1px solid $color1;
         border-radius: 3px;
       }
 
@@ -41,7 +41,7 @@
 
       .previous-month, .next-month {
         @include flex(center, center);
-        border: 1px solid $silverChalice;
+        border: 1px solid $color69;
       }
 
       .previous-month {
@@ -54,13 +54,13 @@
       }
 
       .icon-angle-left, .icon-angle-right {
-        @include text-style(30px, $cadetBlue);
+        @include text-style(30px, $color68);
       }
 
       .cancel-btn {
         @include flex(center, center);
         margin-right: 10px;
-        border: 1px solid $silverChalice;
+        border: 1px solid $color69;
         border-radius: 3px;
         padding-top: 3px;
 
@@ -68,7 +68,7 @@
           @include dimension(21px, 20px);
           @include flex(center, center);
           @include text-style(15px, $white);
-          background-color: $stTropaz;
+          background-color: $color16;
           border-radius: 100%;
         }
       }
@@ -96,7 +96,7 @@
       @include flex(center, center);
       @include text-style(20px, $white);
       border-radius: 3px;
-      background-color: $veniceBlue;
+      background-color: $color20;
       font-weight: 400;
       width: 120px;
 
