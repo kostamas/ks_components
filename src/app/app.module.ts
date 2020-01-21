@@ -2,8 +2,6 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import { AngularFireModule } from 'angularfire2';
-import {AngularFireDatabaseModule} from 'angularfire2/database';
 
 import {AppComponent} from './app.component';
 import {HomeComponent} from './home/home.component';
@@ -13,6 +11,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AdaptersModulesModule} from './adapters/adapters.module';
 import {HttpClientModule, HttpClient} from '@angular/common/http';
 import {firebaseConfig} from './core/firebase-config';
+import {AngularFireModule} from '@angular/fire';
+import {AngularFireDatabaseModule} from '@angular/fire/database';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, '../assets/locale/', '.json');

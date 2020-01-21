@@ -172,7 +172,7 @@ export class BackgammonComputer {
   private getAllPossibleMoves(gameState, nextStatesArrays, currentSpike, allStatesTable, spikes) {
     const encodedGameState = this.encodeGameState(gameState);
 
-    const stateKey = `${encodedGameState}, currentSpike: ${ currentSpike}`;
+    const stateKey = `${encodedGameState}, currentSpike: ${currentSpike}`;
     if (allStatesTable.recursiveStates[stateKey]) {
       return;
     } else {
@@ -259,7 +259,7 @@ export class BackgammonComputer {
   private getAllPossibleOffBoardMoves(gameState, nextStatesArrays, currentSpike, allStatesTable, spikes) {
     const encodedGameState = this.encodeGameState(gameState);
 
-    const stateKey = `${encodedGameState}, currentSpike: ${ currentSpike}`;
+    const stateKey = `${encodedGameState}, currentSpike: ${currentSpike}`;
     if (allStatesTable.recursiveStates[stateKey]) {
       return;
     } else {
@@ -369,7 +369,7 @@ export class BackgammonComputer {
 
   private encodeGameState(gameSate) {
     let encodedState = 'checkers:';
-    Object.values(gameSate.checkers).forEach((checker, index) => encodedState += `${index}_${checker.currentSpike}, `);
+    Object.values(gameSate.checkers).forEach((checker: any, index) => encodedState += `${index}_${checker.currentSpike}, `);
     encodedState += ' dices:';
     gameSate.dices.forEach((dice, index) => encodedState += `${index}_${dice}, `);
     return encodedState;
@@ -390,14 +390,14 @@ export class BackgammonComputer {
     }
   }
 
-  private getBestMove(nextStatesArrays, originalGameState) {
-    const statesArr = Object.values(nextStatesArrays).find(_gameState => _gameState.length > 0);
+  private getBestMove(nextStatesArrays: any, originalGameState) {
+    const statesArr: any = Object.values(nextStatesArrays).find((_gameState: any) => _gameState.length > 0);
     if (statesArr[0].dices.length === originalGameState.dices.length) { // todo - find a better way to check if there is no move.
       return;
     }
 
     const statesDiffInfArr = [];
-    statesArr.forEach((state, index) => statesDiffInfArr.push(getStateDiffInfo(state, index, this.playerType)));
+    statesArr.forEach((state: any, index) => statesDiffInfArr.push(getStateDiffInfo(state, index, this.playerType)));
 
     const bestDiff = statesDiffInfArr.sort((diff1, diff2) => diff2.score - diff1.score)[0];
     const newState = statesArr[bestDiff.index];

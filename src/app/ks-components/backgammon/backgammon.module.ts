@@ -6,8 +6,8 @@ import {BackgammonDBToken, IBackgammonSrvCtor} from './backgammonDb.types';
 import {ReactiveFormsModule} from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 
-import {AngularFireDatabase} from 'angularfire2/database';
 import {SharedModule} from '../../core/sharedModule.module';
+import {AngularFireDatabase} from '@angular/fire/database';
 
 @NgModule({
   imports: [

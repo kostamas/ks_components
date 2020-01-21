@@ -1,51 +1,63 @@
 <div class="multi-date-picker">
 
-  <div class="controls">
-    <div class="controls-left">
-      <form [formGroup]="formGroup">
-        <!--<input class="input-from" [ngClass]="errorsClass(formGroup.controls.to.errors)" placeholder="From Date"-->
-               <!--formControlName="from">-->
-        <!--<input class="input-to" [ngClass]="errorsClass(formGroup.controls.from.errors)" placeholder="To Date"-->
-               <!--formControlName="to">-->
-      </form>
-    </div>
+	<div class="controls">
+		<div class="controls-left">
+			<form [formGroup]="formGroup">
+				<input class="input-from" [ngClass]="errorsClass(formGroup.controls.from.errors)" placeholder="From Date"
+							 formControlName="from">
+				<input class="input-to" [ngClass]="errorsClass(formGroup.controls.to.errors)" placeholder="To Date"
+							 formControlName="to">
+			</form>
+		</div>
 
-    <div class="controls-right">
-      <div class="cancel-btn click-able" (click)="cancel()">
-        x
-      </div>
+		<div class="controls-right">
+			<div class="cancel-btn click-able" (click)="cancel()">
+        <div class="round_close"><svg id="round-close" width="20" height="20" viewBox="0 0 20 20"><style>#round-close .cls-1 {fill: #acb2bf;}  #round-close .cls-1, #round-close .cls-2 {fill-rule: evenodd;}  #round-close .cls-2 {fill: #285a84;}</style><path id="Delete" class="cls-2" d="M10.355,0.012A9.988,9.988,0,1,0,20.344,10,9.987,9.987,0,0,0,10.355.012ZM14.649,12.7l-1.59,1.588a36.688,36.688,0,0,0-2.7-2.7,37.178,37.178,0,0,0-2.7,2.7L6.061,12.7a31.146,31.146,0,0,0,2.7-2.7,30.751,30.751,0,0,0-2.7-2.7L7.652,5.707s2.538,2.7,2.7,2.7,2.7-2.7,2.7-2.7L14.649,7.3a36.616,36.616,0,0,0-2.7,2.7C11.946,10.183,14.649,12.7,14.649,12.7Z"></path></svg></div>
+			</div>
 
-      <div class="previous-month click-able" (click)="updateCalendarDates(-1)">
-        <
-      </div>
+			<div class="previous-month click-able" (click)="updateCalendarDates(-1)">
+				<
+			</div>
 
-      <div class="next-month click-able" (click)="updateCalendarDates(1)">
-        >
-      </div>
-    </div>
-  </div>
+			<div class="next-month click-able" (click)="updateCalendarDates(1)">
+				>
+			</div>
+		</div>
+	</div>
 
-  <div class="date-range-pickers-wrapper" #multiDatePicker>
-    <app-calendar-date-range-picker
-      [disableRangeSelection]="true"
-      [externalSelection$]="selection$"
-      [date]="calendarDates[0]">
-    </app-calendar-date-range-picker>
+	<div class="date-range-pickers-wrapper" #multiDatePicker>
+		<app-calendar-date-range-picker
+      [detectChangesManually]="detectChangesManually"
+      [disabledRanges]="disabledRanges"
+			[allowPastDates]="allowPastDates"
+			[disableMonthControl]="true"
+			[disableRangeSelection]="true"
+			[externalSelection$]="selection$"
+			[date]="calendarDates[0]">
+		</app-calendar-date-range-picker>
 
-    <app-calendar-date-range-picker
-      [disableRangeSelection]="true"
-      [externalSelection$]="selection$"
-      [date]="calendarDates[1]">
-    </app-calendar-date-range-picker>
+		<app-calendar-date-range-picker
+      [detectChangesManually]="detectChangesManually"
+      [disabledRanges]="disabledRanges"
+			[allowPastDates]="allowPastDates"
+			[disableMonthControl]="true"
+			[disableRangeSelection]="true"
+			[externalSelection$]="selection$"
+			[date]="calendarDates[1]">
+		</app-calendar-date-range-picker>
 
-    <app-calendar-date-range-picker
-      [disableRangeSelection]="true"
-      [externalSelection$]="selection$"
-      [date]="calendarDates[2]">
-    </app-calendar-date-range-picker>
-  </div>
+		<app-calendar-date-range-picker
+      [detectChangesManually]="detectChangesManually"
+      [disabledRanges]="disabledRanges"
+			[allowPastDates]="allowPastDates"
+			[disableMonthControl]="true"
+			[disableRangeSelection]="true"
+			[externalSelection$]="selection$"
+			[date]="calendarDates[2]">
+		</app-calendar-date-range-picker>
+	</div>
 
-  <div class="controls-bottom">
-    <div class="select-btn click-able" (click)="select()"> Select</div>
-  </div>
+	<div class="controls-bottom">
+		<div class="select-btn click-able" (click)="select()"> Select</div>
+	</div>
 </div>

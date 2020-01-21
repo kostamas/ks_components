@@ -26,3 +26,10 @@ export const isEmpty = (arrayOrObject) => {
     return Array.isArray(arrayOrObject) ? arrayOrObject.length : Object.keys(arrayOrObject).length;
   }
 };
+
+export const isDefineAndNotNull = (value: any): boolean => {
+  return isDefined(value) && value !== null;
+}
+
+export const isDefined = (parameter: any) => typeof parameter !== 'undefined';
+

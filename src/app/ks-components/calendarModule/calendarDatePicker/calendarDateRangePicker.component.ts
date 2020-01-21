@@ -1,42 +1,66 @@
-import {AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild,
+} from '@angular/core';
 import {Subject} from 'rxjs';
-import * as moment from 'moment';
-import {switchMap, takeUntil, tap} from 'rxjs/operators';
+import * as momentNs from 'moment';
+
+const moment = momentNs;
+import {filter, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {ICalendarClickPosition, ICalendarDay, IFromTo} from '../calendar-types';
 import {CalendarDatePickerService} from './calendarDatePicker.service';
-import {Observable} from 'rxjs/Observable';
+import {fromEvent} from 'rxjs/observable/fromEvent';
+import {isDefineAndNotNull} from '../../../utils/jsUtils';
+import {DATE_FORMAT} from '../date-format';
 
 @Component({
   selector: 'app-calendar-date-range-picker',
   templateUrl: './calendarDateRangePicker.html',
   styleUrls: ['./calendarDateRangePicker.scss']
 })
-export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
-  public NUM_OF_CELLS = 40;
-  public daysToSelect: any;
+export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, OnChanges {
+  public NUM_OF_CELLS: number = 40;
+  public daysToSelect: ICalendarDay[];
   public moment: any = moment;
-  public selectedDay: any;
-  public daysWrapperPosition: any;
-  public unSubscribe$: any = new Subject();
+  public selectedDay: ICalendarDay;
+  public unSubscribe$: Subject<any> = new Subject();
   public canSelect: boolean;
 
-  @Input() date: any;
-  @Input() disableRangeSelection: any;
-  @Input() externalSelection$: any;
+  @Input() date: string;
+  @Input() dateFormat: string;
+  @Input() disableRangeSelection: boolean;
+  @Input() allowPastDates: boolean = false;
+  @Input() externalSelection$: Subject<ICalendarClickPosition>;
+  @Input() rangeSize: number = 31;
+  @Input() isSingleSelection: boolean;
+  @Input() disableMonthControl: boolean;
+  @Input() disabledRanges: IFromTo | IFromTo[] = [];
+  @Input() detectChangesManually: boolean;
 
-  @ViewChild('daysToSelectRef') daysToSelectRef: any;
+  @Output() selectedRange: EventEmitter<string> = new EventEmitter<string>();
+  @ViewChild('daysToSelectRef') daysToSelectRef: ElementRef;
 
-  constructor(private calendarDatePickerService: CalendarDatePickerService) {
+  constructor(private calendarDatePickerService: CalendarDatePickerService,
+              private changeDetector: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
-    this.initDaysToSelect();
+    this.initSelectDateHandler();
+
     if (!this.disableRangeSelection) {
       this.initSelectRangeHandler();
     }
     if (this.externalSelection$) {
       this.initExternalSelectionHandler();
     }
-    this.initSelectDateHandler();
+    if (!this.date) {
+      this.date = moment().format(this.dateFormat ? this.dateFormat : DATE_FORMAT);
+    }
+    if (this.isSingleSelection) {
+      this.rangeSize = 1;
+    }
+
+    this.initDaysToSelect();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -45,17 +69,21 @@ export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, Afte
     }
   }
 
-  ngAfterViewInit(): void {
-    this.daysWrapperPosition = this.daysToSelectRef.nativeElement.getClientRects()[0];
-  }
-
   initSelectRangeHandler(): void {
-    Observable.fromEvent(this.daysToSelectRef.nativeElement, 'click')  // todo - duplication with multiDatePicker
-      .pipe(
-        takeUntil(this.unSubscribe$),
-        tap(this.tapHandler),
-        switchMap(this.switchMapHandler))
-      .subscribe(this.mark.bind(this));
+    if (this.isSingleSelection) {
+      fromEvent(this.daysToSelectRef.nativeElement, 'click')
+        .pipe(
+          takeUntil(this.unSubscribe$),
+        )
+        .subscribe(this.mark.bind(this));
+    } else {
+      fromEvent(this.daysToSelectRef.nativeElement, 'click')  // todo - duplication with multiDatePicker
+        .pipe(
+          takeUntil(this.unSubscribe$),
+          tap(this.tapHandler),
+          switchMap(this.switchToMouseMove))
+        .subscribe(this.mark.bind(this));
+    }
   }
 
   tapHandler = (event: any) => {
@@ -67,69 +95,33 @@ export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, Afte
     }
   };
 
-  switchMapHandler = () => {
-    return Observable.fromEvent(this.daysToSelectRef.nativeElement, 'mousemove')
-      .pipe(takeUntil(Observable.fromEvent(this.daysToSelectRef.nativeElement, 'click')));
+  switchToMouseMove = () => {
+    return fromEvent(this.daysToSelectRef.nativeElement, 'mousemove')
+      .pipe(takeUntil(fromEvent(this.daysToSelectRef.nativeElement, 'click')));
   };
 
   initSelectDateHandler(): void {
     this.calendarDatePickerService.selectDate$
-      .pipe(takeUntil(this.unSubscribe$))
-      .subscribe(() => setTimeout(() => {
-          const date = moment(this.date);
-
-          const {firstDate, lastDate} = this.calendarDatePickerService.getSelectedRange();
-          const canUpdateDaysStyle = firstDate && lastDate
-            && (firstDate.year() < date.year() || (firstDate.year() === date.year() && firstDate.month() <= date.month()))
-            && (lastDate.year() > date.year() || (lastDate.year() === date.year() && lastDate.month() >= date.month()));
-
-          this.resetDaysToSelectStyle();
-          if (canUpdateDaysStyle) {
-            this.updateDaysStyle();
+      .pipe(
+        takeUntil(this.unSubscribe$),
+        filter(date => isDefineAndNotNull(date))
+      )
+      .subscribe(selectedDate => setTimeout(() => {
+        if (selectedDate) {
+          if (this.isSingleSelection) {
+            this.date = selectedDate.format(this.dateFormat ? this.dateFormat : DATE_FORMAT);
+            this.singleSelectionHandler(selectedDate);
+          } else {
+            this.selectRangeHandler();
           }
-        })
-      );
+        }
+      }));
   }
 
   initExternalSelectionHandler(): void {
     this.externalSelection$
       .pipe(takeUntil(this.unSubscribe$))
       .subscribe((data: any) => data.clear ? this.unMark() : this.mark(data));
-  }
-
-  mark({clientX, clientY}): void {
-    const {width, height, left, top} = this.daysWrapperPosition;
-    if (clientX > left + width || clientX < left || clientY > top + height || clientY < top) {
-      return;
-    }
-
-    const daysInWeek = 7;
-    const cellSize = width / daysInWeek;
-    const column = Math.floor((clientX - left) / cellSize);
-    const row = Math.floor((clientY - top) / cellSize);
-    const index = row * daysInWeek + column;
-
-    if (!this.daysToSelect[index]) {
-      return;
-    }
-
-    const {dateMonth, dateYear, todayYear, todayMonth, today} = this.getDatesData();
-
-    const selectedDate = moment([dateYear, dateMonth, this.daysToSelect[index].dayNumber]);
-    const isPast = (dateYear < todayYear || (dateYear === todayYear && dateMonth < todayMonth)) || today.diff(selectedDate, 'days') > 0;
-
-    if (!isPast && this.daysToSelect[index] && this.daysToSelect[index] !== this.selectedDay) {
-      this.selectedDay = this.daysToSelect[index];
-      const date = moment(this.date);
-      const selectedDate = moment([date.year(), date.month(), this.daysToSelect[index].dayNumber]);
-      this.calendarDatePickerService.selectDate$.next(selectedDate);
-    }
-  };
-
-  unMark(): void {
-    this.resetDaysToSelectStyle();
-    this.calendarDatePickerService.selectedRange = {date1: null, date2: null};
-    this.selectedDay = null;
   }
 
   initDaysToSelect(): void {
@@ -145,11 +137,11 @@ export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, Afte
         isEmpty: isEmpty,
         dayNumber: isEmpty ? -1 : day,
         isSelected: false,
-        today: todayMonth === dateMonth && todayDayNumber === day,
-        past: todayYear > dateYear || (todayYear === dateYear && todayMonth > dateMonth)
-        || (todayYear === dateYear && todayMonth === dateMonth && todayDayNumber > day)
+        today: todayMonth === dateMonth && todayDayNumber === day && todayYear === dateYear && !isEmpty,
+        past: !this.allowPastDates && (todayYear > dateYear || (todayYear === dateYear && todayMonth > dateMonth)
+          || (todayYear === dateYear && todayMonth === dateMonth && todayDayNumber > day)),
+        isDisabled: this.calcDisabledRange(moment([dateYear, dateMonth, day]))
       });
-
       if (!isEmpty) {
         day++;
       }
@@ -157,14 +149,145 @@ export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, Afte
     }
   }
 
-  updateDaysStyle(): void {
-    const {dateMonth, dateYear, todayYear, todayMonth, todayDayNumber} = this.getDatesData();
-
+  selectRangeHandler(): void {
+    const date = moment(this.date, this.dateFormat ? this.dateFormat : DATE_FORMAT);
     const {firstDate, lastDate} = this.calendarDatePickerService.getSelectedRange();
-    const firstDayMonth = firstDate.month();
-    const lastDayMonth = lastDate.month();
-    const firstDay = firstDayMonth === dateMonth ? firstDate.date() : 0;
-    const lastDay = lastDayMonth === dateMonth ? lastDate.date() : 31;
+    const canUpdateDaysStyle = firstDate && lastDate
+      && (firstDate.year() < date.year() || (firstDate.year() === date.year() && firstDate.month() <= date.month()))
+      && (lastDate.year() > date.year() || (lastDate.year() === date.year() && lastDate.month() >= date.month()));
+
+    this.resetDaysToSelectStyle();
+    if (canUpdateDaysStyle) {
+      this.updateDaysStyle();
+    }
+  }
+
+  updateCalendarDates(direction: number): void {
+    this.date = moment(this.date, this.dateFormat ? this.dateFormat : DATE_FORMAT).add(direction, 'month').format(this.dateFormat ? this.dateFormat : DATE_FORMAT);
+    this.initDaysToSelect();
+  }
+
+  singleSelectionHandler(selectedDate: any): void {
+    this.resetDaysToSelectStyle();
+    this.updateDaysStyle(selectedDate);
+  }
+
+  mark({clientX, clientY}): void {
+    const {width, height, left, top} = this.daysToSelectRef.nativeElement.getClientRects()[0];
+    if (clientX > left + width || clientX < left || clientY > top + height || clientY < top) {
+      return;
+    }
+
+    const daysInWeek = 7;
+    const cellSize = width / daysInWeek;
+    const column = Math.floor((clientX - left) / cellSize);
+    const row = Math.floor((clientY - top) / cellSize);
+    const index = row * daysInWeek + column;
+
+    if (!this.daysToSelect[index] || this.daysToSelect[index].isEmpty) {
+      return;
+    }
+
+    const {dateMonth, dateYear, todayYear, todayMonth, today} = this.getDatesData();
+    const selectedDate = moment([dateYear, dateMonth, this.daysToSelect[index].dayNumber]);
+    const selectedRange = this.calendarDatePickerService.selectedRange;
+    let isDisabled = this.daysToSelect[index].isDisabled;
+    if (!isDisabled && (selectedRange.date1 || selectedRange.date2)) {
+      isDisabled = this.isOverlapWithDisabledRanges(selectedRange.date1 || selectedRange.date2, selectedDate);
+    }
+
+    const isPast = !this.allowPastDates && ((dateYear < todayYear || (dateYear === todayYear && dateMonth < todayMonth)) || today.diff(selectedDate, 'days') > 0);
+    if (!isDisabled && !isPast && this.daysToSelect[index] && this.daysToSelect[index] !== this.selectedDay) {
+      this.selectedDay = this.daysToSelect[index];
+      const date = moment(this.date, this.dateFormat ? this.dateFormat : DATE_FORMAT);
+      const _selectedDate = moment([date.year(), date.month(), this.daysToSelect[index].dayNumber]);
+      this.calendarDatePickerService.selectDate$.next(_selectedDate);
+      this.selectedRange.next(_selectedDate.format(this.dateFormat ? this.dateFormat : DATE_FORMAT));
+    }
+    if (this.detectChangesManually) {
+      setTimeout(() => this.changeDetector.detectChanges());
+    }
+  };
+
+  unMark(): void {
+    this.resetDaysToSelectStyle();
+    this.calendarDatePickerService.selectedRange = {date1: null, date2: null};
+    this.selectedDay = null;
+  }
+
+  calcDisabledRange(selectedDateToCompare: any): boolean {
+    let disabledRanges = [];
+    if (this.disabledRanges) {
+      disabledRanges = Array.isArray(this.disabledRanges) ? this.disabledRanges : [this.disabledRanges];
+    }
+    const arrLength = disabledRanges.length;
+    let isDisabled = false;
+    let isDisabledFrom = false;
+    let isDisabledTo = false;
+
+    for (let i = 0; i < arrLength && !isDisabled; i++) {
+      if (disabledRanges[i].from) {
+        const from = moment(disabledRanges[i].from, this.dateFormat ? this.dateFormat : DATE_FORMAT);
+        const fromToCompare = moment([from.year(), from.month(), from.date()]);
+        isDisabledFrom = selectedDateToCompare.diff(fromToCompare) >= 0;
+      }
+      if (!isDisabled && disabledRanges[i].to) {
+        const to = moment(disabledRanges[i].to, this.dateFormat ? this.dateFormat : DATE_FORMAT);
+        const toToCompare = moment([to.year(), to.month(), to.date()]);
+        isDisabledTo = selectedDateToCompare.diff(toToCompare) <= 0;
+      }
+
+      if (disabledRanges[i].from && disabledRanges[i].to) {
+        isDisabled = isDisabledFrom && isDisabledTo;
+      } else {
+        isDisabled = isDisabledFrom || isDisabledTo;
+      }
+
+    }
+    return isDisabled;
+  }
+
+  isOverlapWithDisabledRanges(fromOrTo: any, selectedDate: any): boolean {
+    let disabledRanges = [];
+    if (this.disabledRanges) {
+      disabledRanges = Array.isArray(this.disabledRanges) ? this.disabledRanges : [this.disabledRanges];
+    }
+    const arrLength = disabledRanges.length;
+    let isDisabled: boolean = false;
+
+    for (let i = 0; i < arrLength && !isDisabled; i++) {
+      const from = disabledRanges[i].from;
+      const to = disabledRanges[i].to;
+      if (from && to) {
+        if (fromOrTo.diff(moment(from, DATE_FORMAT)) < 0 && selectedDate.diff(moment(from, DATE_FORMAT)) > 0
+          || fromOrTo.diff(moment(to, DATE_FORMAT)) > 0 && selectedDate.diff(moment(to, DATE_FORMAT)) < 0) {
+          isDisabled = true;
+        }
+      }
+    }
+    return isDisabled;
+  }
+
+  updateDaysStyle(selectedDate?: any): void {
+    const {dateMonth, dateYear, todayYear, todayMonth, todayDayNumber} = this.getDatesData();
+    let firstDay;
+    let lastDay;
+    let firstDayMonth;
+    let lastDayMonth;
+    const {firstDate, lastDate} = this.calendarDatePickerService.getSelectedRange();
+
+    if (this.isSingleSelection) {
+      firstDay = selectedDate.date();
+      lastDay = selectedDate.date();
+      firstDayMonth = selectedDate.month();
+      lastDayMonth = selectedDate.month();
+    } else {
+      firstDayMonth = firstDate.month();
+      lastDayMonth = lastDate.month();
+      firstDay = firstDayMonth === dateMonth ? firstDate.date() : 0;
+      lastDay = lastDayMonth === dateMonth ? lastDate.date() : 31;
+    }
+
     const dateRunner = moment([dateYear, dateMonth]);
 
     for (let i = 0; i < this.daysToSelect.length; i++) {
@@ -173,18 +296,21 @@ export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, Afte
         this.daysToSelect[i].firstDay = dateMonth === firstDayMonth && this.daysToSelect[i].dayNumber === firstDay;
         this.daysToSelect[i].lastDay = dateMonth === lastDayMonth && this.daysToSelect[i].dayNumber === lastDay;
       }
-      this.daysToSelect[i].today = todayMonth === dateMonth && todayDayNumber === this.daysToSelect[i].dayNumber;
+      this.daysToSelect[i].today = todayMonth === dateMonth && todayYear === dateYear && todayDayNumber === this.daysToSelect[i].dayNumber;
       dateRunner.add(1, 'day');
     }
 
     for (let i = 0; i < this.NUM_OF_CELLS; i++) {
       if (!this.daysToSelect[i].isEmpty) {
-        this.daysToSelect[i].past = todayYear > dateYear || (todayYear === dateYear && todayMonth > dateMonth)
-          || (todayYear === dateYear && todayMonth === dateMonth && todayDayNumber > this.daysToSelect[i].dayNumber);
+        this.daysToSelect[i].past = !this.allowPastDates && (todayYear > dateYear || (todayYear === dateYear && todayMonth > dateMonth)
+          || (todayYear === dateYear && todayMonth === dateMonth && todayDayNumber > this.daysToSelect[i].dayNumber));
       }
     }
 
     this.daysToSelect.forEach((day, index) => day.classToAdd += this.getBorderClass(day.dayNumber, index));
+    if (this.detectChangesManually) {
+      setTimeout(() => this.changeDetector.detectChanges());
+    }
   }
 
   getBorderClass(dayNumber: number, index: number): string {
@@ -211,19 +337,20 @@ export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, Afte
     return borderClass;
   }
 
-  getDatesData() {
-    const date = moment(this.date);
+  getDatesData(): any {
+    const date = moment(this.date, this.dateFormat ? this.dateFormat : DATE_FORMAT);
     const today = moment();
-    const dateMonth = date.month();
     const dateYear = date.year();
+    const dateMonth = date.month();
     const todayYear = today.year();
     const todayMonth = today.month();
     const todayDayNumber = today.date();
     return {today, dateMonth, dateYear, todayYear, todayMonth, todayDayNumber};
   }
 
-  getDayClass(day: any): string {
+  getDayClass(day: ICalendarDay): string {
     let classToAdd = day.classToAdd ? day.classToAdd : ' ';
+    classToAdd += day.isDisabled ? ' day-disabled' : '';
     classToAdd += day.isSelected ? ' selected' : '';
     classToAdd += day.firstDay ? ' first-day' : '';
     classToAdd += day.lastDay ? ' last-day' : '';

@@ -49,7 +49,7 @@ export const getStateDiffInfo = (newState, index, _playerType) => {
 const buildSpikesFromCheckers = (checkers) => {
   const spikes: any = new Array(24);
 
-  Object.values(checkers).forEach((checker, index) => {
+  Object.values(checkers).forEach((checker: any, index) => {
     if (!spikes[checker.currentSpike]) {
       spikes[checker.currentSpike] = {
         type: index < 15 ? playersMap.Black : playersMap.White,

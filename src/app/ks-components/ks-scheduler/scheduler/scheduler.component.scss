@@ -32,9 +32,11 @@ $scheduler-width: 900px;
           cursor: pointer;
           position: absolute;
         }
+
         .arrow-left {
           left: 20px;
         }
+
         .arrow-right {
           left: 60px;
         }
@@ -101,14 +103,15 @@ $scheduler-width: 900px;
 
       .scheduler-hours-wrapper {
         .scheduler-hours {
-          display: flex;
-          flex-direction: column;
           border-bottom: 1px solid $alto;
           box-sizing: border-box;
           background-color: white;
+          height: calc(100% - 1px);
 
           .hour {
             @include dimension(45px, 50px);
+            box-sizing: border-box;
+            padding-top: 6px;
             font-size: 13px;
             display: flex;
             justify-content: center;
@@ -130,6 +133,7 @@ $scheduler-width: 900px;
           width: 5000px;
           display: flex;
           position: relative;
+
           .scheduler-weeks-container {
             display: flex;
             padding-bottom: 40px;

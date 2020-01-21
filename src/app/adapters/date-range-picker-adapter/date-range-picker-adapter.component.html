@@ -1,8 +1,7 @@
 <div class="selected-range">
-  <div>selected range</div>
-  <div> from: {{from}}</div>
-  <div>to: {{to}}</div>
+  <div> from: {{from | date:'MMMM d, y'}}</div>
+  <div>to: {{to | date: 'MMMM d, y'}}</div>
 </div>
 <div class="multi-date-picker-wrapper">
-<app-multi-date-picker (onSelectRange)="onSelectRange($event)" [config]="config"></app-multi-date-picker>
+  <app-multi-date-picker (onSelectRange)="onSelectRange($event)" [config]="config"></app-multi-date-picker>
 </div>
