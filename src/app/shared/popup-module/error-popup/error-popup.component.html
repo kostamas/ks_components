@@ -1,0 +1,15 @@
+<div class="error-popup-container">
+
+	<div class="centralize">
+		<div class="error-icon"></div>
+		<div class="error-title">Something Went Wrong</div>
+	</div>
+	<div *ngIf="traceId" class="error-content">
+		Trace ID: {{traceId}}
+	</div>
+
+	<div class="centralize">
+		<div class="action-button" (click)="closeModal()">OK</div>
+	</div>
+
+</div>

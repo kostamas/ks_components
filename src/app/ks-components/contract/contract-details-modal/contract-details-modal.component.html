@@ -1,0 +1,59 @@
+<div class="contract-details-modal">
+	<app-loader *ngIf="showLoader" shape="rectangle-loader" type="container"></app-loader>
+
+	<div class="contract-details-header">
+		<div class="title">Load Contract Details</div>
+	</div>
+
+	<div class="contract-details-content" *ngIf="contracts && contracts.length">
+		<div class="details" *ngFor="let contract of contracts; let index = index;">
+			<app-svg-icon class="contract-icon" [svg]="SVG_ICONS.contract"></app-svg-icon>
+
+			<div>
+				<div class="id-name-currency">
+					<div class="contract-text">Contract #: {{contract.contractId}},</div>
+					<div class="hotel-text">Name: {{contract.name}},</div>
+					<div class="currency-text">Currency: {{contract.currencyId}}</div>
+				</div>
+
+				<div class="dates">
+					<div class="dates-text">Dates: {{contract.travelWindow.from | date: 'mediumDate'}} - {{contract.travelWindow.to | date: 'mediumDate'}},</div>
+					<div>Creation Date: {{contract.audit.creationDate | date: 'mediumDate'}}</div>
+				</div>
+
+				<div class="description">
+					Description: {{contract.description}}
+				</div>
+			</div>
+			<app-button-with-loader [hideIcon]="buttonsConfig[index].hideIcon"
+			                        app-tooltip
+			                        [tooltipClass]="'import-error-tooltip'"
+			                        [tooltipTitle]="buttonsConfig[index].errorMessage ? buttonsConfig[index].errorMessage : 'Error'"
+			                        [isToolTipDisabled]="buttonsConfig[index].isToolTipDisabled"
+			                        [loadingText]="'Loading'"
+			                        [text]="buttonsConfig[index].text"
+			                        [style]="buttonsConfig[index].style"
+			                        [svg]="buttonsConfig[index].svg"
+			                        [onClick]="select(index)">
+			</app-button-with-loader>
+		</div>
+	</div>
+
+	<div class="no-contract-details" *ngIf="contracts && contracts.length === 0 && !showLoader && !errorObj.hasError">
+		<app-svg-icon [svg]="SVG_ICONS.contract"></app-svg-icon>
+		<div> No contracts found</div>
+	</div>
+	<div *ngIf="errorObj.hasError" class="technical-error">
+		<div class="error-content">
+			<div class="triangle-error-icon">
+				<app-svg-icon [svg]="SVG_ICONS.technicalErrorTriangle"></app-svg-icon>
+			</div>
+			<div class="error-title">
+				Technical Error
+			</div>
+			<div class="error-message">
+				{{errorObj.message}}
+			</div>
+		</div>
+	</div>
+</div>

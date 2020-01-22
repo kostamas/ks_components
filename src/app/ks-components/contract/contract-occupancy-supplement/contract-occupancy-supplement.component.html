@@ -1,0 +1,16 @@
+<div class="contract-occupancy-supplement-container page-section">
+	<div class="title">
+		<div class="display-hide-icon click-able" (click)="displayForm = !displayForm;"
+				 [ngClass]="[displayForm ? 'hide' : 'collapse']">
+			<app-svg-icon [svg]="SVG_ICONS.down_arrow_collapse"></app-svg-icon>
+		</div>
+		Occupancy Supplements&nbsp;<span class="lite">(Extra Bed)</span>
+	</div>
+
+	<div class="contract-occupancy-supplement-form" [ngClass]="{'close-section': !displayForm}">
+		<app-guest-room-table
+			[guestRoomSrv]="contractOccupancySupplementService"
+			[getRowsFromContract]="getRowsFromContract">
+		</app-guest-room-table>
+	</div>
+</div>

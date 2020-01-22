@@ -1,0 +1,36 @@
+<div class="app-seven-days-checkbox" [ngClass]="{'is-disabled': isDisabled}">
+	<ng-container *ngIf="!selectInputConfig">
+		<div class="days-container" [ngClass]="{'single-selected': isSingleSelected()}">
+			<div class="day-repeater" [ngClass]="{'select-item': sevenDaysMainList[day]}" *ngFor="let day of sevenDaysKeys">
+				<app-checkbox
+					[isDisabled]="isDisabled"
+					[isManualControl]="true"
+					[item]="{isSelected: sevenDaysMainList[day]}"
+					(onChecked)="checkHandler($event, day)"></app-checkbox>
+				<div class="day">{{day | titlecase}}</div>
+			</div>
+		</div>
+
+		<div class="select-options" *ngIf="!isDisabled">
+			<div class="click-able-red" (click)="markDays('all')">All Days</div>
+			|
+			<div class="click-able-red" (click)="markDays('weekdays')">Weekdays</div>
+			|
+			<div class="click-able-red" (click)="markDays('weekend')">Weekend</div>
+		</div>
+	</ng-container>
+
+	<ng-container *ngIf="selectInputConfig">
+		<app-select-input
+			[selectList]="sevenDaysSelectInputOptions"
+			[inputTextHandler]="multipleSelectTextInputHandler"
+			(onSelectItem)="syncSevenDaysMainList()"
+			(onListChange)="onListChange($event)"
+			[optionsClass]="'seven-days'"
+			[setTextManually$]="inputText$"
+			[optionsComponent]="selectColorfulOptionsComponent"
+			[openOptionsInModal]="selectInputConfig.openOptionsInModal"
+			[componentInputs]="componentInputs">
+		</app-select-input>
+	</ng-container>
+</div>

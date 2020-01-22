@@ -1,0 +1,14 @@
+<div class="information-popup-container">
+
+  <div class="centralize">
+    <div class="information-icon"><app-svg-icon [svg]="SVG_ICONS.exclamationMark"></app-svg-icon></div>
+    <div class="information-title">{{data.title || ''}}</div>
+  </div>
+
+  <div class="content">{{data.content || ''}}</div>
+
+  <div class="centralize">
+    <div class="action-button" (click)="closeModal()">OK</div>
+  </div>
+
+</div>

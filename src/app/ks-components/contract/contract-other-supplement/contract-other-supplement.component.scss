@@ -1,0 +1,24 @@
+@import "~shared-ui-components-lib/style/shared";
+
+.contract-other-supplement-container {
+	.title {
+		@include text-style(18px, $black, null, bold);
+		margin: 0 0 15px;
+	}
+
+	.contract-other-supplement-form {
+		.guest-room-container {
+			.hb-table {
+				.season-row {
+					width: 1018px;
+				}
+			}
+		}
+	}
+
+	.contract-other-supplement-form.close-section {
+		@include dimension(0, 0);
+		overflow: hidden;
+		position: absolute;
+	}
+}

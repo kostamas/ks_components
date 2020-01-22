@@ -1,0 +1,30 @@
+<div class="calendar-date-range-picker">
+
+	<div class="calendar-date-range-picker-header" [ngClass]="{'disable-month-control': disableMonthControl}">
+		<div class="next-month click-able" (click)="updateCalendarDates(-1)" *ngIf="!disableMonthControl">
+			<app-svg-icon [svg]="SVG_ICONS.back"></app-svg-icon>
+		</div>
+
+		<div class="month-title">{{moment(date).format('MMM YYYY')}}</div>
+
+		<div class="next-month click-able" (click)="updateCalendarDates(1)" *ngIf="!disableMonthControl">
+			<app-svg-icon [svg]="SVG_ICONS.next"></app-svg-icon>
+		</div>
+	</div>
+
+	<div class="date-range-header">
+		<div class="header-days">Su</div>
+		<div class="header-days">Mo</div>
+		<div class="header-days">Tu</div>
+		<div class="header-days">We</div>
+		<div class="header-days">Th</div>
+		<div class="header-days">Fr</div>
+		<div class="header-days">Sa</div>
+	</div>
+
+	<div class="days-to-select" #daysToSelectRef>
+		<div class="day" [ngClass]="getDayClass(day)" *ngFor="let day of daysToSelect">
+			<div class="click-able day-number" *ngIf="!day.isEmpty">{{day.dayNumber}}</div>
+		</div>
+	</div>
+</div>

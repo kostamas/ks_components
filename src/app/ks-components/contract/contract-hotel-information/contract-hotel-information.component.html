@@ -1,0 +1,153 @@
+<div class="contract-hotel-information-container page-section">
+	<div class="title">Hotel Information</div>
+	<div class="hotel-info-selection">
+		<app-radio-buttons
+			[radioButtons]="hotelInformationRadioOptions"
+			(radioButtonClick)="radioButtonClick($event.checkedButton)">
+		</app-radio-buttons>
+	</div>
+	<div class="contract-hotel-information-form" [ngClass]="contractHotelInformationService.hotelInfo">
+		<div class="search-column search-column-1">
+			<div class="hotel-name" *ngIf="contractHotelInformationService.hotelInfo === 'new'">
+				<div class="large-field margin-bottom-20">
+					<div class="search-label">
+						Hotel Name
+					</div>
+					<input class="large-input hb-input" [fontSize]="16" tabindex="1"
+								 [(ngModel)]="contractHotelInformationService.oneContractParams.hotelData.hotelName"
+								 (input)="hotelNameHandler()"
+								 appEllipseDetector/>
+				</div>
+			</div>
+			<div class="hotel-name" *ngIf="contractHotelInformationService.hotelInfo === 'exist'">
+				<div class="large-field margin-bottom-20">
+					<div class="search-label">
+						Hotel Code
+					</div>
+					<app-auto-suggest-input
+						[isAutoSelectWhenContainsValue]="false"
+						[searchTextValue$]="hotelCodeSearch$"
+						[openResultsInModal]="true"
+						(isEmpty)="	onResetHotelAutoSuggest($event)"
+						[searchCallback]="autoSuggestHandler(appCommonService.autoSuggestAPIS.hotelAutoSuggestSourcing, 'hotelId', true)"
+						[validators]="[appCommonService.requiredValidator('Hotel/Code is missing')]"
+						[tabIndex]="1"
+						[validationStatus$]="validationHotelCodeStatus$"
+						(onSelectValue)="onSelectAutoSuggestValue($event, 'hotelId', 'hotelName')">
+					</app-auto-suggest-input>
+				</div>
+			</div>
+			<div class="company margin-bottom-20">
+				<div class="large-field margin-bottom-20">
+					<div class="search-label">
+						Company
+					</div>
+					<app-select-input
+						[withAutoSuggest]="true"
+						[autoSuggestFilterFunction]="autoSuggestFilterFunction"
+						[selectList]="companyOptions"
+						[inputTextHandler]="appCommonService.selectInputTextHandlerNameAndId"
+						[optionsType]="OPTIONS_TYPES.regular"
+						[tabIndex]="2"
+						[componentInputs]="{hideHeaders: true , inputTextHandler: appCommonService.selectInputTextHandlerNameAndId}"
+						(onSelectItem)="onSelectCompany($event)"
+						(resetSelectInput)="onResetCompany()">
+					</app-select-input>
+				</div>
+			</div>
+			<div class="large-field margin-bottom-20 hotel-address"
+					 *ngIf="contractHotelInformationService.hotelInfo === 'new'">
+				<div class="search-label">
+					Hotel Address
+				</div>
+				<input class="large-input hb-input" [fontSize]="16"
+							 [(ngModel)]="contractHotelInformationService.oneContractParams.hotelData.hotelAddress"
+							 tabindex="4"
+							 appEllipseDetector/>
+			</div>
+			<div class="two-fields margin-bottom-20" *ngIf="contractHotelInformationService.hotelInfo === 'new'">
+				<div class="search-column first-field postal-code">
+					<div class="search-label">Postal Code</div>
+					<input class="first-input hb-input" [fontSize]="16"
+								 [(ngModel)]="contractHotelInformationService.oneContractParams.hotelData.postalCode"
+								 tabindex="8"
+								 appEllipseDetector/>
+				</div>
+				<div class="search-column second-field official-category">
+					<div class="search-label">Official Category</div>
+					<input class="second-input hb-input" [fontSize]="16"
+								 [(ngModel)]="contractHotelInformationService.oneContractParams.hotelData.categoryId"
+								 tabindex="9"
+								 appEllipseDetector/>
+				</div>
+			</div>
+		</div>
+
+		<div class="search-column search-column-2">
+			<div class="large-field load-contract-details"
+					 *ngIf="contractHotelInformationService.hotelInfo === 'exist'">
+				<div class="loading-link click-able">
+					<div class="load-link" (click)="openContractDetails()">Load Contract Details</div>
+					<app-svg-icon class="cursor-pointer tooltip"
+												app-tooltip
+												tooltipTitle="{{loadContractDetailsTooltipInfo}}"
+												[tooltipClass]="'load-contract-details-tooltip'"
+												[svg]="SVG_ICONS.info">
+					</app-svg-icon>
+				</div>
+			</div>
+			<div class="large-field margin-bottom-20 office">
+				<div class="search-label">
+					Office
+				</div>
+				<app-select-input
+					[withAutoSuggest]="true"
+					[autoSuggestFilterFunction]="autoSuggestFilterFunction"
+					[selectList]="officesOptions"
+					[componentInputs]="{ withEmptyOption: contractHotelInformationService.oneContractParams.office.id}"
+					(onSelectItem)="onSelectOption($event, 'office', $event.name)"
+					[tabIndex]="3">
+				</app-select-input>
+			</div>
+			<div class="three-fields margin-bottom-20" *ngIf="contractHotelInformationService.hotelInfo === 'new'">
+				<div class="second-column first-field destination">
+					<div class="search-label">Destination</div>
+					<input class="first-input hb-input" [fontSize]="16"
+								 [(ngModel)]="contractHotelInformationService.oneContractParams.hotelData.destination.name"
+								 tabindex="5"
+								 appEllipseDetector/>
+				</div>
+				<div class="search-column second-field zone">
+					<div class="search-label">Zone</div>
+					<input class="second-input hb-input" [fontSize]="16"
+								 [(ngModel)]="contractHotelInformationService.oneContractParams.hotelData.zone.name"
+								 tabindex="6"
+								 appEllipseDetector/>
+				</div>
+				<div class="second-field country">
+					<div class="search-label">Country</div>
+					<app-select-input
+						[componentInputs]="{withEmptyOption: contractHotelInformationService.oneContractParams.hotelData.country}"
+						[selectList]="countriesOptions"
+						(onSelectItem)="onSelectOption($event, 'country', $event.name)"
+						[tabIndex]="7">
+					</app-select-input>
+				</div>
+			</div>
+			<div class="three-fields" *ngIf="contractHotelInformationService.hotelInfo === 'new'">
+				<div class="search-column first-field total-room-number">
+					<div class="search-label">Hotel Total Room Number</div>
+					<div class="search-field max-room">
+						<app-input-with-error
+							[inputValue]="contractHotelInformationService.oneContractParams.hotelData.totalNumberOfRooms"
+							[required]="true"
+							[preventValues]="appCommonService.rangeValueValidator(1,999999999)"
+							[preventPaste]="true"
+							[tabIndex]="10">
+						</app-input-with-error>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

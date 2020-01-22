@@ -1,0 +1,27 @@
+@import "~shared-ui-components-lib/style/shared";
+
+.contract-occupancy-supplement-container {
+	.title {
+		@include text-style(18px, $black, null, bold);
+		margin: 0 0 15px;
+		.lite {
+			@include text-style(18px, $black, null, 500);
+		}
+	}
+
+	.contract-occupancy-supplement-form {
+		.guest-room-container {
+			.hb-table {
+				.season-row {
+					width: 843px;
+				}
+			}
+		}
+	}
+
+	.contract-occupancy-supplement-form.close-section {
+		@include dimension(0, 0);
+		overflow: hidden;
+		position: absolute;
+	}
+}

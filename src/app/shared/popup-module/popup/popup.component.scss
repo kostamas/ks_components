@@ -1,0 +1,64 @@
+@import "../../../style/shared";
+
+.popup-container {
+	@include dimension(560px, auto);
+	padding: 50px 70px 50px 70px;
+	margin: 0 auto;
+	border-radius: 10px;
+	background-color: $white;
+	box-sizing: border-box;
+
+	.title-and-content {
+		.title {
+			@include dimension(100%, 40px);
+			@include flex(null, center);
+			@include text-style(25px);
+			border-radius: 10px 10px 0 0;
+		}
+
+		.content {
+			@include text-style(17px);
+			padding: 10px 0 20px;
+			overflow-y: auto;
+			max-height: 220px;
+			line-height: 23px;
+			white-space: pre-line;
+		}
+	}
+
+	.buttons-wrapper {
+		@include flex(null, center);
+		@include dimension(100%, 65px);
+
+		.done-button {
+			margin-right: 20px;
+		}
+
+		.popup-buttons-repeater {
+			margin-left: 15px;
+
+			&:first-child {
+				margin-left: 0;
+			}
+
+			.popup-button {
+				.popup-button-svg {
+					margin-right: 5px;
+				}
+			}
+		}
+	}
+}
+
+.popup-container.message {
+
+}
+
+.popup-container.warning {
+
+	.title-and-content {
+		.title {
+			color: $color60;
+		}
+	}
+}

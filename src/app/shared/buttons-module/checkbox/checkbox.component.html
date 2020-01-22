@@ -1,0 +1,4 @@
+<div class="checkbox-component cursor-pointer" (click)="checkboxChecked()" [ngClass]="{'is-disabled':isDisabled}">
+	<input id="{{item.text}}" type="checkbox" value="{{item.value}}" [checked]="item.isSelected"/>
+	<span class="check-mark"></span>
+</div>

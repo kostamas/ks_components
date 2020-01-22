@@ -1,0 +1,47 @@
+<div class="contract-combinations-container page-section">
+	<div class="title">
+		<div class="display-hide-icon click-able" (click)="displayForm = !displayForm;"
+		     [ngClass]="[displayForm ? 'hide' : 'collapse']">
+			<app-svg-icon [svg]="SVG_ICONS.down_arrow_collapse"></app-svg-icon>
+		</div>
+		Combinable
+	</div>
+
+	<div class="contract-combinations-form" *ngIf="displayForm">
+
+		<div class="hb-table">
+			<div class="hb-table-row">
+				<div class="hb-table-header hb-table-column" *ngFor="let header of  tableHeader"> {{header}}</div>
+			</div>
+
+			<div class="hb-table-row" *ngFor="let row of contractCombinationsService.tableRows; let index = index">
+				<app-select-input class="offer-type"
+				                  [componentInputs]="{ withEmptyOption: row.offerType}"
+				                  [selectList]="row.offerTypesOptions"
+				                  (onSelectItem)="onSelectOfferType($event, index)">
+				</app-select-input>
+				<app-select-input class="combination-with-offer"
+				                  [optionsType]="OPTIONS_TYPES.multiSelection"
+				                  [componentInputs]="getSelectAllConfig(index)"
+				                  [inputTextHandler]="multipleNamesOrIdTextHandler()"
+				                  (onSelectItem)="onSelectCombinationWithOffer($event, index)"
+				                  [selectList]="row.combinationWithOfferOptions">
+				</app-select-input>
+				<app-select-input class="allotment"
+				                  [selectList]="row.allotmentOptions"
+				                  (onSelectItem)="onSelectAllotment($event, index)">
+				</app-select-input>
+				<div class="hb-input total-discount"
+				     appEllipseDetector [paddingLeft]="9" [paddingRight]="30"
+				     [fontSize]="16">{{calculateCombinationDiscount(index)}}</div>
+				<div class="hb-table-column click-able delete-row" (click)="deleteRow(index)">
+					<app-svg-icon class="bin-icon" [svg]="SVG_ICONS.bin"></app-svg-icon>
+				</div>
+			</div>
+		</div>
+
+		<div class="add-row click-able" (click)="addRow()">
+			<app-svg-icon [svg]="SVG_ICONS.plus"></app-svg-icon>
+		</div>
+	</div>
+</div>

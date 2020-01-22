@@ -1,0 +1,197 @@
+<div class="contract-min-and-security page-section">
+  <div class="title">
+    Allotment
+    <app-svg-icon class="cursor-pointer tooltip" app-tooltip [tooltipTitle]="minSecurityAllotmentTooltip"
+                  [svg]="SVG_ICONS.info"></app-svg-icon>
+  </div>
+  <div class="contract-min-and-security-form">
+    <div class="hb-table">
+      <div class="hb-table-row">
+        <div class="hb-table-header hb-table-column">
+          Allotment
+        </div>
+        <div class="hb-table-header hb-table-column take-left">
+          Room & Characteristic
+        </div>
+        <div class="hb-table-header hb-table-column take-left">
+          Type
+        </div>
+        <div class="hb-table-header hb-table-column take-left">
+          Units
+        </div>
+        <div class="hb-table-header hb-table-column take-left">
+          Release Nights
+        </div>
+        <div class="hb-table-header hb-table-column take-left">
+          Ceiling Price
+        </div>
+        <div class="hb-table-header hb-table-column take-left">
+        </div>
+      </div>
+      <ng-container *ngFor="let item of contractAllotmentService.minSecurityAndAllotmentRows; let index = index">
+        <div class="hb-table-row" [ngClass]="[item.isSeasons ? 'seasonally-row' : '']">
+          <app-select-input class="allotment"
+                            [selectList]="item.allotmentList"
+                            [validationStatus$]="item.allotmentValidator"
+                            (onSelectItem)="onSelectItem($event, 'allotment', item, index)">
+          </app-select-input>
+          <app-select-input class="room-and-characteristic take-left"
+                            [selectList]="item.roomAndCharacteristicList"
+                            [componentInputs]="{ withEmptyOption: contractAllotmentService.minSecurityAndAllotmentRows[index].roomAndCharacteristic}"
+                            (onSelectItem)="onSelectItem($event, 'roomAndCharacteristic', item, index)">
+          </app-select-input>
+          <app-select-input class="take-left"
+                            [selectList]="item.type"
+                            (onSelectItem)="onSelectItem($event, 'type', item, null)">
+          </app-select-input>
+          <div class="numeric-field units">
+            <app-input-with-error
+							[cssClasses]="['take-left', 'fix-contract-input-focus']"
+							[preventValues]="oneContractService.numberOnly"
+							[required]="true"
+							[preventPaste]="true"
+							[isDisabled]="item.isSeasons"
+							[(inputValue)]="item.units">
+						</app-input-with-error>
+          </div>
+          <div class="numeric-field release" [ngClass]="{'disabled-field': item.isSeasons}">
+            <app-input-with-symbol
+              *ngIf="!contractAllotmentService.minSecurityAndAllotmentRows[index].isSeasons"
+              [svg]="SVG_ICONS.moon"
+              [isFloat]="false"
+              [isDisabled]="item.isSeasons"
+              [(inputValue)]="item.release">
+            </app-input-with-symbol>
+          </div>
+          <div class="numeric-field ceiling" [ngClass]="{'disabled-field': item.isSeasons}">
+            <app-input-with-symbol
+              *ngIf="!contractAllotmentService.minSecurityAndAllotmentRows[index].isSeasons"
+              [symbol]="currency"
+              [valueMaxRange]="null"
+              [valueMinRange]="0"
+              [isFloat]="true"
+              [isDisabled]="item.isSeasons"
+              [(inputValue)]="item.ceilingPrice">
+            </app-input-with-symbol>
+          </div>
+          <div class="hb-table-column click-able delete-row" (click)="deleteRow(item)">
+            <app-svg-icon [svg]="SVG_ICONS.bin" title="Delete row"></app-svg-icon>
+          </div>
+        </div>
+        <div class="hb-table-row season-row" *ngIf="item.isSeasons">
+          <div class="row-connect">
+            <div class="calendar-icon">
+              <app-svg-icon [svg]="SVG_ICONS.season_calendar"></app-svg-icon>
+            </div>
+          </div>
+          <div class="fields-columns">
+            <div class="field">Units</div>
+            <div class="field">Release Nights</div>
+            <div class="field">Ceiling Price
+            </div>
+          </div>
+          <div class="row">
+            <ng-container *ngFor="let season of contractAllotmentService.seasons; let ind = index">
+              <div class="season-column" *ngIf="season.selectedSeasonType === 'A'">
+                <div class="season-title" app-tooltip
+                     [tooltipTitle]="contractAllotmentService.minSecurityAndAllotmentRows[index].seasonsValues[ind].tooltip">
+                  {{oneContractService.getSeasonHeader(ind + 1)}}
+                </div>
+                <div class="season-nights">
+                  <input type="text"
+                         (keypress)="oneContractService.numberOnly($event)"
+                         required
+                         (paste)="preventPasteValue()"
+                         class="nights-input"
+                         appEllipseDetector
+                         [(ngModel)]="item.seasonsValues[ind].unitsValue"/>
+                </div>
+                <div class="season-nights">
+                  <app-input-with-symbol
+                    *ngIf="contractAllotmentService.minSecurityAndAllotmentRows[index].isSeasons"
+                    [svg]="SVG_ICONS.moon"
+                    [isFloat]="false"
+                    [(inputValue)]="item.seasonsValues[ind].releaseValue">
+                  </app-input-with-symbol>
+                </div>
+                <div class="season-nights">
+                  <app-input-with-symbol
+                    *ngIf="contractAllotmentService.minSecurityAndAllotmentRows[index].isSeasons"
+                    [symbol]="currency"
+                    [isFloat]="true"
+                    [valueMinRange]="0"
+                    [(inputValue)]="item.seasonsValues[ind].ceilingValue">
+                  </app-input-with-symbol>
+                </div>
+              </div>
+              <ng-container *ngIf="season.selectedSeasonType === 'W'">
+                <div class="season-column expended">
+                  <div class="season-title" app-tooltip
+                       [tooltipTitle]="contractAllotmentService.minSecurityAndAllotmentRows[index].seasonsValues[ind].tooltipWkdy">
+                    {{oneContractService.getSeasonHeader(ind + 1, 'WKDY')}}
+                  </div>
+                  <div class="season-nights">
+                    <input type="text" (keypress)="oneContractService.numberOnly($event)" required
+                           (paste)="preventPasteValue()" appEllipseDetector
+                           class="nights-input" [(ngModel)]="item.seasonsValues[ind].unitsWkdy"/>
+                  </div>
+                  <div class="season-nights">
+                    <app-svg-icon
+                      *ngIf="contractAllotmentService.minSecurityAndAllotmentRows[index].isSeasons"
+                      class="input-value-symbol" [svg]="SVG_ICONS.moon"></app-svg-icon>
+                    <input type="text" (keypress)="oneContractService.numberOnly($event)"
+                           (paste)="preventPasteValue()" appEllipseDetector
+                           class="nights-input" [(ngModel)]="item.seasonsValues[ind].releaseWkdy"/>
+                  </div>
+                  <div class="season-nights">
+                    <div class="currency" *ngIf="contractAllotmentService.minSecurityAndAllotmentRows[index].isSeasons">
+                      {{currency}}
+                    </div>
+                    <input type="text"
+                           (keypress)="isRangeValue($event, 0, null, true)"
+                           (paste)="preventPasteValue()" appEllipseDetector
+                           class="nights-input ceiling" [(ngModel)]="item.seasonsValues[ind].ceilingWkdy"/>
+                  </div>
+                </div>
+                <div class="season-column expended">
+                  <div class="season-title" app-tooltip
+                       [tooltipTitle]="contractAllotmentService.minSecurityAndAllotmentRows[index].seasonsValues[ind].tooltipWknd">
+                    {{oneContractService.getSeasonHeader(ind + 1, 'WKND')}}
+                  </div>
+                  <div class="season-nights">
+                    <input type="text" (keypress)="oneContractService.numberOnly($event)" required
+                           (paste)="preventPasteValue()" appEllipseDetector
+                           class="nights-input" [(ngModel)]="item.seasonsValues[ind].unitsWknd"/>
+                  </div>
+                  <div class="season-nights">
+                    <app-svg-icon
+                      *ngIf="contractAllotmentService.minSecurityAndAllotmentRows[index].isSeasons"
+                      class="input-value-symbol" [svg]="SVG_ICONS.moon"></app-svg-icon>
+                    <input type="text" (keypress)="oneContractService.numberOnly($event)"
+                           (paste)="preventPasteValue()" appEllipseDetector
+                           class="nights-input" [(ngModel)]="item.seasonsValues[ind].releaseWknd"/>
+                  </div>
+                  <div class="season-nights">
+                    <app-input-with-symbol
+                      *ngIf="contractAllotmentService.minSecurityAndAllotmentRows[index].isSeasons"
+                      [symbol]="currency"
+                      [valueMaxRange]="null"
+                      [valueMinRange]="0"
+                      [isFloat]="true"
+                      [(inputValue)]="item.seasonsValues[ind].ceilingWknd">
+                    </app-input-with-symbol>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
+      <div class="add-row click-able"
+           (click)="addRow()"
+           [ngClass]="[addRowsDisabled() ? 'disabled' : '']" title="{{addRowsDisabled() ? '' : 'Add row'}}">
+        <app-svg-icon [svg]="SVG_ICONS.plus"></app-svg-icon>
+      </div>
+    </div>
+  </div>
+</div>

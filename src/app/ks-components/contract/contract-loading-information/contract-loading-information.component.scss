@@ -1,0 +1,119 @@
+@import "~shared-ui-components-lib/style/shared";
+
+.contract-loading-information {
+	.title {
+		@include text-style(18px, $black, null, bold);
+		margin: 0 0 15px;
+
+		.lite {
+			@include text-style(18px, $black, null, 500);
+		}
+	}
+	input, app-select-input .select-input, .hb-input {
+		border-radius: 3px;
+	}
+
+	.contract-details-form {
+		height: 55.5px;
+		@include flex();
+
+		.search-column {
+			.search-field {
+				margin-bottom: 20px;
+
+				app-select-input {
+					.options-wrapper {
+						background-color: $white;
+						width: fit-content;
+
+						.option-text {
+							white-space: nowrap;
+						}
+					}
+				}
+			}
+		}
+
+		.search-column-1 {
+			@include dimension(200px, 211.5px);
+
+			.type {
+				width: 200px;
+			}
+		}
+
+		.search-column-2 {
+			@include dimension(215px, 211.5px);
+			margin-left: 15px;
+
+			.child-ages {
+				display: inline-flex;
+				justify-content: space-between;
+
+				.search-field {
+					position: relative;
+				}
+
+				.child-age {
+					width: 100px;
+
+					.search-label-with-tooltip .search-label {
+						@include flex();
+						position: relative;
+						bottom: 5px;
+
+						app-svg-icon {
+							@include dimension(10px, 10px);
+							margin-left: 5px;
+						}
+
+						.child-age-text {
+							@include position(relative, 3px);
+						}
+					}
+				}
+
+				.child-ages-separator {
+					@include flex(center, center);
+					width: 15px;
+				}
+
+				.child-age.second {
+					padding-top: 19px;
+				}
+			}
+		}
+
+		.search-column-3 {
+			@include dimension(200px, 211.5px);
+			margin-left: 15px;
+
+			.atlas-supplier-name-field {
+				.atlas-supplier-name-input {
+					@include dimension(100%, 36px);
+				}
+			}
+		}
+
+		.search-column-4 {
+			@include dimension(440px, 211.5px);
+			margin-left: 15px;
+
+			.contract-short-name-and-client-distribution-type {
+				display: inline-flex;
+
+				.contact-short-name-field {
+					width: 200px;
+					.contact-short-name-input {
+						@include dimension(100%, 36px);
+					}
+				}
+
+				.client-dist-type {
+					width: 200px;
+					margin-left: 15px;
+				}
+			}
+		}
+	}
+}

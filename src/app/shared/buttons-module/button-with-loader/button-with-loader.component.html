@@ -1,0 +1,9 @@
+<div class="button-with-loader" (click)="onClickWrapper()"
+		 [ngClass]="[isDisabled && !markAsEnabled ? 'disabled': '', btnClass ? btnClass : 'action-button']"
+		 [ngStyle]="style">
+	<div class="icon-container">
+		<app-loader *ngIf="showLoader" shape="circle" type="container"></app-loader>
+		<app-svg-icon *ngIf="!showLoader && !hideIcon" [svg]="svg || SVG_ICONS.search"></app-svg-icon>
+	</div>
+	<div>{{showLoader ? loadingText || text || 'Search' : text || 'Search'}}</div>
+</div>

@@ -1,0 +1,52 @@
+@import "~shared-ui-components-lib/style/shared";
+
+.contract-overrides-container {
+	.title .tooltip {
+		margin-left: 15px;
+	}
+
+	.contract-overrides-form {
+		.hb-table {
+			margin-bottom: 10px;
+
+			.hb-table-column:nth-child(1), .total-sales-input-wrapper, .total-sales {
+				width: 130px;
+			}
+
+			.hb-table-column:nth-child(2), .scale-from {
+				width: 130px;
+			}
+
+			.hb-table-column:nth-child(3), .scale-to {
+				width: 130px;
+			}
+
+			.delete-row {
+				border-left: #c3c9d8 1px solid;
+				margin-left: -2px;
+			}
+
+			.hb-table-column:nth-child(4) {
+				width: 40px;
+			}
+
+			.hb-invalid-input{
+				z-index: 12;
+			}
+
+			.total-sales-input-wrapper {
+				@include flex();
+				position: relative;
+
+				.percentage {
+					@include position(absolute, 10px, 7px);
+				}
+
+				.total-sales {
+					@include text-overflow-ellipsis();
+					padding: 0 25px 0 9px;
+				}
+			}
+		}
+	}
+}

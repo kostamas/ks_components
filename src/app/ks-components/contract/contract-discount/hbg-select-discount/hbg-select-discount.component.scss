@@ -1,0 +1,24 @@
+@import "~shared-ui-components-lib/style/shared";
+
+.hbg-select-discount-container {
+	.title {
+		@include text-style(18px, $black, null, bold);
+		margin: 0 0 15px;
+	}
+
+	.hb-select-discount-form {
+		.guest-room-container {
+			.hb-table {
+				.season-row {
+					width: 843px;
+				}
+			}
+		}
+	}
+
+	.hb-select-discount-form.close-section {
+		@include dimension(0, 0);
+		overflow: hidden;
+		position: absolute;
+	}
+}

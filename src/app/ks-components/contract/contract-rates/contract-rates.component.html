@@ -1,0 +1,187 @@
+<div class="contract-rates-container page-section"
+		 [ngClass]="{'rates-invalid': validationStatus && !validationStatus.isValid}">
+
+	<div class="" *ngIf="validationStatus && !validationStatus.isValid">
+		<div class="rates-error-wrapper">
+			<div class="rates-title">
+				Rates
+				<app-svg-icon class="cursor-pointer" app-tooltip [tooltipTitle]="ratesTooltip"
+											[svg]="SVG_ICONS.info"></app-svg-icon>
+			</div>
+
+			<div class="section-toast-error" *ngIf="validationStatus && !validationStatus.isValid">
+				<div class="message">
+					<app-svg-icon [svg]="SVG_ICONS.errorTriangle"></app-svg-icon>
+					{{validationStatus.message}}</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="rates-container">
+		<div class="rates-and-room-column">
+			<div class="rates">
+				<div class="rates-title">
+					Rates
+					<app-svg-icon class="cursor-pointer" app-tooltip [tooltipTitle]="ratesTooltip"
+												[svg]="SVG_ICONS.info"></app-svg-icon>
+				</div>
+				<div class="radio-buttons-wrapper">
+					<div class="text">VAT Included:</div>
+					<app-radio-buttons
+						[radioButtons]="vatIncluded" (radioButtonClick)="radioButtonClick($event.checkedButton, 'vatIncluded')">
+					</app-radio-buttons>
+				</div>
+				<div class="radio-buttons-wrapper">
+					<div class="text">Rate Per:</div>
+					<app-radio-buttons
+						[radioButtons]="ratePer" (radioButtonClick)="radioButtonClick($event.checkedButton, 'ratePer')">
+					</app-radio-buttons>
+				</div>
+			</div>
+			<div class="room-and-characteristic-header">
+				Room & Characteristic
+			</div>
+			<app-select-input class="room-and-characteristic" *ngFor="let row of tableRows; let rowIndex = index"
+												[componentInputs]="{ withEmptyOption: contractRatesService.ratesParams[rowIndex].roomAndCharacteristic}"
+												[selectList]="row.roomAndCharacteristic"
+												(onSelectItem)="onSelectRoomAndCharacteristic($event, rowIndex)">
+			</app-select-input>
+			<div class="add-row click-able"
+					 (click)="addRow()"
+					 [ngClass]="[contractRatesService.ratesParams.length >= roomAndCharacteristic.length ? 'disabled' : '']"
+					 title="{{contractRatesService.ratesParams.length >= roomAndCharacteristic.length ? '' : 'Add row'}}">
+				<app-svg-icon [svg]="SVG_ICONS.plus"></app-svg-icon>
+			</div>
+		</div>
+		<div class="contract-rates-scroll-container">
+			<div class="contract-rates-content">
+				<div class="rates-header">
+					<div *ngFor="let tableHeader of tableHeaderColumns; let last = last; let columnIndex = index"
+							 class="season-item take-left"
+							 [ngClass]="[tableHeader.selectedSeasonType === 'W'? 'weekend-and-week-days' : '', (columnIndex+1) === tableHeaderColumns.length ? 'last' : '']">
+						<div class="season">
+							<div class="date">
+								<div class="bin-icon-wrapper">
+									<app-svg-icon
+										(click)="deleteLastHeaderColumn(columnIndex)"
+										*ngIf="columnIndex === tableHeaderColumns.length -1"
+										class="click-able"
+										[svg]="SVG_ICONS.bin" title="Delete season column">
+									</app-svg-icon>
+								</div>
+
+								<div class="calendar-section click-able"
+										 [ngClass]="{'calendar-disabled': columnIndex > lastEditableCalendarIndex}"
+										 (click)="openDateRangePicker($event, columnIndex)">
+									<app-svg-icon [svg]="SVG_ICONS.calendar" class="calendar-icon-wrapper"
+																title="Select season period"></app-svg-icon>
+									<div class="selected-date">
+										<div>{{tableHeaderColumns[columnIndex].seasonRange.from || 'Select Start Date'}}</div>
+										<div>{{tableHeaderColumns[columnIndex].seasonRange.to || 'Select End Date'}}</div>
+									</div>
+
+									<app-multi-date-picker-wrapper
+										[detectChangesManually]="true"
+										[ngStyle]="{left: dateRangePickerPosition.left + 'px', top: dateRangePickerPosition.top + 'px'}"
+										*ngIf="isDateRangePickerOpened[columnIndex]"
+										[format]="'MMM DD, YYYY'"
+										[isSelectToMode]="isSelectToMode[columnIndex]"
+										[ngClass]="calcCalendarPositionClass[columnIndex]"
+										[initialDate]="tableHeaderColumns[columnIndex].seasonRange.from"
+										[disabledRanges]="getDisabledRange(columnIndex)"
+										[selectedRange]="tableHeaderColumns[columnIndex].seasonRange.from && tableHeaderColumns[columnIndex].seasonRange.to ?
+																					 {from: tableHeaderColumns[columnIndex].seasonRange.from, to: tableHeaderColumns[columnIndex].seasonRange.to} : null"
+										(rangeSelected)="onSelectRange($event, columnIndex)">
+									</app-multi-date-picker-wrapper>
+								</div>
+							</div>
+							<div class="all-days">
+								<app-select-input (onSelectItem)="onSelectSeasonType($event, columnIndex)"
+																	[selectList]="seasonTypes[columnIndex]">
+								</app-select-input>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="hb-table">
+					<div class="hb-table-row">
+						<ng-container *ngFor="let header of  tableHeader; let columnIndex = index">
+							<div *ngIf="tableHeaderColumns[columnIndex]?.selectedSeasonType === 'A'"
+									 class="hb-table-header hb-table-column take-left fix-contract-input-focus">
+								{{header}}
+							</div>
+							<div *ngIf="tableHeaderColumns[columnIndex].selectedSeasonType === 'W'"
+									 class="hb-table-header hb-table-column week-season take-left fix-contract-input-focus">
+								{{header}} (WKDY)
+							</div>
+							<div *ngIf="tableHeaderColumns[columnIndex].selectedSeasonType === 'W'"
+									 class="hb-table-header hb-table-column week-season take-left fix-contract-input-focus">
+								{{header}} (WKND)
+							</div>
+						</ng-container>
+					</div>
+
+					<div class="hb-table-row" *ngFor="let row of tableRows; let rowIndex = index">
+						<ng-container *ngFor="let tableHeader of tableHeaderColumns; let columnIndex = index">
+
+							<div class="input-with-value-wrapper take-left fix-contract-input-focus"
+									 *ngIf="tableHeader.selectedSeasonType === 'A'">
+
+								<app-input-with-error
+									[symbol]="currency"
+									[(inputValue)]="contractRatesService.ratesParams[rowIndex].seasons[columnIndex].season"
+									[required]="true"
+									[preventValues]="appCommonService.rangeValueValidator(1,999, true)"
+									[validationStatus$]="row.daysBeforeCheckinStatus$"
+									[preventPaste]="true">
+								</app-input-with-error>
+							</div>
+
+							<div class="input-with-value-wrapper take-left fix-contract-input-focus"
+									 *ngIf="tableHeader.selectedSeasonType === 'W'">
+								<app-input-with-symbol
+									[symbol]="currency"
+									[isFloat]="true"
+									[valueMinRange]="0"
+									[isRequired]="true"
+									[(inputValue)]="contractRatesService.ratesParams[rowIndex].seasons[columnIndex].seasonWKND"
+									symbol="%">
+								</app-input-with-symbol>
+							</div>
+
+							<div class="input-with-value-wrapper take-left fix-contract-input-focus"
+									 *ngIf="tableHeader.selectedSeasonType === 'W'">
+								<app-input-with-symbol
+									[symbol]="currency"
+									[isFloat]="true"
+									[valueMinRange]="0"
+									[isRequired]="true"
+									[(inputValue)]="contractRatesService.ratesParams[rowIndex].seasons[columnIndex].seasonWKDY"
+									symbol="%">
+								</app-input-with-symbol>
+							</div>
+						</ng-container>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="rates-and-room-column-tail">
+			<div class="add-button">
+				<div class="add-column click-able" (click)="addColumn()">
+					<app-svg-icon [svg]="SVG_ICONS.plus" title="Add season column"></app-svg-icon>
+				</div>
+			</div>
+
+			<div class="tail-header">
+			</div>
+			<div class="tail-columns">
+				<div class="tail-column" *ngFor="let row of tableRows; let rowIndex = index">
+					<div class="click-able delete-row" (click)="deleteRow(rowIndex)" title="Delete row">
+						<app-svg-icon [svg]="SVG_ICONS.bin"></app-svg-icon>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

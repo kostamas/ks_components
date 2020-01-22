@@ -1,0 +1,169 @@
+@import "../../../../style/shared";
+
+.select-input {
+	@include flex(space-between, center);
+	@include dimension(100%, auto);
+	min-height: 36px;
+	padding: 0 6px 0 9px;
+	outline: none;
+	border-radius: 3px;
+	font-size: 15px;
+	font-family: 'Roboto', sans-serif !important;
+	box-sizing: border-box;
+	border: 1px solid $color1;
+	background-color: white;
+	box-shadow: inset 0 0 1px 1px $white;
+	position: relative;
+	color: black;
+
+	&.options-opened:not(.with-auto-suggest) {
+		z-index: 15;
+		pointer-events: none;
+	}
+
+	.triangle-error {
+		display: none;
+	}
+
+	&.invalid {
+		background-color: $color42;
+		border: 1px solid red !important;
+
+		.triangle-error {
+			@include dimension(0, 0);
+			@include flex(center);
+			@include position(absolute, 10px, 30px);
+			position: absolute;
+			border-left: 9px solid transparent;
+			border-right: 9px solid transparent;
+			border-bottom: 17px solid $color43;
+			content: '!';
+			color: $white;
+			line-height: 19px;
+			font-size: 13px;
+		}
+	}
+
+	&.with-auto-suggest .select-input-title, &.with-chips .select-input-title {
+		display: none;
+	}
+
+	.select-input-title {
+		@include text-overflow-ellipsis();
+		width: 100%;
+		font-size: 16px;
+		max-width: 100%;
+	}
+
+	.input-with-chips-wrapper {
+		display: none;
+	}
+
+	&.with-auto-suggest .input-with-chips-wrapper, &.with-chips .input-with-chips-wrapper {
+		@include dimension(calc(100% - 20px), 100%);
+		@include flex();
+		flex-wrap: wrap;
+
+		.chips-value {
+			@include text-overflow-ellipsis();
+			@include flex(center, center);
+			background-color: $color36;
+			border: 1px solid $color37;
+			min-width: fit-content;
+			max-width: 400px;
+			border-radius: 10px;
+			padding: 0 10px;
+			height: 22px;
+			margin: 5px 10px 5px 0;
+			position: relative;
+			z-index: 13;
+
+			.remove-chips {
+				color: $color2;
+				margin-left: 7px;
+
+				svg {
+					@include dimension(10px, 10px);
+					margin-left: 6px;
+
+					line {
+						stroke: $color26;
+					}
+				}
+			}
+		}
+
+		.chips-value.without-chips {
+			background-color: transparent;
+			border-radius: 0;
+			padding: 0;
+			border: 0;
+		}
+
+		.input {
+			@include text-overflow-ellipsis();
+			@include dimension(100%, calc(100% - 2px));
+			border: none;
+			font-size: 16px;
+			margin: 5px 0;
+
+			&:focus, &:active {
+				outline: none;
+			}
+		}
+	}
+
+	.arrowDown {
+		margin-right: 4px;
+		margin-top: 4px;
+	}
+
+	.options-wrapper {
+		@include position(absolute, 34px, null, null, -1px, 14);
+		box-shadow: 2px 2px 2px -2px $color2;
+		border: 1px solid $color1;
+		border-radius: 3px;
+		max-height: 350px;
+		overflow-y: auto;
+		width: fit-content;
+		opacity: 0;
+		min-width: 100%;
+		pointer-events: all;
+	}
+}
+
+.modal-container.select-options-modal {
+	background: none;
+	overflow: hidden;
+
+	.modal-overlay {
+		background-color: transparent;
+	}
+
+	.component-wrapper {
+		@include dimension(268px, auto);
+		@include transform(none);
+		box-shadow: 2px 2px 2px -2px $color2;
+		border: 1px solid $color1;
+		border-radius: 3px;
+		display: block;
+		opacity: 0;
+	}
+
+	.modal-close-button {
+		@include position(absolute, 0, 0);
+		width: 30px;
+
+		.button {
+			padding: 10px;
+			float: right;
+		}
+	}
+}
+
+.select-input.is-disabled {
+	background-color: $color39;
+	border-color: $color81;
+	box-shadow: none;
+	pointer-events: none;
+}

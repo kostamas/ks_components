@@ -1,0 +1,45 @@
+@import "../../../../style/shared";
+
+.auto-suggest-result-container {
+  font-size: 16px;
+  font-weight: 400;
+  font-family: 'Roboto', sans-serif;
+  z-index: 20;
+  background-color: $color19;
+  box-sizing: border-box;
+  width: auto;
+  border-radius: 3px;
+  min-width: 100%;
+  position: relative;
+
+  .item-result {
+    min-width: auto;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    padding: 6px 10px;
+
+    .item-value {
+      width: max-content;
+    }
+  }
+
+  .item-result.selected {
+    background-color: $color44;
+  }
+
+  .item-result:hover {
+    background-color: $color44;
+  }
+}
+
+.modal-container.auto-suggest-results {
+  .modal-overlay {
+    background-color: transparent;
+  }
+
+  .component-wrapper {
+    background-color: white;
+    transform: none;
+  }
+}

@@ -1,0 +1,148 @@
+@import "~shared-ui-components-lib/style/shared";
+
+.contract-min-and-security {
+
+	.title {
+		.tooltip {
+			margin-left: 10px;
+		}
+	}
+
+	.contract-min-and-security-form {
+		.hb-table {
+			position: relative;
+			width: fit-content;
+			z-index: 2;
+			margin-bottom: 10px;
+
+			.hb-table-row {
+				.hb-table-column:nth-child(1), .hb-table-column:nth-child(2) {
+					width: 190px;
+				}
+
+				app-select-input:nth-child(1) .select-input, app-select-input:nth-child(2) .select-input {
+					width: 190px;
+				}
+
+				.hb-table-column:nth-child(3) {
+					width: 170px;
+				}
+
+				app-select-input:nth-child(3) .select-input {
+					width: 170px;
+				}
+
+				.hb-table-column:nth-child(4) {
+					width: 94px;
+				}
+
+				.hb-table-column:nth-child(5) {
+					width: 125px;
+				}
+
+				.hb-table-column:nth-child(6) {
+					width: 115px;
+				}
+
+				.hb-table-column:nth-child(7) {
+					width: 40px;
+					border: 1px solid $color1;
+				}
+
+				.numeric-field {
+					&.units input {
+						width: 94px;
+					}
+
+					&.release {
+						@include position(relative, null, null, null, -1px);
+						width: 125px;
+						svg path{
+							fill: $color10;
+						}
+						
+						input:focus {
+							z-index: 2;
+						}
+					}
+
+					&.ceiling {
+						@include position(relative, null, null, null, -2px);
+						width: 115px;
+
+						input:focus {
+							z-index: 2;
+						}
+
+						.numeric-input {
+							padding-right: 45px;
+						}
+					}
+
+					.numeric-input {
+						padding-right: 30px;
+					}
+				}
+
+				.delete-row {
+					@include position(relative, null, null, null, -3px);
+				}
+
+				&.season-row {
+					min-width: 898px;
+					max-width: 1140px;
+					height: 180px;
+
+					.row-connect {
+						margin-top: -65px;
+					}
+
+					.fields-columns {
+						@include dimension(150px, 160px);
+						margin-top: 54px;
+
+						.field {
+							@include flex(start, center);
+							height: 35px;
+							margin-bottom: 10px;
+						}
+					}
+
+					.row {
+						height: 170px;
+						padding-bottom: 0;
+
+						.season-column {
+							padding-top: 10px;
+
+							.season-nights {
+								position: relative;
+								padding-bottom: 10px;
+								padding-right: 10px;
+
+								.nights-input {
+									padding-right: 30px;
+
+									&.ceiling {
+										padding-right: 45px;
+									}
+								}
+
+								.input-value-symbol, .currency {
+									@include position(absolute, 8px, 20px);
+									width: 40px;
+									text-align: right;
+								}
+							}
+						}
+					}
+
+				}
+			}
+
+			.add-row {
+				margin-top: 10px;
+			}
+		}
+	}
+}

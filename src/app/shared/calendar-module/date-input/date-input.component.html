@@ -1,0 +1,55 @@
+<div class="date-input-component"
+		 #dateInputElement
+		 [ngClass]="{invalid: !validationStatus.isValid ? 'invalid': '', 'date-picker-open': isOpen}">
+	<div class="date-input-and-icon" (click)="openDatePicker()">
+		<app-svg-icon [svg]="SVG_ICONS.calendar" class="calendar-icon cursor-pointer"></app-svg-icon>
+
+		<app-svg-icon class="round-close cursor-pointer"
+									*ngIf="!selectedDateArr && (selectedDate || selectedRangeText)"
+									[svg]="SVG_ICONS.round_close"
+									(click)="clearDateInput($event)">
+		</app-svg-icon>
+
+		<input *ngIf="!multiDatePicker"
+					 class="date-input cursor-pointer hb-input"
+					 [ngModel]="selectedDate"
+					 [disabled]="true"
+					 autocomplete="off"/>
+
+		<div *ngIf="multiDatePicker" class="multi-date-picker-text-container" (click)="openDatePicker()">
+			<div class="selected-date" (click)="selectedDateClickHandler($event)"
+					 *ngFor="let selectedDate of selectedDateArr; let index = index">
+				{{selectedDate}}
+				<div class="delete-date click-able" (click)="deleteDate(selectedDate, index)">
+					<svg viewBox="0 0 1 1" version="1.1" xmlns="http://www.w3.org/2000/svg">
+						<line x1="0" y1="1" x2="1" y2="0" stroke-width="0.15"/>
+						<line x1="0" y1="0" x2="1" y2="1" stroke-width="0.15"/>
+					</svg>
+				</div>
+			</div>
+
+			<div class="selected-range" *ngIf="!selectedDateArr">{{selectedRangeText}}</div>
+		</div>
+	</div>
+
+	<div class="calendar-wrapper" #calendarWrapperElement>
+		<app-calendar-date-range-picker
+			*ngIf="isOpen && !multiDatePicker && !openInModal"
+      [detectChangesManually]="detectChangesManually"
+      [allowPastDates]="allowPastDates"
+			[isSingleSelection]="true"
+			[dateFormat]="dateFormat"
+			[date]="selectedDate"
+			(selectedRange)="onSelectDate($event)">
+		</app-calendar-date-range-picker>
+
+		<app-multi-date-picker-wrapper
+			*ngIf="isOpen && multiDatePicker && !openInModal"
+      [detectChangesManually]="detectChangesManually"
+      [allowPastDates]="allowPastDates"
+			[selectedRange]="selectedDate"
+			(rangeSelected)="onSelectRange($event)">
+		</app-multi-date-picker-wrapper>
+	</div>
+
+</div>

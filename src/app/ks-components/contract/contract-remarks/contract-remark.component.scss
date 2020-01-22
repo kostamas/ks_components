@@ -1,0 +1,27 @@
+@import "~shared-ui-components-lib/style/shared";
+
+.contract-remarks {
+	.title {
+		@include text-style(18px, $black, null, bold);
+		margin: 0 0 15px;
+	}
+
+	.text-area-form {
+		.remarks-text-area {
+			@include dimension(800px, 100px);
+			padding: 10px;
+			margin-bottom: 5px;
+			border-color: $color7;
+			border-radius: 5px;
+			resize: none;
+
+			&:focus {
+				outline: none;
+			}
+		}
+
+		.max-characters-text{
+			@include text-style(15px, $black);
+		}
+	}
+}

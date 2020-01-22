@@ -1,0 +1,50 @@
+@import "~shared-ui-components-lib/style/shared";
+
+.signatures-container {
+	position: relative;
+	z-index: 1;
+	.signatures-form {
+		.hb-table {
+			.hb-table-row:first-child {
+				margin-bottom: -5px;
+			}
+			.hb-table-row {
+				.hb-table-column {
+					border: 0;
+
+					.search-field {
+						width: 250px;
+
+						.hb-input {
+							width: 100%;
+							border-radius: 3px;
+						}
+					}
+				}
+
+				.hb-table-column:first-child {
+					width: 200px;
+				}
+
+				.hb-table-column:nth-child(2), .hb-table-column:nth-child(3) {
+					width: 250px;
+				}
+			}
+		}
+
+		.sign-field {
+			@include flex();
+
+			.sign-text {
+				@include text-style(16px, $color10, 'Roboto', 400);
+				padding-top: 3px;
+			}
+		}
+
+		.bottom-lines {
+			@include text-style(14px, $color10, 'Roboto', 400);
+			margin-left: 10px;
+			margin-top: 20px;
+		}
+	}
+}

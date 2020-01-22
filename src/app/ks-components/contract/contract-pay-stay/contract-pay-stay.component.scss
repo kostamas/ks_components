@@ -1,0 +1,59 @@
+@import "~shared-ui-components-lib/style/shared";
+
+.contract-pat-stay-container {
+	.title {
+		@include text-style(18px, $black, null, bold);
+		margin: 0 0 15px;
+	}
+
+	.contract-pay-stay-form {
+		position: relative;
+		z-index: 3;
+
+		.hb-table {
+			margin-bottom: 10px;
+			width: fit-content;
+
+			app-input-with-error {
+				margin-left: -1px;
+			}
+
+			.take-left:first-child {
+				margin-left: 0;
+			}
+
+			.hb-table-row.specific-dates {
+				margin-bottom: 0;
+			}
+
+			.booking-travel-window {
+				width: 485px;
+			}
+
+			.nrf-tooltip {
+				margin-left: 10px;
+				margin-top: 3px;
+			}
+
+			.hb-table-column:nth-child(1), .discount-type {
+				width: 173px;
+			}
+
+			.hb-table-column:nth-child(2), app-input-with-error {
+				width: 92px;
+			}
+
+			.hb-table-column:nth-child(3), app-input-with-error {
+				width: 92px;
+			}
+
+			.hb-table-column:nth-child(4), .nrf {
+				width: 90px;
+			}
+
+			.hb-table-column:nth-child(5) {
+				width: 40px;
+			}
+		}
+	}
+}

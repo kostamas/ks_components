@@ -1,0 +1,68 @@
+@import "~shared-ui-components-lib/style/shared";
+
+.contract-long-stay-discount-container {
+
+	.contract-long-stay-discount-form {
+		.hb-table {
+			margin-bottom: 10px;
+
+			app-input-with-error {
+				margin-left: -1px;
+			}
+
+			app-input-with-symbol  {
+				position: relative;
+
+				input:focus {
+					z-index: 2;
+				}
+			}
+
+			.take-left:first-child {
+				margin-left: 0;
+			}
+
+			.hb-table-row.specific-dates {
+				margin-bottom: 0;
+			}
+
+			.nrf-tooltip {
+				margin-left: 10px;
+				margin-top: 3px;
+			}
+
+			.booking-travel-window {
+				width: 545px
+			}
+
+			.hb-table-column:nth-child(1), .discount-type {
+				width: 200px;
+			}
+
+			.hb-table-column:nth-child(2), app-input-with-error {
+				width: 110px;
+			}
+
+			.hb-table-column:nth-child(3), .discount {
+				padding-right: 30px;
+				width: 110px;
+			}
+
+			.hb-table-column:nth-child(4) {
+				width: 90px;
+			}
+
+			.nrf {
+				width: 91px;
+			}
+
+			.hb-table-column:nth-child(5) {
+				width: 40px;
+			}
+
+			.discount-value-wrapper {
+				width: 110px;
+			}
+		}
+	}
+}

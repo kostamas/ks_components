@@ -1,0 +1,24 @@
+@import "~shared-ui-components-lib/style/shared";
+
+.nrf-discount-container {
+	.title {
+		@include text-style(18px, $black, null, bold);
+		margin: 0 0 15px;
+	}
+
+	.nrf-discount-form {
+		.guest-room-container {
+			.hb-table {
+				.season-row {
+					width: 843px;
+				}
+			}
+		}
+	}
+
+	.nrf-discount-form.close-section {
+		@include dimension(0, 0);
+		overflow: hidden;
+		position: absolute;
+	}
+}

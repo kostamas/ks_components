@@ -1,0 +1,33 @@
+@import "~shared-ui-components-lib/style/shared";
+
+.contract-stop-sale-container {
+	position: relative;
+	z-index: 2;
+
+	.contract-stop-sale-form {
+		.hb-table {
+			margin-bottom: 10px;
+
+			app-date-input .multi-date-picker-text-container {
+				border-radius: 0;
+			}
+
+			.hb-table-column:nth-child(1), app-select-input .select-input {
+				width: 345px;
+			}
+
+			.hb-table-column:nth-child(2), .date-input {
+				width: 345px;
+			}
+
+			.hb-table-column:nth-child(3) {
+				width: 40px;
+			}
+
+			.hb-table-header:not(:nth-child(3)), app-select-input .select-input {
+				border-right: 0;
+			}
+
+		}
+	}
+}

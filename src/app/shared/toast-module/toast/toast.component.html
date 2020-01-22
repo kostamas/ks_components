@@ -1,0 +1,25 @@
+<div class="toast-component-wrapper">
+	<div class="toast-component click-able" (click)="closeToast()" [ngStyle]="config && config.style"
+			 [ngClass]="[config.type, config.direction || 'bottom-right']">
+		<div class="left-section">
+			<div class="symbol">
+				<app-svg-icon *ngIf="config.type === 'success'" [svg]="SVG_ICONS.checkMark"></app-svg-icon>
+
+				<div class="triangle-error" *ngIf="config.type === 'warning'">!</div>
+
+				<div class="error-symbol-wrapper" *ngIf="config.type === 'error'">
+					<div class="arrow-down"></div>
+					<div class="exclamation-mark">!</div>
+				</div>
+			</div>
+
+			<div class="toast-message">{{config.message}}</div>
+		</div>
+
+		<div class="right-section">
+			<div class="cancel-icon-wrapper">
+				<app-svg-icon [svg]="SVG_ICONS.close_toast"></app-svg-icon>
+			</div>
+		</div>
+	</div>
+</div>

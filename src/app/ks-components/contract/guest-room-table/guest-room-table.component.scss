@@ -1,0 +1,85 @@
+@import "~shared-ui-components-lib/style/shared";
+
+.guest-room-container {
+	.hb-table {
+		margin-bottom: 10px;
+		z-index: 3;
+
+		.select-input {
+			border-right: 0;
+		}
+
+		&.with-dinner-options {
+			.hb-table-column:nth-child(1), .dinner {
+				width: 175px;
+			}
+
+			.hb-table-column:nth-child(2), .guest {
+				width: 130px;
+			}
+
+			.hb-table-column:nth-child(3), .room-and-characteristic {
+				width: 185px;
+			}
+
+			.hb-table-column:nth-child(4), .application-rule {
+				width: 200px;
+			}
+
+			.hb-table-column:nth-child(5), .type {
+				width: 155px;
+			}
+
+			.hb-table-column:nth-child(6), .value {
+				width: 155px;
+			}
+
+			.hb-table-column:nth-child(7) {
+				width: 40px;
+			}
+
+			.hb-table-column:not(:nth-child(7)) {
+				border-right: 0;
+			}
+		}
+
+		&:not(.with-dinner-options) {
+			.hb-table-column:nth-child(1), .guest {
+				width: 130px;
+			}
+
+			.hb-table-column:nth-child(2), .room-and-characteristic {
+				width: 185px;
+			}
+
+			.hb-table-column:nth-child(3), .application-rule {
+				width: 200px;
+			}
+
+			.hb-table-column:nth-child(4), .type {
+				width: 155px;
+			}
+
+			.hb-table-column:nth-child(5), .value {
+				width: 155px;
+			}
+
+			.hb-table-column:nth-child(6) {
+				width: 40px;
+			}
+
+			.hb-table-column:not(:nth-child(6)) {
+				border-right: 0;
+			}
+		}
+
+		.value {
+			@include text-overflow-ellipsis();
+			padding-right: 45px;
+		}
+
+		.input-with-symbol-column-wrapper {
+			width: 155px;
+		}
+	}
+}

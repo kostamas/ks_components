@@ -1,0 +1,52 @@
+@import "~shared-ui-components-lib/style/shared";
+
+.contract-combinations-container {
+	.title {
+		@include text-style(18px, $black, null, bold);
+		margin: 0 0 15px;
+	}
+
+	.contract-combinations-form {
+		.hb-table {
+			margin-bottom: 10px;
+
+			.select-input .option-text label {
+				@include text-style(16px, black);
+			}
+
+			.total-discount {
+				width: 130px;
+				background-color: $color28;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				padding-top: 7px;
+				padding-right: 16px;
+			}
+
+			.hb-table-column:not(:nth-child(5)), .select-input {
+				border-right: 0;
+			}
+
+			.hb-table-column:nth-child(1), .offer-type {
+				width: 165px;
+			}
+
+			.hb-table-column:nth-child(2), .combination-with-offer {
+				width: 185px;
+			}
+
+			.hb-table-column:nth-child(3), .allotment {
+				width: 107px;
+			}
+
+			.hb-table-column:nth-child(4), .total-discount {
+				width: 130px;
+			}
+
+			.hb-table-column:nth-child(5) {
+				width: 40px;
+			}
+		}
+	}
+}

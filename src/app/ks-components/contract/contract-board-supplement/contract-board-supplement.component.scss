@@ -1,0 +1,83 @@
+@import "~shared-ui-components-lib/style/shared";
+
+.contract-board-supplement-container {
+	.title {
+		@include text-style(18px, $black, null, bold);
+		margin: 0 0 15px;
+		.lite {
+			@include text-style(18px, $black, null, 500);
+		}
+	}
+
+	.board-supplement-form {
+		.hb-table {
+			margin-bottom: 10px;
+
+			.select-input {
+				border-right: 0;
+			}
+
+			.hb-table-column:not(:nth-child(6)):not(:nth-child(5)), .hb-table-header:not(:nth-child(6)) {
+				border-right: 0;
+			}
+
+			.hb-table-row.season-row {
+				min-width: 888px;
+				max-width: 888px;
+			}
+
+			.hb-table-column:nth-child(1), .breakfast {
+				width: 215px;
+			}
+
+			.hb-table-column:nth-child(2), .guest {
+				width: 130px;
+			}
+
+			.hb-table-column:nth-child(3), .room-and-characteristic {
+				width: 185px;
+			}
+
+			.hb-table-column:nth-child(4), .contract-type {
+				width: 160px;
+			}
+
+			.hb-table-column:nth-child(5), .price, .disabled-price {
+				width: 180px;
+			}
+
+			.hb-table-column:nth-child(6) {
+				width: 40px;
+			}
+
+			.price-wrapper {
+				width: 180px;
+			}
+
+			.disabled-price {
+				background: repeating-linear-gradient(-45deg, white, $color86 0px, white 2px, $color86 3px);
+				height: 36px;
+				border: 1px solid $color1;
+				box-sizing: border-box;
+			}
+
+			.season-column {
+				margin-right: 5px;
+				width: 100px;
+
+				&.expended {
+					width: 120px;
+				}
+
+				.season-title {
+					white-space: nowrap;
+					font-size: 14px;
+				}
+
+				.season-nights {
+					@include flex();
+				}
+			}
+		}
+	}
+}

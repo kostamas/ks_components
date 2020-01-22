@@ -1,0 +1,59 @@
+@import "~shared-ui-components-lib/style/shared";
+
+.room-availability {
+	.room-availability-title {
+		@include text-style(18px, $black, null, 700);
+		margin: 0 0 15px;
+	}
+
+	.hb-table {
+		margin-bottom: 10px;
+
+		.hb-table-header:not(:first-child) {
+			margin-left: -1px;
+		}
+
+		.hb-table-column:nth-child(1), .room-description {
+			width: 170px;
+		}
+
+		.hb-table-column:nth-child(2), .room-row {
+			width: 90px;
+		}
+
+		.hb-table-column:nth-child(3), .characteristic-row {
+			width: 120px;
+		}
+
+		.hb-table-column:nth-child(4), .sharing-availability-row {
+			width: 159px;
+		}
+
+		.hb-table-column:nth-child(5), .standard-capacity {
+			width: 150px;
+		}
+
+		.hb-table-column:nth-child(6), .min-capacity {
+			width: 115px;
+		}
+
+		.hb-table-column:nth-child(7), .max-adults {
+			width: 100px;
+		}
+
+		.hb-table-column:nth-child(8), .max-child {
+			width: 90px;
+		}
+
+		.hb-table-column:nth-child(9), .max-capacity {
+			width: 116px
+		}
+		.hb-table-column:nth-child(10), .max-babies {
+			width: 116px;
+		}
+
+		.hb-table-column:nth-child(11) {
+			width: 40px;
+		}
+	}
+}

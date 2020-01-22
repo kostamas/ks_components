@@ -1,0 +1,78 @@
+<div class="contract-early-booking-discount-container page-section">
+	<div class="title">
+		<div class="display-hide-icon click-able" (click)="displayForm = !displayForm;"
+				 [ngClass]="[displayForm ? 'hide' : 'collapse']">
+			<app-svg-icon [svg]="SVG_ICONS.down_arrow_collapse"></app-svg-icon>
+		</div>
+		Early Booking Discount
+	</div>
+
+	<div class="contract-early-booking-discount-form" *ngIf="displayForm">
+		<div class="hb-table">
+			<div class="hb-table-row">
+				<div class="hb-table-header hb-table-column take-left" *ngFor="let header of  tableHeader">
+					{{header}}
+					<app-svg-icon *ngIf="header === 'NRF'"
+												class="cursor-pointer nrf-tooltip"
+												app-tooltip
+												[tooltipTitle]="'Non Refundable'"
+												[svg]="SVG_ICONS.info"></app-svg-icon>
+				</div>
+			</div>
+
+			<div class="row-wrapper" *ngFor="let row of tableRows; let index = index">
+				<div class="hb-table-row" [ngClass]="{'specific-dates':contractEarlyBookingService.earlyBookingDiscountParams[index].type === 'SD'}">
+					<app-select-input class="discount-type take-left"
+														(onSelectItem)="onSelectItem($event, index, 'type')"
+														[selectList]="row.periodTypeOptions">
+					</app-select-input>
+
+					<app-input-with-error [(inputValue)]="contractEarlyBookingService.earlyBookingDiscountParams[index].daysBeforeCheckIn"
+																[cssClasses]="['fix-contract-input-focus']"
+																[required]="true"
+																[preventValues]="appCommonService.rangeValueValidator(0, null, false)">
+					</app-input-with-error>
+
+					<app-select-input class="min-stay take-left"
+														[selectList]="row.minStayOptionsOptions"
+														(onSelectItem)="onSelectItem($event, index, 'minStay')">
+					</app-select-input>
+
+					<div class="discount-value-wrapper take-left app-input-with-symbol">
+						<app-input-with-symbol
+							[symbol]="'%'"
+							[isFloat]="true"
+							[valueMinRange]="0"
+							[valueMaxRange]="100"
+							(inputValueChange)="discountTypeHandler('earlyBookingDiscount')"
+							[(inputValue)]="contractEarlyBookingService.earlyBookingDiscountParams[index].discount">
+						</app-input-with-symbol>
+					</div>
+					<app-select-input class="nrf take-left"
+														(onSelectItem)="onSelectItem($event, index, 'nrf')"
+														[selectList]="row.nrfOptions">
+					</app-select-input>
+
+					<div class="hb-table-column click-able delete-row" (click)="deleteRow(index)">
+						<app-svg-icon class="bin-icon" [svg]="SVG_ICONS.bin" title="Delete row"></app-svg-icon>
+					</div>
+				</div>
+
+				<app-booking-travel-dates
+					*ngIf="contractEarlyBookingService.earlyBookingDiscountParams[index].type === 'SD'"
+					[bookingDate]="contractEarlyBookingService.earlyBookingDiscountParams[index].bookingWindow"
+					[travelDate]="contractEarlyBookingService.earlyBookingDiscountParams[index].travelWindow"
+					(bookingDateSelected)="commonOneContractService.onSelectBookingOrTravelDate($event, index, contractEarlyBookingService.earlyBookingDiscountParams, 'bookingWindow')"
+					(travelDateSelected)="commonOneContractService.onSelectBookingOrTravelDate($event, index, contractEarlyBookingService.earlyBookingDiscountParams, 'travelWindow')">
+				</app-booking-travel-dates>
+			</div>
+		</div>
+
+		<div class="add-row click-able"
+				 [ngClass]="[isAddRowDisabled()? 'disabled' : '']"
+				 (click)="addRow()"
+				 title="Add row">
+			<app-svg-icon [svg]="SVG_ICONS.plus"></app-svg-icon>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,332 @@
+@import "~shared-ui-components-lib/style/shared";
+
+.contract-rates-container {
+	position: relative;
+	z-index: 4;
+
+	.rates-title {
+		@include text-style(18px, $black, null, bold);
+		@include flex();
+		margin-bottom: 8px;
+
+		app-svg-icon {
+			margin-left: 10px;
+		}
+	}
+
+	.take-left:first-child {
+		margin-left: 0;
+	}
+
+	.rates-container {
+		display: inline-flex;
+		min-height: 230px;
+
+		.rates-and-room-column {
+
+			.rates {
+				width: 260px;
+				padding-top: 50px;
+				flex-shrink: 0;
+
+				.radio-buttons-wrapper {
+					@include flex();
+
+					&:last-child {
+						margin-top: 8px;
+					}
+
+					.text {
+						width: 105px;
+					}
+
+					.radio-buttons {
+						.radio-button-repeater {
+							margin-right: 10px;
+
+							.label {
+								margin-left: 0;
+
+								&:before {
+									@include dimension(14px, 14px);
+									top: 1px;
+								}
+
+								&:after {
+									top: 5px;
+									left: 4px;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			.room-and-characteristic-header {
+				@include dimension(260px, 36px);
+				@include flex(start, center);
+				@include position(relative, null, -1px);
+				border: 1px solid #c3c9d8;
+				box-sizing: border-box;
+				padding-left: 10px;
+				font-size: 16px;
+				margin-top: 8px;
+				background: linear-gradient(to bottom, #ecf0f1 32%, #e0eaec 67%);
+				font-weight: bold;
+			}
+
+			.room-and-characteristic {
+				@include position(relative, null, -1px);
+				width: 260px;
+			}
+
+			app-select-input .select-input {
+				margin-top: 8px;
+				box-shadow: none;
+			}
+
+			.add-row {
+				margin-top: 10px;
+			}
+		}
+
+		.rates-and-room-column-tail {
+			.add-button {
+				padding-top: 102px;
+				padding-left: 5px;
+			}
+
+			.tail-header {
+				@include dimension(40px, 36px);
+				@include flex(center, center);
+				border-right: 1px solid $color1;
+				border-top: 1px solid $color1;
+				border-bottom: 1px solid $color1;
+				background: linear-gradient(to bottom, #ecf0f1 32%, #e0eaec 67%);
+				box-sizing: border-box;
+				padding-left: 10px;
+				font-size: 16px;
+				margin-top: 8px;
+			}
+
+			.tail-columns {
+				width: 40px;
+
+				.tail-column {
+					display: inline-flex;
+					margin-top: 8px;
+
+					.delete-row {
+						@include flex(center, center);
+						@include dimension(40px, 36px);
+						@include position(relative, null, 1px);
+						border: 1px solid $color1;
+						box-sizing: border-box;
+					}
+				}
+			}
+		}
+	}
+
+	.contract-rates-scroll-container {
+		max-width: 956px;
+		overflow-x: auto;
+
+		.contract-rates-content {
+			width: auto;
+
+			.hb-input {
+				height: 36px;
+			}
+
+			app-svg-icon.bin-icon {
+				width: 30px;
+
+				.bin rect {
+					fill: $color46;
+				}
+			}
+
+			.rates-header {
+				@include flex();
+
+				.season-item {
+					height: 137px;
+
+					&.last {
+						.season {
+							width: 180px;
+
+							.date {
+								border: 1px solid $color27;
+							}
+
+							.all-days {
+								app-select-input .select-input {
+									border-right: 1px solid $color1;
+								}
+							}
+						}
+					}
+
+					&.weekend-and-week-days .season {
+						width: 359px;
+						flex-shrink: 0;
+					}
+
+					.season {
+						@include dimension(180px, 135px);
+
+						.all-days {
+							app-select-input .select-input {
+								border-radius: 0;
+								border-bottom: 0;
+								border-top: 0;
+							}
+						}
+
+						.date {
+							padding: 10px 10px 15px 10px;
+							background-color: $color87;
+							border: 1px solid $color27;
+							box-sizing: border-box;
+							border-right: 0;
+							height: 101px;
+
+							.bin-icon-wrapper {
+								@include flex();
+								flex-direction: row-reverse;
+								height: 24px;
+
+								app-svg-icon .bin rect {
+									fill: $color46;
+								}
+							}
+
+							.calendar-section {
+								@include flex(null, center);
+								margin-top: 2px;
+								height: 35px;
+
+								&.calendar-disabled {
+									pointer-events: none;
+
+									.selected-date {
+										opacity: 0.8;
+									}
+
+									app-svg-icon.calendar-icon-wrapper {
+										background-color: #d3d3d3;
+										border: #c8c6c7 1px solid;
+										border-radius: 3px;
+
+										.calendar {
+											svg g rect, path {
+												fill: #9f9b9c;
+											}
+										}
+									}
+								}
+
+								.selected-date {
+									margin-left: 5px;
+								}
+
+								app-svg-icon.calendar-icon-wrapper {
+									@include dimension(29px, 35px);
+									@include flex(center, center);
+									background-color: $color20;
+									box-sizing: border-box;
+									border-radius: 3px;
+									padding-top: 2px;
+
+									.calendar rect, .calendar path {
+										fill: $white;
+									}
+								}
+
+								app-svg-icon .plus {
+									width: 30px;
+								}
+							}
+
+							app-multi-date-picker-wrapper {
+								@include position(absolute, null, null, null, null, 5);
+							}
+						}
+
+						.all-days {
+							background-color: $color87;
+
+							.select-input {
+								background-color: $color87;
+							}
+						}
+					}
+				}
+			}
+
+			.hb-table {
+				.hb-table-row, .hb-table-header, .hb-table-column:nth-child(1), .room-and-characteristic, .graph, .delete-row {
+					flex-shrink: 0;
+				}
+
+				.input-with-value-wrapper app-input-with-error .input-with-error-component .input-with-error, .input-with-symbol {
+					width: 180px;
+					position: relative;
+
+					&:focus {
+						z-index: 2;
+					}
+				}
+
+				.take-left:not(:first-child) {
+					margin-left: -1px;
+				}
+
+				.hb-table-column, .season-input {
+					width: 180px;
+
+					&.season-input:nth-last-child {
+						border-right: 1px solid $color1;
+					}
+
+					&.week-season {
+						width: 180px;
+					}
+				}
+
+				.hb-table-column:last-child {
+					border-right: 1px solid $color1;
+				}
+
+				.delete-row {
+					border: 1px solid $color1;
+				}
+
+				.delete-row {
+					app-svg-icon .bin rect {
+						fill: $color46;
+					}
+				}
+			}
+		}
+	}
+}
+
+.contract-rates-container.rates-invalid {
+
+	.section-toast-error {
+		margin-top: 0;
+		margin-bottom: 25px;
+	}
+
+	.rates-container .rates {
+		margin-bottom: 91px;
+		padding-top: 0;
+
+		.rates-title {
+			display: none;
+		}
+	}
+}

@@ -12,14 +12,14 @@ export interface IDaysWrapperPosition {
 
 export interface ICalendarDay {
   classToAdd?: string;
-  isDisabled?: boolean;
-  isSelected: boolean;
-  firstDay?: boolean;
-  dayNumber: number;
-  lastDay?: boolean;
-  isEmpty: boolean;
-  today: boolean;
-  past: boolean;
+	isDisabled?: boolean;
+	isSelected: boolean;
+	firstDay?: boolean;
+	dayNumber: number;
+	lastDay?: boolean;
+	isEmpty: boolean;
+	today: boolean;
+	past: boolean;
 }
 
 export interface ICalendarClickPosition {
@@ -29,6 +29,6 @@ export interface ICalendarClickPosition {
 }
 
 export interface IFromTo {
-  from: string;
-  to: string;
+	from: string;
+	to: string;
 }

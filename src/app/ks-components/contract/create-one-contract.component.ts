@@ -1,0 +1,305 @@
+import {AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {combineLatest, Observable, Subject} from 'rxjs';
+import {AuditService, ISvgIcons, JsUtils, ModalService, PopupService, SVG_ICONS} from 'shared-ui-components-lib';
+import {CreateOneContractService} from './create-one-contract.service';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import * as moment from 'moment';
+import {CreateOneContractStoreService} from './create-one-contract-store.service';
+import {AllOneContractService} from './all-one-contract.service';
+import {ROUTES_NAMES} from '../../../core/routes-names';
+import {finalize, take, tap} from 'rxjs/operators';
+import {ApiService} from '../../../services/api.service';
+import {HttpClient} from '@angular/common/http';
+import {IModal, IPopupData} from 'shared-ui-components-lib/types/modal';
+import {ContractPublishModalComponent} from './contract-publish-modal/contract-publish-modal.component';
+import {OneContractService} from '../one-contract-service';
+
+@Component({
+	selector: 'app-one-contract',
+	templateUrl: './create-one-contract.component.html',
+	styleUrls: ['./create-one-contract.component.scss', '../one-contract-shared.component.scss'],
+	encapsulation: ViewEncapsulation.None
+})
+export class CreateOneContractComponent implements OnInit, AfterViewInit, OnDestroy {
+	public subscriptionsArray: any[] = [];
+	public leftWrapperHasScroll: boolean = false;
+	public SVG_ICONS: ISvgIcons = SVG_ICONS;
+	public contractHotelNameText: string;
+	public scrollDistance: number = 0;
+	public auditName: string = '';
+	public modificationDate: string = '';
+	public hotelName: string = '';
+	public oneContractId: string;
+	public selectedOption: any;
+	public auditDetails: any;
+	public currentUrl: string;
+	public publishModal: IModal;
+	public selectedSectionIndex: number = 0;
+	public sectionsToValidateWhenFocusedOut: number[] = [5];
+	public sectionsDomElements: HTMLElement[];
+	public skipScrollHandling: boolean = false;
+	public isPublishDisabled: boolean = false;
+	public isViewMode: boolean;
+	public isSaved: boolean;
+
+	public contractSections: any[] = [
+		{name: 'Hotel Information', isSelected: true}, {name: 'Contract Details', isSelected: false},
+		{name: 'Loading Information', isSelected: false}, {name: 'Rooms List', isSelected: ''},
+		{name: 'Rates', isSelected: ''}, {name: 'Allotment', isSelected: ''},
+		{name: 'Cancellation Policy', isSelected: ''}, {name: 'Min Stay', isSelected: ''},
+		{name: 'Discount', isSelected: ''}, {name: 'Board Supplements', isSelected: ''},
+		{name: 'Occupancy Supplements', isSelected: ''}, {name: 'Other Supplements', isSelected: ''},
+		{name: 'NRF Discount', isSelected: ''}, {name: 'Opaque Discount', isSelected: ''},
+		{name: 'HBG Select Discount', isSelected: ''}, {name: 'Early  Booking Discount', isSelected: ''},
+		{name: 'Long Stay Discount', isSelected: ''}, {name: 'Free Nights', isSelected: ''},
+		{name: 'Combinable', isSelected: ''}, {name: 'Stop Sale', isSelected: ''}, {name: 'Remarks', isSelected: ''},
+		{name: 'Overrides', isSelected: ''}, {name: 'Signature', isSelected: ''},
+	];
+
+	@ViewChild('oneContractContent') contractContent: ElementRef;
+	@ViewChild('oneContractLeft') oneContractLeftWrapper: ElementRef;
+	@ViewChild('saveButton') saveButton: ElementRef;
+
+	constructor(public createOneContractService: CreateOneContractService,
+							private auditService: AuditService, private activatedRoute: ActivatedRoute,
+							private allOneContractService: AllOneContractService, private oneContractService: OneContractService,
+							private modalService: ModalService, private popupService: PopupService,
+							private apiService: ApiService, private httpClient: HttpClient,
+							private router: Router, public  createOneContractStoreService: CreateOneContractStoreService) {
+	}
+
+	ngOnInit(): void {
+		this.createOneContractService.oneContractId = null;
+		this.createOneContractStoreService.oneContract$.next(null);
+		this.createOneContractStoreService.isOneContractViewMode$.next(false);
+		this.scrollDistance = this.contractContent.nativeElement.getClientRects()[0].top + 50;
+		this.selectedOption = this.contractSections.filter(n => n.isSelected)[0];
+		this.createOneContractService.allOneContractService.allServices.forEach((s, ind) => {
+			this.subscriptionsArray.push(s.validation.subscribe(v => this.contractSections[ind].isInvalid = v && !v.isValid));
+		});
+		this.subscriptionsArray.push(this.createOneContractStoreService.contractHotelName$.subscribe(hotel => this.contractHotelNameText = hotel));
+		this.activatedRoute.params.subscribe(this.routeHandler);
+		this.subscriptionsArray.push(this.createOneContractStoreService.oneContract$.subscribe(this.oneContractHandler));
+		this.subscriptionsArray.push(this.createOneContractStoreService.isOneContractViewMode$.subscribe(isViewMode => {
+			this.isViewMode = isViewMode;
+			if (isViewMode) {
+				document.addEventListener('keydown', this.disableKeyDownEvent, true);
+			} else {
+				document.removeEventListener('keydown', this.disableKeyDownEvent, true);
+			}
+		}));
+		this.router.events.subscribe((event: any) => {
+			if (event instanceof NavigationEnd) {
+				const nextUrl = event.urlAfterRedirects || event.url;
+				if (nextUrl === `/${ROUTES_NAMES.oneContract}` && nextUrl !== this.currentUrl) {
+					this.createOneContractService.oneContractId = null;
+					this.createOneContractStoreService.oneContract$.next(null);
+					this.createOneContractStoreService.isOneContractViewMode$.next(false);
+				}
+				this.currentUrl = nextUrl;
+			}
+		});
+		try {
+			//this.auditService.report(4042442); // Will be operational once we have the menu id for OneContact
+		} catch (e) {
+		}
+
+		setTimeout(this.setEmptyOneContract);
+	}
+
+	private setEmptyOneContract = () => {
+		this.createOneContractStoreService.contractSeasons$.pipe(take(1)).subscribe(seasons => {
+			const oneContract = this.allOneContractService.buildOneContract();
+			this.createOneContractService.addSeasonAndTravelWindowToOneContract(oneContract, seasons);
+			this.oneContractService.emptyOneContract = JsUtils.deepCopy(oneContract);
+		});
+	}
+
+	disableKeyDownEvent(e: any): void {
+		e.stopPropagation();
+		e.preventDefault();
+	}
+
+	ngAfterViewInit(): void {
+		this.resizeHandler();
+	}
+
+	routeHandler = (params: any) => {
+
+		this.createOneContractService.getOneContract(params['oneContractId']);
+		if (this.createOneContractService.oneContractId && String(this.createOneContractService.oneContractId) !== params['oneContractId']) {
+			this.allOneContractService.allServices.forEach(srv => {
+				srv.validation.next({isValid: true, message: ''});
+			});
+		}
+
+		if (!params['oneContractId']) { // navigate to new contract
+			this.createOneContractService.oneContractId = null;
+		}
+	};
+
+	save(): Observable<boolean> {
+		const saveDone$: Subject<boolean> = new Subject<boolean>();
+		setTimeout(() => saveDone$.next(true));
+		return saveDone$;
+	}
+
+	updateAuditDetails = (oneContract: any) => {
+		if (oneContract && oneContract.audit) {
+			this.auditDetails = {};
+			this.auditDetails.modificationDate = oneContract.audit.updateDate || oneContract.audit.creationDate || '';
+			this.auditDetails.auditName = oneContract.audit.updateUser || oneContract.audit.creationUser || '';
+			if (this.auditDetails.modificationDate) {
+				const utcDate = moment.utc(this.auditDetails.modificationDate, 'YYYY-MM-DD[T]HH:mm:ss');
+				this.auditDetails.modificationDate = moment(utcDate.toDate()).format('DD/MM/YYYY HH:mm:ss');
+			}
+		}
+		this.calcSaveButtonPosition();
+	};
+
+	@HostListener('window:scroll', ['$event'])
+	scrollHandler($event: any): void {
+		if (this.skipScrollHandling) {
+			return;
+		}
+
+		if (!this.sectionsDomElements) {
+			this.sectionsDomElements = this.contractContent.nativeElement.querySelectorAll('.page-section');
+		}
+
+		let nextSelectedSectionIndex = -1;
+		this.sectionsDomElements.forEach((c, index) => {
+			const elmTRects: any = c.getClientRects()[0];
+			if (elmTRects.top <= this.scrollDistance) {
+				nextSelectedSectionIndex = index;
+			}
+		});
+		if (nextSelectedSectionIndex > -1) {
+			this.updateSelectedSection(nextSelectedSectionIndex);
+			this.calcSaveButtonPosition();
+		}
+	}
+
+	updateSelectedSection(index: number): void {
+		this.selectedOption.isSelected = false;
+		this.selectedOption = this.contractSections[index];
+		this.selectedOption.isSelected = true;
+
+		if (this.selectedSectionIndex !== index && this.sectionsToValidateWhenFocusedOut.indexOf(this.selectedSectionIndex) > -1) {
+			this.allOneContractService.focusedOutSection(this.selectedSectionIndex);
+		}
+		this.selectedSectionIndex = index;
+	}
+
+	calcSaveButtonPosition(): void {
+		const viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+		if (viewportWidth <= 1540) {
+			let calcedTop: number = this.contractContent.nativeElement.getClientRects()[0].y - this.contractContent.nativeElement.offsetTop;
+			if (calcedTop < 0) {
+				calcedTop = calcedTop * -1;
+			}
+			calcedTop += 20;
+			this.saveButton.nativeElement.style.top = calcedTop + 'px';
+		} else {
+			this.saveButton.nativeElement.style.top = (this.auditDetails ? 147 : 136) + 'px';
+		}
+	}
+
+	@HostListener('window:resize', ['$event'])
+	resizeHandler(): void {
+		const elementsHeight: number = document.getElementsByClassName('contract-section-item')[0].getClientRects()[0].height * this.contractSections.length;
+		const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+		setTimeout(() => {
+			this.leftWrapperHasScroll = elementsHeight > (viewportHeight * 0.8);
+			this.calcSaveButtonPosition();
+		}, 0);
+
+	}
+
+	scrollToSection(ind: number): void {
+		if (!this.sectionsDomElements) {
+			this.sectionsDomElements = this.contractContent.nativeElement.querySelectorAll('.page-section');
+		}
+
+		const selectedElement: any = this.sectionsDomElements[ind];
+
+		if (JsUtils.isDefined(selectedElement)) {
+			this.skipScrollHandling = true;
+			const calculatedScroll: number = this.sectionsDomElements[ind].offsetTop - 13.5;
+			this.contractContent.nativeElement.parentElement.parentElement.scrollTo(0, calculatedScroll);
+			this.updateSelectedSection(ind);
+			setTimeout(() => this.skipScrollHandling = false);
+		}
+	}
+
+	saveOneContract = () => {
+		this.isSaved = true;
+		return <any>this.createOneContractService.saveOneContract(this.updateAuditDetails);
+	};
+
+	publishDisabledHandler = () => {
+
+	};
+
+	public isPublishButtonDisable(): boolean {
+		return this.isPublishDisabled;
+	}
+
+	publishCommand = (): Observable<any> => {
+		const publishDone$ = new Subject();
+
+		combineLatest(this.createOneContractStoreService.oneContract$.pipe(take(1)), this.createOneContractStoreService.contractSeasons$.pipe(take(1)))
+			.subscribe(([oneContract, seasons]) => {
+				oneContract = oneContract ? oneContract : this.oneContractService.emptyOneContract;
+				if (this.oneContractService.compareBetweenCurrentAndLastContracts(oneContract, seasons)) {
+					this.isPublishDisabled = true;
+					this.publishModal = <IModal>{};
+					this.apiService.getEndpoints(e => this.httpClient.post(e.sourcing + `/${oneContract.id}/publish`, null)
+						.pipe(finalize(() => publishDone$.next(true)))
+						.subscribe(r => {
+							this.publishModal.closeModalCallback = () => {
+								this.createOneContractService.getOneContract(oneContract.id.toString());
+								document.getElementsByClassName('one-contract-wrapper')[0].scrollTop = 0;
+							};
+							this.modalService.open(ContractPublishModalComponent, this.publishModal, {
+								contract: oneContract,
+								publishResponse: r
+							}, null, null);
+						}, (error) => {
+							this.modalService.open(ContractPublishModalComponent, this.publishModal, {error: error}, null, null);
+						}, () => {
+							publishDone$.next(true);
+						}));
+				} else {
+					const popupData: IPopupData = {
+						title: 'Unsaved Changes',
+						content: 'Please save the changes before publishing'
+					}
+					this.popupService.showInformation(popupData);
+					setTimeout(() => publishDone$.next(true));
+				}
+			});
+
+		return publishDone$.pipe(
+			tap(() => this.isPublishDisabled = false));
+	};
+
+
+	private oneContractHandler = (oneContract: any) => {
+		this.updateAuditDetails(oneContract);
+		if (oneContract && oneContract.publishedDate) {
+			this.createOneContractStoreService.isOneContractViewMode$.next(true);
+		} else {
+			this.createOneContractStoreService.isOneContractViewMode$.next(false);
+		}
+	};
+
+
+	ngOnDestroy(): void {
+		this.subscriptionsArray.forEach((subscription: any) => subscription.unsubscribe());
+		this.createOneContractService.oneContractId = null;
+		this.createOneContractStoreService.oneContract$.next(null);
+		this.createOneContractStoreService.isOneContractViewMode$.next(false);
+		document.removeEventListener('keydown', this.disableKeyDownEvent, true);
+	}
+}

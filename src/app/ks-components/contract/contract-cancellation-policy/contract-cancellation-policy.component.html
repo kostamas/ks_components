@@ -1,0 +1,74 @@
+<div class="contract-cancellation-policy-container page-section">
+	<div class="contract-cancellation-policy-title">Cancellation Policy
+	</div>
+	<div class="section-toast-error" *ngIf="validationStatus && !validationStatus.isValid">
+		<div class="message">
+			<app-svg-icon [svg]="SVG_ICONS.errorTriangle"></app-svg-icon>
+			{{validationStatus.message}}</div>
+	</div>
+	<div class="radio-buttons-wrapper">
+		<div class="text">Non-Refundable Contract</div>
+		<app-radio-buttons
+			[radioButtons]="nonRefundableRadioOptions" (radioButtonClick)="radioButtonClick($event.checkedButton, true)">
+		</app-radio-buttons>
+	</div>
+	<ng-container *ngIf="!contractCancellationPolicyService.contractCancellationPolicyPrams.isNRF">
+		<div class="hb-table">
+			<div class="hb-table-row">
+				<div class="hb-table-header hb-table-column take-left" *ngFor="let header of  tableHeader;"> {{header}}</div>
+			</div>
+
+			<div class="hb-table-row"
+			     *ngFor="let row of contractCancellationPolicyService.contractCancellationPolicyPrams.tableRows; let index = index">
+				<app-select-input class="type"
+				                  (onSelectItem)="onSelectItem($event, index, 'type')"
+				                  [selectList]="row.typeOptions">
+				</app-select-input>
+				<div class="days-before-check-in-field">
+					<app-input-with-error [(inputValue)]="row.days"
+																[cssClasses]="['take-left', 'fix-contract-input-focus']"
+																[required]="true"
+					                      [preventValues]="appCommonService.rangeValueValidator(1,999)"
+					                      [isDisabled]="row.type === 'NS'"
+					                      [validationStatus$]="row.daysBeforeCheckinStatus$"
+					                      [preventPaste]="true">
+					</app-input-with-error>
+				</div>
+				<app-select-input class="staying-type take-left"
+				                  [componentInputs]="{ withEmptyOption: row.penalty}"
+				                  (onSelectItem)="onSelectItem($event, index, 'penalty')"
+				                  [selectList]="row.stayingTypes">
+				</app-select-input>
+				<app-select-input class="rule take-left"
+				                  [componentInputs]="{ withEmptyOption: row.rule}"
+				                  (onSelectItem)="onSelectItem($event, index, 'rule')"
+				                  [selectList]="row.rulesOptions">
+				</app-select-input>
+				<app-select-input class="time take-left"
+				                  (onSelectItem)="onSelectItem($event, index, 'time')"
+				                  [selectList]="row.hoursOptions">
+				</app-select-input>
+				<app-select-input class="apply-on take-left"
+				                  [optionsType]="OPTIONS_TYPES.multiSelection"
+				                  [componentInputs]="multiSelectConfig[index]"
+				                  (onListChange)="onSelectItem($event, index, 'seasonCode')"
+				                  [selectList]="row.seasonCodeOptions"
+				                  [isDisabled]="row.type === 'NS'"
+				                  [setTextManually$]="row.applyOnTextHandler$"
+				                  [inputTextHandler]="multipleNamesOrIdTextHandler()"
+				                  (optionsClosed)="onCloseApplyOn()">
+				</app-select-input>
+
+				<div class="hb-table-column click-able delete-row" (click)="deleteRow(index)">
+					<app-svg-icon class="bin-icon" [svg]="SVG_ICONS.bin" title="Delete row"></app-svg-icon>
+				</div>
+			</div>
+		</div>
+
+		<div class="add-row click-able"
+		     [ngClass]="[isAddRowDisabled()? 'disabled' : '']"
+		     (click)="addRow()" title="{{isAddRowDisabled()? '' : 'Add row'}}">
+			<app-svg-icon [svg]="SVG_ICONS.plus"></app-svg-icon>
+		</div>
+	</ng-container>
+</div>
