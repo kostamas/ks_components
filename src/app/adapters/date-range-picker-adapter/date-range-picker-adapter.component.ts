@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {CalendarDatePickerService} from '../../ks-components/calendarModule/calendarDatePicker/calendarDatePicker.service';
 
 @Component({
   selector: 'app-date-range-picker-adapter',
@@ -9,7 +10,9 @@ export class DateRangePickerAdapterComponent implements OnInit {
   public config = {format: 'DD/MM/YYYY'};
   public from = '';
   public to = '';
-  constructor() { }
+
+  constructor(private calendarDatePickerService: CalendarDatePickerService) {
+  }
 
   ngOnInit() {
   }
@@ -17,5 +20,6 @@ export class DateRangePickerAdapterComponent implements OnInit {
   onSelectRange({from, to}) {
     this.from = from;
     this.to = to;
+    this.calendarDatePickerService.clearSelectRange();
   }
 }

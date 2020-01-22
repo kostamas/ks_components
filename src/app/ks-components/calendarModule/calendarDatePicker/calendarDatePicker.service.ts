@@ -9,6 +9,7 @@ export class CalendarDatePickerService {
 	public selectDate$: any = new BehaviorSubject(null);
 	public selectedRange: any = {date1: null, date2: null};
 	public sameDateClick$: Subject<boolean> = new Subject<boolean>();
+	public reset$: Subject<boolean> = new Subject<boolean>();
 
 	constructor() {
 	}
@@ -16,6 +17,7 @@ export class CalendarDatePickerService {
 	clearSelectRange(): void {
 		this.selectedRange = {date1: null, date2: null};
 		this.selectDate$.next('');
+		this.reset$.next(true);
 	}
 
 	updateSelectedRange(selectedDate: any, rangeSize: number): void {

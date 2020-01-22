@@ -60,6 +60,10 @@ export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, OnCh
       this.rangeSize = 1;
     }
 
+    this.calendarDatePickerService.reset$.subscribe(() => {
+      this.unMark();
+    });
+
     this.initDaysToSelect();
   }
 
