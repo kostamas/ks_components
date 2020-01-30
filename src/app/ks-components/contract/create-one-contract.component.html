@@ -1,6 +1,9 @@
-<div class="one-contract-page" [ngClass]="{'view-mode': isViewMode}">
-
+<div class="contract-control-buttons">
   <div class="action-button load-contract" (click)="loadContract()">Load Existing Contract</div>
+  <div class="action-button new-contract" (click)="newContract()">New Contract</div>
+</div>
+
+<div class="one-contract-page" [ngClass]="{'view-mode': isViewMode}">
 
   <div class="one-contract-left-right-wrapper" [ngClass]="{'with-audit-details': !!auditDetails}">
     <div class="one-contract-left" #oneContractLeft [ngClass]="[leftWrapperHasScroll ? 'hasScroll' : '']">

@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {CreateOneContractService} from './create-one-contract.service';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import * as moment from 'moment';
 import {CreateOneContractStoreService} from './create-one-contract-store.service';
 import {AllOneContractService} from './all-one-contract.service';
@@ -61,7 +61,7 @@ export class CreateOneContractComponent implements OnInit, AfterViewInit, OnDest
   @ViewChild('saveButton') saveButton: ElementRef;
 
   constructor(public createOneContractService: CreateOneContractService,
-              private activatedRoute: ActivatedRoute,
+              private activatedRoute: ActivatedRoute, private router: Router,
               private allOneContractService: AllOneContractService, private oneContractService: OneContractService,
               private modalService: ModalService, private popupService: PopupService, private httpClient: HttpClient,
               private route: ActivatedRoute, public  createOneContractStoreService: CreateOneContractStoreService) {
@@ -77,7 +77,6 @@ export class CreateOneContractComponent implements OnInit, AfterViewInit, OnDest
       this.subscriptionsArray.push(s.validation.subscribe(v => this.contractSections[ind].isInvalid = v && !v.isValid));
     });
     this.subscriptionsArray.push(this.createOneContractStoreService.contractHotelName$.subscribe(hotel => this.contractHotelNameText = hotel));
-    this.activatedRoute.params.subscribe(this.routeHandler);
     this.subscriptionsArray.push(this.createOneContractStoreService.oneContract$.subscribe(this.oneContractHandler));
     this.subscriptionsArray.push(this.createOneContractStoreService.isOneContractViewMode$.subscribe(isViewMode => {
       this.isViewMode = isViewMode;
@@ -89,9 +88,11 @@ export class CreateOneContractComponent implements OnInit, AfterViewInit, OnDest
     }));
 
     this.route.params.subscribe(params => {
-      debugger
-      if (params && params.contratId) {
-
+      if (params && params.oneContractId) {
+        const contract = localStorage.getItem('contract');
+        if (contract) {
+          setTimeout(() => this.createOneContractStoreService.oneContract$.next(JSON.parse(contract)));
+        }
       }
     });
 
@@ -106,6 +107,14 @@ export class CreateOneContractComponent implements OnInit, AfterViewInit, OnDest
     });
   };
 
+  newContract() {
+    this.createOneContractStoreService.oneContract$.next(null);
+    this.allOneContractService.allServices.forEach(srv => {
+      srv.validation.next({isValid: true, message: ''});
+    });
+    this.router.navigate(['contract', {oneContractId: 1}]);
+  }
+
   disableKeyDownEvent(e: any): void {
     e.stopPropagation();
     e.preventDefault();
@@ -114,20 +123,6 @@ export class CreateOneContractComponent implements OnInit, AfterViewInit, OnDest
   ngAfterViewInit(): void {
     this.resizeHandler();
   }
-
-  routeHandler = (params: any) => {
-
-    this.createOneContractService.getOneContract(params['oneContractId']);
-    if (this.createOneContractService.oneContractId && String(this.createOneContractService.oneContractId) !== params['oneContractId']) {
-      this.allOneContractService.allServices.forEach(srv => {
-        srv.validation.next({isValid: true, message: ''});
-      });
-    }
-
-    if (!params['oneContractId']) { // navigate to new contract
-      this.createOneContractService.oneContractId = null;
-    }
-  };
 
   save(): Observable<boolean> {
     const saveDone$: Subject<boolean> = new Subject<boolean>();

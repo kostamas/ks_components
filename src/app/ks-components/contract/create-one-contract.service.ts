@@ -298,7 +298,7 @@ export class CreateOneContractService {
 
   createOrUpdateContract(oneContractObj: IOneContractParams, cb: any, saveCompleted$: Subject<boolean>): Subject<boolean> {
     localStorage.setItem('contract', JSON.stringify(oneContractObj));
-    this.router.navigate(['contract', '1' {oneContractId: 1}]);
+    this.router.navigate(['contract', {oneContractId: 1}]);
     setTimeout(() => saveCompleted$.next(true));
     return saveCompleted$;
   }

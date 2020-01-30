@@ -1,326 +1,327 @@
 @import '../../scss/main';
 
 .one-contract-page {
-	&.view-mode {
-		.save-button {
-			z-index: -1;
-			visibility: hidden;
-		}
+  &.view-mode {
+    .save-button {
+      z-index: -1;
+      visibility: hidden;
+    }
 
-		.radio-buttons .radio-button-repeater .label:before {
-			background-color: $color45;
-		}
+    .radio-buttons .radio-button-repeater .label:before {
+      background-color: $color45;
+    }
 
-		.checkbox-component {
-			pointer-events: none;
-		}
+    .checkbox-component {
+      pointer-events: none;
+    }
 
-		.calendar-icon-wrapper, .check-mark {
-			background-color: $color45 !important;
-		}
+    .calendar-icon-wrapper, .check-mark {
+      background-color: $color45 !important;
+    }
 
-		.calendar-icon-wrapper svg rect, .calendar-icon-wrapper svg path {
-			fill: $color46 !important;
-		}
+    .calendar-icon-wrapper svg rect, .calendar-icon-wrapper svg path {
+      fill: $color46 !important;
+    }
 
-		.add-column {
-			visibility: hidden;
-			pointer-events: none;
-		}
+    .add-column {
+      visibility: hidden;
+      pointer-events: none;
+    }
 
-		.auto-suggest-component .search-icon, .select-input .arrowDown, .add-row, .bin, .loading-link, .round-search-icon, .round-close {
-			display: none !important;
-		}
+    .auto-suggest-component .search-icon, .select-input .arrowDown, .add-row, .bin, .loading-link, .round-search-icon, .round-close {
+      display: none !important;
+    }
 
-		.select-input, .options-wrapper, .auto-suggest-component, input, .radio-buttons, .calendar-section, .date-input-component, app-auto-suggest-input {
-			pointer-events: none;
-		}
-	}
+    .select-input, .options-wrapper, .auto-suggest-component, input, .radio-buttons, .calendar-section, .date-input-component, app-auto-suggest-input {
+      pointer-events: none;
+    }
+  }
 
-	.header-separator {
-		width: 100%;
-		border-bottom: 1px solid $color45;
-	}
+  .header-separator {
+    width: 100%;
+    border-bottom: 1px solid $color45;
+  }
 
-	.audit-details {
-		@include flex();
-		width: 100%;
-		flex-direction: row-reverse;
+  .audit-details {
+    @include flex();
+    width: 100%;
+    flex-direction: row-reverse;
 
-		.modifications-details {
-			padding-top: 5px;
-			padding-right: 46px;
-			font-size: 13px;
-		}
-	}
+    .modifications-details {
+      padding-top: 5px;
+      padding-right: 46px;
+      font-size: 13px;
+    }
+  }
 
-	.one-contract-left-right-wrapper {
-		@include flex();
-		padding-top: 10px;
-		padding-right: 10px;
+  .one-contract-left-right-wrapper {
+    @include flex();
+    padding-top: 10px;
+    padding-right: 10px;
 
-		&.with-audit-details {
-			padding-top: 4px;
-		}
+    &.with-audit-details {
+      padding-top: 4px;
+    }
 
-		.one-contract-left {
-			position: fixed;
-			z-index: 12;
-			padding-left: 30px;
-			background-color: #edf1f6;
-			width: 220px;
+    .one-contract-left {
+      @include dimension(220px, calc(100vh - 95px));
+      position: fixed;
+      z-index: 12;
+      padding-left: 30px;
+      background-color: #edf1f6;
+      width: 220px;
 
-			&.hasScroll {
-				max-height: calc(100vh - 135px);
-				overflow-y: scroll;
-				overflow-x: hidden;
-			}
+      &.hasScroll {
+        max-height: calc(100vh - 135px);
+        overflow-y: scroll;
+        overflow-x: hidden;
+      }
 
-			.contract-section-item-wrapper {
-				&.invalid:before {
-					position: absolute;
-					width: 0;
-					height: 0;
-					display: flex;
-					justify-content: center;
-					border-left: 9px solid transparent;
-					border-right: 9px solid transparent;
-					border-bottom: 17px solid #e44b4e;
-					content: '!';
-					color: white;
-					line-height: 19px;
-					font-size: 13px;
-					margin-left: -25px;
-					margin-top: 16px;
-				}
+      .contract-section-item-wrapper {
+        &.invalid:before {
+          position: absolute;
+          width: 0;
+          height: 0;
+          display: flex;
+          justify-content: center;
+          border-left: 9px solid transparent;
+          border-right: 9px solid transparent;
+          border-bottom: 17px solid #e44b4e;
+          content: '!';
+          color: white;
+          line-height: 19px;
+          font-size: 13px;
+          margin-left: -25px;
+          margin-top: 16px;
+        }
 
-				.contract-section-item {
-					@include dimension(215px, 32px);
-					@include flex();
-					border-left: 1px solid $color1;
-					padding-left: 14px;
+        .contract-section-item {
+          @include dimension(215px, 32px);
+          @include flex();
+          border-left: 1px solid $color1;
+          padding-left: 14px;
 
-					&.triangle-error {
-						display: none;
-					}
+          &.triangle-error {
+            display: none;
+          }
 
-					&.selected, &:not(.selected):hover {
-						.left-symbols {
-							.line-with-circle {
-								.circle {
-									@include dimension(10px);
-									border-radius: 100%;
-									background-color: $color58;
-								}
-							}
-						}
+          &.selected, &:not(.selected):hover {
+            .left-symbols {
+              .line-with-circle {
+                .circle {
+                  @include dimension(10px);
+                  border-radius: 100%;
+                  background-color: $color58;
+                }
+              }
+            }
 
-						.contract-name {
-							color: $color58;
-							font-weight: 500;
-						}
+            .contract-name {
+              color: $color58;
+              font-weight: 500;
+            }
 
-						.contract-name:before {
-							@include dimension(12px);
-							position: absolute;
-							content: '';
-							left: 22px;
-							background-color: $color58;
-							border-radius: 10px;
-							margin-top: -2px;
-							border: 3px solid $color15;
-						}
+            .contract-name:before {
+              @include dimension(12px);
+              position: absolute;
+              content: '';
+              left: 22px;
+              background-color: $color58;
+              border-radius: 10px;
+              margin-top: -2px;
+              border: 3px solid $color15;
+            }
 
-					}
+          }
 
-					&:not(.selected):hover {
-						cursor: pointer;
-					}
+          &:not(.selected):hover {
+            cursor: pointer;
+          }
 
-					.triangle-error {
-						@include position(absolute, 14px, 19px);
-						@include flex(center);
-					}
+          .triangle-error {
+            @include position(absolute, 14px, 19px);
+            @include flex(center);
+          }
 
-					.left-symbols {
-						position: relative;
+          .left-symbols {
+            position: relative;
 
-						.line-with-circle {
-							margin-right: 10px;
+            .line-with-circle {
+              margin-right: 10px;
 
-							.line {
-								@include dimension(1px, 19px);
-								box-sizing: border-box;
-								background-color: $color68;
-								margin-bottom: 2px;
-								margin-left: 3px;
-							}
+              .line {
+                @include dimension(1px, 19px);
+                box-sizing: border-box;
+                background-color: $color68;
+                margin-bottom: 2px;
+                margin-left: 3px;
+              }
 
-							.circle {
-								@include dimension(6px, 6px);
-								border-radius: 100%;
-								background-color: $color68;
-							}
-						}
-					}
+              .circle {
+                @include dimension(6px, 6px);
+                border-radius: 100%;
+                background-color: $color68;
+              }
+            }
+          }
 
-					.contract-name:before {
-						@include dimension(10px);
-						position: absolute;
-						left: 23px;
-						margin-top: 0;
-						background-color: #acb2bf;
-						border-radius: 9px;
-						border: 3px solid #edf1f6;
-						content: '';
-					}
+          .contract-name:before {
+            @include dimension(10px);
+            position: absolute;
+            left: 23px;
+            margin-top: 0;
+            background-color: #acb2bf;
+            border-radius: 9px;
+            border: 3px solid #edf1f6;
+            content: '';
+          }
 
-					.contract-name {
-						@include text-style(14px, black);
-						font-weight: 400;
-						padding-top: 15px;
-					}
-				}
-			}
-		}
+          .contract-name {
+            @include text-style(14px, black);
+            font-weight: 400;
+            padding-top: 15px;
+          }
+        }
+      }
+    }
 
-		.one-contract-wrapper {
-			margin-left: 260px;
-			overflow: auto;
-			max-height: calc(100vh - 15px);
-			width: 100%;
+    .one-contract-wrapper {
+      margin-left: 260px;
+      overflow: auto;
+      max-height: calc(100vh - 95px);
+      width: 100%;
 
-			.sub-wrapper {
-				display: flex;
+      .sub-wrapper {
+        display: flex;
 
-				.view-mode-title {
-					@include dimension(calc(100% - 10px), 65px);
-					@include flex(center, center);
-					@include text-style(30px, $white, null, bold);
-					background-color: $color89;
-					border: 1px solid $color71;
-					margin-bottom: 25px;
-					margin-top: 10px;
-				}
+        .view-mode-title {
+          @include dimension(calc(100% - 10px), 65px);
+          @include flex(center, center);
+          @include text-style(30px, $white, null, bold);
+          background-color: $color89;
+          border: 1px solid $color71;
+          margin-bottom: 25px;
+          margin-top: 10px;
+        }
 
-				.wrapper-separator {
-					min-width: 30px;
-					width: 30px;
-				}
+        .wrapper-separator {
+          min-width: 30px;
+          width: 30px;
+        }
 
-				.one-contract-content {
-					@include dimension(calc(100vw - 340px), auto);
-					padding: 20px 20px 535px 30px;
-					background-color: white;
-					border-radius: 5px;
-					border: 1px solid $color45;
-					position: relative;
-					box-shadow: 0 1px 4px 0 #ccc;
+        .one-contract-content {
+          @include dimension(calc(100vw - 340px), auto);
+          padding: 20px 20px 535px 30px;
+          background-color: white;
+          border-radius: 5px;
+          border: 1px solid $color45;
+          position: relative;
+          box-shadow: 0 1px 4px 0 #ccc;
 
-					.save-button {
-						@include position(fixed, 140px, 41px);
-						width: 100px;
-						z-index: 1000;
+          .save-button {
+            @include position(fixed, 140px, 41px);
+            width: 100px;
+            z-index: 1000;
 
-						.bottom-triangle {
-							@include transform(rotate(-45deg));
-							@include position(absolute, null, 1px, -3px);
-							@include dimension(0, 0);
-							border-left: 4px solid transparent;
-							border-right: 4px solid transparent;
-							border-bottom: 4px solid $color72;
-						}
-					}
+            .bottom-triangle {
+              @include transform(rotate(-45deg));
+              @include position(absolute, null, 1px, -3px);
+              @include dimension(0, 0);
+              border-left: 4px solid transparent;
+              border-right: 4px solid transparent;
+              border-bottom: 4px solid $color72;
+            }
+          }
 
-					.publish-contract-wrapper {
-						margin-top: 30px;
+          .publish-contract-wrapper {
+            margin-top: 30px;
 
-						.publish-button {
-							@include flex(center, center);
-							margin-bottom: 15px;
+            .publish-button {
+              @include flex(center, center);
+              margin-bottom: 15px;
 
-							app-button-with-loader .action-button {
-								@include dimension(330px, 50px);
-								font-size: 24px;
-							}
-						}
+              app-button-with-loader .action-button {
+                @include dimension(330px, 50px);
+                font-size: 24px;
+              }
+            }
 
-						.publish-text-wrapper {
-							.publish-text {
-								@include flex(center, center);
-								margin-bottom: 5px;
-								font-size: 14px;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+            .publish-text-wrapper {
+              .publish-text {
+                @include flex(center, center);
+                margin-bottom: 5px;
+                font-size: 14px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 
-	.contract-page-separator {
-		border: 1px dashed $color68;
-		margin: 20px 0;
-	}
+  .contract-page-separator {
+    border: 1px dashed $color68;
+    margin: 20px 0;
+  }
 
-	.add-row, .add-column {
-		@include dimension(27px, 27px);
-		@include flex(center, center);
-		background-color: $color20;
-		box-sizing: border-box;
-		border-radius: 3px;
-		padding-top: 3px;
-	}
+  .add-row, .add-column {
+    @include dimension(27px, 27px);
+    @include flex(center, center);
+    background-color: $color20;
+    box-sizing: border-box;
+    border-radius: 3px;
+    padding-top: 3px;
+  }
 }
 
 @media only screen and (max-width: 1540px) {
 
-	.one-contract-page {
-		.one-contract-left-right-wrapper {
-			.one-contract-wrapper {
-				overflow: auto;
+  .one-contract-page {
+    .one-contract-left-right-wrapper {
+      .one-contract-wrapper {
+        overflow: auto;
 
-				.sub-wrapper {
-					.one-contract-content {
-						width: 1242px;
+        .sub-wrapper {
+          .one-contract-content {
+            width: 1242px;
 
-						.save-button {
-							position: absolute;
-							z-index: 13;
-							top: 20px;
-							right: -7px;
-						}
-					}
-				}
-			}
-		}
-	}
+            .save-button {
+              position: absolute;
+              z-index: 13;
+              top: 20px;
+              right: -7px;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 .copied-to-clipboard.tooltip {
-	height: 25px;
-	box-sizing: border-box;
-	padding: 3px 16px !important;
-	animation: one-contract-tooltip-animation 1.8s;
-	opacity: 0;
+  height: 25px;
+  box-sizing: border-box;
+  padding: 3px 16px !important;
+  animation: one-contract-tooltip-animation 1.8s;
+  opacity: 0;
 
-	.triangle-tooltip {
-		right: -6px !important;
-		top: calc(50% - 7px) !important;
-		border-top: 7px solid transparent !important;
-		border-bottom: 7px solid transparent !important;
-		border-left: 7px solid rgb(34, 48, 62) !important;
-	}
+  .triangle-tooltip {
+    right: -6px !important;
+    top: calc(50% - 7px) !important;
+    border-top: 7px solid transparent !important;
+    border-bottom: 7px solid transparent !important;
+    border-left: 7px solid rgb(34, 48, 62) !important;
+  }
 }
 
 @keyframes one-contract-tooltip-animation {
-	0% {
-		opacity: 1;
-	}
-	70% {
-		opacity: 1;
-	}
-	100% {
-		opacity: 0;
-	}
+  0% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }

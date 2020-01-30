@@ -1,12 +1,18 @@
 @import '../../scss/main';
 
-.one-contract-page {
-  padding-top: 30px;
+.contract-control-buttons {
+  @include flex(space-between);
+  width: 500px;
+  margin: 0 auto;
+  padding-top: 25px;
 
-  .load-contract {
-    margin: 0 auto;
-    width: 250px;
+  .load-contract, .new-contract {
+    width: 220px;
   }
+}
+
+.one-contract-page {
+  padding-top: 5px;
 
   .take-left, .input-with-symbol-take-left input {
     margin-left: -1px;
