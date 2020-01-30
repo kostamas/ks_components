@@ -10,8 +10,6 @@ import {ContractCombinationsComponent} from './contract-combinations/contract-co
 import {ContractCombinationsService} from './contract-combinations/contract-combinations.service';
 import {ContractDetailsComponent} from './contract-details/contract-details.component';
 import {ContractDetailsService} from './contract-details/contract-details.service';
-import {ContractDetailsModalComponent} from './contract-details-modal/contract-details-modal.component';
-import {ContractDetailsPopulateService} from './contract-details-modal/contract-details-populate.service';
 import {ContractDiscountComponent} from './contract-discount/contract-discount.component';
 import {OpaqueDiscountComponent} from './contract-discount/opaque-discount/opaque-discount.component';
 import {OpaqueDiscountService} from './contract-discount/opaque-discount/opaque-discount.service';
@@ -53,8 +51,47 @@ import {AllOneContractService} from './all-one-contract.service';
 import {CreateOneContractService} from './create-one-contract.service';
 import {CreateOneContractStoreService} from './create-one-contract-store.service';
 import {CreateOneContractComponent} from './create-one-contract.component';
+import {SharedModule} from '../../core/sharedModule.module';
+import {CalendarModule} from '../../shared/calendar-module/calendar.module';
+import {SvgIconModule} from '../../shared/svg-icon-module/svg-icon.module';
+import {TooltipModule} from '../../shared/tooltip-module/tooltip.module';
+import {AutoSuggestInputModule} from '../../shared/inputs/auto-suggest-module/auto-suggest.module';
+import {InputWithErrorModule} from '../../shared/inputs/input-with-error/input-with-error.module';
+import {InputWithSymbolModule} from '../../shared/inputs/input-with-symbol-module/input-with-symbol.module';
+import {SelectModule} from '../../shared/inputs/select-module/select.module';
+import {SevenDaysSelectorModule} from '../../shared/inputs/seven-days-input-module/seven-days-selector.module';
+import {LoaderModule} from '../../shared/loader-module/loader.module';
+import {ModalModule} from '../../shared/modal-module/modal.module';
+import {PopupModule} from '../../shared/popup-module';
+import {ToastModule} from '../../shared/toast-module/toast.module';
+import {BrowserModule} from '@angular/platform-browser';
+import {FormsModule} from '@angular/forms';
+import {ButtonsModule} from '../../shared/buttons-module';
+import {EllipseModule} from '../../shared/ellipse-module/ellipse.module';
+import {ContractHotelInformationComponent} from './contract-hotel-information/contract-hotel-information.component';
+import {CommonOneContractService} from './common-one-contract.service';
+import {OneContractService} from './one-contract-service';
+import {AppCommonService} from '../../../app-common.service';
 
 @NgModule({
+  imports: [
+    CalendarModule,
+    SvgIconModule,
+    TooltipModule,
+    AutoSuggestInputModule,
+    InputWithErrorModule,
+    InputWithSymbolModule,
+    SelectModule,
+    SevenDaysSelectorModule,
+    LoaderModule,
+    ModalModule,
+    PopupModule,
+    ToastModule,
+    BrowserModule,
+    FormsModule,
+    ButtonsModule,
+    EllipseModule
+  ],
   declarations: [
     BookingTravelDatesComponent,
     ContractAllotmentComponent,
@@ -62,7 +99,6 @@ import {CreateOneContractComponent} from './create-one-contract.component';
     ContractCancellationPolicyComponent,
     ContractCombinationsComponent,
     ContractDetailsComponent,
-    ContractDetailsModalComponent,
     ContractDiscountComponent,
     OpaqueDiscountComponent,
     NrfDiscountComponent,
@@ -83,10 +119,7 @@ import {CreateOneContractComponent} from './create-one-contract.component';
     ContractStopSaleComponent,
     GuestRoomTableComponent,
     CreateOneContractComponent,
-
-
-  ],
-  imports: [
+    ContractHotelInformationComponent
   ],
   providers: [
     ContractAllotmentService,
@@ -94,7 +127,6 @@ import {CreateOneContractComponent} from './create-one-contract.component';
     ContractCancellationPolicyService,
     ContractCombinationsService,
     ContractDetailsService,
-    ContractDetailsPopulateService,
     OpaqueDiscountService,
     NrfDiscountService,
     HbgSelectDiscountService,
@@ -115,9 +147,12 @@ import {CreateOneContractComponent} from './create-one-contract.component';
     ContractStopSaleService,
     AllOneContractService,
     CreateOneContractService,
-    CreateOneContractStoreService
-
+    CreateOneContractStoreService,
+    CommonOneContractService,
+    OneContractService,
+    AppCommonService
   ],
+  exports: [CreateOneContractComponent]
 })
 export class ContractModule {
 }

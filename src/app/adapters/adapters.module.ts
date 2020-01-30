@@ -27,9 +27,10 @@ import {ImageExpanderModule} from '../ks-components/image-expander/image-expande
 import {TransparentShapeModalModule} from '../ks-components/transparent-shape-modal/transparent-shape-modal.module';
 
 import {ChatDataService} from './chat-adapter/chatDataService';
-import {CalendarModule} from '../ks-components/calendarModule/calendar.module';
 import {DateRangePickerAdapterComponent} from './date-range-picker-adapter/date-range-picker-adapter.component';
 import {ContractModule} from '../ks-components/contract/contract.module';
+import {CalendarModule} from '../shared/calendar-module/calendar.module';
+import { ContractAdapterComponent } from './contract-adapter/contract-adapter.component';
 
 @NgModule({
   imports: [
@@ -49,9 +50,8 @@ import {ContractModule} from '../ks-components/contract/contract.module';
     ChatModule.config(ChatDataService),
     GalleryModule,
     ImageExpanderModule,
-    TransparentShapeModalModule,
-    CalendarModule,
-    ContractModule
+    ContractModule,
+    CalendarModule
   ],
   declarations: [
     SchedulerAdapterComponent,
@@ -64,7 +64,8 @@ import {ContractModule} from '../ks-components/contract/contract.module';
     TransparentShapeModalAdapterComponent,
     BackgammonAdapterComponent,
     GalleryAdapterComponent,
-    DateRangePickerAdapterComponent
+    DateRangePickerAdapterComponent,
+    ContractAdapterComponent
   ],
   exports: [],
   entryComponents: [

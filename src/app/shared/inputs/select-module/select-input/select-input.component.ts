@@ -4,13 +4,13 @@ import {
   OnDestroy, OnInit, Output, SimpleChanges, ViewChild, ViewContainerRef, ViewEncapsulation
 } from '@angular/core';
 import {ModalService} from '../../../modal-module/modal.service';
-import {IModal, IModalConfig} from '../../../../types/modal';
-import {ISelectItem, IValidationStatus} from '../../../../types/ISelect';
 import {ISvgIcons, SVG_ICONS} from '../../../svg-icon-module/svg-icons.const';
 import {Subject} from 'rxjs';
 import {JsUtils} from '../../../../utils/jsUtils';
-import {OPTIONS_TYPES, OPTIONS_TYPES_COMPONENTS} from '../../../../constants/select-input.constant';
-import {SelectInputService} from '../../../../services/select-input.service';
+import {IModal, IModalConfig} from '../../../types/modal';
+import {ISelectItem, IValidationStatus} from '../../../types/ISelect';
+import {OPTIONS_TYPES, OPTIONS_TYPES_COMPONENTS} from './select-input.constant';
+import {SelectInputService} from '../../../services/select-input.service';
 
 @Component({
   selector: 'app-select-input',

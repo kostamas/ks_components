@@ -13,6 +13,7 @@ import {HttpClientModule, HttpClient} from '@angular/common/http';
 import {firebaseConfig} from './core/firebase-config';
 import {AngularFireModule} from '@angular/fire';
 import {AngularFireDatabaseModule} from '@angular/fire/database';
+import {CalendarModule} from './shared/calendar-module/calendar.module';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, '../assets/locale/', '.json');

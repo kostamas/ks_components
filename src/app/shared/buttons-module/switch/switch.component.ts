@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ISwitchText} from '../../../types/buttons';
+import {ISwitchText} from '../../types/buttons';
 
 @Component({
   selector: 'app-switch',

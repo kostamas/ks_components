@@ -1,4 +1,4 @@
-@import "~shared-ui-components-lib/style/shared";
+@import '../../scss/main';
 
 .one-contract-page {
 	&.view-mode {
@@ -187,7 +187,7 @@
 		.one-contract-wrapper {
 			margin-left: 260px;
 			overflow: auto;
-			max-height: calc(100vh - 138px);
+			max-height: calc(100vh - 15px);
 			width: 100%;
 
 			.sub-wrapper {

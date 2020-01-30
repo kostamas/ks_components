@@ -6,18 +6,18 @@ import {EllipseModule} from '../../ellipse-module/ellipse.module';
 import {SvgIconModule} from '../../svg-icon-module/svg-icon.module';
 
 @NgModule({
-	imports: [
-		BrowserModule,
-		EllipseModule,
-		SvgIconModule,
-		FormsModule
-	],
-	declarations: [
-		InputWithSymbolComponent
-	],
-	exports: [
-		InputWithSymbolComponent
-	]
+  imports: [
+    BrowserModule,
+    EllipseModule,
+    SvgIconModule,
+    FormsModule
+  ],
+  declarations: [
+    InputWithSymbolComponent
+  ],
+  exports: [
+    InputWithSymbolComponent
+  ]
 })
 export class InputWithSymbolModule {
 }

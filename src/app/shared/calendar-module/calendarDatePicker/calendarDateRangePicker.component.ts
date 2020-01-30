@@ -2,16 +2,16 @@ import {
   ChangeDetectorRef,
   Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild,
 } from '@angular/core';
-import {fromEvent, Subject} from 'rxjs';
+import {Subject} from 'rxjs';
 import * as momentNs from 'moment';
 
 const moment = momentNs;
 import {filter, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {CalendarDatePickerService} from '../../../services/calendarDatePicker.service';
-import {JsUtils} from '../../../utils/jsUtils';
-import {ISvgIcons, SVG_ICONS} from '../../svg-icon-module/svg-icons.const';
-import {ICalendarClickPosition, ICalendarDay, IFromTo} from '../../../types/calendar';
-import {DATE_FORMAT} from '../../../constants/shared.constant';
+import {fromEvent} from 'rxjs/observable/fromEvent';
+import {isDefineAndNotNull} from '../../../utils/jsUtils';
+import {ICalendarClickPosition, ICalendarDay, IFromTo} from '../../types/calendar';
+import {DATE_FORMAT} from '../calendar.const';
+import {CalendarDatePickerService} from '../../services/calendarDatePicker.service';
 
 @Component({
   selector: 'app-calendar-date-range-picker',
@@ -25,7 +25,6 @@ export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, OnCh
   public selectedDay: ICalendarDay;
   public unSubscribe$: Subject<any> = new Subject();
   public canSelect: boolean;
-  public SVG_ICONS: ISvgIcons = SVG_ICONS;
 
   @Input() date: string;
   @Input() dateFormat: string;
@@ -60,6 +59,10 @@ export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, OnCh
     if (this.isSingleSelection) {
       this.rangeSize = 1;
     }
+
+    this.calendarDatePickerService.reset$.subscribe(() => {
+      this.unMark();
+    });
 
     this.initDaysToSelect();
   }
@@ -105,7 +108,7 @@ export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, OnCh
     this.calendarDatePickerService.selectDate$
       .pipe(
         takeUntil(this.unSubscribe$),
-        filter(date => JsUtils.isDefineAndNotNull(date))
+        filter(date => isDefineAndNotNull(date))
       )
       .subscribe(selectedDate => setTimeout(() => {
         if (selectedDate) {
@@ -205,7 +208,7 @@ export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, OnCh
       this.calendarDatePickerService.selectDate$.next(_selectedDate);
       this.selectedRange.next(_selectedDate.format(this.dateFormat ? this.dateFormat : DATE_FORMAT));
     }
-    if(this.detectChangesManually){
+    if (this.detectChangesManually) {
       setTimeout(() => this.changeDetector.detectChanges());
     }
   };
@@ -309,7 +312,7 @@ export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, OnCh
     }
 
     this.daysToSelect.forEach((day, index) => day.classToAdd += this.getBorderClass(day.dayNumber, index));
-    if(this.detectChangesManually){
+    if (this.detectChangesManually) {
       setTimeout(() => this.changeDetector.detectChanges());
     }
   }

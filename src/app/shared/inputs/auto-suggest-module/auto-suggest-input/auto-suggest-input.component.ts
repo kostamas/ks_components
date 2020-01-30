@@ -1,23 +1,24 @@
 import {
-	AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, SecurityContext,
-	ViewChild, ViewEncapsulation
+  AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, SecurityContext,
+  ViewChild, ViewEncapsulation
 } from '@angular/core';
-import {fromEvent, Observable, Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {SVG_ICONS} from '../../../svg-icon-module/svg-icons.const';
 import {ModalService} from '../../../modal-module/modal.service';
 import {AutoSuggestResultsComponent} from '../auto-suggest-results/auto-suggest-results.component';
-import {IModal, IModalConfig} from '../../../../types/modal';
-import {IAutoSuggestValidationStatus} from '../../../../types/auto-suggest';
-import {SvgIconService} from '../../../../services/svg-icons.service';
 import {DomSanitizer} from '@angular/platform-browser';
-import {ISelectItem} from '../../../../types/ISelect';
+import {ISelectItem} from '../../../types/ISelect';
+import {IModal, IModalConfig} from '../../../types/modal';
+import {IAutoSuggestValidationStatus} from '../../../types/auto-suggest';
+import {SvgIconService} from '../../../services/svg-icons.service';
+import {fromEvent} from 'rxjs/observable/fromEvent';
 
 @Component({
-	selector: 'app-auto-suggest-input',
-	templateUrl: './auto-suggest-input.component.html',
-	styleUrls: ['./auto-suggest-input.component.scss'],
-	encapsulation: ViewEncapsulation.None
+  selector: 'app-auto-suggest-input',
+  templateUrl: './auto-suggest-input.component.html',
+  styleUrls: ['./auto-suggest-input.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class AutoSuggestInputComponent implements OnInit, AfterViewInit, OnDestroy {
   public searchTextValue: string = '';
@@ -96,7 +97,7 @@ export class AutoSuggestInputComponent implements OnInit, AfterViewInit, OnDestr
       this.modal.closeModal(true);
       this.modal = null;
     }
-  }
+  };
 
   closeAutoSuggestResults(): void {
     if (this.openResultsInModal) {
@@ -112,7 +113,7 @@ export class AutoSuggestInputComponent implements OnInit, AfterViewInit, OnDestr
 
   closeModalCallback = () => {
     this.modal = null;
-  }
+  };
 
   ngAfterViewInit(): void {
     fromEvent(this.inputElement.nativeElement, 'input')
@@ -147,7 +148,7 @@ export class AutoSuggestInputComponent implements OnInit, AfterViewInit, OnDestr
       this.closeModal();
       this.isEmpty.next('');
     }
-  }
+  };
 
   @HostListener('window:resize', ['$event'])
   initializeLeftPane(): void {
@@ -218,7 +219,7 @@ export class AutoSuggestInputComponent implements OnInit, AfterViewInit, OnDestr
     } else {
       this.calcPositionResultsInternal();
     }
-  }
+  };
 
   calcPositionResultsInternal(): void {
     const optionsWrapperElement = this.resultContainer.nativeElement;
@@ -320,7 +321,7 @@ export class AutoSuggestInputComponent implements OnInit, AfterViewInit, OnDestr
     this.closeModal();
     this.validate(true);
     this.isEmpty.next('');
-  }
+  };
 
   blurHandler(): void {
     if (this.modal) {
@@ -337,11 +338,11 @@ export class AutoSuggestInputComponent implements OnInit, AfterViewInit, OnDestr
     if (closeResults) {
       this.closeAutoSuggestResults();
     }
-  }
+  };
 
   showCloseButton = () => {
     return this.searchTextValue.length && (!this.modal || !this.modalService.isModalOpen(this.modal.id));
-  }
+  };
 
   validate(isDirty: boolean): void {
     if (this.validators) {

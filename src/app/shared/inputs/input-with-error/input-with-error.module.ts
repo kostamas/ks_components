@@ -7,19 +7,19 @@ import {InputWithErrorComponent} from './input-with-error.component';
 import {TooltipModule} from '../../tooltip-module/tooltip.module';
 
 @NgModule({
-	imports: [
-		BrowserModule,
-		EllipseModule,
-		SvgIconModule,
-		FormsModule,
-		TooltipModule
-	],
-	declarations: [
-		InputWithErrorComponent
-	],
-	exports: [
-		InputWithErrorComponent
-	]
+  imports: [
+    BrowserModule,
+    EllipseModule,
+    SvgIconModule,
+    FormsModule,
+    TooltipModule
+  ],
+  declarations: [
+    InputWithErrorComponent
+  ],
+  exports: [
+    InputWithErrorComponent
+  ]
 })
 export class InputWithErrorModule {
 }

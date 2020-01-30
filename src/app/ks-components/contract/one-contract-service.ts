@@ -121,21 +121,21 @@ export class OneContractService implements CanDeactivate<any> {
   // 	});
   // }
 
-  // getOfficesByCompany(companyId: string, cb: any): void {
-  // 	this.apiService.getEndpoints((endpoints: IEndpoints) => {
-  // 		const url: string = `${endpoints.offices}?companyId=${companyId}&&limit=10000`;
-  // 		this.http.get(url).subscribe((offices: { items: any[] }) => {
-  // 			if (offices) {
-  // 				const sortedCompanies = offices.items.sort((n1, n2) => JsUtils.sortByNames(n1.name, n2.name));
-  // 				sortedCompanies.forEach((office: any) => {
-  // 					office.id = office.officeId;
-  // 					office.name = office.officeId;
-  // 				});
-  // 				cb(sortedCompanies);
-  // 			}
-  // 		});
-  // 	});
-  // }
+  getOfficesByCompany(companyId: string, cb: any): void {
+    // this.apiService.getEndpoints((endpoints: IEndpoints) => {
+    // 	const url: string = `${endpoints.offices}?companyId=${companyId}&&limit=10000`;
+    // 	this.http.get(url).subscribe((offices: { items: any[] }) => {
+    // 		if (offices) {
+    // 			const sortedCompanies = offices.items.sort((n1, n2) => JsUtils.sortByNames(n1.name, n2.name));
+    // 			sortedCompanies.forEach((office: any) => {
+    // 				office.id = office.officeId;
+    // 				office.name = office.officeId;
+    // 			});
+    // 			cb(sortedCompanies);
+    // 		}
+    // 	});
+    // });
+  }
 
   // public compareBetweenCurrentAndLastContracts(oneContract: IOneContractParams, seasons: any[]): boolean {
   // 	let oneContractObjToCompare1: IOneContractParams = this.allOneContractService.buildOneContract();

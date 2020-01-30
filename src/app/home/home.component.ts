@@ -19,6 +19,7 @@ export class HomeComponent implements OnInit {
     this.components = [
       {text: 'Backgammon', link: '/backgammon'},
       {text: 'Scheduler', link: '/scheduler'},
+      {text: 'Contract', link: '/contract'},
       {text: 'Chat', link: '/chat'},
       {text: 'Gallery', link: '/gallery'},
       {text: 'Date Range Picker', link: '/date-range-picker'},

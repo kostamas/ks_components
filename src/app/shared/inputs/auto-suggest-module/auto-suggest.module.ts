@@ -9,25 +9,25 @@ import {TooltipModule} from '../../tooltip-module/tooltip.module';
 import {EllipseModule} from '../../ellipse-module/ellipse.module';
 
 @NgModule({
-	imports: [
-		FormsModule,
-		BrowserModule,
-		SvgIconModule,
-		ModalModule,
-		TooltipModule,
-		EllipseModule
-	],
-	declarations: [
-		AutoSuggestInputComponent,
-		AutoSuggestResultsComponent,
-	],
-	providers: [],
-	exports: [
-		AutoSuggestInputComponent
-	],
-	entryComponents: [
-		AutoSuggestResultsComponent
-	]
+  imports: [
+    FormsModule,
+    BrowserModule,
+    SvgIconModule,
+    ModalModule,
+    TooltipModule,
+    EllipseModule
+  ],
+  declarations: [
+    AutoSuggestInputComponent,
+    AutoSuggestResultsComponent,
+  ],
+  providers: [],
+  exports: [
+    AutoSuggestInputComponent
+  ],
+  entryComponents: [
+    AutoSuggestResultsComponent
+  ]
 })
 export class AutoSuggestInputModule {
 }

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {CalendarDatePickerService} from '../../ks-components/calendarModule/calendarDatePicker/calendarDatePicker.service';
+import {CalendarDatePickerService} from '../../shared/services/calendarDatePicker.service';
 
 @Component({
   selector: 'app-date-range-picker-adapter',

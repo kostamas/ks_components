@@ -1,4 +1,4 @@
-@import "~shared-ui-components-lib/style/shared";
+@import '../../../scss/main';
 
 .booking-travel-window {
 	@include dimension(793px, 94px);

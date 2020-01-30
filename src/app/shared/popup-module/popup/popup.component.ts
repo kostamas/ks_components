@@ -1,34 +1,34 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 
 @Component({
-	selector: 'app-popup',
-	templateUrl: './popup.component.html',
-	styleUrls: ['./popup.component.scss'],
-	encapsulation: ViewEncapsulation.None
+  selector: 'app-popup',
+  templateUrl: './popup.component.html',
+  styleUrls: ['./popup.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PopupComponent implements OnInit {
-	@Input() data: any;
-	@Input() closeModal: any;
+  @Input() data: any;
+  @Input() closeModal: any;
 
-	constructor() {
-	}
+  constructor() {
+  }
 
-	ngOnInit(): void {
-	}
+  ngOnInit(): void {
+  }
 
-	done(): void {
-		if (this.data.done) {
-			this.data.done();
-		} else {
-			this.closeModal();
-		}
-	}
+  done(): void {
+    if (this.data.done) {
+      this.data.done();
+    } else {
+      this.closeModal();
+    }
+  }
 
-	cancel(): void {
-		if (this.data.done) {
-			this.data.cancel();
-		} else {
-			this.closeModal();
-		}
-	}
+  cancel(): void {
+    if (this.data.done) {
+      this.data.cancel();
+    } else {
+      this.closeModal();
+    }
+  }
 }

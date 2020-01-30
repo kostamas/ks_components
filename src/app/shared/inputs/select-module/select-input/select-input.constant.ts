@@ -1,6 +1,7 @@
-import {SelectRegularOptionsComponent} from '../modules/inputs/select-module/options/select-regular-options/select-regular-options.component';
-import {MultiSelectColorfulOptionsComponent} from '../modules/inputs/select-module/options/multi-select-colorful-options/multi-select-colorful-options.component';
-import {ISelectOptionsComponentsTypes} from '../types/ISelect';
+import {ISelectOptionsComponentsTypes} from '../../../types/ISelect';
+import {SelectRegularOptionsComponent} from '../options/select-regular-options/select-regular-options.component';
+import {MultiSelectColorfulOptionsComponent} from '../options/multi-select-colorful-options/multi-select-colorful-options.component';
+
 
 export const OPTIONS_TYPES: ISelectOptionsComponentsTypes = {
 	regular: 'regular',

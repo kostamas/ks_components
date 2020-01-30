@@ -12,16 +12,17 @@ import {
 import * as momentNs from 'moment';
 
 const moment = momentNs;
-import {fromEvent, merge, Subject} from 'rxjs';
+import {Subject} from 'rxjs';
 import {filter, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {CalendarDatePickerService} from '../../../services/calendarDatePicker.service';
 import {SVG_ICONS} from '../../svg-icon-module/svg-icons.const';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {AbstractControl} from '@angular/forms';
 import {JsUtils} from '../../../utils/jsUtils';
-
-import {ICalendarClickPosition, IFromTo} from '../../../types/calendar';
-import {DATE_FORMAT} from '../../../constants/shared.constant';
+import {ICalendarClickPosition, IFromTo} from '../../types/calendar';
+import {CalendarDatePickerService} from '../../services/calendarDatePicker.service';
+import {merge} from 'rxjs/observable/merge';
+import {fromEvent} from 'rxjs/observable/fromEvent';
+import {DATE_FORMAT} from '../calendar.const';
 
 @Component({
   selector: 'app-multi-date-picker',

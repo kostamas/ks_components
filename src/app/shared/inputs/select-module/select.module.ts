@@ -4,11 +4,11 @@ import {SelectInputComponent} from './select-input/select-input.component';
 import {MultiSelectColorfulOptionsComponent} from './options/multi-select-colorful-options/multi-select-colorful-options.component';
 import {SelectRegularOptionsComponent} from './options/select-regular-options/select-regular-options.component';
 import {SvgIconModule} from '../../svg-icon-module/svg-icon.module';
-import {SelectInputService} from '../../../services/select-input.service';
 import {EllipseModule} from '../../ellipse-module/ellipse.module';
 import {TooltipModule} from '../../tooltip-module/tooltip.module';
 import {FormsModule} from '@angular/forms';
 import {ButtonsModule} from '../../buttons-module';
+import {SelectInputService} from '../../services/select-input.service';
 
 @NgModule({
   imports: [

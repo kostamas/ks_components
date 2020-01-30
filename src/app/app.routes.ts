@@ -9,11 +9,19 @@ import {TransparentShapeModalAdapterComponent} from './adapters/transparent-shap
 import {BackgammonAdapterComponent} from './adapters/backgammon-adapter/backgammon-adapter.component';
 import {GalleryAdapterComponent} from './adapters/gallery-adapter/gallery-adapter.component';
 import {DateRangePickerAdapterComponent} from './adapters/date-range-picker-adapter/date-range-picker-adapter.component';
+import {CreateOneContractComponent} from './ks-components/contract/create-one-contract.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: '/home', pathMatch: 'full'},
   {path: 'home', component: HomeComponent},
   {path: 'scheduler', component: SchedulerAdapterComponent},
+  {
+    path: 'contract', component: CreateOneContractComponent, children: [{
+      path: ':oneContractId',
+      component: CreateOneContractComponent
+    },
+    ]
+  },
   {path: 'chat', component: ChatAdapterComponent},
   {path: 'image-expander', component: ImageExpanderAdapterComponent},
   {path: 'transparent-shape-modal', component: TransparentShapeModalAdapterComponent},
