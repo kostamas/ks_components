@@ -70,7 +70,7 @@
 									</app-svg-icon>
 								</div>
 
-								<div class="calendar-section click-able"
+								<div class="calendar-section cursor-pointer"
 										 [ngClass]="{'calendar-disabled': columnIndex > lastEditableCalendarIndex}"
 										 (click)="openDateRangePicker($event, columnIndex)">
 									<app-svg-icon [svg]="SVG_ICONS.calendar" class="calendar-icon-wrapper"
