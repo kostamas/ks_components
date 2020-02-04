@@ -38,7 +38,7 @@ export class SelectRegularOptionsComponent implements OnInit, OnDestroy {
     }
   }
 
-  @HostListener('document:keyup')
+  @HostListener('document:keyup', ['$event'])
   keyUpHandler(keyEvent: KeyboardEvent): void {
     clearTimeout(this.timeout);
     this.timeout = setTimeout(this.clearStringSuggestion, 1000);

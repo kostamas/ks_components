@@ -13,6 +13,7 @@ import {OneContractService} from './one-contract-service';
 import {ModalService} from '../../shared/modal-module/modal.service';
 import {PopupService} from '../../shared/popup-module/popup.service';
 import {JsUtils} from '../../utils/jsUtils';
+import {contract, contractToShow} from './one-contract.const';
 
 @Component({
   selector: 'app-one-contract',
@@ -224,7 +225,7 @@ export class CreateOneContractComponent implements OnInit, AfterViewInit, OnDest
   };
 
   loadContract() {
-    return this.isPublishDisabled;
+    this.createOneContractStoreService.oneContract$.next(contractToShow);
   }
 
   private oneContractHandler = (oneContract: any) => {

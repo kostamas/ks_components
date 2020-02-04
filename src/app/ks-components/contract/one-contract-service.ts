@@ -14,6 +14,7 @@ import {CreateOneContractComponent} from './create-one-contract.component';
 import {Observable} from 'rxjs/Observable';
 import {combineLatest} from 'rxjs/observable/combineLatest';
 import {IPopupData} from '../../shared/types/modal';
+import {countriesList} from './currencies.constant';
 
 
 @Injectable()
@@ -21,7 +22,7 @@ export class OneContractService implements CanDeactivate<any> {
   public leftSectionCollapsed$: Subject<boolean> = new Subject<boolean>();
   public oneContractsResults$: Subject<IOneContractParams[]> = new Subject<IOneContractParams[]>();
   public creationUsers$: BehaviorSubject<{ id: string }[]> = new BehaviorSubject<{ id: string }[]>(null);
-  public countries$: BehaviorSubject<ISelectItem[]> = new BehaviorSubject<ISelectItem[]>(null);
+  public countries$: BehaviorSubject<ISelectItem[]> = new BehaviorSubject<ISelectItem[]>(countriesList);
   public companies$: BehaviorSubject<ISelectItem[]> = new BehaviorSubject<ISelectItem[]>(null);
   public emptyOneContract: IOneContractParams = <IOneContractParams>{}; // will initialize in CreateOneContractComponent
 

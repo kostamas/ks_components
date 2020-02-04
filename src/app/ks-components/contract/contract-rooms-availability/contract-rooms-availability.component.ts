@@ -18,6 +18,7 @@ import {SelectInputService} from '../../../shared/services/select-input.service'
 import {IRoomsAndAvailability} from '../one-contract';
 import {JsUtils} from '../../../utils/jsUtils';
 import {IOneContractParams, IRoom} from '../one-contract-object';
+import {characteristicsNames, roomsNames} from './rooms-and-characteristics-names';
 
 @Component({
   selector: 'app-contract-rooms-availability',
@@ -48,8 +49,8 @@ export class ContractRoomsAvailabilityComponent implements OnInit, OnDestroy {
     ];
     this.contractRoomsAvailabilityService.roomsAvailabilityParams = [<IRoomsAndAvailability>{}];
     this.tableRows.push({
-      rooms: this.contractRoomsAvailabilityService.getRoomsOptions().sort((n1, n2) => JsUtils.sortByNames(n1.id, n2.id)),
-      characteristics: this.contractRoomsAvailabilityService.getCharacteristicsOptions().sort((n1, n2) => JsUtils.sortByNames(n1.id, n2.id)),
+      rooms: roomsNames,
+      characteristics: characteristicsNames,
       sharingAvailability: []
     });
     this.subscriptionsArray.push(
@@ -58,27 +59,6 @@ export class ContractRoomsAvailabilityComponent implements OnInit, OnDestroy {
         .subscribe((oneContract: IOneContractParams) => this.resetParameters(oneContract))
     );
     this.roomsAndCharacteristicsStatus$.push(new Subject<IValidationStatus>());
-    this.subscriptionsArray.push(this.contractRoomsAvailabilityService.roomAndCharacteristicRoomsObservable$.subscribe((rooms) => {
-      this.tableRows.forEach((row: any, index: number) => {
-        row.rooms = [...JsUtils.deepCopy(rooms[0].items.sort((n1, n2) => JsUtils.sortByNames(n1.id, n2.id)))];
-        row.characteristics = [...rooms[1].items.sort((n1, n2) => JsUtils.sortByNames(n1.id, n2.id))];
-        const {roomsAvailabilityParams} = this.contractRoomsAvailabilityService;
-        if (roomsAvailabilityParams[index].room) {
-          this.selectInputService.updateIsSelected(this.tableRows[index].rooms, null, roomsAvailabilityParams[index].room);
-          const selectedRoom = {id: roomsAvailabilityParams[index].room, name: roomsAvailabilityParams[index].room};
-          this.onSelectRoomOrCharacteristic(selectedRoom, index, 'rooms', 'room');
-        }
-        if (roomsAvailabilityParams[index].characteristic) {
-          this.selectInputService.updateIsSelected(this.tableRows[index].characteristics, null, roomsAvailabilityParams[index].characteristic);
-          const selectedCharacteristic = {
-            id: roomsAvailabilityParams[index].characteristic,
-            name: roomsAvailabilityParams[index].characteristic
-          };
-          this.onSelectRoomOrCharacteristic(selectedCharacteristic, index, 'characteristics', 'characteristic');
-        }
-      });
-      setTimeout(() => this.changeDetector.detectChanges());
-    }));
   }
 
   resetParameters = (oneContract: IOneContractParams) => {
@@ -243,8 +223,8 @@ export class ContractRoomsAvailabilityComponent implements OnInit, OnDestroy {
 
   addRow(): void {
     this.tableRows.push({
-      rooms: this.contractRoomsAvailabilityService.getRoomsOptions().sort((n1, n2) => JsUtils.sortByNames(n1.id, n2.id)),
-      characteristics: this.contractRoomsAvailabilityService.getCharacteristicsOptions().sort((n1, n2) => JsUtils.sortByNames(n1.id, n2.id)),
+      rooms: roomsNames,
+      characteristics: characteristicsNames,
       sharingAvailability: []
     });
     this.contractRoomsAvailabilityService.roomsAvailabilityParams.push(<IRoomsAndAvailability>{});
