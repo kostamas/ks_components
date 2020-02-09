@@ -42,10 +42,10 @@ export class ContractHotelInformationService implements ISectionPageService {
       oneContract.hotelData.zone = this.oneContractParams.hotelData.zone && !JsUtils.isEmpty(this.oneContractParams.hotelData.zone) ? this.oneContractParams.hotelData.zone : null;
       oneContract.hotelData.country = this.oneContractParams.hotelData.country;
       oneContract.hotelData.postalCode = this.oneContractParams.hotelData.postalCode;
-      oneContract.hotelData.totalNumberOfRooms = this.oneContractParams.hotelData.totalNumberOfRooms;
     } else {
       oneContract.hotelData.hotelId = this.oneContractParams.hotelData.hotelId;
     }
+    oneContract.hotelData.totalNumberOfRooms = this.oneContractParams.hotelData.totalNumberOfRooms;
     oneContract.hotelData.hotelName = this.oneContractParams.hotelData.hotelName;
     oneContract.company = this.oneContractParams.company;
     oneContract.office = this.oneContractParams.office;

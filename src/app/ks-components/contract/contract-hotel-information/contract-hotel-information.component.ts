@@ -21,7 +21,16 @@ import {OneContractService} from '../one-contract-service';
 import {ModalService} from '../../../shared/modal-module/modal.service';
 import {SelectInputService} from '../../../shared/services/select-input.service';
 import {INameId, IOneContractParams} from '../one-contract-object';
-import {JsUtils} from '../../../utils/jsUtils';
+import {deepCopy, JsUtils} from '../../../utils/jsUtils';
+
+
+const companiesList = [{name: 'company 1', id: '1'}, {name: 'company 2', id: '2'}, {name: 'company 3', id: '3'},
+  {name: 'company 4', id: '4'}, {name: 'company 5', id: '5'}, {name: 'company 6', id: '6'}, {name: 'company 7', id: '7'},
+  {name: 'company 8', id: '8'}, {name: 'company 9', id: '9'}, {name: 'company 10', id: '10'}];
+
+const officesList = [{name: 'office 1', id: '1'}, {name: 'office 2', id: '2'}, {name: 'office 3', id: '3'},
+  {name: 'office 4', id: '4'}, {name: 'office 5', id: '5'}, {name: 'office 6', id: '6'}, {name: 'office 7', id: '7'},
+  {name: 'office 8', id: '8'}, {name: 'office 9', id: '9'}, {name: 'office 10', id: '10'}];
 
 @Component({
   selector: 'app-contract-hotel-information',
@@ -101,25 +110,27 @@ export class ContractHotelInformationComponent implements OnInit, OnDestroy {
     this.selectInputService.updateIsSelected(this.hotelInformationRadioOptions, null, selectedHotelInfo.id);
     this.radioButtonClick(this.hotelInformationRadioOptions.filter(r => r.id === selectedHotelInfo.id)[0], true);
     this.hotelInformationRadioOptions = [...this.hotelInformationRadioOptions];
+    this.contractHotelInformationService.oneContractParams.hotelData.destination.name = '';
+    this.contractHotelInformationService.oneContractParams.hotelData.postalCode = '';
+    this.contractHotelInformationService.oneContractParams.hotelData.categoryId = '';
 
-    this.oneContractService.companies$.subscribe((companies: ISelectItem[]) => {
-      if (companies) {
-        this.companyOptions = JsUtils.deepCopy(companies);
-        const selectedCompany: ISelectItem = <ISelectItem>this.selectInputService.getSelectedItem(this.companyOptions);
-        if (JsUtils.isDefineAndNotNull(selectedCompany) || JsUtils.isDefineAndNotNull(company)) {
-          this.selectInputService.updateIsSelected(this.companyOptions, null, company.id);
-          this.companyOptions = [...this.companyOptions];
-          this.onSelectCompany(company ? company : selectedCompany, null, null, () => {
-            const selectedOffice: ISelectItem = <ISelectItem>this.selectInputService.getSelectedItem(this.officesOptions);
-            if (JsUtils.isDefineAndNotNull(selectedOffice) || JsUtils.isDefineAndNotNull(office)) {
-              this.selectInputService.updateIsSelected(this.officesOptions, null, String(office.id));
-              this.officesOptions = [...this.officesOptions];
-              this.onSelectOption(office ? office : selectedOffice, 'office', office ? office.name : selectedOffice.name);
-            }
-          });
+    this.companyOptions = JsUtils.deepCopy(deepCopy(companiesList));
+    this.officesOptions = JsUtils.deepCopy(officesList);
+
+    const selectedCompany: ISelectItem = <ISelectItem>this.selectInputService.getSelectedItem(this.companyOptions);
+    if (JsUtils.isDefineAndNotNull(selectedCompany) || JsUtils.isDefineAndNotNull(company)) {
+      this.selectInputService.updateIsSelected(this.companyOptions, null, company.id);
+      this.companyOptions = [...this.companyOptions];
+      this.onSelectCompany(company ? company : selectedCompany, null, null, () => {
+        const selectedOffice: ISelectItem = <ISelectItem>this.selectInputService.getSelectedItem(this.officesOptions);
+        if (JsUtils.isDefineAndNotNull(selectedOffice) || JsUtils.isDefineAndNotNull(office)) {
+          this.selectInputService.updateIsSelected(this.officesOptions, null, String(office.id));
+          this.officesOptions = [...this.officesOptions];
+          this.onSelectOption(office ? office : selectedOffice, 'office', office ? office.name : selectedOffice.name);
         }
-      }
-    });
+      });
+    }
+
 
     this.oneContractService.countries$.subscribe((countries: ISelectItem[]) => {
       if (countries) {

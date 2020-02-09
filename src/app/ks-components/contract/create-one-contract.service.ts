@@ -20,11 +20,11 @@ import {DATE_FORMAT} from '../../shared/calendar-module/calendar.const';
 @Injectable()
 export class CreateOneContractService {
   private boardBasisOptions: ISelectItem[] = [
-    {name: 'Room Only (RO)', id: 'RO'},
-    {name: 'Self-Catering (SC)', id: 'SC'},
-    {name: 'Bed & Breakfast (BB)', id: 'BB'},
-    {name: 'Half Board (HB)', id: 'HB'},
-    {name: 'Full Board (FB)', id: 'FB'},
+    {name: 'Room Only (RO)', id: 'R1'},
+    {name: 'Self-Catering (SC)', id: 'S1'},
+    {name: 'Bed & Breakfast (BB)', id: 'B1'},
+    {name: 'Half Board (HB)', id: 'H1'},
+    {name: 'Full Board (FB)', id: 'F1'},
     {name: 'All Inclusive (AI)', id: 'all'},
   ];
 
@@ -37,10 +37,10 @@ export class CreateOneContractService {
   ];
   private rulesOptions: ISelectItem[] = [{name: 'By Stay', id: 'STAY'}, {name: 'By Entry', id: 'ENTRY'}];
   private guestOptions: ISelectItem[] = [
-    {name: 'Infant', id: 'I'}, {name: 'Child', id: 'C'}, {name: 'Adult', id: 'A'},
-    {name: '1st child', id: '1C'}, {name: '2nd child', id: '2C'}, {name: '3rd child', id: '3C'},
-    {name: '4th child', id: '4C'}, {name: '1st adult', id: '1A'}, {name: '2nd adult', id: '2A'},
-    {name: '3rd adult', id: '3A'}, {name: '4th adult', id: '4A'}
+    {name: 'Infant', id: 'I1'}, {name: 'Child', id: 'C1'}, {name: 'Adult', id: 'A1'},
+    {name: '1st child', id: '1C1'}, {name: '2nd child', id: '2C1'}, {name: '3rd child', id: '3C1'},
+    {name: '4th child', id: '4C1'}, {name: '1st adult', id: '1A1'}, {name: '2nd adult', id: '2A1'},
+    {name: '3rd adult', id: '3A1'}, {name: '4th adult', id: '4A1'}
   ];
   private periodOrSeasonallyOptions: ISelectItem[] = [{id: 'period', name: 'Contract Period', isSelected: true},
     {id: 'seasonally', name: 'Seasonally'}];
@@ -59,8 +59,8 @@ export class CreateOneContractService {
     {name: 'Not Shared', id: false}
   ];
   private dinnerOptions: ISelectItem[] = [
-    {name: 'Dinner (Compulsory)', id: 'DC'},
-    {name: 'Dinner (Optional)', id: 'DO'}
+    {name: 'Dinner (Compulsory)', id: '1'},
+    {name: 'Dinner (Optional)', id: '2'}
   ];
   private hoursOptions: ISelectItem[] = [
     {name: '00:00', id: '00:00:00'}, {name: '01:00', id: '01:00:00'}, {name: '02:00', id: '02:00:00'},

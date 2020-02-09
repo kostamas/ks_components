@@ -41,7 +41,7 @@ export class GuestRoomTableComponent implements OnInit, OnDestroy {
   public sortGuestMap: any = {
     'I': 1, 'C': 2, 'A': 3, '1C': 4, '2C': 5, '3C': 6, '4C': 7, '1A': 8, '2A': 9, '3A': 10, '4A': 11
   };
-  public guestPriorities: string[] = ['I', 'C', 'A', '1C', '2C', '3C', '4C', '1A', '2A', '3A', '4A'];
+  public guestPriorities: string[] = ['I1', 'C1', 'A1', '1C1', '2C1', '3C1', '4C1', '1A1', '2A1', '3A1', '4A1'];
 
   @Input('getRowsFromContract') getRowsFromContract: (oneContract: IOneContractParams) => any[];
   @Input('isDiscounts') isDiscounts: boolean;
@@ -279,7 +279,8 @@ export class GuestRoomTableComponent implements OnInit, OnDestroy {
     }
     if (paramMap === 'guest') {
       const {guest} = this.guestRoomSrv.guestRoomParams[index];
-      const oldOption: ISelectItem = JsUtils.deepCopy((<ISelectItem>this.selectInputService.getItem(this.oneContractService.getGuestOptions(), null, guest)));
+      const getGuestOptions = this.oneContractService.getGuestOptions();
+      const oldOption: ISelectItem = JsUtils.deepCopy((<ISelectItem>this.selectInputService.getItem(getGuestOptions, null, guest)));
 
       this.guestRoomSrv.guestRoomParams[index][paramMap] = selectedItem.id;
       if (oldOption.id !== selectedItem.id) {

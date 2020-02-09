@@ -63,7 +63,7 @@ export class CreateOneContractComponent implements OnInit, AfterViewInit, OnDest
               private route: ActivatedRoute, public  createOneContractStoreService: CreateOneContractStoreService) {
   }
 
-  ngOnInit(): void {g
+  ngOnInit(): void {
     this.createOneContractService.oneContractId = null;
     this.createOneContractStoreService.oneContract$.next(null);
     this.createOneContractStoreService.isOneContractViewMode$.next(false);
@@ -104,11 +104,11 @@ export class CreateOneContractComponent implements OnInit, AfterViewInit, OnDest
   };
 
   newContract() {
-    this.createOneContractStoreService.oneContract$.next(null);
     this.allOneContractService.allServices.forEach(srv => {
       srv.validation.next({isValid: true, message: ''});
     });
-    this.router.navigate(['contract', {oneContractId: 1}]);
+    this.createOneContractStoreService.oneContract$.next(null);
+    setTimeout(() => this.router.navigate(['contract']));
   }
 
   disableKeyDownEvent(e: any): void {
@@ -219,6 +219,7 @@ export class CreateOneContractComponent implements OnInit, AfterViewInit, OnDest
   };
 
   loadContract() {
+    this.router.navigate(['contract']);
     this.createOneContractStoreService.oneContract$.next(contractToShow);
   }
 

@@ -16,12 +16,13 @@ import {combineLatest} from 'rxjs/observable/combineLatest';
 import {IPopupData} from '../../shared/types/modal';
 import {countriesList} from './currencies.constant';
 
+const companiesList = [{name: 'company 1', id: '1'}, {name: 'company 2', id: '2'}, {name: 'company 3', id: '3'},
+  {name: 'company 4', id: '4'}, {name: 'company 5', id: '5'}, {name: 'company 6', id: '6'}, {name: 'company 7', id: '7'},
+  {name: 'company 8', id: '8'}, {name: 'company 9', id: '9'}, {name: 'company 10', id: '10'}];
 
 @Injectable()
 export class OneContractService implements CanDeactivate<any> {
   public leftSectionCollapsed$: Subject<boolean> = new Subject<boolean>();
-  public oneContractsResults$: Subject<IOneContractParams[]> = new Subject<IOneContractParams[]>();
-  public creationUsers$: BehaviorSubject<{ id: string }[]> = new BehaviorSubject<{ id: string }[]>(null);
   public countries$: BehaviorSubject<ISelectItem[]> = new BehaviorSubject<ISelectItem[]>(countriesList);
   public companies$: BehaviorSubject<ISelectItem[]> = new BehaviorSubject<ISelectItem[]>(null);
   public emptyOneContract: IOneContractParams = <IOneContractParams>{}; // will initialize in CreateOneContractComponent
@@ -32,6 +33,7 @@ export class OneContractService implements CanDeactivate<any> {
               private popupService: PopupService,
               private createOneContractStoreService: CreateOneContractStoreService) {
     this.leftSectionCollapsed$.next(false);
+    setTimeout(() => this.companies$.next(companiesList));
   }
 
   public canDeactivate(component: CreateOneContractComponent, currentRoute: ActivatedRouteSnapshot,
@@ -41,15 +43,6 @@ export class OneContractService implements CanDeactivate<any> {
 
     combineLatest(this.createOneContractStoreService.oneContract$.pipe(take(1)), this.createOneContractStoreService.contractSeasons$.pipe(take(1)))
       .subscribe(([oneContract, seasons]) => {
-        oneContract = oneContract ? oneContract : this.emptyOneContract;
-        // const createContractRoute = ROUTES_NAMES.oneContract + '/' + ROUTES_NAMES.createOneContract;
-        // const isSamePage = currentState.url.indexOf(createContractRoute) > -1 && nextState.url.indexOf(createContractRoute) > -1;
-
-        // if (isSamePage || this.compareBetweenCurrentAndLastContracts(oneContract, seasons)) {
-        // 	setTimeout(() => canDeactivate$.next(true));
-        // } else {
-        // 	this.popupService.showWarning(this.getDeactivatePopupData(canDeactivate$), {disableClose: true});
-        // }
       });
 
     return canDeactivate$;
@@ -77,88 +70,9 @@ export class OneContractService implements CanDeactivate<any> {
     };
   }
 
-  // getContractResults(searchParams: ISearchContract, cb: (contractsResults: IOneContractParams[]) => any, errorCb: any): void {
-  // 	this.apiService.getEndpoints((endPoints: IEndpoints) => {
-  // 		this.http.post(`${endPoints.preContractsSearch}?limit=10000`, searchParams).subscribe(cb, errorCb);
-  // 	});
-  // }
-
-  // searchContractById(contractId: string, successCB: any, errorCB: any): void {
-  // 	this.apiService.getEndpoints((endPoints: IEndpoints) => {
-  // 		this.http.get(endPoints.sourcing + '/' + contractId).subscribe(() => successCB(), () => errorCB());
-  // 	});
-  // }
-
-  // getCreationUsers(): void {
-  // 	this.apiService.getEndpoints((endPoints: IEndpoints) => {
-  // 		this.http.get(endPoints.creationUsers).subscribe((users: { id: string }[]) => this.creationUsers$.next(users));
-  // 	});
-  // }
-
-  // getCountriesList(): void {
-  // 	this.apiService.getEndpoints((endpoints: IEndpoints) => {
-  // 		const url: string = `${endpoints.countriesAutoSuggestSourcing}?limit=500`;
-  // 		this.http.get(url)
-  // 			.pipe(map((results: any) => {
-  // 				let items: ISelectItem[] = [];
-  // 				if (results && results.items) {
-  // 					items = results.items.sort((n1, n2) => JsUtils.sortByNames(n1.name, n2.name));
-  // 				}
-  // 				return items;
-  // 			}))
-  // 			.subscribe((countries: ISelectItem[]) => this.countries$.next(countries));
-  // 	});
-  // }
-
-  // getCompaniesList(): void {
-  // 	this.apiService.getEndpoints((endpoints: IEndpoints) => {
-  // 		const url: string = `${endpoints.companies}?limit=10000`;
-  // 		this.http.get(url).subscribe((countries: { items: ISelectItem[] }) => {
-  // 			if (countries) {
-  // 				const sortedCompanies = countries.items.sort((n1, n2) => JsUtils.sortByNames(n1.name, n2.name));
-  // 				this.companies$.next(sortedCompanies);
-  // 			}
-  // 		});
-  // 	});
-  // }
-
   getOfficesByCompany(companyId: string, cb: any): void {
-    // this.apiService.getEndpoints((endpoints: IEndpoints) => {
-    // 	const url: string = `${endpoints.offices}?companyId=${companyId}&&limit=10000`;
-    // 	this.http.get(url).subscribe((offices: { items: any[] }) => {
-    // 		if (offices) {
-    // 			const sortedCompanies = offices.items.sort((n1, n2) => JsUtils.sortByNames(n1.name, n2.name));
-    // 			sortedCompanies.forEach((office: any) => {
-    // 				office.id = office.officeId;
-    // 				office.name = office.officeId;
-    // 			});
-    // 			cb(sortedCompanies);
-    // 		}
-    // 	});
-    // });
+    cb([{name: 'office 1', id: '1'}, {name: 'office 2', id: '2'}, {name: 'office 3', id: '3'},
+      {name: 'office 4', id: '4'}, {name: 'office 5', id: '5'}, {name: 'office 6', id: '6'}, {name: 'office 7', id: '7'},
+      {name: 'office 8', id: '8'}, {name: 'office 9', id: '9'}, {name: 'office 10', id: '10'}]);
   }
-
-  // public compareBetweenCurrentAndLastContracts(oneContract: IOneContractParams, seasons: any[]): boolean {
-  // 	let oneContractObjToCompare1: IOneContractParams = this.allOneContractService.buildOneContract();
-  // 	this.createOneContractService.addSeasonAndTravelWindowToOneContract(oneContractObjToCompare1, seasons);
-  // 	const keysToCheck = Object.keys(oneContractObjToCompare1);
-  // 	const hotelDataKeys = Object.keys(oneContractObjToCompare1.hotelData);
-  // 	let oneContractObjToCompare2: IOneContractParams = <IOneContractParams>{};
-  // 	keysToCheck.forEach(key => oneContractObjToCompare2[key] = oneContract[key]);
-  // 	oneContractObjToCompare2.hotelData = <IHotelData>{};
-  // 	hotelDataKeys.forEach(key => oneContractObjToCompare2.hotelData[key] = oneContract.hotelData[key]);
-  //
-  // 	oneContractObjToCompare1 = JsUtils.deepCopy(oneContractObjToCompare1);
-  // 	oneContractObjToCompare2 = JsUtils.deepCopy(oneContractObjToCompare2);
-  //
-  // 	const dateKeys: string[] = ['dateFrom', 'dateTo', 'date'];
-  //
-  // 	oneContractObjToCompare1 = JsUtils.convertDataInObject(oneContractObjToCompare1, (obj, o) => dateKeys.indexOf(o) > -1,
-  // 		(obj: any, o: string) => obj[o] = obj[o] ? moment(obj[o]).format(DATE_FORMAT) : '');
-  //
-  // 	oneContractObjToCompare2 = JsUtils.convertDataInObject(oneContractObjToCompare2, (obj, o) => dateKeys.indexOf(o) > -1,
-  // 		(obj: any, o: string) => obj[o] = obj[o] ? moment(obj[o]).format(DATE_FORMAT) : '');
-  //
-  // 	return JsUtils.deepObjectComparision(oneContractObjToCompare1, oneContractObjToCompare2);
-  // }
 }

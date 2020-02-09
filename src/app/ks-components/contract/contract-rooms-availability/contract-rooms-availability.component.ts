@@ -16,7 +16,7 @@ import {ISvgIcons, SVG_ICONS} from '../../../shared/svg-icon-module/svg-icons.co
 import {InputUtils} from '../../../utils/input-utils';
 import {SelectInputService} from '../../../shared/services/select-input.service';
 import {IRoomsAndAvailability} from '../one-contract';
-import {JsUtils} from '../../../utils/jsUtils';
+import {deepCopy, JsUtils} from '../../../utils/jsUtils';
 import {IOneContractParams, IRoom} from '../one-contract-object';
 import {characteristicsNames, roomsNames} from './rooms-and-characteristics-names';
 
@@ -49,8 +49,8 @@ export class ContractRoomsAvailabilityComponent implements OnInit, OnDestroy {
     ];
     this.contractRoomsAvailabilityService.roomsAvailabilityParams = [<IRoomsAndAvailability>{}];
     this.tableRows.push({
-      rooms: roomsNames,
-      characteristics: characteristicsNames,
+      rooms: deepCopy(roomsNames),
+      characteristics: deepCopy(characteristicsNames),
       sharingAvailability: []
     });
     this.subscriptionsArray.push(
@@ -223,8 +223,8 @@ export class ContractRoomsAvailabilityComponent implements OnInit, OnDestroy {
 
   addRow(): void {
     this.tableRows.push({
-      rooms: roomsNames,
-      characteristics: characteristicsNames,
+      rooms: deepCopy(roomsNames),
+      characteristics: deepCopy(characteristicsNames),
       sharingAvailability: []
     });
     this.contractRoomsAvailabilityService.roomsAvailabilityParams.push(<IRoomsAndAvailability>{});
