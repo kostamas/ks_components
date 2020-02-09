@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {WindowRef} from "../core/window-ref.service";
+import {WindowRef} from '../core/window-ref.service';
 
 @Component({
   selector: 'app-home',
@@ -21,8 +21,8 @@ export class HomeComponent implements OnInit {
       {text: 'Scheduler', link: '/scheduler'},
       {text: 'Contract', link: '/contract'},
       {text: 'Chat', link: '/chat'},
-      {text: 'Gallery', link: '/gallery'},
       {text: 'Date Range Picker', link: '/date-range-picker'},
+      {text: 'Gallery', link: '/gallery'},
       {text: 'Image Expander', link: '/image-expander'},
       {text: 'Transparent Shape Modal', link: '/transparent-shape-modal'}
     ];

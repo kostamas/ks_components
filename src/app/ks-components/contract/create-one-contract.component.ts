@@ -8,12 +8,11 @@ import {AllOneContractService} from './all-one-contract.service';
 import {take} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
 import {ISvgIcons, SVG_ICONS} from '../../shared/svg-icon-module/svg-icons.const';
-import {IModal} from '../../shared/types/modal';
 import {OneContractService} from './one-contract-service';
 import {ModalService} from '../../shared/modal-module/modal.service';
 import {PopupService} from '../../shared/popup-module/popup.service';
 import {JsUtils} from '../../utils/jsUtils';
-import {contract, contractToShow} from './one-contract.const';
+import {contractToShow} from './one-contract.const';
 
 @Component({
   selector: 'app-one-contract',
@@ -30,16 +29,12 @@ export class CreateOneContractComponent implements OnInit, AfterViewInit, OnDest
   public auditName: string = '';
   public modificationDate: string = '';
   public hotelName: string = '';
-  public oneContractId: string;
   public selectedOption: any;
   public auditDetails: any;
-  public currentUrl: string;
-  public publishModal: IModal;
   public selectedSectionIndex: number = 0;
   public sectionsToValidateWhenFocusedOut: number[] = [5];
   public sectionsDomElements: HTMLElement[];
   public skipScrollHandling: boolean = false;
-  public isPublishDisabled: boolean = false;
   public isViewMode: boolean;
   public isSaved: boolean;
 
@@ -90,9 +85,9 @@ export class CreateOneContractComponent implements OnInit, AfterViewInit, OnDest
 
     this.route.params.subscribe(params => {
       if (params && params.oneContractId) {
-        const contract = localStorage.getItem('contract');
-        if (contract) {
-          setTimeout(() => this.createOneContractStoreService.oneContract$.next(JSON.parse(contract)));
+        const contractFromStorage = localStorage.getItem('contract');
+        if (contractFromStorage) {
+          setTimeout(() => this.createOneContractStoreService.oneContract$.next(JSON.parse(contractFromStorage)));
         }
       }
     });
