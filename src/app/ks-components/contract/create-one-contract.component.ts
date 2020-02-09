@@ -63,7 +63,7 @@ export class CreateOneContractComponent implements OnInit, AfterViewInit, OnDest
               private route: ActivatedRoute, public  createOneContractStoreService: CreateOneContractStoreService) {
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {g
     this.createOneContractService.oneContractId = null;
     this.createOneContractStoreService.oneContract$.next(null);
     this.createOneContractStoreService.isOneContractViewMode$.next(false);
@@ -195,7 +195,6 @@ export class CreateOneContractComponent implements OnInit, AfterViewInit, OnDest
       this.leftWrapperHasScroll = elementsHeight > (viewportHeight * 0.8);
       this.calcSaveButtonPosition();
     }, 0);
-
   }
 
   scrollToSection(ind: number): void {
@@ -231,7 +230,6 @@ export class CreateOneContractComponent implements OnInit, AfterViewInit, OnDest
       this.createOneContractStoreService.isOneContractViewMode$.next(false);
     }
   };
-
 
   ngOnDestroy(): void {
     this.subscriptionsArray.forEach((subscription: any) => subscription.unsubscribe());
