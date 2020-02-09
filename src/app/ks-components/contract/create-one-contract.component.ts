@@ -104,10 +104,10 @@ export class CreateOneContractComponent implements OnInit, AfterViewInit, OnDest
   };
 
   newContract() {
+    this.createOneContractStoreService.oneContract$.next(null);
     this.allOneContractService.allServices.forEach(srv => {
       srv.validation.next({isValid: true, message: ''});
     });
-    this.createOneContractStoreService.oneContract$.next(null);
     setTimeout(() => this.router.navigate(['contract']));
   }
 
