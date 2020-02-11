@@ -30,6 +30,7 @@ export class ContractRemarkComponent implements OnInit, OnDestroy {
 
   resetParameters = (oneContract: IOneContractParams) => {
     this.contractRemarkService.resetParams();
+    this.displayForm = false;
 
     if (oneContract) {
       this.contractRemarkService.remarksParams = JsUtils.deepCopy(oneContract.remarks);

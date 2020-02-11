@@ -40,9 +40,9 @@ const officesList = [{name: 'office 1', id: '1'}, {name: 'office 2', id: '2'}, {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractHotelInformationComponent implements OnInit, OnDestroy {
-  hotelInformationRadioOptions: IRadioButton[] = [{id: 'exist', text: 'Existing Hotel', isSelected: true}, {
+  hotelInformationRadioOptions: IRadioButton[] = [{id: 'exist', text: 'Existing', isSelected: true}, {
     id: 'new',
-    text: 'New Hotel',
+    text: 'New',
     isSelected: false
   }];
 
@@ -145,11 +145,13 @@ export class ContractHotelInformationComponent implements OnInit, OnDestroy {
 
   resetParameters = (oneContract: IOneContractParams): void => {
     this.initializeParams(oneContract);
+
     if (oneContract) {
       this.hotelTempValue = {exist: {}, new: ''};
       this.contractHotelInformationService.oneContractParams.company = JsUtils.deepCopy(oneContract.company);
       this.contractHotelInformationService.oneContractParams.office = JsUtils.deepCopy(oneContract.office);
       this.contractHotelInformationService.oneContractParams.hotelData = JsUtils.deepCopy(oneContract.hotelData);
+      this.contractHotelInformationService.oneContractParams.hotelData.totalNumberOfRooms = oneContract.hotelData.totalNumberOfRooms;
 
       const {oneContractParams} = this.contractHotelInformationService;
 

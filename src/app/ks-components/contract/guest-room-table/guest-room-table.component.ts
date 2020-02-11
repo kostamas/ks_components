@@ -63,11 +63,7 @@ export class GuestRoomTableComponent implements OnInit, OnDestroy {
     this.subscriptionsArray.push(
       this.oneContractStoreService.oneContract$
         .pipe(filter(contract => !contract || !contract.dontUpdateView))
-        .subscribe((oneContract: IOneContractParams) => {
-          if (oneContract) {
-            setTimeout(() => this.resetParameters(oneContract));
-          }
-        }));
+        .subscribe((oneContract: IOneContractParams) => setTimeout(() => this.resetParameters(oneContract))));
 
     if (this.showDinnerOptions) {
       this.tableHeader.unshift('Supplement');

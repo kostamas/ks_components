@@ -78,6 +78,8 @@ export class ContractDetailsComponent implements OnInit, OnDestroy {
     this.classificationOptions = this.contractDetailsService.getClassificationOptions();
     this.managedByOptions = this.contractDetailsService.getManagedByOptions();
     this.visibleSwsOptions = this.contractDetailsService.getYesNoOptions(true);
+    this.contractDetailsService.contractDetailsParams.commissionPercentage = null;
+
     this.oneContractService.countries$.subscribe((countries: ISelectItem[]) => {
       if (countries) {
         this.excludedCountriesOptions = JsUtils.deepCopy(countries);

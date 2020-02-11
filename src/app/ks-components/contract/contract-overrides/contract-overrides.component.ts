@@ -37,6 +37,8 @@ export class ContractOverridesComponent implements OnInit, OnDestroy {
 
   resetParams(oneContract: IOneContractParams): void {
     this.contractOverridesService.resetParams();
+    this.displayForm = false;
+    
     if (oneContract) {
       this.contractOverridesService.contractOverridesParams = JsUtils.deepCopy(oneContract.contractData.overrides);
       const {contractOverridesParams} = this.contractOverridesService;

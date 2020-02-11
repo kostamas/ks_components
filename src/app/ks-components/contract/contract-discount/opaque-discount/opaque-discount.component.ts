@@ -33,8 +33,10 @@ export class OpaqueDiscountComponent implements OnInit, OnDestroy {
           if (oneContract && oneContract.contractData && oneContract.contractData.generalSupplements && oneContract.contractData.generalSupplements) {
             const HBGSelectedDiscount = oneContract && oneContract.contractData && oneContract.contractData.generalSupplements && oneContract.contractData.generalSupplements.opaqueDiscount || [];
             this.displayForm = HBGSelectedDiscount.length > 0;
-            setTimeout(() => this.changeDetector.detectChanges());
+          } else {
+            this.displayForm = false;
           }
+          setTimeout(() => this.changeDetector.detectChanges());
         }));
   }
 

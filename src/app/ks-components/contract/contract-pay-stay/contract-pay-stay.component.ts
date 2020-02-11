@@ -60,6 +60,7 @@ export class ContractPayStayComponent implements OnInit, OnDestroy {
     const freeSale: IFree[] = oneContract && oneContract.contractData && JsUtils.deepCopy(oneContract.contractData.free);
     this.contractPayStayService.tableRows = [];
     this.contractPayStayService.resetParams();
+    this.displayForm = false;
 
     if (freeSale && freeSale.length > 0) {
       this.displayForm = true;

@@ -13,6 +13,7 @@ import {filter} from 'rxjs/operators';
 import {ISvgIcons, SVG_ICONS} from '../../../shared/svg-icon-module/svg-icons.const';
 import {IOneContractParams} from '../one-contract-object';
 import {JsUtils} from '../../../utils/jsUtils';
+import {DISCOUNTS_TYPES} from '../one-contract.const';
 
 @Component({
   selector: 'app-contract-other-supplement',
@@ -39,14 +40,16 @@ export class ContractOtherSupplementComponent implements OnInit, OnDestroy {
           if (oneContract && oneContract.contractData && oneContract.contractData.generalSupplements.otherSupplements) {
             const occupancySupplement = oneContract.contractData.generalSupplements.otherSupplements;
             this.displayForm = occupancySupplement.length > 0;
-            setTimeout(() => this.changeDetector.detectChanges());
+          } else {
+            this.displayForm = false;
           }
+          setTimeout(() => this.changeDetector.detectChanges());
         }));
   }
 
   getRowsFromContract(oneContract: IOneContractParams): any[] {
-    if (oneContract.contractData && oneContract.contractData.generalSupplements.otherSupplements) {
-      return JsUtils.deepCopy(oneContract.contractData.generalSupplements.otherSupplements);
+    if (oneContract && oneContract.contractData && oneContract.contractData.generalSupplements) {
+      return JsUtils.deepCopy(oneContract.contractData.generalSupplements.otherSupplements) || [];
     } else {
       return [];
     }

@@ -40,17 +40,20 @@ export class ContractOccupancySupplementComponent implements OnInit, OnDestroy {
           if (oneContract && oneContract.contractData && oneContract.contractData.generalSupplements.occupancySupplements) {
             const occupancySupplement = oneContract.contractData.generalSupplements.occupancySupplements;
             this.displayForm = occupancySupplement.length > 0;
-            setTimeout(() => this.changeDetector.detectChanges());
+          } else {
+            this.displayForm = false;
           }
+          setTimeout(() => this.changeDetector.detectChanges());
         }));
   }
 
   getRowsFromContract(oneContract: IOneContractParams): any[] {
-    if (oneContract.contractData && oneContract.contractData.generalSupplements.occupancySupplements) {
+    if (oneContract && oneContract.contractData && oneContract.contractData.generalSupplements.occupancySupplements) {
       return JsUtils.deepCopy(oneContract.contractData.generalSupplements.occupancySupplements);
     } else {
       return [];
     }
+
   }
 
   ngOnDestroy(): void {

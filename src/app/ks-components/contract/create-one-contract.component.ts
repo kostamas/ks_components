@@ -39,17 +39,18 @@ export class CreateOneContractComponent implements OnInit, AfterViewInit, OnDest
   public isSaved: boolean;
 
   public contractSections: any[] = [
-    {name: 'Hotel Information', isSelected: true}, {name: 'Contract Details', isSelected: false},
-    {name: 'Loading Information', isSelected: false}, {name: 'Rooms List', isSelected: ''},
-    {name: 'Rates', isSelected: ''}, {name: 'Allotment', isSelected: ''},
-    {name: 'Cancellation Policy', isSelected: ''}, {name: 'Min Stay', isSelected: ''},
-    {name: 'Discount', isSelected: ''}, {name: 'Board Supplements', isSelected: ''},
-    {name: 'Occupancy Supplements', isSelected: ''}, {name: 'Other Supplements', isSelected: ''},
-    {name: 'NRF Discount', isSelected: ''}, {name: 'Opaque Discount', isSelected: ''},
-    {name: 'HBG Select Discount', isSelected: ''}, {name: 'Early  Booking Discount', isSelected: ''},
-    {name: 'Long Stay Discount', isSelected: ''}, {name: 'Free Nights', isSelected: ''},
-    {name: 'Combinable', isSelected: ''}, {name: 'Stop Sale', isSelected: ''}, {name: 'Remarks', isSelected: ''},
-    {name: 'Overrides', isSelected: ''}, {name: 'Signature', isSelected: ''},
+    {name: 'Section 1', isSelected: true}, {name: 'Section2', isSelected: false},
+    {name: 'Section 3', isSelected: false}, {name: 'Section4', isSelected: ''},
+    {name: 'Section 5', isSelected: ''}, {name: 'Section 6', isSelected: ''},
+    {name: 'Section 7', isSelected: ''}, {name: 'Section 8', isSelected: ''},
+    {name: 'Section 9', isSelected: ''}, {name: 'Section 10', isSelected: ''},
+    {name: 'Section 11', isSelected: ''}, {name: 'Section 12', isSelected: ''},
+    {name: 'Section 13', isSelected: ''}, {name: 'Section 14', isSelected: ''},
+    {name: 'Section 15', isSelected: ''}, {name: 'Section 16', isSelected: ''},
+    {name: 'Section 17', isSelected: ''}, {name: 'Section 18', isSelected: ''},
+    {name: 'Section 19', isSelected: ''}, {name: 'Section 20', isSelected: ''},
+    {name: 'Section 21', isSelected: ''}, {name: 'Section 22', isSelected: ''},
+    {name: 'Section 23', isSelected: ''},
   ];
 
   @ViewChild('oneContractContent') contractContent: ElementRef;

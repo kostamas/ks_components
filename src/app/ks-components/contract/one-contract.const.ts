@@ -310,7 +310,7 @@ export const contractToShow: any = {
   },
   'hotelData': {
     'categoryId': '5',
-    'destination': {'name': 'madrid'},
+    'destination': {'name': 'New York'},
     'zone': null,
     'country': {'id': null, 'name': 'Spain'},
     'postalCode': '4234242'

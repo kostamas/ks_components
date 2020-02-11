@@ -56,6 +56,7 @@ export class ContractLongStayDiscountComponent implements OnInit, OnDestroy {
   resetParameters = (oneContract: IOneContractParams) => {
     this.tableRows = [];
     this.contractLongStayService.resetParams();
+    this.displayForm = false;
     if (oneContract) {
       const discounts: ILongStayDiscount[] = JsUtils.deepCopy(oneContract.contractData.generalSupplements.longStayDiscount);
       this.contractLongStayService.contractLongStayDiscountParams = [];

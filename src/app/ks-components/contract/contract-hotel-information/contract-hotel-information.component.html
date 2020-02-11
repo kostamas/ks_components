@@ -1,5 +1,5 @@
 <div class="contract-hotel-information-container page-section">
-  <div class="title">Hotel Information</div>
+  <div class="title">Section 1</div>
   <div class="hotel-info-selection">
     <app-radio-buttons
       [radioButtons]="hotelInformationRadioOptions"
@@ -11,7 +11,7 @@
       <div class="hotel-name" *ngIf="contractHotelInformationService.hotelInfo === 'new'">
         <div class="large-field margin-bottom-20">
           <div class="search-label">
-            Hotel Name
+            Contract Name
           </div>
           <input class="large-input hb-input" [fontSize]="16" tabindex="1"
                  [(ngModel)]="contractHotelInformationService.oneContractParams.hotelData.hotelName"
@@ -22,7 +22,7 @@
       <div class="hotel-name" *ngIf="contractHotelInformationService.hotelInfo === 'exist'">
         <div class="large-field margin-bottom-20">
           <div class="search-label">
-            Hotel Code
+            Contract Code
           </div>
           <app-auto-suggest-input
             [isAutoSelectWhenContainsValue]="false"
@@ -58,7 +58,7 @@
       <div class="large-field margin-bottom-20 hotel-address"
            *ngIf="contractHotelInformationService.hotelInfo === 'new'">
         <div class="search-label">
-          Hotel Address
+           Address
         </div>
         <input class="large-input hb-input" [fontSize]="16"
                [(ngModel)]="contractHotelInformationService.oneContractParams.hotelData.hotelAddress"
@@ -136,10 +136,10 @@
       </div>
       <div class="three-fields" *ngIf="contractHotelInformationService.hotelInfo === 'new'">
         <div class="search-column first-field total-room-number">
-          <div class="search-label">Hotel Total Room Number</div>
+          <div class="search-label">Total Number</div>
           <div class="search-field max-room">
             <app-input-with-error
-              [inputValue]="contractHotelInformationService.oneContractParams.hotelData.totalNumberOfRooms"
+              [(inputValue)]="contractHotelInformationService.oneContractParams.hotelData.totalNumberOfRooms"
               [required]="true"
               [preventValues]="appCommonService.rangeValueValidator(1,999999999)"
               [preventPaste]="true"

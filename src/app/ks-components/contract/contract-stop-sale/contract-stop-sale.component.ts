@@ -90,6 +90,8 @@ export class ContractStopSaleComponent implements OnInit, OnDestroy {
   resetParams(oneContract: IOneContractParams): void {
     this.tableRows = [];
     this.contractStopSaleService.resetParams();
+    this.displayForm = false;
+
     if (oneContract) {
       this.contractStopSaleService.contractStopSaleParams = JsUtils.deepCopy(oneContract.contractData.stopSales);
       const {contractStopSaleParams} = this.contractStopSaleService;

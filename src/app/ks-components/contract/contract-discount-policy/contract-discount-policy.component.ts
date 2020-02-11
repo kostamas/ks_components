@@ -40,13 +40,19 @@ export class ContractDiscountPolicyComponent implements OnInit, OnDestroy {
           if (oneContract && oneContract.contractData && oneContract.contractData.generalSupplements) {
             const discountPolicies = oneContract.contractData.generalSupplements[DISCOUNTS_TYPES.discount];
             this.displayForm = discountPolicies.length > 0;
-            setTimeout(() => this.changeDetector.detectChanges());
+          } else {
+            this.displayForm = false;
           }
+          setTimeout(() => this.changeDetector.detectChanges());
         }));
   }
 
   getRowsFromContract = (oneContract: IOneContractParams): any[] => {
-    return JsUtils.deepCopy(oneContract.contractData.generalSupplements[DISCOUNTS_TYPES.discount]) || [];
+    if (oneContract && oneContract.contractData && oneContract.contractData.generalSupplements) {
+      return JsUtils.deepCopy(oneContract.contractData.generalSupplements[DISCOUNTS_TYPES.discount]) || [];
+    } else {
+      return [];
+    }
   };
 
   ngOnDestroy(): void {

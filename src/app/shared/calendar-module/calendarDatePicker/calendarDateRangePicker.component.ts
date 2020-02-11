@@ -12,6 +12,7 @@ import {isDefineAndNotNull} from '../../../utils/jsUtils';
 import {ICalendarClickPosition, ICalendarDay, IFromTo} from '../../types/calendar';
 import {DATE_FORMAT} from '../calendar.const';
 import {CalendarDatePickerService} from '../../services/calendarDatePicker.service';
+import {ISvgIcons, SVG_ICONS} from '../../svg-icon-module/svg-icons.const';
 
 @Component({
   selector: 'app-calendar-date-range-picker',
@@ -25,6 +26,8 @@ export class CalendarDateRangePickerComponent implements OnInit, OnDestroy, OnCh
   public selectedDay: ICalendarDay;
   public unSubscribe$: Subject<any> = new Subject();
   public canSelect: boolean;
+  public SVG_ICONS: ISvgIcons = SVG_ICONS;
+
 
   @Input() date: string;
   @Input() dateFormat: string;

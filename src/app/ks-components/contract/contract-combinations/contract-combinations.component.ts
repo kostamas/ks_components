@@ -83,16 +83,16 @@ export class ContractCombinationsComponent implements OnInit, OnDestroy {
     const {subscriptionsArray, oneContractStoreService, selectedDiscountsHandler} = this;
     this.subscriptionsArray.push(
       oneContractStoreService.oneContract$.pipe(filter(contract => !contract || !contract.dontUpdateView))
-        .subscribe((oneContract: IOneContractParams) => {
-          if (oneContract) {
-            setTimeout(() => this.resetParameters(oneContract));
-          }
-        }));
+        .subscribe((oneContract: IOneContractParams) => setTimeout(() => this.resetParameters(oneContract))));
     subscriptionsArray.push(oneContractStoreService.selectedDiscounts$.subscribe(selectedDiscountsHandler));
   }
 
   resetParameters = (oneContract: IOneContractParams) => {
-    const supplementCombination: ISupplementCombination[] = JsUtils.deepCopy(oneContract.contractData && oneContract.contractData.supplementCombination) || [];
+    let supplementCombination: ISupplementCombination[] = [];
+    if (oneContract && oneContract.contractData && oneContract.contractData.supplementCombination) {
+      supplementCombination = JsUtils.deepCopy(oneContract.contractData.supplementCombination);
+    }
+    this.displayForm = false;
     this.contractCombinationsService.tableRows = [];
     if (supplementCombination.length > 0) {
       this.displayForm = true;
