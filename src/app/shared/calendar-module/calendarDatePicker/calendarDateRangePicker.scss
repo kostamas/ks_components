@@ -1,0 +1,112 @@
+@import '../../../scss/main';
+
+$dayCellSize: 30px;
+$dateRangeContainerWidth: 210px;
+
+.calendar-date-range-picker {
+  @include dimension($dateRangeContainerWidth, auto);
+  @include text-style(14px, $color72);
+  padding: 10px 5px;
+  border: 1px solid $color38;
+  cursor: pointer;
+  user-select: none;
+  background-color: $white;
+
+  .calendar-date-range-picker-header {
+    @include flex(space-between);
+    padding: 0 10px;
+
+    &.disable-month-control {
+      @include flex(center);
+    }
+  }
+
+  .month-title {
+    @include flex(center, center);
+    font-size: 17px;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+
+  .date-range-header {
+    @include dimension($dateRangeContainerWidth, auto);
+    @include flex();
+    margin-bottom: 10px;
+    font-weight: bold;
+
+    .header-days {
+      @include dimension($dayCellSize, auto);
+      @include flex(center, center);
+    }
+  }
+
+  .days-to-select {
+    @include dimension($dateRangeContainerWidth, auto);
+    @include flex();
+    flex-wrap: wrap;
+
+    .day {
+      @include dimension($dayCellSize, $dayCellSize);
+      @include flex(center, center);
+      box-sizing: border-box;
+
+      .day-number {
+        position: relative;
+      }
+    }
+
+    .day.selected {
+      background-color: $color36;
+    }
+
+    .day.border-left {
+      border-left: 1px solid $color37;
+    }
+    .day.border-top {
+      border-top: 1px solid $color37;
+    }
+    .day.border-right {
+      border-right: 1px solid $color37;
+    }
+    .day.border-bottom {
+      border-bottom: 1px solid $color37;
+    }
+
+    /*-------------   content jump fix   -------------*/
+    .day.border-top:not(.border-bottom) {
+      .day-number {
+        bottom: 0.5px;
+      }
+    }
+    .day.border-bottom:not(.border-top) {
+      .day-number {
+        top: 0.5px;
+      }
+    }
+
+    .day.border-right:not(.border-left) {
+      .day-number {
+        left: 0.5px;
+      }
+    }
+
+    .day.border-left:not(.border-right) {
+      .day-number {
+        right: 0.5px;
+      }
+    }
+    /*-------------   content jump fix   -------------*/
+
+    .day.first-day, .day.last-day {
+      background-color: $color37;
+    }
+
+    .today {
+      border: 1px solid $color38;
+    }
+
+    .past, .day-disabled {
+      color: $color79;
+    }
+  }
+}

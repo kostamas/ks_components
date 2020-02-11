@@ -1,0 +1,25 @@
+<div class="booking-travel-window">
+	<div class="content-wrapper">
+		<div class="window">
+			<div class="window-title">Booking Window</div>
+			<app-date-input
+				[detectChangesManually]="true"
+				[selectedDate]="bookingDate &&  bookingDate.dateFrom && bookingDate.dateTo ? {from: bookingDate.dateFrom, to: bookingDate.dateTo} : ''"
+				[multiDatePicker]="true"
+				[withoutDefaultDate]="true"
+				(rangeSelected)="onSelectRange($event, 'booking')">
+			</app-date-input>
+		</div>
+
+		<div class="window">
+			<div class="window-title">Travel Window</div>
+			<app-date-input
+				[detectChangesManually]="true"
+				[selectedDate]="travelDate &&  travelDate.dateFrom && travelDate.dateTo ? {from: travelDate.dateFrom, to: travelDate.dateTo} : ''"
+				[multiDatePicker]="true"
+				[withoutDefaultDate]="true"
+				(rangeSelected)="onSelectRange($event, 'travel')">
+			</app-date-input>
+		</div>
+	</div>
+</div>

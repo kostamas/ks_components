@@ -1,0 +1,31 @@
+@import '../../../scss/main';
+
+.contract-discount-container {
+	.hb-table {
+		.hb-table-row {
+			position: relative;
+			width: 550px;
+
+			.percentage {
+				@include position(absolute, 10px, 50px);
+			}
+
+			.hb-table-column:nth-child(1), .type, app-select-input .select-input {
+				width: 250px;
+				border-right: 0;
+			}
+
+			.hb-table-column:nth-child(2), .discount-wrapper {
+				width: 260px;
+			}
+
+			.hb-table-column:nth-child(3), .delete-row {
+				width: 40px;
+				border-left: 0;
+			}
+		}
+	}
+	app-booking-travel-dates .booking-travel-window {
+		width: 548px;
+	}
+}

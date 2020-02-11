@@ -1,0 +1,136 @@
+@import '../../../scss/main';
+
+
+.loader-component.container-loader {
+  @include position(absolute, 50%, null, null, 50%, 10);
+  transform: translate(-50%, -50%);
+}
+
+.loader-component.page-loader {
+  @include position(absolute, 50%, null, null, 50%, 10);
+  transform: translate(-50%, -50%);
+}
+
+/*************************** rectangle loader **********************************/
+
+.loader-component:not(.rectangle-loader) .rectangle-loader {
+  display: none;
+}
+
+.rectangle-loader {
+  @include dimension(75px, 50px);
+  text-align: center;
+  font-size: 10px;
+  margin-bottom: 15px;
+
+  .rect {
+    @include dimension(8px, 100%);
+    background-color: $color20;
+    display: inline-block;
+    margin-right: 2px;
+    -webkit-animation: sk-stretchdelay 1s infinite ease-in-out;
+    animation: sk-stretchdelay 1s infinite ease-in-out;
+    box-shadow: 0 2px 2px 0 $white;
+  }
+
+  .rect2 {
+    -webkit-animation-delay: -0.9s;
+    animation-delay: -0.9s;
+  }
+
+  .rect3 {
+    -webkit-animation-delay: -0.8s;
+    animation-delay: -0.8s;
+
+  }
+
+  .rect4 {
+    -webkit-animation-delay: -0.7s;
+    animation-delay: -0.7s;
+  }
+
+  .rect5 {
+    -webkit-animation-delay: -0.6s;
+    animation-delay: -0.6s;
+  }
+
+  .rect6 {
+    -webkit-animation-delay: -0.5s;
+    animation-delay: -0.5s;
+  }
+}
+
+@-webkit-keyframes sk-stretchdelay {
+  0%, 40%, 100% {
+    -webkit-transform: scaleY(0.4)
+  }
+  20% {
+    -webkit-transform: scaleY(1.0)
+  }
+}
+
+@keyframes sk-stretchdelay {
+  0%, 40%, 100% {
+    transform: scaleY(0.4);
+    -webkit-transform: scaleY(0.4);
+  }
+  20% {
+    transform: scaleY(1.0);
+    -webkit-transform: scaleY(1.0);
+  }
+}
+
+/*************************** rectangle loader **********************************/
+
+/*************************** circle loader **********************************/
+.loader-component:not(.circle-loader) .circle-loader {
+  display: none;
+}
+
+.circle-loader {
+  @include dimension(64px);
+  display: inline-block;
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.circle-loader .circle {
+  @include dimension(100%);
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  margin: 6px;
+  border: 6px solid $white;
+  border-radius: 50%;
+  animation: circle-loader-key-frame 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: $white transparent transparent transparent;
+}
+
+.circle-loader div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+
+.circle-loader div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+
+.circle-loader div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+
+@keyframes circle-loader-key-frame {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/*************************** circle loader **********************************/
+
+.loading_text {
+  text-align: center;
+  text-shadow: 1px 1px 0 $white;
+  font-size: 15px;
+}

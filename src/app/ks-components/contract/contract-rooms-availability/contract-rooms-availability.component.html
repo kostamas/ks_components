@@ -1,0 +1,67 @@
+<script src="contract-rooms-availability.component.ts"></script>
+<div class="room-availability page-section">
+	<div class="room-availability-title">Section 4</div>
+
+	<div class="hb-table">
+		<div class="hb-table-row">
+			<div *ngFor="let header of  tableHeader" class="hb-table-header hb-table-column"> {{header}}</div>
+		</div>
+
+		<div *ngFor="let row of tableRows; let _index = index" class="hb-table-row">
+			<input [(ngModel)]="contractRoomsAvailabilityService.roomsAvailabilityParams[_index].description"
+			       class="hb-input room-description fix-contract-input-focus"/>
+			<app-select-input (onSelectItem)="onSelectRoomOrCharacteristic($event, _index, 'rooms', 'room')"
+			                  [componentInputs]="{ withEmptyOption: contractRoomsAvailabilityService.roomsAvailabilityParams[_index].room,
+			                  inputTextHandler: roomListDisplay }"
+			                  [selectList]="row.rooms"
+			                  [inputTextHandler]="displayRoomId"
+			                  class="room-row take-left fix-contract-input-focus">
+			</app-select-input>
+			<app-select-input
+				(onSelectItem)="onSelectRoomOrCharacteristic($event, _index, 'characteristics', 'characteristic')"
+				[componentInputs]="{ withEmptyOption: contractRoomsAvailabilityService.roomsAvailabilityParams[_index].characteristic,
+				  inputTextHandler: roomListDisplay  }"
+				[selectList]="row.characteristics"
+				[inputTextHandler]="displayRoomId"
+				[validationStatus$]="roomsAndCharacteristicsStatus$[_index]"
+				class="characteristic-row take-left fix-contract-input-focus">
+			</app-select-input>
+			<app-select-input (onSelectItem)="onSelectSharingAvailability($event, _index)"
+			                  [componentInputs]="{ withEmptyOption: contractRoomsAvailabilityService.roomsAvailabilityParams[_index].sharingAvailability}"
+			                  [selectList]="row.sharingAvailability"
+			                  class="sharing-availability-row take-left fix-contract-input-focus">
+			</app-select-input>
+			<input (keypress)="isRangeValue($event, 1, null, false)"
+			       (paste)="preventPasteValue()"
+			       [(ngModel)]="contractRoomsAvailabilityService.roomsAvailabilityParams[_index].standardCapacity"
+			       class="hb-input standard-capacity take-left fix-contract-input-focus"/>
+			<input (keypress)="isRangeValue($event, 1, 10)"
+			       (paste)="preventPasteValue()"
+			       [(ngModel)]="contractRoomsAvailabilityService.roomsAvailabilityParams[_index].minCapacity"
+			       class="hb-input min-capacity take-left fix-contract-input-focus"/>
+			<input (keypress)="isRangeValue($event, 1, 10)"
+			       (paste)="preventPasteValue()"
+			       [(ngModel)]="contractRoomsAvailabilityService.roomsAvailabilityParams[_index].maxAdults"
+			       class="hb-input max-adults take-left fix-contract-input-focus"/>
+			<input (keypress)="isRangeValue($event, null, 10)"
+			       (paste)="preventPasteValue()"
+			       [(ngModel)]="contractRoomsAvailabilityService.roomsAvailabilityParams[_index].maxChild"
+			       class="hb-input max-child take-left fix-contract-input-focus"/>
+			<input (keypress)="isRangeValue($event, 1, 99)"
+			       (paste)="preventPasteValue()"
+			       [(ngModel)]="contractRoomsAvailabilityService.roomsAvailabilityParams[_index].maxCapacity"
+			       class="hb-input max-capacity take-left fix-contract-input-focus"/>
+			<input (keypress)="isRangeValue($event, null, 30)"
+				   (paste)="preventPasteValue()"
+				   [(ngModel)]="contractRoomsAvailabilityService.roomsAvailabilityParams[_index].maxBabies"
+				   class="hb-input max-babies take-left fix-contract-input-focus"/>
+			<div (click)="deleteRow(_index)" class="hb-table-column click-able delete-row take-left fix-contract-input-focus">
+				<app-svg-icon [svg]="SVG_ICONS.bin" class="bin-icon" title="Delete row"></app-svg-icon>
+			</div>
+		</div>
+	</div>
+
+	<div (click)="addRow()" class="add-row click-able" title="Add row">
+		<app-svg-icon [svg]="SVG_ICONS.plus"></app-svg-icon>
+	</div>
+</div>

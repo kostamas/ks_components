@@ -1,0 +1,140 @@
+<div class="guest-room-container">
+	<div class="hb-table" [ngClass]="{'with-dinner-options': showDinnerOptions}">
+		<div class="hb-table-row">
+			<div class="hb-table-header hb-table-column" *ngFor="let header of  tableHeader"> {{header}}</div>
+		</div>
+
+		<ng-container *ngFor="let row of guestRoomSrv.tableRows; let rowIndex = index">
+			<div class="hb-table-row" [ngClass]="[row.type === 'S' || row.type === 'SD'  ?  'seasonally-row' : '']">
+				<app-select-input class="dinner"
+													[selectList]="row.dinnerOptions"
+													*ngIf="showDinnerOptions"
+													(onSelectItem)="onSelectItem($event, rowIndex, 'dinner')">
+				</app-select-input>
+				<app-select-input class="guest"
+													[selectList]="row.guestOptions"
+													[validationStatus$]="row.guestValidator"
+													(onSelectItem)="onSelectItem($event, rowIndex, 'guest')">
+				</app-select-input>
+				<app-select-input class="room-and-characteristic"
+													[componentInputs]="{ withEmptyOption: guestRoomSrv.guestRoomParams[rowIndex].roomAndCharacteristic}"
+													[selectList]="row.roomAndCharacteristicList"
+													(onSelectItem)="onSelectItem($event, rowIndex, 'roomAndCharacteristic')">
+				</app-select-input>
+				<app-select-input class="application-rule"
+													[componentInputs]="{ withEmptyOption: guestRoomSrv.guestRoomParams[rowIndex].applicationRule}"
+													[selectList]="row.applicationRulesOptions"
+													(onSelectItem)="onSelectItem($event, rowIndex, 'applicationRule')">
+				</app-select-input>
+				<app-select-input class="type"
+													[selectList]="row.contractPeriodOptions"
+													(onSelectItem)="onSelectItem($event, rowIndex, 'type')">
+				</app-select-input>
+				<div class="input-with-symbol-column-wrapper">
+					<app-input-with-symbol
+						[symbol]="inputValueSymbol[rowIndex]"
+						[isFloat]="true"
+						[isDisabled]="row.type === 'S'"
+						[hideSymbol]="row.type === 'S'"
+						[valueMinRange]="0"
+						[valueMaxRange]="row.discountValueMaxRange"
+						[(inputValue)]="guestRoomSrv.guestRoomParams[rowIndex].value">
+					</app-input-with-symbol>
+				</div>
+
+				<div class="hb-table-column click-able delete-row" (click)="deleteRow(rowIndex)">
+					<app-svg-icon class="bin-icon" [svg]="SVG_ICONS.bin" title="Delete row"></app-svg-icon>
+				</div>
+			</div>
+
+			<div class="hb-table-row season-row specific-dates"
+					 *ngIf="guestRoomSrv.tableRows[rowIndex].type === 'SD'"
+					 [ngClass]="{'calendar-open': row.isCalendarOpen}">
+				<div class="row-connect">
+					<div class="calendar-icon">
+						<app-svg-icon [svg]="SVG_ICONS.season_calendar"></app-svg-icon>
+					</div>
+				</div>
+				<div class="date-range-title">Date Range</div>
+				<app-date-input
+					[detectChangesManually]="true"
+					[withoutDefaultDate]="true"
+					[multiDatePicker]="true"
+					[selectedDateArr]="guestRoomSrv.tableRows[rowIndex].selectedDates"
+					(isOpenChanged)="isCalendarOpenHandler($event, row)"
+					(rangeSelected)="onSelectRange($event, rowIndex)">
+				</app-date-input>
+			</div>
+
+			<div class="hb-table-row season-row" *ngIf="guestRoomSrv.tableRows[rowIndex].type === 'S'">
+				<div class="row-connect">
+					<div class="calendar-icon">
+						<app-svg-icon [svg]="SVG_ICONS.season_calendar"></app-svg-icon>
+					</div>
+				</div>
+				<div class="row">
+					<ng-container *ngFor="let season of seasons; let ind = index">
+						<div class="season-column" *ngIf="season.selectedSeasonType === 'A'">
+							<div class="season-title" app-tooltip
+									 [tooltipTitle]="guestRoomSrv.tableRows[rowIndex].seasonsValues[ind].tooltip">
+								{{oneContractService.getSeasonHeader(ind + 1)}}
+							</div>
+							<div class="season-nights">
+								<div class="input-with-symbol-wrapper">
+									<app-input-with-symbol
+										[symbol]="inputValueSymbol[rowIndex]"
+										[isFloat]="true"
+										[valueMinRange]="0"
+										[valueMaxRange]="row.discountValueMaxRange"
+										[(inputValue)]="guestRoomSrv.tableRows[rowIndex].seasonsValues[ind].value">
+									</app-input-with-symbol>
+								</div>
+							</div>
+						</div>
+						<ng-container *ngIf="season.selectedSeasonType === 'W'">
+							<div class="season-column expended">
+								<div class="season-title" app-tooltip
+										 [tooltipTitle]="guestRoomSrv.tableRows[rowIndex].seasonsValues[ind].tooltipWkdy">
+									{{oneContractService.getSeasonHeader(ind + 1, 'WKDY')}}
+								</div>
+								<div class="season-nights">
+									<div class="input-with-symbol-wrapper">
+										<app-input-with-symbol
+											[symbol]="inputValueSymbol[rowIndex]"
+											[isFloat]="true"
+											[valueMinRange]="0"
+											[valueMaxRange]="row.discountValueMaxRange"
+											[(inputValue)]="guestRoomSrv.tableRows[rowIndex].seasonsValues[ind].wkdy">
+										</app-input-with-symbol>
+									</div>
+								</div>
+							</div>
+							<div class="season-column expended">
+								<div class="season-title"
+										 app-tooltip
+										 [tooltipTitle]="guestRoomSrv.tableRows[rowIndex].seasonsValues[ind].tooltipWknd">
+									{{oneContractService.getSeasonHeader(ind + 1, 'WKND')}}
+								</div>
+								<div class="season-nights">
+									<div class="input-with-symbol-wrapper">
+										<app-input-with-symbol
+											[symbol]="inputValueSymbol[rowIndex]"
+											[isFloat]="true"
+											[valueMinRange]="0"
+											[valueMaxRange]="row.discountValueMaxRange"
+											[(inputValue)]="guestRoomSrv.tableRows[rowIndex].seasonsValues[ind].wknd">
+										</app-input-with-symbol>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+					</ng-container>
+				</div>
+			</div>
+		</ng-container>
+	</div>
+
+	<div class="add-row click-able" (click)="addRow()" title="Add row">
+		<app-svg-icon [svg]="SVG_ICONS.plus"></app-svg-icon>
+	</div>
+</div>

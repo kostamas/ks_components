@@ -1,0 +1,49 @@
+	<div class="contract-overrides-container page-section">
+	<div class="title">
+		<div class="display-hide-icon click-able" (click)="displayForm = !displayForm;"
+				 [ngClass]="[displayForm ? 'hide' : 'collapse']">
+			<app-svg-icon [svg]="SVG_ICONS.down_arrow_collapse"></app-svg-icon>
+		</div>
+		Section 23
+	</div>
+
+	<div class="contract-overrides-form" *ngIf="displayForm">
+		<div class="hb-table">
+			<div class="hb-table-row">
+				<div class="hb-table-header hb-table-column take-left" *ngFor="let header of  tableHeader"> {{header}}</div>
+			</div>
+
+			<div class="hb-table-row"
+					 *ngFor="let params of  contractOverridesService.contractOverridesParams; let index = index;">
+				<input class="hb-input scale-from take-left fix-contract-input-focus"
+							 [(ngModel)]="params.scale.from"
+							 (paste)="preventPasteValue()"
+							 (keypress)="isRangeValue($event, 0, 100, true)"
+							 [ngClass]="[isInputInvalid(params.scale.from, index, true) ? 'hb-invalid-input': '']"/>
+
+				<input class="hb-input scale-to take-left fix-contract-input-focus"
+							 [(ngModel)]="params.scale.to"
+							 (paste)="preventPasteValue()"
+							 (keypress)="isRangeValue($event, 0, 100, true)"
+							 [ngClass]="[isInputInvalid(params.scale.to, index, false) ? 'hb-invalid-input': '']"/>
+
+				<div class="total-sales-input-wrapper">
+					<div class="percentage">%</div>
+					<input class="hb-input total-sales take-left fix-contract-input-focus"
+								 appEllipseDetector
+								 [(ngModel)]="params.totalSalesPercentage"
+								 (paste)="preventPasteValue()"
+								 (keypress)="isRangeValue($event, 0, 100, true)"/>
+				</div>
+
+				<div class="hb-table-column click-able delete-row" (click)="deleteRow(index)">
+					<app-svg-icon class="bin-icon" [svg]="SVG_ICONS.bin" title="Delete row"></app-svg-icon>
+				</div>
+			</div>
+		</div>
+
+		<div class="add-row click-able" (click)="addRow()" title="Add row">
+			<app-svg-icon [svg]="SVG_ICONS.plus"></app-svg-icon>
+		</div>
+	</div>
+</div>

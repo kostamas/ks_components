@@ -1,0 +1,12 @@
+<div class="auto-suggest-result-container"
+		 #resultsWrapper
+		 (mouseenter)="mouseEnterHandler()"
+		 (mouseleave)="mouseLeaveHandler()">
+
+	<div class="item-result" *ngFor="let item of data.results; let i = index"
+			 (click)="selectResultHandler(i);"
+			 [ngClass]="isSelected(i)"
+			 id="itemResult{{i}}">
+		<div class="item-value">{{item.name}} ({{item.id}}) {{ item.countryName ? ' ,' + item.countryName : ''}}</div>
+	</div>
+</div>

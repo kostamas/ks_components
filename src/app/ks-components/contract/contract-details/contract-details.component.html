@@ -1,0 +1,166 @@
+<div class="contract-details-container page-section">
+
+	<div class="title">Section 2</div>
+
+	<div class="contract-details-form">
+
+		<div class="search-column search-column-1">
+			<div class="contract-type">
+				<div class="search-label">Contract Type</div>
+				<div class="search-field">
+					<app-select-input
+						[selectList]="contractTypeOptions"
+						(onSelectItem)="onSelectMarketDistribution($event)"
+						[tabIndex]="11">
+					</app-select-input>
+				</div>
+			</div>
+			<div class="currency">
+				<div class="search-label">Currency</div>
+				<app-select-input
+					[validationStatus$]="contractCurrencyStatus$"
+					[selectList]="currencyOptions"
+					[componentInputs]="{ withEmptyOption: contractDetailsService.contractDetailsParams && contractDetailsService.contractDetailsParams.currency}"
+					(onSelectItem)="onSelectOption($event, 'currency', $event.id)"
+					(optionsClosed)="createOneContractService.onOptionsClosedRequiredValidation(contractCurrencyStatus$, contractDetailsService.contractDetailsParams, 'currency')"
+					[tabIndex]="19">
+				</app-select-input>
+			</div>
+		</div>
+
+		<div class="search-column search-column-2">
+			<div class="fields-row">
+				<div class="commission">
+					<div class="search-label">Commission</div>
+					<div class="search-field">
+						<app-input-with-symbol
+							[isFloat]="true"
+							[valueMaxRange]="100"
+							[valueMinRange]="0"
+							[isDisabled]="contractDetailsService.contractDetailsParams.contractType && contractDetailsService.contractDetailsParams.contractType === 'FN'"
+							[(inputValue)]="contractDetailsService.contractDetailsParams.commissionPercentage"
+							symbol="%"
+							[tabIndex]="12">
+						</app-input-with-symbol>
+					</div>
+				</div>
+				<div class="rsp">
+					<div class="search-label">R.S.P
+						<app-svg-icon class="cursor-pointer tooltip" app-tooltip [tooltipTitle]="'Recommended Selling Price'"
+													[svg]="SVG_ICONS.info"></app-svg-icon>
+					</div>
+					<div class="search-field">
+						<app-select-input
+							[selectList]="rspOptions"
+							[isDisabled]="contractDetailsService.contractDetailsParams.contractType && contractDetailsService.contractDetailsParams.contractType === 'FN'"
+							(onSelectItem)="onSelectOption($event, 'recommendedSellingPrice')"
+							[componentInputs]="{withEmptyOption: contractDetailsService.contractDetailsParams.recommendedSellingPrice || contractDetailsService.contractDetailsParams.recommendedSellingPrice === false}"
+							[tabIndex]="13">
+						</app-select-input>
+					</div>
+				</div>
+				<div class="board-base">
+					<div class="search-label">Board Base</div>
+					<div class="search-field">
+						<app-select-input
+							[validationStatus$]="contractBoardBasisStatus$"
+							[selectList]="boardBasisOptions"
+							[componentInputs]="{withEmptyOption: contractDetailsService.contractDetailsParams.boardBase.id, inputTextHandler: appCommonService.selectInputTextHandlerNameAndId}"
+							[inputTextHandler]="appCommonService.selectInputTextHandlerNameAndId"
+							(onSelectItem)="onSelectOption($event, 'boardBase', $event.id === null ? $event.name : $event.name)"
+							(optionsClosed)="createOneContractService.onOptionsClosedRequiredValidation(contractBoardBasisStatus$,contractDetailsService.contractDetailsParams, 'boardBase')"
+							[tabIndex]="14">
+						</app-select-input>
+					</div>
+				</div>
+				<div class="payment">
+					<div class="search-label">Payment Mode</div>
+					<div class="search-field">
+						<app-select-input
+							[selectList]="paymentModeOptions"
+							[componentInputs]="{withEmptyOption: contractDetailsService.contractDetailsParams.paymentMode && contractDetailsService.contractDetailsParams.contractType === 'BR'}"
+							(onSelectItem)="onSelectOption($event, 'paymentMode')"
+							[tabIndex]="15">
+						</app-select-input>
+					</div>
+				</div>
+				<div class="classification">
+					<div class="search-label">Classification</div>
+					<div class="search-field">
+						<app-select-input
+							[validationStatus$]="contractClassificationStatus$"
+							[selectList]="classificationOptions"
+							[componentInputs]="{withEmptyOption: contractDetailsService.contractDetailsParams.classification}"
+							(onSelectItem)="onSelectOption($event, 'classification')"
+							(optionsClosed)="createOneContractService.onOptionsClosedRequiredValidation(contractClassificationStatus$,contractDetailsService.contractDetailsParams, 'classification')"
+							[tabIndex]="16">
+						</app-select-input>
+					</div>
+				</div>
+			</div>
+			<div class="managed-and-sws">
+				<div class="managed">
+					<div class="search-label">Managed By</div>
+					<div class="search-field">
+						<app-select-input
+							[validationStatus$]="contractManagedByStatus$"
+							[selectList]="managedByOptions"
+							(onSelectItem)="onSelectOption($event, 'managementType')"
+							(optionsClosed)="createOneContractService.onOptionsClosedRequiredValidation(contractManagedByStatus$,contractDetailsService.contractDetailsParams, 'managementType')"
+							[tabIndex]="20">
+						</app-select-input>
+					</div>
+				</div>
+				<div class="sws">
+					<div class="search-label">Visible Maxiroom</div>
+					<div class="search-field">
+						<app-select-input
+							[validationStatus$]="contractVisibleSWSStatus$"
+							[selectList]="visibleSwsOptions"
+							[isDisabled]="true"
+							(onSelectItem)="onSelectOption($event, 'isVisibleWeb')"
+							(optionsClosed)="createOneContractService.onOptionsClosedRequiredValidation(contractVisibleSWSStatus$,contractDetailsService.contractDetailsParams, 'isVisibleWeb')">
+						</app-select-input>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="include-exclude-countries">
+		<div class="included-countries">
+			<div class="search-label">Include Countries</div>
+			<div class="search-field market-distribution">
+				<app-select-input
+					[tabIndex]="15"
+					[isDisabled]="isIncludedCountriesDisabled"
+					[withAutoSuggest]="true"
+					[withChips]="true"
+					[chipsValues]="contractDetailsService.contractDetailsParams.includedCountries"
+					[selectList]="includedCountriesOptions"
+					(onSelectItem)="onSelectCountries($event, 'includedCountries')"
+					(chipsDeleted)="onDeleteChips($event, 'includedCountries')"
+					(optionsOpened)="onIncludedCountriesFocus()"
+					(optionsClosed)="onIncludedCountriesBlur()">
+				</app-select-input>
+			</div>
+		</div>
+
+		<div class="excluded-countries">
+			<div class="search-label">Exclude Countries</div>
+			<div class="search-field">
+				<app-select-input
+					[isDisabled]="isExcludeCountriesDisabled"
+					[withAutoSuggest]="true"
+					[withChips]="true"
+					[chipsValues]="contractDetailsService.contractDetailsParams.excludedCountries"
+					[selectList]="excludedCountriesOptions"
+					(onSelectItem)="onSelectCountries($event, 'excludedCountries')"
+					(chipsDeleted)="onDeleteChips($event, 'excludedCountries')"
+					[tabIndex]="17">
+				</app-select-input>
+			</div>
+		</div>
+	</div>
+
+</div>

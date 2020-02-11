@@ -1,0 +1,50 @@
+<div class="contract-discount-container">
+	<div class="shared-allotment-input-wrapper">
+		<div class="shared-allotment-label">Shared Allotment</div>
+		<app-radio-buttons
+			[radioButtons]="sharedAllotmentOptions"
+			(radioButtonClick)="radioButtonClick($event.checkedButton)">
+		</app-radio-buttons>
+	</div>
+
+	<div class="hb-table">
+		<div class="hb-table-row">
+			<div class="hb-table-header hb-table-column">Type</div>
+			<div class="hb-table-header hb-table-column">Discount</div>
+			<div class="hb-table-header hb-table-column"></div>
+		</div>
+		<ng-container *ngFor="let row of discountSrv.params.discountRows; let index = index;">
+			<div class="hb-table-row"
+					 [ngClass]="{'seasonally-row' :row.seasonCode === 'SD'}">
+				<app-select-input class="type"
+													[selectList]="row.seasonTypeList"
+													(onSelectItem)="onSelectItem($event, index, 'seasonCode')">
+				</app-select-input>
+				<div class="discount-wrapper">
+					<app-input-with-symbol
+						[symbol]="'%'"
+						[isFloat]="true"
+						[valueMinRange]="0"
+						[valueMaxRange]="100"
+						(inputValueChange)="discountTypeHandler()"
+						[(inputValue)]="row.discount">
+					</app-input-with-symbol>
+				</div>
+				<div class="hb-table-column click-able delete-row" (click)="deleteRow(index)">
+					<app-svg-icon class="bin-icon" [svg]="SVG_ICONS.bin" title="Delete row"></app-svg-icon>
+				</div>
+			</div>
+			<app-booking-travel-dates *ngIf="row.seasonCode === 'SD'"
+																[bookingDate]="discountSrv.params.discountRows[index].bookingWindow"
+																[travelDate]="discountSrv.params.discountRows[index].travelWindow"
+																(bookingDateSelected)="commonOneContractService.onSelectBookingOrTravelDate($event, index, discountSrv.params.discountRows, 'bookingWindow')"
+																(travelDateSelected)="commonOneContractService.onSelectBookingOrTravelDate($event, index,discountSrv.params.discountRows, 'travelWindow')">
+			</app-booking-travel-dates>
+		</ng-container>
+	</div>
+	<div class="add-row click-able"
+			 [ngClass]="[isAddRowDisabled()? 'disabled' : '']"
+			 (click)="addRow()" title="{{isAddRowDisabled()? '' : 'Add row'}}">
+		<app-svg-icon [svg]="SVG_ICONS.plus"></app-svg-icon>
+	</div>
+</div>

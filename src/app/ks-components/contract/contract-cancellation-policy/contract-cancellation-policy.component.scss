@@ -1,0 +1,95 @@
+@import '../../../scss/main';
+
+.contract-cancellation-policy-container {
+	.multi-select-colorful-options .option-row .option-text {
+		label {
+			@include text-style(16px, black, 'Roboto');
+		}
+	}
+
+	.contract-cancellation-policy-title {
+		@include text-style(18px, $black, null, 700);
+		position: relative;
+		margin: 0 0 15px;
+
+		.triangle-error {
+			@include position(absolute, 2px, initial, null, 170px);
+		}
+	}
+
+	.radio-buttons-wrapper {
+		@include flex();
+		margin-bottom: 10px;
+
+		.text {
+			width: 192px;
+		}
+
+		app-radio-buttons {
+			.radio-buttons {
+				.radio-button-repeater {
+					margin-right: 10px;
+
+					.label {
+						margin-left: 0;
+
+						&:before {
+							@include dimension(14px, 14px);
+							top: 1px;
+						}
+
+						&:after {
+							top: 5px;
+							left: 4px;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.hb-table {
+		.days-before-check-in-field {
+			position: relative;
+
+			app-input-with-error .input-with-error {
+				width: 200px;
+			}
+		}
+
+		.take-left:first-child {
+			margin-left: 0;
+		}
+
+		.hb-table-column:nth-child(1), .type {
+			width: 145px;
+		}
+
+		.hb-table-column:nth-child(2), .days-before-check-in {
+			position: relative;
+			width: 200px;
+		}
+
+		.hb-table-column:nth-child(3), .staying-type {
+			width: 145px;
+		}
+
+		.hb-table-column:nth-child(4), .rule {
+			width: 145px;
+		}
+
+		.hb-table-column:nth-child(5), .time {
+			width: 145px;
+		}
+
+		.hb-table-column:nth-child(6), .apply-on {
+			width: 220px;
+		}
+
+		.hb-table-column:nth-child(7) {
+			width: 40px;
+		}
+
+		margin-bottom: 10px;
+	}
+}

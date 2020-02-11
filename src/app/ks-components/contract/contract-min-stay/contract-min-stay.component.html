@@ -1,0 +1,112 @@
+<div class="contract-min-stay page-section">
+	<div class="title">
+		<div class="display-hide-icon click-able" (click)="hideOrDisplayForm()"
+				 [ngClass]="[displayForm ? 'hide' : 'collapse']">
+			<app-svg-icon [svg]="SVG_ICONS.down_arrow_collapse"></app-svg-icon>
+		</div>
+    Section 8
+	</div>
+	<div class="contract-min-stay-form" *ngIf="displayForm">
+		<div class="hb-table">
+			<div class="hb-table-row">
+				<div class="hb-table-header hb-table-column">
+					Type
+				</div>
+				<div class="hb-table-header hb-table-column">
+					Room & Characteristic
+				</div>
+				<div class="hb-table-header hb-table-column">
+					Nights
+				</div>
+				<div class="hb-table-header hb-table-column">
+				</div>
+			</div>
+			<ng-container *ngFor="let row of contractMinStayService.contractMinStayParameters; let rowIndex = index;">
+				<div class="hb-table-row" [ngClass]="[row.isSeasons ? 'seasonally-row' : '']">
+					<app-select-input [selectList]="row.type"
+														(onSelectItem)="onSelectItem($event, 'type', rowIndex, row)"></app-select-input>
+					<app-select-input [selectList]="row.roomAndCharacteristicList"
+														[validationStatus$]="row.roomAndCharacteristicValidator$"
+														[componentInputs]="{ withEmptyOption: row.roomAndCharacteristic}"
+														(onSelectItem)="onSelectItem($event, 'roomAndCharacteristic', rowIndex, row)"></app-select-input>
+					<div class="nights-field">
+						<app-input-with-symbol
+							[isDisabled]="row.isSeasons"
+							[svg]="SVG_ICONS.moon"
+							[valueMaxRange]="100"
+							[valueMinRange]="0"
+							[isFloat]="true"
+							[(inputValue)]="row.nights">
+						</app-input-with-symbol>
+					</div>
+					<div class="click-able delete-row" (click)="deleteRow(row)">
+						<app-svg-icon [svg]="SVG_ICONS.bin" title="Delete row"></app-svg-icon>
+					</div>
+				</div>
+				<div class="hb-table-row season-row" *ngIf="row.isSeasons">
+					<div class="row-connect">
+						<div class="calendar-icon">
+							<app-svg-icon [svg]="SVG_ICONS.season_calendar"></app-svg-icon>
+						</div>
+					</div>
+					<div class="row">
+						<ng-container *ngFor="let season of contractMinStayService.seasons; let ind = index">
+							<div class="season-column" *ngIf="season.selectedSeasonType === 'A'">
+								<div class="season-title" app-tooltip
+										 [tooltipTitle]="contractMinStayService.contractMinStayParameters[rowIndex].seasonsValues[ind].tooltip">
+									{{oneContractService.getSeasonHeader(ind + 1)}}
+								</div>
+								<div class="season-nights">
+									<app-input-with-symbol
+										[svg]="SVG_ICONS.moon"
+										[isFloat]="true"
+										[valueMaxRange]="100"
+										[valueMinRange]="0"
+										[(inputValue)]="row.seasonsValues[ind].value">
+									</app-input-with-symbol>
+								</div>
+							</div>
+							<ng-container *ngIf="season.selectedSeasonType === 'W'">
+								<div class="season-column expended">
+									<div class="season-title" app-tooltip
+											 [tooltipTitle]="contractMinStayService.contractMinStayParameters[rowIndex].seasonsValues[ind].tooltipWkdy">
+										{{oneContractService.getSeasonHeader(ind + 1, 'WKDY')}}
+									</div>
+									<div class="season-nights">
+										<app-input-with-symbol
+											[svg]="SVG_ICONS.moon"
+											[isFloat]="true"
+											[valueMaxRange]="100"
+											[valueMinRange]="0"
+											[(inputValue)]="row.seasonsValues[ind].wkdy">
+										</app-input-with-symbol>
+									</div>
+								</div>
+								<div class="season-column expended">
+									<div class="season-title" app-tooltip
+											 [tooltipTitle]="contractMinStayService.contractMinStayParameters[rowIndex].seasonsValues[ind].tooltipWknd">
+										{{oneContractService.getSeasonHeader(ind + 1, 'WKND')}}
+									</div>
+									<div class="season-nights">
+										<app-input-with-symbol
+											[svg]="SVG_ICONS.moon"
+											[isFloat]="true"
+											[valueMaxRange]="100"
+											[valueMinRange]="0"
+											[(inputValue)]="row.seasonsValues[ind].wknd">
+										</app-input-with-symbol>
+									</div>
+								</div>
+							</ng-container>
+						</ng-container>
+					</div>
+				</div>
+			</ng-container>
+		</div>
+		<div class="add-row click-able"
+				 (click)="addRow()"
+				 [ngClass]="[addRowsDisabled() ? 'disabled' : '']" title="{{addRowsDisabled() ? '' : 'Add row'}}">
+			<app-svg-icon [svg]="SVG_ICONS.plus"></app-svg-icon>
+		</div>
+	</div>
+</div>

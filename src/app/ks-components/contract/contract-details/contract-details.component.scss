@@ -1,0 +1,104 @@
+@import '../../../scss/main';
+
+.contract-details-container {
+
+	.title {
+		@include text-style(18px, $black, null, bold);
+		margin: 0 0 15px;
+	}
+	input, app-select-input .select-input, .hb-input {
+		border-radius: 3px;
+	}
+
+	.contract-details-form {
+		@include flex();
+		height: auto;
+
+		.search-column {
+			margin-right: 15px;
+
+			.search-field {
+				margin-bottom: 22px;
+
+				app-select-input {
+					.options-wrapper {
+						background-color: $white;
+						width: fit-content;
+
+						.option-text {
+							white-space: nowrap;
+						}
+					}
+				}
+			}
+		}
+
+		.search-column-1 {
+			@include dimension(277px, auto);
+
+			.contract-type, .currency {
+				@include dimension(277px, 77px);
+			}
+		}
+
+		.search-column-2 {
+			height: auto;
+
+			.fields-row {
+				@include flex();
+
+				.rsp {
+					width: 92px;
+					margin-right: 15px;
+
+					.tooltip {
+						margin-left: 10px;
+						margin-top: -3px;
+						position: absolute;
+					}
+				}
+
+				.commission {
+					width: 120px;
+					margin-right: 15px;
+				}
+
+				.board-base, .payment, .classification {
+					margin-right: 15px;
+					width: 184px;
+				}
+			}
+
+			.managed-and-sws {
+				@include flex();
+
+				.managed {
+					margin-right: 15px;
+					width: 227px;
+				}
+				.sws {
+					margin-right: 15px;
+					width: 184px;
+
+					app-select-input {
+						app-svg-icon {
+							display: none;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.include-exclude-countries {
+		@include flex();
+
+		.included-countries, .excluded-countries {
+			width: 519px;
+		}
+
+		.included-countries {
+			margin-right: 15px;
+		}
+	}
+}

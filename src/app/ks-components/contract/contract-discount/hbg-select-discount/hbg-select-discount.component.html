@@ -1,0 +1,17 @@
+<div class="hbg-select-discount-container page-section">
+  <div class="title">
+    <div class="display-hide-icon click-able" (click)="displayForm = !displayForm;"
+         [ngClass]="[displayForm ? 'hide' : 'collapse']">
+      <app-svg-icon [svg]="SVG_ICONS.down_arrow_collapse"></app-svg-icon>
+    </div>
+     Section 15
+  </div>
+
+  <div class="hb-select-discount-form" [ngClass]="{'close-section': !displayForm}">
+    <app-contract-discount
+      discountType="HBGSelectDiscount"
+      [discountSrv]="hbgSelectDiscountService"
+      [getRowsFromContract]="getRowsFromContract">
+    </app-contract-discount>
+  </div>
+</div>

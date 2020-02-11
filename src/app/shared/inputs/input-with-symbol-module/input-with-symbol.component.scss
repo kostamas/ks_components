@@ -1,0 +1,24 @@
+@import '../../../scss/main';
+
+app-input-with-symbol {
+	width: 100%;
+}
+
+.input-with-symbol {
+	@include flex();
+	position: relative;
+	width: 100%;
+
+	.input-symbol {
+		@include position(absolute, 10px, 10px, null, null, 3);
+		pointer-events: none;
+		text-align: right;
+		width: 40px;
+	}
+
+	.input-value {
+		@include text-overflow-ellipsis();
+		padding: 0 35px 0 9px;
+		width: 100%;
+	}
+}

@@ -1,0 +1,591 @@
+@import '../../scss/main';
+
+.contract-control-buttons {
+  @include flex(space-between);
+  width: 500px;
+  margin: 0 auto;
+  padding-top: 25px;
+
+  .load-contract, .new-contract {
+    width: 220px;
+  }
+}
+
+.one-contract-page {
+  padding-top: 5px;
+
+  .take-left, .input-with-symbol-take-left input {
+    margin-left: -1px;
+  }
+
+  .fix-contract-input-focus {
+    position: relative;
+
+    &:focus {
+      z-index: 2;
+    }
+  }
+
+  input {
+    font-size: 16px;
+  }
+
+  .hb-invalid-input {
+    border: 0;
+    background-color: #fbfb8a;
+    box-shadow: inset 0 0 0 1px red;
+  }
+
+  .disabled-field {
+    background: repeating-linear-gradient(-45deg, #f2f2f2, #e5e5e5 0, #f2f2f2 2px, #e5e5e5 3px);
+    height: 36px;
+    border: 1px solid $color1;
+    box-sizing: border-box;
+  }
+
+  .page-section {
+    .title {
+      @include flex(null, null);
+      @include text-style(18px, $black, null, bold);
+      margin: 0 0 15px;
+    }
+
+    app-select-input {
+      .select-input {
+        &.is-disabled, &.is-disabled .input, &.is-disabled .chips-value {
+          background: repeating-linear-gradient(-45deg, white, $color86 0px, white 2px, $color86 3px);
+        }
+      }
+    }
+  }
+
+  .section-toast-error {
+    @include dimension(515px, 40px);
+    @include flex(start, center);
+    margin-bottom: 15px;
+    margin-top: 15px;
+    color: $white;
+    border: $color9 1px solid;
+    padding: 0 10px 0 10px;
+    box-sizing: border-box;
+    line-height: 40px;
+    background-color: #ffeeee;
+    border-radius: 5px;
+
+    .message {
+      display: inline-flex;
+      color: $color9;
+
+      .errorTriangle {
+        @include dimension(20px);
+        padding-right: 10px;
+        margin-top: 4px;
+
+        svg path {
+          fill: $color9;
+        }
+      }
+    }
+  }
+
+  .select-input, .select-input .options-wrapper, .hb-input {
+    border-radius: 0;
+  }
+
+  .delete-row {
+    @include flex(center, center);
+    @include dimension(40px, 36px);
+    border: 1px solid $color1;
+    box-sizing: border-box;
+    border-left: 0;
+    padding-top: 4px;
+    padding-left: 0;
+
+    app-svg-icon .bin rect {
+      fill: $color46;
+    }
+  }
+
+  .title {
+    margin: 10px 0 0 20px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .page-section {
+    .title {
+      @include flex(null, null);
+      @include text-style(18px, $black, null, bold);
+      margin: 0 0 15px;
+    }
+  }
+
+  .display-hide-icon {
+    @include dimension(25px);
+    margin-top: -2px;
+    margin-right: 5px;
+    transition: 0.1s;
+
+    &.hide {
+      @include transform(rotate(90deg));
+    }
+  }
+
+  .seasonally-row {
+    margin-bottom: 0;
+  }
+
+  .shared-allotment-input-wrapper {
+    @include flex(space-between, center);
+    @include dimension(300px, 40px);
+  }
+
+  .season-row {
+    width: fit-content;
+    min-width: 478px;
+    position: relative;
+    background-color: $color87;
+    border: 1px solid $color1;
+    border-top: 0;
+    padding: 0 10px;
+    margin-bottom: 10px;
+
+    &.specific-dates {
+      padding-top: 25px;
+      padding-bottom: 10px;
+    }
+
+    .row {
+      display: inline-flex;
+      padding-top: 10px;
+      overflow: auto;
+      padding-bottom: 10px;
+      @include dimension(100%);
+    }
+
+    .row-connect {
+      @include dimension(10px, 64px);
+      position: absolute;
+      margin-left: -23px;
+      margin-top: -23px;
+      border: $color1 2px solid;
+      border-right: 0;
+
+      .calendar-icon {
+        @include dimension(10px, 22px);
+        @include flex(center, center);
+        background-color: $white;
+        position: relative;
+        margin-top: 23px;
+        margin-left: -8px;
+      }
+    }
+
+    .date-range-title {
+      @include position(absolute, 6px, null, null, 10px);
+      font-size: 14px;
+    }
+
+    app-date-input {
+      width: 100%;
+    }
+
+    .season-column {
+      margin-right: 5px;
+      width: 100px;
+      min-width: 100px;
+
+      &.expended {
+        width: 120px;
+        min-width: 120px;
+
+        .season-nights {
+          .input-value-wrapper-season {
+            position: relative;
+            width: 120px;
+
+            .input-value-symbol {
+              @include position(absolute, 10px, null, null, 69px);
+              width: 40px;
+              text-align: right;
+            }
+          }
+        }
+      }
+
+      .season-title {
+        white-space: nowrap;
+        font-size: 14px;
+      }
+
+      .season-nights {
+        .input-value-wrapper-season {
+          position: relative;
+          width: 100px;
+
+          .input-value-symbol {
+            @include position(absolute, 10px, null, null, 49px);
+            width: 40px;
+            text-align: right;
+          }
+        }
+
+        .nights-input, .season-input {
+          @include dimension(100%, 35px);
+          @include text-style(16px, $black, ('Roboto', sans-serif), 400);
+          box-sizing: border-box;
+          padding-left: 8px;
+          padding-right: 25px;
+          border: 1px solid $color1;
+          border-radius: 3px;
+        }
+      }
+    }
+  }
+}
+
+
+.page-title {
+  display: flex;
+  @include text-style(19px, $color10, null, 500);
+  background-color: $color24;
+  padding-left: 20px;
+  font-size: 18px;
+  box-shadow: -1px 1px 5px -2px rgba(171, 166, 166, 0.75);
+  line-height: 40px;
+  z-index: 4;
+  color: $color10;
+  font-weight: 500;
+  border-bottom: 1px solid $color1;
+
+  .navigation-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .separator {
+    height: 20px;
+    margin: 4px 10px 0 10px;
+  }
+}
+
+.action-button {
+  @include text-style(18px, $white, Roboto, normal);
+  @include dimension(auto, 40px);
+  @include flex(center, center);
+  position: relative;
+  border: 1px solid $color20;
+  background-color: $color20;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+  white-space: nowrap;
+  border-radius: 3px;
+  overflow: hidden;
+  padding: 0 16px;
+  cursor: pointer;
+  text-decoration: none;
+  outline: 0 none;
+
+  &:active {
+    background-color: $color78
+  }
+
+  &:disabled, &.disabled {
+    background-color: $color45;
+    border-color: $color81;
+    color: $color46;
+    pointer-events: none;
+    cursor: default;
+
+    svg * {
+      fill: $color46 !important;
+    }
+  }
+
+  &.with-icon, &.confirm, &.cancel {
+    padding-left: 45px;
+    background-position: 16px center;
+    background-repeat: no-repeat;
+  }
+
+  &.confirm {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAY1BMVEUAAAD///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////+aRQ2gAAAAIHRSTlMA+Y0I7r9YQy0R8uHbx6l0TB7n0bmsn5WUgXxyYTszGJFKRwoAAAB7SURBVBjTZc7XEoUgDARQERXs3mJv+/9f6SqOYzQPkDlDwnqydBdWD/KBRMqsACXHMgCloJYSCjGU4HOXOCVF4lFDKYRUlDQWY1+Scf1ij6ug+E5K10WUn3aUs6/1GgDKnjsGsPI/j/Ha2+/2iD0pvGKb5BXbsxl/vWoD7+8KPZ+KXAIAAAAASUVORK5CYII=);
+
+    &:disabled, &.disabled {
+      background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAXVBMVEUAAACenJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ3WsczpAAAAHnRSTlMA+e3fjQhYQy0c8sfAu6l0TBDRrJ+VlIF8cmE7MxO9IJ/ZAAAAeUlEQVQY02XOSQ6FMAwDUEopLTP8eQDf/5hYeNOAF230lCgpbMKrn09UAa2VvwOcHfMAJkNPSm8kUsoml8WTatP0oIxGZopfctlKUlS9puMbKZVkUlVTbkHUsb6HhmMuFcoHTDfw+QqYN5Qh2/VzuJwdW52dJ3ntV3abSAmRY7NnrQAAAABJRU5ErkJggg==);
+    }
+  }
+
+  &.cancel {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASBAMAAACk4JNkAAAAHlBMVEUAAAAFWIUFWIUFWIUFWIUFWIUFWIUFWIUFWIUFWIUqULRvAAAACXRSTlMA6jAp5tyvurlcETC9AAAAXUlEQVQI12NoNWAAAaYwBk9nMEtxKoPiFAOQkKQwEDuDhCYC+UBBsBADSBAsBJYxAgmBBQVBQmDBmUAhKMuZASYL1I7QATEeYgqIBPNABIQLxhC+pzDMVaVQl7oBANZ5EvzgfYqxAAAAAElFTkSuQmCC');
+    background-color: white;
+    color: $color20;
+
+    &:disabled, &.disabled {
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASBAMAAACk4JNkAAAAHlBMVEUAAACenJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ2enJ0svtaTAAAACXRSTlMA7OgwKeTcuq/aMutXAAAASklEQVQI12Moc2AAAeYIhkgVMMtwGoPhJAeQkKQKGDOA+GACwgWRYB5YxhkkBBZUBAmBBWeChBAshCxCB8IUhMkI2xAuQLgK4VIAeFMVQ/9q45MAAAAASUVORK5CYII=');
+      background-color: white;
+      color: $color46;
+    }
+  }
+
+  &.loading .loader {
+    display: block;
+  }
+
+  &.with-icon.loading, &.confirm.loading, &.cancel.loading {
+    background-image: none !important;
+  }
+
+  .loader {
+    display: none;
+    position: absolute;
+    left: 26px;
+    top: 18px;
+
+    .circle-loader {
+      width: 22px;
+      height: 22px;
+
+      .circle {
+        border-width: 3px !important;
+        margin: 0 !important;
+      }
+    }
+  }
+
+  .icon {
+    margin: 2px 10px 0 0
+  }
+}
+
+.clear-search-button {
+  @include text-style(20px, white);
+  @include dimension(40px, 40px);
+  margin-right: 10px;
+  background: $white url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAmCAMAAACf4xmcAAAAZlBMVEUAAAAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJAHYJCBhYrkAAAAIXRSTlMA+vH3nFIR6lourZWFRhgJyzXf28y6s6WMfm9DPiEGyEu9/kVpAAAAoklEQVQ4y+2S2Q6CMBBFp9QWC8jivuv8/0/aXEiqYbBEE544T23mpNNZaGZCXLFN9Xp3Lr9Jt4w7dFENWquEA4+hB6+a39lY0bIpf5KJ2hExuKrNfhGsO0K1zb1lGlz20v/xwJJooQzRAeUK1Z6gKe85rzJo+hoi8HAGpq/lnWbCmZ/jkrpRJajqt4bE2xsfVnz08UWqyz/WMix50i75zIS8AAnZIBPUIhuDAAAAAElFTkSuQmCC) 1px 0 no-repeat;
+  border: 1px solid $color20;
+  cursor: pointer;
+  border-radius: 3px;
+  outline: 0 none;
+
+  &:active {
+    background-color: $color22
+  }
+}
+
+
+body {
+  margin: 0;
+
+  .caret {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 2px;
+    vertical-align: middle;
+    border-top: 4px dashed;
+    border-top: 4px solid;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+  }
+
+  -webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    background-color: $color21;
+  }
+
+  ::-webkit-scrollbar {
+    margin-left: 30px;
+    width: 6px;
+    height: 6px;
+    background-color: $color22;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: $color23;
+  }
+
+  input::-ms-clear {
+    display: none;
+  }
+}
+
+html, body {
+  margin: 0;
+  background-color: $color15;
+  height: 100%;
+  font-family: 'Roboto', sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  color: $color10 !important;
+}
+
+
+//////////////////// shared ui style file //////////////////////
+
+.cursor-pointer:not(.disabled) {
+  cursor: pointer !important;
+}
+
+.hover-opacity:hover {
+  opacity: 0.8 !important;
+}
+
+.animate {
+  transition: 0.2s !important;
+}
+
+.click-able:not(.disabled) {
+  cursor: pointer !important;
+
+  &.underline {
+    &:hover {
+      text-decoration: underline !important;
+    }
+  }
+
+  &:active {
+    opacity: 1;
+  }
+}
+
+.disabled {
+  background-color: $color45 !important;
+  border: 1px solid $color81 !important;
+  color: $color46 !important;
+  pointer-events: none;
+}
+
+.click-able-red:not(.disabled) {
+  cursor: pointer !important;
+
+  &:active {
+    opacity: 1;
+  }
+
+  &:hover {
+    opacity: 0.8 !important;
+    color: $color48 !important;
+    text-decoration: underline !important;
+    text-decoration-color: $color48 !important;
+  }
+}
+
+.hb-input {
+  border: 1px solid $color1;
+  box-sizing: border-box;
+  padding: 0 6px 0 9px;
+  border-radius: 3px;
+  height: 36px;
+}
+
+.hb-invalid-input {
+  border: 1px solid red;
+  outline: none;
+}
+
+.triangle-error {
+  @include position(absolute, 10px, 30px);
+  @include dimension(0, 0);
+  @include flex(center);
+  position: absolute;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-bottom: 17px solid $color43;
+  content: '!';
+  color: white;
+  line-height: 19px;
+  font-size: 13px;
+}
+
+
+///////////////////////////      border 0      ////////////////////
+.border-right-0 {
+  border-right: 0;
+}
+
+.border-left-0 {
+  border-left: 0;
+}
+
+.border-top-0 {
+  border-top: 0;
+}
+
+.border-bottom-0 {
+  border-bottom: 0;
+}
+
+///////////////////////////      buttons      ////////////////////
+
+.hb-button, .hb-button-blue {
+  @include hb-button($color20, $white, $color20);
+}
+
+.hb-button-white {
+  @include hb-button($white, $color20, $color20);
+}
+
+///////////////////////////      table      ////////////////////
+
+.hb-table-row {
+  @include flex(null, center);
+  margin-bottom: 8px;
+}
+
+.hb-table-column {
+  @include flex(null, center);
+  border: 1px solid $color1;
+  box-sizing: border-box;
+  padding-left: 10px;
+  height: 36px;
+  font-size: 15px;
+}
+
+.hb-table-header {
+  background: linear-gradient(to bottom, #ecf0f1 32%, #e0eaec 67%);
+  font-weight: bold;
+}
+
+///////////////////////////      scrollbar      ////////////////////
+
+.scrollbar-style {
+  &::-webkit-scrollbar {
+    height: 20px;
+    width: 7px;
+    background-color: $color66;
+    border-radius: 100px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $color63;
+    -webkit-border-radius: 1ex;
+  }
+}
+
+///////////////////////////      errors      ////////////////////
+
+.contract-triangle-error {
+  @include dimension(0, 0);
+  @include flex(center);
+  @include position(absolute, 10px, 11px);
+  position: absolute;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-bottom: 17px solid $color43;
+  content: '!';
+  color: white;
+  line-height: 19px;
+  font-size: 13px;
+}
+
+.ng-invalid.ng-touched.hb-input {
+  background-color: $color42;
+  border: 1px solid red !important;
+  outline: none;
+  z-index: 2;
+}
+

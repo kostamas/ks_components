@@ -1,0 +1,25 @@
+@import '../../../scss/main';
+
+.booking-travel-window {
+	@include dimension(793px, 94px);
+	background-color: $color87;
+	padding-top: 10px;
+	border: 1px solid $color1;
+	margin-bottom: 8px;
+	border-top: 0;
+
+	.window {
+		@include flex();
+		margin-bottom: 10px;
+		padding-left: 9px;
+
+		.window-title {
+			width: 160px;
+			padding-top: 8px;
+		}
+
+		.date-input-component {
+			width: 260px;
+		}
+	}
+}

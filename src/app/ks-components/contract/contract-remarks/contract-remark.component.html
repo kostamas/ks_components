@@ -1,0 +1,13 @@
+<div class="contract-remarks page-section">
+	<div class="title">
+		<div class="display-hide-icon click-able" (click)="hideOrDisplayForm()"
+				 [ngClass]="[displayForm ? 'hide' : 'collapse']">
+			<app-svg-icon [svg]="SVG_ICONS.down_arrow_collapse"></app-svg-icon>
+		</div>
+		Section 22
+	</div>
+	<div class="text-area-form" *ngIf="displayForm">
+		<textarea class="remarks-text-area" maxlength="250" [(ngModel)]="contractRemarkService.remarksParams"></textarea>
+		<div class="max-characters-text">Max 250 characters</div>
+	</div>
+</div>

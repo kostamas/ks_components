@@ -1,0 +1,6 @@
+<div class="radio-buttons" [ngClass]="{'is-disabled':isDisabled}">
+	<div class="radio-button-repeater" *ngFor="let radioButton of radioButtons; let i = index">
+		<input type="radio" class="input" [checked]="radioButton.isSelected">
+		<label class="label cursor-pointer" (click)="clickHandler(i)">{{radioButton.text}}</label>
+	</div>
+</div>

@@ -1,0 +1,17 @@
+<div class="input-with-symbol">
+
+	<div *ngIf="!svg && !hideSymbol" class="input-symbol">{{symbol}}</div>
+
+	<app-svg-icon *ngIf="svg && !hideSymbol" class="input-symbol" [svg]="svg"></app-svg-icon>
+
+	<input class="hb-input input-value"
+				 [required]="isRequired? '' : null"
+				 appEllipseDetector
+				 [disabled]="isDisabled"
+				 [(ngModel)]="inputValue"
+				 (paste)="preventPasteValue()"
+				 (ngModelChange)="ngModelChange()"
+				 [ngClass]="{'disabled-field': isDisabled}"
+				 (keypress)="isRangeValue($event, valueMinRange, valueMaxRange, isFloat)"
+	[tabIndex]="tabIndex ? tabIndex : ''"/>
+</div>

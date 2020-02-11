@@ -1,0 +1,96 @@
+@import '../../../scss/main';
+
+.date-input-component {
+	flex: 1;
+
+	&.date-picker-open {
+		@include position(relative, null, null, null, null, 15);
+	}
+
+	.date-input-and-icon {
+		@include flex(null, center);
+		position: relative;
+		z-index: 12;
+		width: 100%;
+
+		.date-input, .multi-date-picker-text-container {
+			@include dimension(100%, 36px);
+			background-color: white;
+			box-sizing: border-box;
+			padding-left: 38px;
+			font-size: 15px;
+		}
+
+		.multi-date-picker-text-container {
+			@include flex(null, center);
+			flex-wrap: wrap;
+			padding: 5px 0 0 38px;
+			border: 1px solid $color1;
+			border-radius: 5px;
+			min-height: 36px;
+			max-width: 100%;
+			height: auto;
+
+			.selected-range {
+				padding-bottom: 4px;
+			}
+
+			.selected-date {
+				@include flex(space-between, center);
+				width: 230px;
+				background-color: $color36;
+				border-radius: 20px;
+				border: 1px solid $color37;
+				padding: 2px 15px;
+				margin-right: 10px;
+				margin-left: 10px;
+				margin-bottom: 5px;
+
+				.delete-date {
+					svg {
+						@include dimension(10px, 10px);
+						margin-left: 6px;
+
+						line {
+							stroke: $color26;
+						}
+					}
+				}
+			}
+		}
+
+		.calendar-icon {
+			@include position(absolute, 8px, null, null, 10px);
+			svg rect, svg path {
+				fill: $color46;
+			}
+		}
+
+		.round-close {
+			@include position(absolute, 10.5px, 10px);
+
+			svg {
+				@include dimension(16px, 16px);
+			}
+		}
+	}
+
+	.calendar-wrapper {
+		@include position(absolute, 35px, null, null, 0, 14);
+	}
+}
+
+.date-input-component.invalid .date-input {
+	border: 1px solid red;
+}
+
+.modal-container.date-options-modal {
+	.modal-overlay {
+		background-color: transparent !important;
+	}
+
+	.component-wrapper {
+		width: auto !important;
+		box-shadow: none;
+	}
+}

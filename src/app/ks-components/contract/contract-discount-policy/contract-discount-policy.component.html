@@ -1,0 +1,17 @@
+<div class="contract-discount-policy-container page-section">
+	<div class="title">
+		<div class="display-hide-icon click-able" (click)="displayForm = !displayForm;"
+				 [ngClass]="[displayForm ? 'hide' : 'collapse']">
+			<app-svg-icon [svg]="SVG_ICONS.down_arrow_collapse"></app-svg-icon>
+		</div>
+    Section 9
+	</div>
+
+	<div class="contract-discount-policy-form" [ngClass]="{'close-section': !displayForm}">
+		<app-guest-room-table
+			[guestRoomSrv]="contractDiscountPolicyService"
+			[getRowsFromContract]="getRowsFromContract"
+			[isDiscounts]="true">
+		</app-guest-room-table>
+	</div>
+</div>

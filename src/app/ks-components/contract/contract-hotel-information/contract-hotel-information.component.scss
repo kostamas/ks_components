@@ -1,0 +1,176 @@
+@import '../../../scss/main';
+
+.margin-bottom-20 {
+	margin-bottom: 20px;
+}
+
+.contract-hotel-information-container {
+	$property-field-width: 589.5px;
+	.title {
+		@include text-style(18px, $black, null, bold);
+		margin: 0 0 15px;
+	}
+
+	input, app-select-input .select-input, .hb-input {
+		border-radius: 3px;
+	}
+
+
+	.hotel-info-selection {
+		margin-bottom: 20px;
+
+		app-radio-buttons {
+			.radio-button-repeater {
+				label {
+					font-weight: 500;
+				}
+			}
+		}
+	}
+
+	.search-field {
+		position: relative;
+		&.max-room {
+			app-input-with-error .input-with-error {
+				@include dimension(($property-field-width / 2) - 7.5, 36px);
+			}
+		}
+	}
+
+	.contract-hotel-information-form {
+		@include flex();
+
+		&.exist {
+			height: 129.5px;
+		}
+
+		&.new {
+			height: 280.5px;
+
+			.search-column-2 {
+				padding-top: 75px;
+			}
+		}
+
+		.search-column-1, .search-column-2 {
+			@include dimension($property-field-width, auto);
+
+			.large-field {
+
+				&.load-contract-details {
+					padding-top: 10px;
+					margin-bottom: 20px;
+					height: 45px;
+					display: flex;
+
+
+					.loading-link {
+						@include text-style(15px, $color58, 'Roboto', 400);
+						text-decoration: underline;
+						padding-top: 16px;
+						width: 180px;
+						display: flex;
+
+						.load-link {
+							width: fit-content;
+							margin-right: 10px;
+						}
+
+						.load-link:hover {
+							color: $color48;
+							text-decoration-color: $color48;
+						}
+
+						app-svg-icon .info {
+							margin-top: -4px;
+						}
+					}
+				}
+
+				.large-input {
+					@include dimension($property-field-width, 36px);
+					box-sizing: border-box;
+				}
+
+				&.office {
+					width: 589px;
+
+					.large-input {
+						@include dimension($property-field-width / 2, 36px);
+					}
+				}
+			}
+
+			.two-fields {
+				display: inline-flex;
+				width: $property-field-width;
+				justify-content: space-between;
+
+				.first-field {
+					.first-input {
+						@include dimension(($property-field-width / 2) - 7.5, 36px);
+					}
+				}
+
+				.second-field {
+					.second-input, app-select-input .select-input {
+						@include dimension(($property-field-width / 2) - 7.5, 36px);
+						margin-right: 0;
+					}
+				}
+			}
+
+			.three-fields {
+				display: inline-flex;
+				width: $property-field-width;
+				justify-content: space-between;
+
+				.first-field {
+					.first-input {
+						@include dimension(($property-field-width / 3) - 7.5, 36px);
+					}
+				}
+
+				.second-field, .third-field {
+					.second-input, app-select-input .select-input {
+						@include dimension(($property-field-width / 3) - 7.5, 36px);
+						margin-right: 0;
+					}
+				}
+			}
+		}
+
+		.search-column-2 {
+			margin-left: 15px;
+		}
+
+		.search-column-3 {
+			@include dimension(150px, 120px);
+		}
+
+		.search-column-4 {
+			@include dimension(310px, 120px);
+
+			.dates-wrapper {
+				@include flex(space-between);
+
+				.date-from, .date-to {
+					@include dimension(150px, 30px);
+				}
+			}
+
+			.visible-SWS {
+				@include flex();
+				margin-top: 25px;
+			}
+		}
+
+		.search-label {
+			margin-right: 5px;
+		}
+	}
+}
+
+.load-contract-details-tooltip {
+	width: 530px;
+}

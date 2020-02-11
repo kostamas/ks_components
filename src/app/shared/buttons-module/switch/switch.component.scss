@@ -1,0 +1,72 @@
+@import '../../../scss/main';
+
+$switch-transition-duration: 0.4s;
+
+.switch {
+  @include dimension(130px, 35px);
+  @include flex(center, center);
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+
+  .enabled, .disabled {
+    @include text-style(14px, white);
+    @include dimension(100%, 100%);
+    @include position(absolute, 0);
+    transition:$switch-transition-duration left;
+    .text {
+      @include position(absolute, 50%);
+      transform: translateY(-50%);
+    }
+  }
+
+  .enabled {
+    background-color: $color35;
+    .text {
+      left: 15px;
+    }
+  }
+
+  .disabled {
+    background-color: $color26;
+    .text {
+      left: 40px;
+    }
+  }
+
+  .indicator {
+    @include position(absolute, 50%);
+    @include dimension(20px, 20px);
+    transform: translateY(-50%);
+    background-color: white;
+    border-radius: 100%;
+    transition: $switch-transition-duration left;
+  }
+}
+
+.switch.enabled-state {
+  .enabled {
+    left: 0;
+  }
+  .disabled {
+    left: calc(100%);
+  }
+  .indicator {
+    left: calc(100% - 30px);
+  }
+  .text {
+    font-size: 16px;
+  }
+}
+
+.switch.disabled-state {
+  .enabled {
+    left: calc(-100%);
+  }
+  .disabled {
+    left: 0;
+  }
+  .indicator {
+    left: 10px;
+  }
+}

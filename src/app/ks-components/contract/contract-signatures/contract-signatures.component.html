@@ -1,0 +1,91 @@
+<div class="signatures-container page-section">
+
+	<div class="title">Signatures</div>
+
+	<div class="signatures-form">
+		<div class="sign-field">
+			<app-checkbox [id]="'sign'" [isManualControl]="true" [item]="signItem"
+										(onChecked)="signCheck($event)"></app-checkbox>
+			<div class="sign-text">
+				Hotel has complete control over free sale and will be applying changes via extranet.
+			</div>
+		</div>
+		<div class="hb-table">
+			<div class="hb-table-row">
+				<div class="hb-table-column">
+				</div>
+				<div class="hb-table-column">
+					<div class="search-label">Name</div>
+				</div>
+				<div class="hb-table-column">
+					<div class="search-label">Title</div>
+				</div>
+			</div>
+			<div class="hb-table-row">
+				<div class="hb-table-column">
+					<div class="hotelbeds-title">
+						One behalf of Hotelbeds
+					</div>
+				</div>
+				<div class="hb-table-column">
+						<div class="search-field">
+						<input class="hb-input" [(ngModel)]="contractSignaturesService.contractSignatureParams.hotelbeds.name"
+									 [fontSize]="16" appEllipseDetector/>
+					</div>
+				</div>
+				<div class="hb-table-column">
+					<div class="search-field">
+						<input class="hb-input"  [(ngModel)]="contractSignaturesService.contractSignatureParams.hotelbeds.title"
+									 [fontSize]="16" appEllipseDetector/>
+					</div>
+				</div>
+				<div class="hb-table-column">
+					<div class="search-field">
+						<app-date-input class="date-picker"
+						                [withoutDefaultDate]="true"
+						                [selectedDate]="contractSignaturesService.contractSignatureParams.hotelbeds.date"
+														(dateSelected)="onSelectDate($event, 'hotelbeds', 'date')">
+
+						</app-date-input>
+					</div>
+				</div>
+			</div>
+			<div class="hb-table-row">
+				<div class="hb-table-column">
+					<div class="hotel-title">
+						One behalf of Hotel
+					</div>
+				</div>
+				<div class="hb-table-column">
+					<div class="search-field">
+						<input class="hb-input"
+						       [(ngModel)]="contractSignaturesService.contractSignatureParams.hotel.name"
+									 [fontSize]="16" appEllipseDetector/>
+					</div>
+				</div>
+				<div class="hb-table-column">
+					<div class="search-field">
+						<input class="hb-input"
+						       [(ngModel)]="contractSignaturesService.contractSignatureParams.hotel.title"
+									 [fontSize]="16" appEllipseDetector/>
+					</div>
+				</div>
+				<div class="hb-table-column">
+					<div class="search-field">
+						<app-date-input class="date-picker" [withoutDefaultDate]="true"
+						                [selectedDate]="contractSignaturesService.contractSignatureParams.hotel.date"
+						                (dateSelected)="onSelectDate($event, 'hotel', 'date')"></app-date-input>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="bottom-lines">
+			This contract shall be renewed annually by unwritten agreement. Therefore the SUPPLIER shall send his proposal
+			with new rates and conditions FOUR (4) months before the expiration of this contract at the latest.<br/>
+			Else HOTELBEDS reserves the right to unilaterally extend the conditions of the current contract for the next
+			TWELVE (12) months.<br/>
+			By submitting / signing this contract you are agreeing to work with Hotelbeds under the Hotelbeds Tems and
+			Conditions as attached.
+		</div>
+	</div>
+</div>

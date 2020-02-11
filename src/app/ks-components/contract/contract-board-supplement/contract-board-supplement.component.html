@@ -1,0 +1,118 @@
+<div class="contract-board-supplement-container page-section">
+	<div class="title">
+		<div class="display-hide-icon click-able" (click)="displayForm = !displayForm;"
+				 [ngClass]="[displayForm ? 'hide' : 'collapse']">
+			<app-svg-icon [svg]="SVG_ICONS.down_arrow_collapse"></app-svg-icon>
+		</div>
+    Section 10
+	</div>
+
+	<div class="board-supplement-form" *ngIf="displayForm">
+		<div class="hb-table">
+			<div class="hb-table-row">
+				<div class="hb-table-header hb-table-column" *ngFor="let header of  tableHeader;"> {{header}}</div>
+			</div>
+
+			<ng-container *ngFor="let row of contractBoardSupplementService.tableRows; let index = index">
+				<div class="hb-table-row" [ngClass]="[row.isSeasons ? 'seasonally-row' : '']">
+					<app-select-input class="breakfast"
+														[componentInputs]="{ withEmptyOption: contractBoardSupplementService.contractBoardSupplementPrams[index].board}"
+														(onSelectItem)="onSelectItem($event, index, 'board')"
+														[selectList]="row.boardBasisOptions">
+					</app-select-input>
+					<app-select-input class="guest"
+														[componentInputs]="{ withEmptyOption: contractBoardSupplementService.contractBoardSupplementPrams[index].guest}"
+														(onSelectItem)="onSelectItem($event, index, 'guest')"
+														[selectList]="row.guestOptions">
+					</app-select-input>
+					<app-select-input class="room-and-characteristic"
+														[componentInputs]="{ withEmptyOption: contractBoardSupplementService.contractBoardSupplementPrams[index].roomAndCharacteristic}"
+														(onSelectItem)="onSelectItem($event, index, 'roomAndCharacteristic')"
+														[selectList]="row.roomAndCharacteristicOptions">
+					</app-select-input>
+					<app-select-input class="contract-type"
+														(onSelectItem)="onSelectItem($event, index, 'rowType')"
+														[selectList]="row.rowTypeOptions">
+					</app-select-input>
+
+					<div class="price-wrapper" *ngIf="!row.isSeasons">
+						<app-input-with-symbol
+							[symbol]="currency || ''"
+							[isFloat]="true"
+							[valueMinRange]="1"
+							[valueMaxRange]="null"
+							[(inputValue)]="contractBoardSupplementService.contractBoardSupplementPrams[index].price">
+						</app-input-with-symbol>
+					</div>
+
+					<div class="disabled-price" *ngIf="row.isSeasons"></div>
+
+					<div class="hb-table-column click-able delete-row" (click)="deleteRow(index)">
+						<app-svg-icon class="bin-icon" [svg]="SVG_ICONS.bin" title="Delete row"></app-svg-icon>
+					</div>
+				</div>
+
+				<div class="hb-table-row season-row" *ngIf="row.isSeasons">
+					<div class="row-connect">
+						<div class="calendar-icon">
+							<app-svg-icon [svg]="SVG_ICONS.season_calendar"></app-svg-icon>
+						</div>
+					</div>
+					<div class="row">
+					<ng-container *ngFor="let season of seasons; let ind = index">
+						<div class="season-column" *ngIf="season.selectedSeasonType === 'A'">
+							<div class="season-title" app-tooltip [tooltipTitle]="contractBoardSupplementService.tableRows[index].seasonsValues[ind].tooltip">
+								{{oneContractService.getSeasonHeader(ind + 1)}}
+							</div>
+							<div class="season-nights">
+								<app-input-with-symbol
+									[symbol]="currency || ''"
+									[isFloat]="true"
+									[valueMinRange]="1"
+									[valueMaxRange]="null"
+									[(inputValue)]="contractBoardSupplementService.tableRows[index].seasonsValues[ind].value">
+								</app-input-with-symbol>
+							</div>
+						</div>
+						<ng-container *ngIf="season.selectedSeasonType === 'W'">
+							<div class="season-column expended">
+								<div class="season-title" app-tooltip [tooltipTitle]="contractBoardSupplementService.tableRows[index].seasonsValues[ind].tooltipWkdy">
+									{{oneContractService.getSeasonHeader(ind + 1, 'WKDY')}}
+								</div>
+								<div class="season-nights">
+									<app-input-with-symbol
+										[symbol]="currency || ''"
+										[isFloat]="true"
+										[valueMinRange]="1"
+										[valueMaxRange]="null"
+										[(inputValue)]="contractBoardSupplementService.tableRows[index].seasonsValues[ind].wkdy">
+									</app-input-with-symbol>
+								</div>
+							</div>
+							<div class="season-column expended">
+								<div class="season-title" app-tooltip [tooltipTitle]="contractBoardSupplementService.tableRows[index].seasonsValues[ind].tooltipWknd">
+									{{oneContractService.getSeasonHeader(ind + 1, 'WKND')}}
+								</div>
+								<div class="season-nights">
+									<app-input-with-symbol
+										[symbol]="currency || ''"
+										[isFloat]="true"
+										[valueMinRange]="1"
+										[valueMaxRange]="null"
+										[(inputValue)]="contractBoardSupplementService.tableRows[index].seasonsValues[ind].wknd">
+									</app-input-with-symbol>
+								</div>
+							</div>
+						</ng-container>
+					</ng-container>
+					</div>
+				</div>
+			</ng-container>
+		</div>
+
+		<div class="add-row click-able"
+				 (click)="addRow()" title="Add row">
+			<app-svg-icon [svg]="SVG_ICONS.plus"></app-svg-icon>
+		</div>
+	</div>
+</div>

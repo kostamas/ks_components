@@ -1,11 +1,8 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {SubMenuItemComponent} from './sub-menu-item.component';
-import {EllipsisPipe} from '../../../pips/ellipsis.pipe';
-import {FilterPipe} from '../../../pips/filter.pipe';
 import {MainHeaderComponent} from '../main-header.component';
 import {MenuItemComponent} from '../menu-item/menu-item.component';
-import {AdfWrapperComponent} from '../../../../components/adf-wrapper/adf-wrapper.component';
 
 describe('SubMenuItemComponent', () => {
   let component: SubMenuItemComponent;

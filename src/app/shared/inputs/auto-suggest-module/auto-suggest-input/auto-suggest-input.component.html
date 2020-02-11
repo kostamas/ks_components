@@ -1,0 +1,21 @@
+<div class="auto-suggest-component"
+     [ngClass]="[ !validationStatus.isValid ? 'invalid': '',
+     validationStatus.invalidView ? validationStatus.invalidView: '',
+     isDisabled ? 'is-disabled' : '']">
+	<div class="input-wrapper">
+		<div class="triangle-error cursor-pointer" app-tooltip [tooltipTitle]="validationStatus.message || 'Error'">!</div>
+		<input appEllipseDetector [fontSize]="16" (blur)="blurHandler()" [paddingRight]="40" class="auto-suggest-input" type="text" [(ngModel)]="searchTextValue" #inputElement [tabIndex]="tabIndex ? tabIndex : ''" />
+	</div>
+	<div class="no-results-found"
+	     *ngIf="isStrictMode && searchTextValue && (!selectedValue.id || selectedValue.name !== searchTextValue)&&(!autoSuggestData || !autoSuggestData.results.length)">
+		No results found
+	</div>
+	<app-svg-icon *ngIf="!searchTextValue.length" [svg]="SVG_ICONS.search" class="search-icon"></app-svg-icon>
+
+	<app-svg-icon *ngIf="showCloseButton()" [svg]="SVG_ICONS.round_close" class="round-search-icon cursor-pointer"
+	              (click)="onCloseIconClick()"></app-svg-icon>
+
+	<div class="auto-suggest-results-wrapper" #resultContainer [ngStyle]="resultsWrapperStyle">
+		<app-auto-suggest-results *ngIf="isResultsOpened" [data]="autoSuggestData"></app-auto-suggest-results>
+	</div>
+</div>

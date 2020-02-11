@@ -1,0 +1,134 @@
+@import '../../../../scss/main';
+
+$autoSuggestInputWidth: 100%;
+.auto-suggest-component {
+  width: $autoSuggestInputWidth;
+  position: relative;
+
+  .search-icon, .round-search-icon {
+    @include position(absolute, 11px, 11px);
+
+    svg {
+      @include dimension(15px, 15px);
+    }
+  }
+
+  .input-wrapper {
+    .triangle-error {
+      display: none;
+    }
+  }
+
+  .auto-suggest-results-wrapper {
+    @include position(absolute, 35px, null, null, 0, 14);
+    box-shadow: 2px 2px 2px -2px $color2;
+    border: 1px solid $color1;
+    border-radius: 3px;
+    max-height: 350px;
+    overflow-y: auto;
+    min-width: 100%;
+    box-sizing: border-box;
+    opacity: 0;
+  }
+
+  .auto-suggest-input {
+    border-radius: 3px;
+    font-size: 16px;
+    font-weight: 400;
+    font-family: 'Roboto', sans-serif;
+    height: 36px;
+    box-sizing: border-box;
+    padding: 0 40px 0 10px;
+    border: 1px solid $color1;
+    width: $autoSuggestInputWidth;
+    background-color: $color19;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &.invalid {
+    .input-wrapper {
+      position: relative;
+
+      .auto-suggest-input {
+        background-color: $color42;
+        border: 1px solid red;
+      }
+
+      .triangle-error {
+        @include dimension(0, 0);
+        @include flex(center);
+        @include position(absolute, 10px, 30px);
+        position: absolute;
+        border-left: 9px solid transparent;
+        border-right: 9px solid transparent;
+        border-bottom: 17px solid $color43;
+        content: '!';
+        color: white;
+        line-height: 19px;
+        font-size: 13px;
+      }
+    }
+  }
+
+  .no-results-found {
+    @include dimension(100%, 36px);
+    @include position(absolute, 36px, null, null, 0, 1);
+    @include flex(null, center);
+    background-color: white;
+    border: 1px solid $color1;
+    box-shadow: 2px 2px 2px -2px $color2;
+    padding: 0 40px 0 10px;
+    box-sizing: border-box;
+  }
+}
+
+.modal-container.auto-suggest-results {
+  overflow: hidden;
+
+  .component-wrapper {
+    @include transform(none);
+    opacity: 0;
+    display: block;
+    box-shadow: 2px 2px 2px -2px $color2;
+    border: 1px solid $color1;
+    border-radius: 3px;
+  }
+
+  .component-wrapper > * {
+    width: 100%;
+  }
+
+  .close-auto-suggest-modal-results {
+    @include position(absolute, null, 11.5px);
+    @include dimension(15px, 15px);
+    cursor: pointer;
+    box-sizing: border-box;
+
+    svg {
+      @include dimension(15px, 15px);
+    }
+  }
+
+  .close-auto-suggest-modal-results.top {
+    top: -25px;
+  }
+
+  .close-auto-suggest-modal-results.bottom {
+    bottom: -26.5px;
+  }
+}
+
+.auto-suggest-component.is-disabled {
+  pointer-events: none;
+
+  .input-wrapper .auto-suggest-input {
+    background-color: $color39;
+    border-color: $color81;
+  }
+}

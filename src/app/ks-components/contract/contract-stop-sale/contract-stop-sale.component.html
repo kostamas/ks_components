@@ -1,0 +1,41 @@
+<div class="contract-stop-sale-container page-section">
+	<div class="title">
+		<div class="display-hide-icon click-able" (click)="displayForm = !displayForm;"
+				 [ngClass]="[displayForm ? 'hide' : 'collapse']">
+			<app-svg-icon [svg]="SVG_ICONS.down_arrow_collapse"></app-svg-icon>
+		</div>
+	  Section 21
+	</div>
+
+	<div class="contract-stop-sale-form" *ngIf="displayForm">
+		<div class="hb-table">
+			<div class="hb-table-row">
+				<div class="hb-table-header hb-table-column" *ngFor="let header of  tableHeader"> {{header}}</div>
+			</div>
+
+			<div class="hb-table-row" *ngFor="let row of  tableRows; let index = index;"
+					 [ngClass]="{'calendar-open': row.isCalendarOpen}">
+				<app-select-input [selectList]="row.roomAndCharacteristicList" class="room-and-characteristic"
+													[validationStatus$]="row.roomAndCharacteristicValidator$"
+													[componentInputs]="{ withEmptyOption: row.roomAndCharacteristic}"
+													(onSelectItem)="onSelectItem($event, 'roomAndCharacteristic', index)"></app-select-input>
+				<app-date-input
+					class="date-input"
+					[withoutDefaultDate]="true"
+					[multiDatePicker]="true"
+					[selectedDate]="row.range ? {from: row.range.dateFrom, to: row.range.dateTo} : null"
+					(rangeSelected)="onSelectRange($event, index)"
+					(isOpenChanged)="row.isCalendarOpen = $event">
+				</app-date-input>
+
+				<div class="hb-table-column click-able delete-row" (click)="deleteRow(index)">
+					<app-svg-icon class="bin-icon" [svg]="SVG_ICONS.bin"></app-svg-icon>
+				</div>
+			</div>
+		</div>
+
+		<div class="add-row click-able" (click)="addRow()">
+			<app-svg-icon [svg]="SVG_ICONS.plus"></app-svg-icon>
+		</div>
+	</div>
+</div>

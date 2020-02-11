@@ -1,0 +1,53 @@
+@import '../../../../scss/main';
+
+.app-seven-days-checkbox {
+  @include flex();
+
+  .days-container {
+    @include flex(null, center);
+
+    &.single-selected .select-item {
+      .cursor-pointer {
+        cursor: default;
+      }
+      .check-mark {
+        background-color: $color45;
+      }
+      .check-mark::after {
+        width: 5px;
+        height: 10px;
+        position: absolute;
+        top: 2px;
+        left: 7px;
+        content: "";
+        border: solid $color46;
+        border-width: 0 2.4px 2.4px 0;
+        transform: rotate(45deg);
+      }
+    }
+
+    .day-repeater {
+      @include flex();
+      margin-right: 6px;
+
+      app-checkbox .checkbox-component {
+        width: 20px;
+        margin-right: 10px;
+      }
+
+      .day {
+        font-size: 16px;
+        height: 21px;
+        line-height: 28px;
+      }
+    }
+  }
+
+  .select-options {
+    @include flex(space-around, flex-end);
+    font-size: 14px;
+    text-decoration: underline;
+    width: 200px;
+    color: $color6;
+  }
+}

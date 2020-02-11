@@ -1,0 +1,110 @@
+<div class="contract-control-buttons">
+  <div class="action-button load-contract" (click)="loadContract()">Load Existing Contract</div>
+  <div class="action-button new-contract" (click)="newContract()">New Contract</div>
+</div>
+
+<div class="one-contract-page" [ngClass]="{'view-mode': isViewMode}">
+
+  <div class="one-contract-left-right-wrapper" [ngClass]="{'with-audit-details': !!auditDetails}">
+    <div class="one-contract-left" #oneContractLeft [ngClass]="[leftWrapperHasScroll ? 'hasScroll' : '']">
+      <div *ngFor="let contractSection of contractSections, let ind = index" class="contract-section-item-wrapper"
+           [ngClass]="contractSection.isInvalid ? 'invalid' : ''">
+        <div class="contract-section-item"
+             [ngClass]="[contractSection.isSelected ? 'selected' : '']"
+             (click)="scrollToSection(ind)">
+          <div class="contract-name">{{contractSection.name}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="one-contract-wrapper" (scroll)="scrollHandler($event)">
+      <div class="sub-wrapper">
+        <div class="one-contract-content-top"></div>
+        <div class="one-contract-content" #oneContractContent>
+
+          <div class="save-button" #saveButton>
+            <app-button-with-loader [text]="'Save'" [svg]="SVG_ICONS.save" [onClick]="saveOneContract">
+            </app-button-with-loader>
+            <div class="bottom-triangle"></div>
+          </div>
+
+          <div class="view-mode-title" *ngIf="isViewMode">ONE-CONTRACT - VIEW ONLY</div>
+
+          <app-contract-hotel-information></app-contract-hotel-information>
+          <div class="contract-page-separator"></div>
+
+          <app-contract-details></app-contract-details>
+          <div class="contract-page-separator"></div>
+
+          <app-contract-loading-information></app-contract-loading-information>
+          <div class="contract-page-separator"></div>
+
+          <app-contract-rooms-availability></app-contract-rooms-availability>
+          <div class="contract-page-separator"></div>
+
+          <app-contract-rates></app-contract-rates>
+          <div class="contract-page-separator"></div>
+
+          <app-contract-min-and-security-allotment></app-contract-min-and-security-allotment>
+          <div class="contract-page-separator"></div>
+
+          <app-contract-cancellation-policy></app-contract-cancellation-policy>
+          <div class="contract-page-separator"></div>
+
+          <app-contract-min-stay></app-contract-min-stay>
+          <div class="contract-page-separator"></div>
+
+          <app-contract-discount-policy></app-contract-discount-policy>
+          <div class="contract-page-separator"></div>
+
+          <app-contract-board-supplement></app-contract-board-supplement>
+          <div class="contract-page-separator"></div>
+
+          <app-contract-occupancy-supplement></app-contract-occupancy-supplement>
+          <div class="contract-page-separator"></div>
+
+          <app-contract-other-supplement></app-contract-other-supplement>
+          <div class="contract-page-separator"></div>
+
+          <app-nrf-discount></app-nrf-discount>
+          <div class="contract-page-separator"></div>
+
+          <app-opaque-discount></app-opaque-discount>
+          <div class="contract-page-separator"></div>
+
+          <app-hbg-select-discount></app-hbg-select-discount>
+          <div class="contract-page-separator"></div>
+
+          <app-contract-early-booking-discount></app-contract-early-booking-discount>
+          <div class="contract-page-separator"></div>
+
+          <app-contract-long-stay-discount></app-contract-long-stay-discount>
+          <div class="contract-page-separator"></div>
+
+          <app-contract-pay-stay></app-contract-pay-stay>
+          <div class="contract-page-separator"></div>
+
+          <app-contract-combinations></app-contract-combinations>
+          <div class="contract-page-separator"></div>
+
+          <app-contract-stop-sale></app-contract-stop-sale>
+          <div class="contract-page-separator"></div>
+
+          <app-contract-remark></app-contract-remark>
+          <div class="contract-page-separator"></div>
+
+          <app-contract-overrides></app-contract-overrides>
+          <div class="contract-page-separator"></div>
+
+          <app-contract-signatures></app-contract-signatures>
+          <ng-container
+            *ngIf="createOneContractStoreService.oneContract$.value && !createOneContractStoreService.oneContract$.value.publishedDate">
+
+            <div class="contract-page-separator"></div>
+          </ng-container>
+        </div>
+        <div class="wrapper-separator"></div>
+      </div>
+    </div>
+  </div>
+</div>

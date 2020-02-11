@@ -1,0 +1,76 @@
+<div class="contract-long-stay-discount-container page-section">
+	<div class="title">
+		<div class="display-hide-icon click-able" (click)="displayForm = !displayForm;"
+				 [ngClass]="[displayForm ? 'hide' : 'collapse']">
+			<app-svg-icon [svg]="SVG_ICONS.down_arrow_collapse"></app-svg-icon>
+		</div>
+		Section 18
+	</div>
+
+	<div class="contract-long-stay-discount-form" *ngIf="displayForm">
+		<div class="hb-table">
+			<div class="hb-table-row">
+				<div class="hb-table-header hb-table-column take-left" *ngFor="let header of  tableHeader">
+					{{header}}
+					<app-svg-icon *ngIf="header === 'NRF'"
+												class="cursor-pointer nrf-tooltip"
+												app-tooltip
+												[tooltipTitle]="'Non Refundable'"
+												[svg]="SVG_ICONS.info"></app-svg-icon>
+				</div>
+			</div>
+
+			<div class="row-wrapper" *ngFor="let row of  tableRows; let index = index">
+				<div class="hb-table-row"
+						 [ngClass]="{'specific-dates': contractLongStayService.contractLongStayDiscountParams[index].periodType === 'SD'}">
+					<app-select-input class="discount-type"
+														(onSelectItem)="onSelectItem($event, index, 'periodType')"
+														[selectList]="row.periodTypeOptions">
+					</app-select-input>
+
+					<app-input-with-error
+						[(inputValue)]="contractLongStayService.contractLongStayDiscountParams[index].stayNights"
+						[cssClasses]="['fix-contract-input-focus']"
+						[required]="true"
+						[preventValues]="numberOnly"
+						[isDisabled]="row.type === 'NS'"
+						[preventPaste]="true">
+					</app-input-with-error>
+
+					<div class="discount-value-wrapper take-left">
+						<app-input-with-symbol
+							[symbol]="'%'"
+							[isFloat]="true"
+							[valueMinRange]="0"
+							[valueMaxRange]="100"
+							(inputValueChange)="discountTypeHandler('longStayDiscount')"
+							[(inputValue)]="contractLongStayService.contractLongStayDiscountParams[index].discount">
+						</app-input-with-symbol>
+					</div>
+
+					<app-select-input class="nrf take-left"
+														(onSelectItem)="onSelectItem($event, index, 'nrf')"
+														[selectList]="row.nrfOptions">
+					</app-select-input>
+					<div class="hb-table-column click-able delete-row take-left" (click)="deleteRow(index)">
+						<app-svg-icon class="bin-icon" [svg]="SVG_ICONS.bin" title="Delete row"></app-svg-icon>
+					</div>
+				</div>
+				<app-booking-travel-dates
+					*ngIf="contractLongStayService.contractLongStayDiscountParams[index].periodType === 'SD'"
+					[bookingDate]="contractLongStayService.contractLongStayDiscountParams[index].bookingWindow"
+					[travelDate]="contractLongStayService.contractLongStayDiscountParams[index].travelWindow"
+					(bookingDateSelected)="commonOneContractService.onSelectBookingOrTravelDate($event, index, contractLongStayService.contractLongStayDiscountParams, 'bookingWindow')"
+					(travelDateSelected)="commonOneContractService.onSelectBookingOrTravelDate($event, index, contractLongStayService.contractLongStayDiscountParams, 'travelWindow')">
+				</app-booking-travel-dates>
+			</div>
+		</div>
+
+		<div class="add-row click-able"
+				 [ngClass]="[isAddRowDisabled()? 'disabled' : '']"
+				 (click)="addRow()"
+				 title="Add row">
+			<app-svg-icon [svg]="SVG_ICONS.plus"></app-svg-icon>
+		</div>
+	</div>
+</div>

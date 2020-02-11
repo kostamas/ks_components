@@ -1,0 +1,35 @@
+<div class="select-input cursor-pointer"
+		 [ngClass]="[validationStatus.isValid === false ? 'invalid' : '',
+		  isDisabled ? 'is-disabled' : '',
+		  isOptionsOpen ? 'options-opened' : '',
+		  withAutoSuggest ? 'with-auto-suggest' : '',
+		  withChips ? 'with-chips' : '']"
+		 (focus)="selectInputFocus(true)" (blur)="blurHandler()" [tabIndex]="tabIndex && !isDisabled ? tabIndex : ''"
+		 #selectInput>
+
+	<div class="select-input-title" #inputText appEllipseDetector [fontSize]="16" [paddingLeft]="9"></div>
+
+	<div class="input-with-chips-wrapper">
+		<div class="select__input__chips__value chips-value"
+				 [ngClass]="{'without-chips': value.withoutChips}" *ngFor="let value of chipsValues; let index = index;">
+			{{value.name}}
+			<div (click)="removeChips($event, index)" class="remove-chips" *ngIf="!value.withoutChips">
+				<svg viewBox="0 0 1 1" version="1.1" xmlns="http://www.w3.org/2000/svg">
+					<line x1="0" y1="1" x2="1" y2="0" stroke-width="0.15"/>
+					<line x1="0" y1="0" x2="1" y2="1" stroke-width="0.15"/>
+				</svg>
+			</div>
+		</div>
+
+		<input (focus)="inputFocus()" (blur)="inputBlur()" #inputElement class="input" [(ngModel)]="inputValue"
+					 (ngModelChange)="ngModelChange()" *ngIf="withAutoSuggest"/>
+	</div>
+
+	<div class="triangle-error" app-tooltip [tooltipTitle]="validationStatus.message || 'Error'">!</div>
+
+	<app-svg-icon [svg]="SVG_ICONS.arrowDown" (click)="arrowDownClickHandler()"></app-svg-icon>
+
+	<div class="options-wrapper" #optionsWrapperElement>
+		<div #optionsContainer></div>
+	</div>
+</div>
