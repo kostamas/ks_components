@@ -64,11 +64,10 @@
     }
 
     .one-contract-left {
-      @include dimension(220px, calc(100vh - 95px));
+      @include dimension(130px, calc(100vh - 95px));
       position: fixed;
       z-index: 12;
       padding-left: 30px;
-      width: 220px;
 
       &.hasScroll {
         max-height: calc(100vh - 135px);
@@ -185,7 +184,7 @@
     }
 
     .one-contract-wrapper {
-      margin-left: 260px;
+      margin-left: 190px;
       overflow: auto;
       max-height: calc(100vh - 95px);
       width: 100%;

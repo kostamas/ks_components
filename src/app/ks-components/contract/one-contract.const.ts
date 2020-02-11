@@ -51,8 +51,25 @@ export const contractToShow: any = {
       }, {
         'guestApplicationType': {'id': 'I1', 'name': null},
         'room': {'roomCode': 'Id-3', 'characteristicCode': 'C2'},
-        'applicationType': 'Fixed Amount',
-        'seasons': [{'value': 6, 'seasonCode': 'CP', 'travelWindow': null}]
+        'applicationType': 'Room (%)',
+        'seasons': [{
+          'seasonCode': 'SD',
+          'value': 0,
+          'travelWindow': {'dateFrom': '2020-03-09', 'dateTo': '2020-04-06'}
+        }, {'seasonCode': 'SD', 'value': 0, 'travelWindow': {'dateFrom': '2020-03-20', 'dateTo': '2020-04-14'}}, {
+          'seasonCode': 'SD',
+          'value': 0,
+          'travelWindow': {'dateFrom': '2020-03-19', 'dateTo': '2020-04-28'}
+        }]
+      }, {
+        'guestApplicationType': {'id': 'I1', 'name': null},
+        'room': {'roomCode': '', 'characteristicCode': ''},
+        'applicationType': null,
+        'seasons': [{'seasonCode': 'A', 'value': 34, 'travelWindow': null}, {
+          'seasonCode': 'B',
+          'value': 5,
+          'travelWindow': null
+        }, {'seasonCode': 'C', 'value': 6, 'travelWindow': null}, {'seasonCode': 'D', 'value': 7, 'travelWindow': null}]
       }],
       'occupancySupplements': [{
         'guestApplicationType': {'id': 'I1', 'name': null},
@@ -83,17 +100,17 @@ export const contractToShow: any = {
       }, {
         'supplementCode': 'otherSupplement',
         'guestApplicationType': {'id': 'I1', 'name': null},
-        'room': {'roomCode': '', 'characteristicCode': ''},
-        'applicationType': null,
+        'room': {'roomCode': 'Id-3', 'characteristicCode': 'C2'},
+        'applicationType': 'Fixed Amount',
         'seasons': [{'travelWindow': {'dateFrom': '2020-01-20', 'dateTo': '2020-01-20'}, 'value': '', 'seasonCode': 'SD'}]
       }, {
         'supplementCode': 'otherSupplement',
         'guestApplicationType': {'id': 'I1', 'name': null},
-        'room': {'roomCode': '', 'characteristicCode': ''},
-        'applicationType': null,
-        'seasons': [{'seasonCode': 'A', 'value': 4}, {'seasonCode': 'B', 'value': 5}, {'seasonCode': 'C', 'value': 6}, {
+        'room': {'roomCode': 'Id-2', 'characteristicCode': 'C5'},
+        'applicationType': 'Room and Board (%)',
+        'seasons': [{'seasonCode': 'A', 'value': 3}, {'seasonCode': 'B', 'value': 4}, {'seasonCode': 'C', 'value': 5}, {
           'seasonCode': 'D',
-          'value': 7
+          'value': 6
         }]
       }],
       'NRFDiscount': [{
@@ -138,6 +155,15 @@ export const contractToShow: any = {
           'bookingWindow': {'dateFrom': '2020-03-12', 'dateTo': '2020-04-14'},
           'travelWindow': {'dateFrom': '2020-03-10', 'dateTo': '2020-04-16'}
         }]
+      }, {
+        'stayNights': null,
+        'supplementCode': null,
+        'seasons': [{
+          'value': null,
+          'seasonCode': 'SD',
+          'bookingWindow': {'dateFrom': '2020-03-09', 'dateTo': '2020-04-12'},
+          'travelWindow': {'dateFrom': '2020-03-11', 'dateTo': '2020-04-21'}
+        }]
       }]
     },
     'boardSupplements': [{
@@ -145,6 +171,14 @@ export const contractToShow: any = {
       'paxType': '1C1',
       'room': {'roomCode': 'Id-3', 'characteristicCode': 'C2'},
       'seasons': [{'seasonCode': 'CP', 'value': 5}]
+    }, {
+      'board': 'F1',
+      'paxType': '3C1',
+      'room': {'roomCode': 'Id-3', 'characteristicCode': 'C2'},
+      'seasons': [{'seasonCode': 'A', 'value': 3}, {'seasonCode': 'B', 'value': 4}, {'seasonCode': 'C', 'value': 5}, {
+        'seasonCode': 'D',
+        'value': 6
+      }]
     }],
     'rooms': [{
       'type': {'id': 'Id-7', 'name': ''},
@@ -207,13 +241,13 @@ export const contractToShow: any = {
           'value': 3
         }]
       }, {
-        'roomCode': 'Id-3',
-        'characteristicCode': 'C4',
+        'roomCode': 'Id-2',
+        'characteristicCode': 'C3',
         'type': [{'seasonCode': 'A', 'value': 3}, {'seasonCode': 'B', 'value': 4}, {'seasonCode': 'C', 'value': 5}, {
           'seasonCode': 'D',
           'value': 5
         }]
-      }], 'vatIncluded': true, 'applicationType': 'Unit'
+      }, {'roomCode': null, 'characteristicCode': null, 'type': []}], 'vatIncluded': true, 'applicationType': 'Unit'
     },
     'seasons': [{
       'seasonCode': 'A',
@@ -280,7 +314,7 @@ export const contractToShow: any = {
         'seasonCode': 'D',
         'value': 7
       }]
-    }],
+    }, {'room': {'roomCode': '', 'characteristicCode': ''}, 'seasons': [{'seasonCode': 'CP', 'value': null}]}],
     'free': [{
       'payNights': '6',
       'stayNights': '4',
