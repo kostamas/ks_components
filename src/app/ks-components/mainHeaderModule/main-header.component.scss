@@ -1,9 +1,9 @@
-@import "shared";
+@import '../../scss/main';
 
 .main-header {
   @include dimension(100%, 64px);
   @include flex(space-between, center);
-  min-width: $mobile;
+  min-width: 400px;
   background: -webkit-linear-gradient(top, rgba(38, 100, 133, 1) 0%, rgba(38, 100, 133, 1) 85%, rgba(35, 93, 124, 1) 96%, rgba(35, 93, 124, 1) 100%);
   box-shadow: 2px -4px 7px 4px rgba(126, 118, 118, 0.75);
   padding-left: 20px;
@@ -35,11 +35,11 @@
         color: $alto;
         height: 64px;
         padding: 0 12px;
-        box-shadow: -2px -1px 0px -1px $lynch;
-        border-left: 1px solid $tarawera;
+        box-shadow: -2px -1px 0px -1px $color64;
+        border-left: 1px solid $color59;
         &.selected-tab {
           color: $white;
-          background: $blumine;
+          background: $color42;
         }
         .header-tab-name {
           white-space: nowrap;
@@ -55,11 +55,11 @@
 
       .header-button:hover {
         color: $white;
-        background: $blumine;
+        background: $color42;
       }
 
       .header-button:first-child {
-        border-left: 1px solid $tarawera;
+        border-left: 1px solid $color59;
       }
 
     }
@@ -72,7 +72,7 @@
       position: fixed;
       z-index: 15;
       left: calc(100vw - 426px);
-      top: $mainHeaderHeight;
+      top: 60px;
       display: block;
       font-size: 12px;
       .menu-user-content {
@@ -213,7 +213,7 @@
   }
 }
 
-@media only screen and (max-width: $mobile) {
+@media only screen and (max-width: 400px) {
   .main-header {
     .main-header-left-section .header-tabs-wrapper {
       .header-button {
