@@ -47,7 +47,7 @@ export class ContractRatesComponent implements OnInit, OnDestroy {
   public validationStatus: IValidationStatus;
   public ratesTooltip: string = `<div>Weekdays are defined as Monday to Friday</div>
 																 <div>Weekend are defined as Saturday to Sunday</div>`;
-
+  private timer;
   public SVG_ICONS: ISvgIcons = SVG_ICONS;
   public vatIncluded: IRadioButton[] = [
     {text: 'Yes', isSelected: true, id: true}, {text: 'No', isSelected: false, id: false}
@@ -70,7 +70,7 @@ export class ContractRatesComponent implements OnInit, OnDestroy {
     }));
     subscriptionsArray.push(this.contractRatesService.validation.subscribe(status => {
       this.validationStatus = status;
-      setTimeout(() => this.changeDetector.detectChanges());
+      this.timer = setTimeout(() => this.changeDetector.detectChanges());
     }));
     this.tableHeader = ['Season ' + JsUtils.numberToLatter(1, true)];
     tableHeaderColumns.push({seasonRange: {from: '', to: ''}, selectedSeasonType: 'A'});
@@ -407,6 +407,7 @@ export class ContractRatesComponent implements OnInit, OnDestroy {
     this.tableHeader = [];
     this.tableHeaderColumns = [];
     this.contractRatesService.resetParams();
+    clearTimeout(this.timer);
     this.subscriptionsArray.forEach((subscription: any) => subscription.unsubscribe());
   }
 }

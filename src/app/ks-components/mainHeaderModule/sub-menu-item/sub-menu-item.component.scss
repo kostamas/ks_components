@@ -1,4 +1,4 @@
-@import "shared";
+@import '../../../scss/main';
 
 :host {
   width: 100%;
@@ -25,7 +25,7 @@
 
       .sub-menu-category {
         @include flex();
-        @include text-style(13px, $sanMarino);
+        @include text-style(13px, $blueLagoon);
         font-family: 'Roboto', sans-serif !important;
         text-decoration: underline;
         cursor: pointer;
@@ -43,11 +43,10 @@
         }
 
         &:hover {
-          color: $chestnutRose;
+          color: $blueChill;
           .favorite-div:not(.show-favorite) {
             img {
               display: block;
-              content: url(../../../../../assets/icons/images/favorites_off.jpg);
             }
           }
         }
@@ -60,7 +59,7 @@
   }
 }
 
-@media only screen and (max-width: $tablet) {
+@media only screen and (max-width: 400px) {
   .scroll-able-sub-menu {
     margin-top: 20px;
 
